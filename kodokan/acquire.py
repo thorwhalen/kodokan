@@ -8,6 +8,7 @@ once") is skipped from the main line by default but can be fetched as a referenc
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 from kodokan.config import clips_dir
@@ -29,6 +30,32 @@ def list_techniques(*, include_pv: bool = False, **kwargs):
 
     items = "1:" if include_pv else "2:"
     return youtube_playlist_info(KODOKAN_PLAYLIST_URL, playlist_items=items, **kwargs)["entries"]
+
+
+def local_clips(directory: Path | None = None) -> list[dict]:
+    """List already-downloaded clips on disk (decouples processing from download).
+
+    Reads each ``*.info.json`` sidecar and pairs it with its ``.mp4``. Returns
+    dicts with ``id``, ``title``, ``webpage_url``, ``path``. Sidecars without a
+    matching video (e.g. the playlist-level info.json) are skipped.
+    """
+    directory = Path(directory or clips_dir())
+    out: list[dict] = []
+    for ij in sorted(directory.glob("*.info.json")):
+        base = ij.name[: -len(".info.json")]
+        mp4 = directory / f"{base}.mp4"
+        if not mp4.exists():
+            continue
+        info = json.loads(ij.read_text())
+        out.append(
+            {
+                "id": info.get("id"),
+                "title": info.get("title"),
+                "webpage_url": info.get("webpage_url"),
+                "path": mp4,
+            }
+        )
+    return out
 
 
 def download_techniques(

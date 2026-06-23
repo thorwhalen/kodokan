@@ -15,7 +15,7 @@ from pathlib import Path
 import numpy as np
 
 from kodokan import config, store
-from kodokan.acquire import download_techniques
+from kodokan.acquire import download_techniques, local_clips
 from kodokan.segment import segment_demonstrations
 from kodokan.track import estimate_poses_tracked
 
@@ -29,21 +29,22 @@ def main():
 
     archive = config.clips_dir() / ".download_archive.txt"
     print(f"[acquire] playlist items {args.items} (archive: {archive.name}) ...", flush=True)
-    results = download_techniques(playlist_items=args.items, download_archive=str(archive))
-    print(f"[acquire] {len(results)} clips", flush=True)
+    download_techniques(playlist_items=args.items, download_archive=str(archive))
+    clips = local_clips()  # process whatever is on disk (robust to archive skips)
+    print(f"[acquire] {len(clips)} clips on disk", flush=True)
 
     ps = store.pose_store()
     ss = store.segments_store()
     summary = []
 
-    for r in results:
-        vid, title, url = r.info.get("id"), r.info.get("title"), r.info.get("webpage_url")
-        if not r.path or not Path(r.path).exists():
+    for c in clips:
+        vid, title, url, path = c["id"], c["title"], c["webpage_url"], c["path"]
+        if not path or not Path(path).exists():
             print(f"[skip] {vid} {title!r}: file missing", flush=True)
             continue
         print(f"\n=== {vid}  {title} ===", flush=True)
         seq = estimate_poses_tracked(
-            r.path, frame_step=args.frame_step, device=args.device, source_url=url, progress=True
+            path, frame_step=args.frame_step, device=args.device, source_url=url, progress=True
         )
         ps[vid] = seq
         segs = segment_demonstrations(
