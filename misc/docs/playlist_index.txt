@@ -1,0 +1,100 @@
+001|_GxcFx8LZRk|KODOKAN JUDO 100 Techniques PV
+002|zIq0xI0ogxk|背負投 / Seoi-nage
+003|FQnOlCxo4oI|一本背負投 / Ippon-seoi-nage
+004|vu1TMVNnq34|背負落 / Seoi-otoshi
+005|4x6S3Q-Ktv8|体落 / Tai-otoshi
+006|cnHRhSy8yi4|肩車 / Kata-guruma
+007|vU6aJ2kFxoI|掬投 / Sukui-nage
+008|ff8U2TVZIYI|帯落 / Obi-otoshi
+009|6H5tmncOY4Q|浮落 / Uki-otoshi
+010|lLU9wv52ni0|隅落 / Sumi-otoshi
+011|MGlyKmSuzdc|山嵐 / Yama-arashi
+012|bpc82SrunUU|帯取返 / Obi-tori-gaeshi
+013|BHLQS4K85bs|双手刈 / Morote-gari
+014|ZNL47q1aJNY|朽木倒 / Kuchiki-taoshi
+015|tJylJYfBliA|踵返 / Kibisu-gaeshi
+016|V-RS3uhtVWM|内股すかし / Uchi-mata-sukashi
+017|_MWAdYi_LC4|小内返 / Ko-uchi-gaeshi
+018|z5qYfCEcZOU|手技 / Te-waza
+019|bPKwtB4lyOQ|浮腰 / Uki-goshi
+020|yhu1mfy2vJ4|大腰 / O-goshi
+021|SU7Id6uVJ44|腰車 / Koshi-guruma
+022|McfzA0yRVt4|釣込腰 / Tsurikomi-goshi
+023|QsmAxpmYLOI|袖釣込腰 / Sode-tsurikomi-goshi
+024|qTo8HlAAkOo|払腰 / Harai-goshi
+025|51Htlp7xEvE|釣腰 / Tsuri-goshi
+026|M9_7De6A1kk|跳腰 / Hane-goshi
+027|4pQd_bEnlf0|移腰 / Utsuri-goshi
+028|ORIYstuxYT8|後腰 / Ushiro-goshi
+029|cgIby7HnKzA|腰技 / Koshi-waza
+030|4BUUvqxi_Kk|出足払 / De-ashi-harai
+031|JPJx9-oAVns|膝車 / Hiza-guruma
+032|699i--pvYmE|支釣込足 / Sasae-tsurikomi-ashi
+033|c-A_nP7mKAc|大外刈 / O-soto-gari
+034|0itJFhV9pDQ|大内刈 / O-uchi-gari
+035|jeQ541ScLB4|小外刈 / Ko-soto-gari
+036|3Jb3tZvr9Ng|小内刈 / Ko-uchi-gari
+037|nw1ZdRjrdRI|送足払 / Okuri-ashi-harai
+038|iUpSu5J-bgw|内股 / Uchi-mata
+039|8b6kY4s4zH4|小外掛 / Ko-soto-gake
+040|ROeayhvom9U|足車 / Ashi-guruma
+041|gGPXvWL8VbE|払釣込足 / Harai-tsurikomi-ashi
+042|SnZciTAY9vc|大車 / O-guruma
+043|92KbCm6pQeI|大外車 / O-soto-guruma
+044|2DsVvDw7b8g|大外落 / O-soto-otoshi
+045|GwweWqqFB5g|燕返 / Tsubame-gaeshi
+046|8ZjM3X_EANo|大外返 / O-soto-gaeshi
+047|dCyZTXyjIXE|大内返 / O-uchi-gaeshi
+048|9bZAZSBtnGs|跳腰返 / Hane-goshi-gaeshi
+049|4U3It-7PPsc|払腰返 / Harai-goshi-gaeshi
+050|Sy6sLWxkWYw|内股返 / Uchi-mata-gaeshi
+051|-Xpmgtaypmg|足技 / Ashi-waza
+052|880WbHvHv6A|巴投 / Tomoe-nage
+053|5VhduA5xkbA|隅返 / Sumi-gaeshi
+054|92zUYWBp5N8|引込返 / Hikikomi-gaeshi
+055|TmTWgrmViZc|俵返 / Tawara-gaeshi
+056|Fgi9b8DJ5sQ|裏投 / Ura-nage
+057|LnjW67efl00|真捨身技 / Ma-sutemi-waza
+058|MnNG67pF_a0|横落 / Yoko-otoshi
+059|3b9Me3Fohpk|谷落 / Tani-otoshi
+060|6CRBGLGz9j8|跳巻込 / Hane-makikomi
+061|bWG9O1BVKtQ|外巻込 / Soto-makikomi
+062|5BowcjduxVc|内巻込 / Uchi-makikomi
+063|weVOpJ63gII|浮技 / Uki-waza
+064|bp1tscHlePI|横分 / Yoko-wakare
+065|MehP6I5cY2c|横車 / Yoko-guruma
+066|tP1Sj1uDfSo|横掛 / Yoko-gake
+067|Hr0cOMGBDYo|抱分 / Daki-wakare
+068|DGDv2oMwmas|大外巻込 / O-soto-makikomi
+069|jZXENTLpJCI|内股巻込 / Uchi-mata-makikomi
+070|VBaHzKaCXss|払巻込 /  Harai-makikomi
+071|_1eygIXLD_w|小内巻込 /  Ko-uchi-makikomi
+072|OR-HGHnarYc|蟹挟 /  Kani-basami
+073|w6G57bWACi0|河津掛 /  Kawazu-gake
+074|ml_eSxz8OMo|横捨身技 / Yoko-sutemi-waza
+075|NDaQuJOFBYk|袈裟固 /  Kesa-gatame
+076|5_TS0YHdxcQ|袈裟固の逃れ方 /  Kesa-gatame Escapes
+077|Q2fb9jaoUFQ|崩袈裟固 /  Kuzure-kesa-gatame
+078|-zFQ6h4yKT4|崩袈裟固の逃れ方 /  Kuzure-kesa-gatame Escapes
+079|SBapox2M2dE|後袈裟固 /  Ushiro-kesa-gatame
+080|4QuzAAucQsA|後袈裟固の逃れ方 /  Ushiro-kesa-gatame Escapes
+081|zQR3IOXxO_Q|肩固 /  Kata-gatame
+082|7hP1-W2yovk|肩固の逃れ方 /  Kata-gatame Escapes
+083|HFuMjOv0WN8|上四方固 /  Kami-shiho-gatame
+084|seGsXy9I4G8|上四方固の逃れ方 /  Kami-siho-gatame Escapes
+085|YUrogQWdwiY|崩上四方固 /  Kuzure-kami-shiho-gatame
+086|PPe7E_7d7UI|崩上四方固の逃れ方 /  Kuzure-kami-siho-gatame Escapes
+087|TT7XJVSEQxA|横四方固 /  Yoko-shiho-gatame
+088|yK_GSamSPko|横四方固の逃れ方 /  Yoko-shiho-gatame Escapes
+089|55-rFmBx53g|縦四方固 /  Tate-shiho-gatame
+090|JMJBjnst_DA|縦四方固の逃れ方 /  Tate-shiho-gatame Escapes
+091|e_lAjik1SUM|浮固 /  Uki-gatame
+092|AMHWDFR4ryo|浮固の逃れ方 /  Uki-gatame Escapes
+093|eeAHZB0v3XY|裏固 /  Ura-gatame
+094|0aY2Tmchzs8|裏固の逃れ方 /  Ura-gatame Escapes
+095|guJ-HlAKEA8|抑込技 / Osaekomi-waza
+096|k2cHry9HByQ|並十字絞 /  Nami-juji-jime
+097|t3tQriIPdlI|逆十字絞 /  Gyaku-juji-jime
+098|3VZVUAmiMD8|片十字絞 /  Kata-juji-jime
+099|9f0n8jez7iA|裸絞 /  Hadaka-jime
+100|EiqyoVcIAi8|送襟絞 /  Okuri-eri-jime
