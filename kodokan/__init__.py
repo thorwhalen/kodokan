@@ -21,6 +21,8 @@ See ``misc/docs/research-architecture.md`` for the tool/architecture rationale.
 
 from kodokan.pose import estimate_poses, PoseSequence, COCO17_KEYPOINTS, COCO17_SKELETON
 from kodokan.viz import render_skeleton_video, log_to_rerun
+from kodokan.segment import segment_demonstrations, Segment
+from kodokan.compare import compare, angle_features, distance_matrix, ANGLE_NAMES
 
 __all__ = [
     "estimate_poses",
@@ -29,4 +31,10 @@ __all__ = [
     "COCO17_SKELETON",
     "render_skeleton_video",
     "log_to_rerun",
+    "segment_demonstrations",
+    "Segment",
+    "compare",
+    "angle_features",
+    "distance_matrix",
+    "ANGLE_NAMES",
 ]
