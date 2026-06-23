@@ -48,7 +48,8 @@ def main():
         )
         ps[vid] = seq
         segs = segment_demonstrations(
-            seq, active_quantile=0.55, smooth_sigma=5, min_duration_s=1.5, merge_gap_s=0.6
+            seq, smooth_sigma=5, low_quantile=0.25, high_quantile=0.5,
+            min_duration_s=1.5, merge_gap_s=0.6, min_two_person_frac=0.3,
         )
         ss[vid] = {
             "video_id": vid,
