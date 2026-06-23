@@ -16,7 +16,6 @@ dominant fragments; fragment-merging/ReID-stitching is a later refinement (see
 
 from __future__ import annotations
 
-from collections import Counter, defaultdict
 from pathlib import Path
 
 import numpy as np
@@ -33,6 +32,7 @@ def estimate_poses_tracked(
     tracker: str = "botsort.yaml",
     conf_thresh: float = 0.3,
     max_gap_frac: float = 0.15,
+    stale_after: int = 12,
     frame_step: int = 1,
     frame_range: tuple[int, int] | None = None,
     device: str | None = "mps",
@@ -97,17 +97,12 @@ def estimate_poses_tracked(
         idx += 1
     cap.release()
 
-    # choose the n_persons most-persistent tracks; order left->right by clip-mean x
-    presence: Counter[int] = Counter()
-    xs: dict[int, list[float]] = defaultdict(list)
-    for d in per_frame:
-        for tid, kp in d.items():
-            if np.nanmean(kp[:, 2]) >= conf_thresh:
-                presence[tid] += 1
-                xs[tid].append(float(np.nanmean(kp[:, 0])))
-    chosen = [tid for tid, _ in presence.most_common(n_persons)]
-    chosen.sort(key=lambda t: np.mean(xs[t]) if xs[t] else 1e9)
-
+    # Per-frame assignment into n_persons stable slots, fusing two cues:
+    #   (1) BoT-SORT track-id continuity (robust through crossings), then
+    #   (2) spatial nearest-centroid continuity (survives track fragmentation),
+    #   (3) lazy left->right initialization of still-empty slots.
+    # This avoids the "two temporally-disjoint dominant tracks" failure that a
+    # global top-2-by-presence binding hits on long, fragment-heavy clips.
     F = len(per_frame)
     out = np.full((F, n_persons, 17, 3), np.nan, dtype=np.float32)
     max_gap_px = max_gap_frac * float(width or 1920)
@@ -115,34 +110,74 @@ def estimate_poses_tracked(
     def _centroid(kp: np.ndarray) -> np.ndarray:
         return np.nanmean(kp[:, :2], axis=0)
 
-    last: list[np.ndarray | None] = [None] * n_persons
+    slot_centroid: list[np.ndarray | None] = [None] * n_persons
+    slot_tid: list[int | None] = [None] * n_persons
+    slot_missing: list[int] = [10**9] * n_persons
+    n_recover = 0
+
     for f, d in enumerate(per_frame):
-        used: set[int] = set()
-        # 1) place each bound track into its stable slot
-        for slot, tid in enumerate(chosen):
-            if tid in d and np.nanmean(d[tid][:, 2]) >= conf_thresh:
-                out[f, slot] = d[tid]
-                used.add(tid)
-                last[slot] = _centroid(d[tid])
-        # 2) gap-fill empty slots from the nearest unused detection (identity by continuity)
-        avail = [
-            (tid, kp) for tid, kp in d.items()
-            if tid not in used and np.nanmean(kp[:, 2]) >= conf_thresh
-        ]
-        for slot in range(n_persons):
-            if not np.all(np.isnan(out[f, slot])) or last[slot] is None or not avail:
+        dets = [(tid, kp) for tid, kp in d.items() if np.nanmean(kp[:, 2]) >= conf_thresh]
+        det_c = [_centroid(kp) for _, kp in dets]
+        used_slot: set[int] = set()
+        used_det: set[int] = set()
+
+        # (1) identity continuity: a bound track id reappears
+        for si in range(n_persons):
+            if slot_tid[si] is None:
                 continue
-            dists = [float(np.linalg.norm(_centroid(kp) - last[slot])) for _, kp in avail]
-            k = int(np.argmin(dists))
-            if dists[k] <= max_gap_px:
-                tid, kp = avail.pop(k)
-                out[f, slot] = kp
-                used.add(tid)
-                last[slot] = _centroid(kp)
+            for di, (tid, _) in enumerate(dets):
+                if di in used_det or tid != slot_tid[si]:
+                    continue
+                out[f, si] = dets[di][1]
+                slot_centroid[si] = det_c[di]
+                used_slot.add(si)
+                used_det.add(di)
+                break
+
+        # (2) spatial continuity: nearest unused det to each *fresh* initialized empty slot (gated)
+        fresh = [
+            si for si in range(n_persons)
+            if si not in used_slot and slot_centroid[si] is not None and slot_missing[si] < stale_after
+        ]
+        cand = sorted(
+            (float(np.linalg.norm(slot_centroid[si] - det_c[di])), si, di)
+            for si in fresh
+            for di in range(len(dets))
+            if di not in used_det
+        )
+        for dist_val, si, di in cand:
+            if si in used_slot or di in used_det or dist_val > max_gap_px:
+                continue
+            out[f, si] = dets[di][1]
+            slot_centroid[si] = det_c[di]
+            slot_tid[si] = dets[di][0]  # re-bind: id may have changed after a fragment
+            used_slot.add(si)
+            used_det.add(di)
+            n_recover += 1
+
+        # (3) re-acquire / initialize: stale or never-initialized empty slots grab leftover dets
+        for si in range(n_persons):
+            if si not in used_slot and slot_centroid[si] is not None and slot_missing[si] >= stale_after:
+                slot_centroid[si] = None  # forget a long-lost target so the slot can re-acquire
+        uninit = sorted(si for si in range(n_persons) if si not in used_slot and slot_centroid[si] is None)
+        leftover = sorted(
+            (di for di in range(len(dets)) if di not in used_det), key=lambda di: det_c[di][0]
+        )
+        for si, di in zip(uninit, leftover):
+            out[f, si] = dets[di][1]
+            slot_centroid[si] = det_c[di]
+            slot_tid[si] = dets[di][0]
+            used_slot.add(si)
+            used_det.add(di)
+
+        # (4) update miss counters
+        for si in range(n_persons):
+            slot_missing[si] = 0 if si in used_slot else slot_missing[si] + 1
 
     if progress:
-        print(f"  [track] bound tracks {chosen} "
-              f"(presence {[presence[t] for t in chosen]}/{F})", flush=True)
+        present = ~np.all(np.isnan(out[..., 0]), axis=2)
+        print(f"  [track] both-present {float((present.sum(1) == n_persons).mean()):.0%}"
+              f"  (spatial recoveries: {n_recover})", flush=True)
     return PoseSequence(
         keypoints=out,
         frame_indices=np.asarray(indices, dtype=int),
