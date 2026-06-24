@@ -28,7 +28,9 @@ _META_KEY = b"kodokan_meta"
 _TIDY_COLUMNS = ("fidx", "frame", "t_sec", "person", "keypoint", "x", "y", "conf")
 
 
-def sequence_to_tidy_df(seq: PoseSequence, *, video_id: str | None = None, drop_missing: bool = True):
+def sequence_to_tidy_df(
+    seq: PoseSequence, *, video_id: str | None = None, drop_missing: bool = True
+):
     """Convert a :class:`PoseSequence` to a tidy/long DataFrame.
 
     One row per (frame, person, keypoint). ``fidx`` is the 0-based analyzed-frame

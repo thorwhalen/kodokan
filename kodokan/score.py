@@ -28,7 +28,9 @@ from kodokan.compare import (
 from kodokan.pose import PoseSequence
 
 
-def demo_features(pose_seq: PoseSequence, start_s: float, end_s: float, *, person: int | None = None) -> np.ndarray:
+def demo_features(
+    pose_seq: PoseSequence, start_s: float, end_s: float, *, person: int | None = None
+) -> np.ndarray:
     """Cleaned joint-angle features for one demo window (primary person by default)."""
     fps = pose_seq.fps
     fr = (int(start_s * fps), int(end_s * fps))
@@ -45,14 +47,24 @@ def build_reference(feature_list: list[np.ndarray]) -> dict:
     feats = [f for f in feature_list if len(f) >= 2]
     n = len(feats)
     if n == 0:
-        return {"medoid": None, "reference": None, "baseline": np.array([]), "distance_matrix": np.zeros((0, 0))}
+        return {
+            "medoid": None,
+            "reference": None,
+            "baseline": np.array([]),
+            "distance_matrix": np.zeros((0, 0)),
+        }
     D = np.zeros((n, n))
     for i in range(n):
         for j in range(i + 1, n):
             D[i, j] = D[j, i] = compare(feats[i], feats[j])["normalized"]
     medoid = int(np.argmin(D.sum(axis=1)))
     baseline = np.array([D[medoid, j] for j in range(n) if j != medoid])
-    return {"medoid": medoid, "reference": feats[medoid], "baseline": baseline, "distance_matrix": D}
+    return {
+        "medoid": medoid,
+        "reference": feats[medoid],
+        "baseline": baseline,
+        "distance_matrix": D,
+    }
 
 
 def score(query_features: np.ndarray, reference: dict) -> dict:
@@ -90,7 +102,11 @@ def feedback(query_features: np.ndarray, reference: dict, *, n_phases: int = 3) 
         else:
             phases.append(float("nan"))
     return {
-        "per_angle_deg": {k: round(float(v), 1) for k, v in zip(ANGLE_NAMES, per_angle)},
+        "per_angle_deg": {
+            k: round(float(v), 1) for k, v in zip(ANGLE_NAMES, per_angle)
+        },
         "per_phase_deg": phases,
-        "worst_joint": ANGLE_NAMES[int(np.nanargmax(per_angle))] if per_angle.size else None,
+        "worst_joint": ANGLE_NAMES[int(np.nanargmax(per_angle))]
+        if per_angle.size
+        else None,
     }

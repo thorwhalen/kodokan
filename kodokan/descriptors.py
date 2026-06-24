@@ -32,7 +32,11 @@ def _angles(kp17: np.ndarray) -> np.ndarray:
     for i, (_, a, b, c) in enumerate(ANGLE_DEFS):
         ba, bc = xy[a] - xy[b], xy[c] - xy[b]
         nba, nbc = np.linalg.norm(ba), np.linalg.norm(bc)
-        out[i] = np.arccos(np.clip(np.dot(ba, bc) / (nba * nbc), -1, 1)) if nba > 1e-6 and nbc > 1e-6 else np.nan
+        out[i] = (
+            np.arccos(np.clip(np.dot(ba, bc) / (nba * nbc), -1, 1))
+            if nba > 1e-6 and nbc > 1e-6
+            else np.nan
+        )
     return out
 
 
@@ -61,7 +65,9 @@ def _slot_activity(kp_fp: np.ndarray) -> float:
     return float(np.nansum(np.where(np.isfinite(disp), disp * w, 0.0)))
 
 
-def demo_descriptor(pose_seq: PoseSequence, start_s: float, end_s: float, *, mode: str = "angles") -> np.ndarray:
+def demo_descriptor(
+    pose_seq: PoseSequence, start_s: float, end_s: float, *, mode: str = "angles"
+) -> np.ndarray:
     """Per-frame feature matrix for one demo window under the chosen ``mode``."""
     kp = _window(pose_seq, start_s, end_s)  # (F, P, 17, 3)
     F = len(kp)
@@ -69,7 +75,11 @@ def demo_descriptor(pose_seq: PoseSequence, start_s: float, end_s: float, *, mod
         return np.empty((0, 1))
 
     if mode in ("angles", "angles_vel", "angles_pos"):
-        p = primary_person(PoseSequence(kp, np.arange(F), pose_seq.fps, pose_seq.width, pose_seq.height, "", ""))
+        p = primary_person(
+            PoseSequence(
+                kp, np.arange(F), pose_seq.fps, pose_seq.width, pose_seq.height, "", ""
+            )
+        )
         ang = np.stack([_angles(kp[f, p]) for f in range(F)])
         if mode == "angles":
             feat = ang
@@ -83,17 +93,27 @@ def demo_descriptor(pose_seq: PoseSequence, start_s: float, end_s: float, *, mod
 
     if mode in ("angles_both", "pos_both"):
         P = kp.shape[1]
-        order = sorted(range(P), key=lambda s: -_slot_activity(kp[:, s]))  # most-active first
+        order = sorted(
+            range(P), key=lambda s: -_slot_activity(kp[:, s])
+        )  # most-active first
         per_frame = []
         for f in range(F):
             parts = []
             ok = True
             for s in order:
-                vec = _angles(kp[f, s]) if mode == "angles_both" else _norm_positions(kp[f, s])
+                vec = (
+                    _angles(kp[f, s])
+                    if mode == "angles_both"
+                    else _norm_positions(kp[f, s])
+                )
                 parts.append(vec)
                 if not np.all(np.isfinite(vec)):
                     ok = False
-            per_frame.append(np.concatenate(parts) if ok else np.full(sum(len(p) for p in parts), np.nan))
+            per_frame.append(
+                np.concatenate(parts)
+                if ok
+                else np.full(sum(len(p) for p in parts), np.nan)
+            )
         return _clean(np.stack(per_frame))
 
     raise ValueError(f"unknown mode {mode!r}")

@@ -49,7 +49,9 @@ def joint_angles(keypoints_17x3: np.ndarray) -> np.ndarray:
     return np.array([_angle(xy[a], xy[b], xy[c]) for _, a, b, c in ANGLE_DEFS])
 
 
-def primary_person(pose_seq: PoseSequence, *, frame_range: tuple[int, int] | None = None) -> int:
+def primary_person(
+    pose_seq: PoseSequence, *, frame_range: tuple[int, int] | None = None
+) -> int:
     """Person slot with the highest presence over the (optional) frame window."""
     kp, fi = pose_seq.keypoints, pose_seq.frame_indices
     if frame_range is not None:

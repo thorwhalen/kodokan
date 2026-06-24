@@ -48,10 +48,24 @@ COCO17_KEYPOINTS: tuple[str, ...] = (
 
 #: COCO-17 skeleton edges (pairs of keypoint indices) for drawing/connections.
 COCO17_SKELETON: tuple[tuple[int, int], ...] = (
-    (5, 7), (7, 9), (6, 8), (8, 10), (5, 6),
-    (5, 11), (6, 12), (11, 12),
-    (11, 13), (13, 15), (12, 14), (14, 16),
-    (0, 1), (0, 2), (1, 3), (2, 4), (0, 5), (0, 6),
+    (5, 7),
+    (7, 9),
+    (6, 8),
+    (8, 10),
+    (5, 6),
+    (5, 11),
+    (6, 12),
+    (11, 12),
+    (11, 13),
+    (13, 15),
+    (12, 14),
+    (14, 16),
+    (0, 1),
+    (0, 2),
+    (1, 3),
+    (2, 4),
+    (0, 5),
+    (0, 6),
 )
 
 
@@ -128,7 +142,10 @@ class PoseSequence:
 # Backends (strategy): each returns estimate(frame_bgr) -> (n, 17, 3) array
 # --------------------------------------------------------------------------- #
 
-def _make_rtmlib_estimator(*, device: str | None, mode: str) -> Callable[[np.ndarray], np.ndarray]:
+
+def _make_rtmlib_estimator(
+    *, device: str | None, mode: str
+) -> Callable[[np.ndarray], np.ndarray]:
     from rtmlib import Body
 
     body = Body(mode=mode, backend="onnxruntime", device=device or "cpu")
@@ -142,7 +159,9 @@ def _make_rtmlib_estimator(*, device: str | None, mode: str) -> Callable[[np.nda
     return estimate
 
 
-def _make_yolo_estimator(*, device: str | None, model_name: str) -> Callable[[np.ndarray], np.ndarray]:
+def _make_yolo_estimator(
+    *, device: str | None, model_name: str
+) -> Callable[[np.ndarray], np.ndarray]:
     from ultralytics import YOLO
 
     from kodokan.config import models_dir
@@ -155,7 +174,11 @@ def _make_yolo_estimator(*, device: str | None, model_name: str) -> Callable[[np
 
     def estimate(frame_bgr: np.ndarray) -> np.ndarray:
         r = model(frame_bgr, verbose=False, device=device or "mps")[0]
-        if r.keypoints is None or r.keypoints.data is None or len(r.keypoints.data) == 0:
+        if (
+            r.keypoints is None
+            or r.keypoints.data is None
+            or len(r.keypoints.data) == 0
+        ):
             return np.zeros((0, 17, 3), dtype=np.float32)
         return r.keypoints.data.cpu().numpy().astype(np.float32)  # (n,17,3)
 
@@ -245,7 +268,9 @@ def estimate_poses(
 
     video_path = str(video_path)
     if backend not in _BACKENDS:
-        raise ValueError(f"unknown backend {backend!r}; choose from {sorted(_BACKENDS)}")
+        raise ValueError(
+            f"unknown backend {backend!r}; choose from {sorted(_BACKENDS)}"
+        )
 
     fps, n_total, width, height = _video_meta(video_path)
     start, stop = frame_range or (0, n_total or 10**9)
@@ -269,7 +294,10 @@ def estimate_poses(
             per_frame.append(_select_persons(dets, n_persons, conf_thresh))
             indices.append(idx)
             if progress and len(indices) % 50 == 0:
-                print(f"  [{backend}] analyzed {len(indices)} frames (frame {idx})", flush=True)
+                print(
+                    f"  [{backend}] analyzed {len(indices)} frames (frame {idx})",
+                    flush=True,
+                )
         idx += 1
     cap.release()
 

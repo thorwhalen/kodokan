@@ -48,7 +48,9 @@ class Segment:
         return self.end_s - self.start_s
 
 
-def pose_motion_energy(pose_seq: PoseSequence, *, conf_thresh: float = 0.2) -> np.ndarray:
+def pose_motion_energy(
+    pose_seq: PoseSequence, *, conf_thresh: float = 0.2
+) -> np.ndarray:
     """Per-frame confidence-weighted total keypoint speed, summed over all people.
 
     Returns an array aligned to ``pose_seq.frame_indices`` (first sample is 0).
@@ -97,12 +99,18 @@ def optical_flow_energy(
         if not ok:
             break
         if (idx - start) % step == 0:
-            gray = cv2.cvtColor(cv2.resize(frame, None, fx=scale, fy=scale), cv2.COLOR_BGR2GRAY)
+            gray = cv2.cvtColor(
+                cv2.resize(frame, None, fx=scale, fy=scale), cv2.COLOR_BGR2GRAY
+            )
             if prev is None:
                 energy.append(0.0)
             else:
-                flow = cv2.calcOpticalFlowFarneback(prev, gray, None, 0.5, 3, 15, 3, 5, 1.2, 0)
-                energy.append(float(np.sqrt(flow[..., 0] ** 2 + flow[..., 1] ** 2).mean()))
+                flow = cv2.calcOpticalFlowFarneback(
+                    prev, gray, None, 0.5, 3, 15, 3, 5, 1.2, 0
+                )
+                energy.append(
+                    float(np.sqrt(flow[..., 0] ** 2 + flow[..., 1] ** 2).mean())
+                )
             prev = gray
             indices.append(idx)
         idx += 1
@@ -240,7 +248,7 @@ def estimate_period(
     sm = sm - sm.mean()
     if sm.size < 4 or not np.any(sm):
         return {"period_s": None, "count_est": None, "strength": 0.0}
-    ac = np.correlate(sm, sm, "full")[sm.size - 1:]
+    ac = np.correlate(sm, sm, "full")[sm.size - 1 :]
     ac = ac / (ac[0] + 1e-9)
     lo, hi = int(min_period_s * fps), min(int(max_period_s * fps), len(ac) - 1)
     if hi <= lo:
@@ -273,7 +281,10 @@ def segment_demonstrations(
     if use_optical_flow:
         if video_path is None:
             raise ValueError("use_optical_flow=True requires video_path")
-        start, stop = int(pose_seq.frame_indices[0]), int(pose_seq.frame_indices[-1]) + 1
+        start, stop = (
+            int(pose_seq.frame_indices[0]),
+            int(pose_seq.frame_indices[-1]) + 1,
+        )
         flow_e, _ = optical_flow_energy(video_path, frame_range=(start, stop))
         m = min(len(flow_e), len(pose_e))
 
@@ -283,7 +294,9 @@ def segment_demonstrations(
 
         energy = (_norm(pose_e) + _norm(flow_e)) / 2.0
 
-    segs = find_segments(energy, pose_seq.frame_indices[: len(energy)], pose_seq.fps, **find_kwargs)
+    segs = find_segments(
+        energy, pose_seq.frame_indices[: len(energy)], pose_seq.fps, **find_kwargs
+    )
 
     present = ~np.all(np.isnan(pose_seq.keypoints[..., 0]), axis=2)  # (F, P)
     counts = present.sum(axis=1)

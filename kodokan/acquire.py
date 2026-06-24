@@ -29,7 +29,9 @@ def list_techniques(*, include_pv: bool = False, **kwargs):
     from yb.download import youtube_playlist_info
 
     items = "1:" if include_pv else "2:"
-    return youtube_playlist_info(KODOKAN_PLAYLIST_URL, playlist_items=items, **kwargs)["entries"]
+    return youtube_playlist_info(KODOKAN_PLAYLIST_URL, playlist_items=items, **kwargs)[
+        "entries"
+    ]
 
 
 def local_clips(directory: Path | None = None) -> list[dict]:

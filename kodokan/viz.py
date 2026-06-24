@@ -36,8 +36,19 @@ def _draw_persons(canvas, persons, skeleton, colors, conf_thresh, thickness, rad
         for a, b in skeleton:
             xa, ya, ca = kp[a]
             xb, yb, cb = kp[b]
-            if ca >= conf_thresh and cb >= conf_thresh and not (np.isnan(xa) or np.isnan(xb)):
-                cv2.line(canvas, (int(xa), int(ya)), (int(xb), int(yb)), color, thickness, cv2.LINE_AA)
+            if (
+                ca >= conf_thresh
+                and cb >= conf_thresh
+                and not (np.isnan(xa) or np.isnan(xb))
+            ):
+                cv2.line(
+                    canvas,
+                    (int(xa), int(ya)),
+                    (int(xb), int(yb)),
+                    color,
+                    thickness,
+                    cv2.LINE_AA,
+                )
         for j in range(kp.shape[0]):
             x, y, c = kp[j]
             if c >= conf_thresh and not np.isnan(x):
@@ -79,7 +90,9 @@ def render_skeleton_video(
     out_path = Path(out_path)
     W, H = int(pose_seq.width), int(pose_seq.height)
     fps = float(fps or pose_seq.fps)
-    writer = cv2.VideoWriter(str(out_path), cv2.VideoWriter_fourcc(*"mp4v"), fps, (W, H))
+    writer = cv2.VideoWriter(
+        str(out_path), cv2.VideoWriter_fourcc(*"mp4v"), fps, (W, H)
+    )
 
     use_backdrop = source_video is not None and not blank_canvas
     cap = cv2.VideoCapture(str(source_video)) if use_backdrop else None
@@ -94,10 +107,22 @@ def render_skeleton_video(
                 if not ok:
                     frame = None
                     break
-            canvas = frame.copy() if frame is not None else np.full((H, W, 3), background, np.uint8)
+            canvas = (
+                frame.copy()
+                if frame is not None
+                else np.full((H, W, 3), background, np.uint8)
+            )
         else:
             canvas = np.full((H, W, 3), background, np.uint8)
-        _draw_persons(canvas, pose_seq.keypoints[k], pose_seq.skeleton, person_colors, conf_thresh, thickness, radius)
+        _draw_persons(
+            canvas,
+            pose_seq.keypoints[k],
+            pose_seq.skeleton,
+            person_colors,
+            conf_thresh,
+            thickness,
+            radius,
+        )
         writer.write(canvas)
 
     writer.release()
@@ -149,10 +174,12 @@ def log_to_rerun(
         rr.save(str(save))
 
     ann = rr.AnnotationContext(
-        [rr.ClassDescription(
-            info=rr.AnnotationInfo(id=0, label="person"),
-            keypoint_connections=pose_seq.skeleton,
-        )]
+        [
+            rr.ClassDescription(
+                info=rr.AnnotationInfo(id=0, label="person"),
+                keypoint_connections=pose_seq.skeleton,
+            )
+        ]
     )
     rr.log(f"{entity_prefix}", ann, static=True)
 
@@ -171,7 +198,10 @@ def log_to_rerun(
                     break
             if frame is not None:
                 small = cv2.resize(frame, None, fx=frame_scale, fy=frame_scale)
-                rr.log(f"{entity_prefix}video/image", rr.Image(cv2.cvtColor(small, cv2.COLOR_BGR2RGB)))
+                rr.log(
+                    f"{entity_prefix}video/image",
+                    rr.Image(cv2.cvtColor(small, cv2.COLOR_BGR2RGB)),
+                )
 
         for p in range(pose_seq.n_persons):
             kp = pose_seq.keypoints[k, p]

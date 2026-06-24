@@ -83,9 +83,15 @@ def estimate_poses_tracked(
         if not ok:
             break
         if (idx - start) % frame_step == 0:
-            r = model.track(frame, persist=True, tracker=tracker, verbose=False, device=device)[0]
+            r = model.track(
+                frame, persist=True, tracker=tracker, verbose=False, device=device
+            )[0]
             d: dict[int, np.ndarray] = {}
-            if r.boxes is not None and r.boxes.id is not None and r.keypoints is not None:
+            if (
+                r.boxes is not None
+                and r.boxes.id is not None
+                and r.keypoints is not None
+            ):
                 ids = r.boxes.id.int().cpu().numpy()
                 kk = r.keypoints.data.cpu().numpy()  # (n,17,3)
                 for tid, kp in zip(ids, kk):
@@ -116,7 +122,9 @@ def estimate_poses_tracked(
     n_recover = 0
 
     for f, d in enumerate(per_frame):
-        dets = [(tid, kp) for tid, kp in d.items() if np.nanmean(kp[:, 2]) >= conf_thresh]
+        dets = [
+            (tid, kp) for tid, kp in d.items() if np.nanmean(kp[:, 2]) >= conf_thresh
+        ]
         det_c = [_centroid(kp) for _, kp in dets]
         used_slot: set[int] = set()
         used_det: set[int] = set()
@@ -136,8 +144,11 @@ def estimate_poses_tracked(
 
         # (2) spatial continuity: nearest unused det to each *fresh* initialized empty slot (gated)
         fresh = [
-            si for si in range(n_persons)
-            if si not in used_slot and slot_centroid[si] is not None and slot_missing[si] < stale_after
+            si
+            for si in range(n_persons)
+            if si not in used_slot
+            and slot_centroid[si] is not None
+            and slot_missing[si] < stale_after
         ]
         cand = sorted(
             (float(np.linalg.norm(slot_centroid[si] - det_c[di])), si, di)
@@ -157,11 +168,22 @@ def estimate_poses_tracked(
 
         # (3) re-acquire / initialize: stale or never-initialized empty slots grab leftover dets
         for si in range(n_persons):
-            if si not in used_slot and slot_centroid[si] is not None and slot_missing[si] >= stale_after:
-                slot_centroid[si] = None  # forget a long-lost target so the slot can re-acquire
-        uninit = sorted(si for si in range(n_persons) if si not in used_slot and slot_centroid[si] is None)
+            if (
+                si not in used_slot
+                and slot_centroid[si] is not None
+                and slot_missing[si] >= stale_after
+            ):
+                slot_centroid[si] = (
+                    None  # forget a long-lost target so the slot can re-acquire
+                )
+        uninit = sorted(
+            si
+            for si in range(n_persons)
+            if si not in used_slot and slot_centroid[si] is None
+        )
         leftover = sorted(
-            (di for di in range(len(dets)) if di not in used_det), key=lambda di: det_c[di][0]
+            (di for di in range(len(dets)) if di not in used_det),
+            key=lambda di: det_c[di][0],
         )
         for si, di in zip(uninit, leftover):
             out[f, si] = dets[di][1]
@@ -176,8 +198,11 @@ def estimate_poses_tracked(
 
     if progress:
         present = ~np.all(np.isnan(out[..., 0]), axis=2)
-        print(f"  [track] both-present {float((present.sum(1) == n_persons).mean()):.0%}"
-              f"  (spatial recoveries: {n_recover})", flush=True)
+        print(
+            f"  [track] both-present {float((present.sum(1) == n_persons).mean()):.0%}"
+            f"  (spatial recoveries: {n_recover})",
+            flush=True,
+        )
     return PoseSequence(
         keypoints=out,
         frame_indices=np.asarray(indices, dtype=int),

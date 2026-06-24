@@ -70,20 +70,30 @@ def lift_one(npz_path, poser, stride):
             wl = res.pose_world_landmarks
             if wl is None:
                 continue
-            out[f, p] = np.array([[lm.x, lm.y, lm.z, lm.visibility] for lm in wl.landmark], dtype=np.float32)
+            out[f, p] = np.array(
+                [[lm.x, lm.y, lm.z, lm.visibility] for lm in wl.landmark],
+                dtype=np.float32,
+            )
     cap.release()
     out_path = str(npz_path).replace(".npz", "_3d.npz")
     np.savez(out_path, world=out, frame_indices=fi_sub, fps=float(d["fps"]))
     present = ~np.all(np.isnan(out[..., 0]), axis=2)
-    print(f"lifted {Path(npz_path).stem}: {F} frames, both-present {float((present.sum(1)==2).mean()):.0%}", flush=True)
+    print(
+        f"lifted {Path(npz_path).stem}: {F} frames, both-present {float((present.sum(1) == 2).mean()):.0%}",
+        flush=True,
+    )
 
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--stride", type=int, default=2)
     args = ap.parse_args()
-    poser = mp_pose.Pose(static_image_mode=True, model_complexity=1, min_detection_confidence=0.3)
-    files = [f for f in sorted(glob.glob(str(BRIDGE / "*.npz"))) if not f.endswith("_3d.npz")]
+    poser = mp_pose.Pose(
+        static_image_mode=True, model_complexity=1, min_detection_confidence=0.3
+    )
+    files = [
+        f for f in sorted(glob.glob(str(BRIDGE / "*.npz"))) if not f.endswith("_3d.npz")
+    ]
     print(f"lifting {len(files)} clips (stride {args.stride})", flush=True)
     for npz in files:
         lift_one(npz, poser, args.stride)
