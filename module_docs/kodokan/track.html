@@ -1,0 +1,163 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kodokan.track &mdash; kodokan 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="kodokan.viz" href="viz.html" />
+    <link rel="prev" title="kodokan.store" href="store.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            kodokan
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../kodokan.html">kodokan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acquire.html">kodokan.acquire</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compare.html">kodokan.compare</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">kodokan.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="descriptors.html">kodokan.descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pose.html">kodokan.pose</a></li>
+<li class="toctree-l1"><a class="reference internal" href="score.html">kodokan.score</a></li>
+<li class="toctree-l1"><a class="reference internal" href="segment.html">kodokan.segment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store.html">kodokan.store</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">kodokan.track</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.track.estimate_poses_tracked"><code class="docutils literal notranslate"><span class="pre">estimate_poses_tracked()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="viz.html">kodokan.viz</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">kodokan</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">kodokan.track</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/module_docs/kodokan/track.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-kodokan.track">
+<span id="kodokan-track"></span><h1>kodokan.track<a class="headerlink" href="#module-kodokan.track" title="Link to this heading"></a></h1>
+<p>Stable tori/uke identity tracking (BoT-SORT / ByteTrack).</p>
+<p>The plain <a class="reference internal" href="pose.html#kodokan.pose.estimate_poses" title="kodokan.pose.estimate_poses"><code class="xref py py-func docutils literal notranslate"><span class="pre">estimate_poses()</span></code></a> keeps the top-2 detections and
+orders them left→right <em>per frame</em>, so the two slots swap whenever tori and uke
+cross. This module instead runs a multi-object tracker (Ultralytics’ built-in
+BoT-SORT by default — appearance ReID + camera-motion compensation) so each
+person keeps a persistent <code class="docutils literal notranslate"><span class="pre">track_id</span></code> across frames; we then bind the two most
+persistent tracks to fixed slots for the whole clip (ordered left→right by their
+clip-average x), giving a stable identity that does not swap mid-throw.</p>
+<p>Limitation: under the heavy mutual occlusion at a throw’s apex a track can
+fragment (a person reappears with a new id). Top-2-by-presence captures the
+dominant fragments; fragment-merging/ReID-stitching is a later refinement (see
+<code class="docutils literal notranslate"><span class="pre">misc/docs/research-architecture.md</span></code> §4).</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.track.estimate_poses_tracked">
+<span class="sig-prename descclassname"><span class="pre">kodokan.track.</span></span><span class="sig-name descname"><span class="pre">estimate_poses_tracked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">video_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_persons</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'botsort.yaml'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conf_thresh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_gap_frac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stale_after</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'mps'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'yolo11n-pose.pt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="pose.html#kodokan.pose.PoseSequence" title="kodokan.pose.PoseSequence"><span class="pre">PoseSequence</span></a></span></span><a class="reference internal" href="../../_modules/kodokan/track.html#estimate_poses_tracked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.track.estimate_poses_tracked" title="Link to this definition"></a></dt>
+<dd><p>Estimate per-frame keypoints with persistent tori/uke identity.</p>
+<p>Returns a <a class="reference internal" href="pose.html#kodokan.pose.PoseSequence" title="kodokan.pose.PoseSequence"><code class="xref py py-class docutils literal notranslate"><span class="pre">PoseSequence</span></code></a> whose person slots are <em>stable</em>
+across the clip (slot 0 = the track that is, on average, further left).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>video_path</strong> – Path to the clip.</p></li>
+<li><p><strong>n_persons</strong> – Number of stable identity slots to keep (2 for tori+uke).</p></li>
+<li><p><strong>tracker</strong> – Ultralytics tracker config (<code class="docutils literal notranslate"><span class="pre">&quot;botsort.yaml&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;bytetrack.yaml&quot;</span></code>).</p></li>
+<li><p><strong>conf_thresh</strong> – Minimum mean per-person confidence to count a detection.</p></li>
+<li><p><strong>frame_step</strong> – Analyze every n-th frame.</p></li>
+<li><p><strong>frame_range</strong> – Optional <code class="docutils literal notranslate"><span class="pre">(start,</span> <span class="pre">stop)</span></code> frame window.</p></li>
+<li><p><strong>device</strong> – Torch device (<code class="docutils literal notranslate"><span class="pre">&quot;mps&quot;</span></code>/<code class="docutils literal notranslate"><span class="pre">&quot;cpu&quot;</span></code>).</p></li>
+<li><p><strong>model_name</strong> – YOLO-pose weights (resolved under the data models dir).</p></li>
+<li><p><strong>source_url</strong> – Provenance URL.</p></li>
+<li><p><strong>progress</strong> – Print progress.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="store.html" class="btn btn-neutral float-left" title="kodokan.store" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="viz.html" class="btn btn-neutral float-right" title="kodokan.viz" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

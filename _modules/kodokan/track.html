@@ -1,0 +1,309 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kodokan.track &mdash; kodokan 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            kodokan
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan.html">kodokan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/acquire.html">kodokan.acquire</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/compare.html">kodokan.compare</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/config.html">kodokan.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/descriptors.html">kodokan.descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/pose.html">kodokan.pose</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/score.html">kodokan.score</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/segment.html">kodokan.segment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/store.html">kodokan.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/track.html">kodokan.track</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/viz.html">kodokan.viz</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">kodokan</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">kodokan.track</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for kodokan.track</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Stable tori/uke identity tracking (BoT-SORT / ByteTrack).</span>
+
+<span class="sd">The plain :func:`~kodokan.pose.estimate_poses` keeps the top-2 detections and</span>
+<span class="sd">orders them left→right *per frame*, so the two slots swap whenever tori and uke</span>
+<span class="sd">cross. This module instead runs a multi-object tracker (Ultralytics&#39; built-in</span>
+<span class="sd">BoT-SORT by default — appearance ReID + camera-motion compensation) so each</span>
+<span class="sd">person keeps a persistent ``track_id`` across frames; we then bind the two most</span>
+<span class="sd">persistent tracks to fixed slots for the whole clip (ordered left→right by their</span>
+<span class="sd">clip-average x), giving a stable identity that does not swap mid-throw.</span>
+
+<span class="sd">Limitation: under the heavy mutual occlusion at a throw&#39;s apex a track can</span>
+<span class="sd">fragment (a person reappears with a new id). Top-2-by-presence captures the</span>
+<span class="sd">dominant fragments; fragment-merging/ReID-stitching is a later refinement (see</span>
+<span class="sd">``misc/docs/research-architecture.md`` §4).</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.pose</span><span class="w"> </span><span class="kn">import</span> <span class="n">PoseSequence</span><span class="p">,</span> <span class="n">_video_meta</span>
+
+<span class="n">PathLike</span> <span class="o">=</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span>
+
+
+<div class="viewcode-block" id="estimate_poses_tracked">
+<a class="viewcode-back" href="../../module_docs/kodokan/track.html#kodokan.estimate_poses_tracked">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">estimate_poses_tracked</span><span class="p">(</span>
+    <span class="n">video_path</span><span class="p">:</span> <span class="n">PathLike</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">n_persons</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">tracker</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;botsort.yaml&quot;</span><span class="p">,</span>
+    <span class="n">conf_thresh</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span>
+    <span class="n">max_gap_frac</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.15</span><span class="p">,</span>
+    <span class="n">stale_after</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
+    <span class="n">frame_step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="n">frame_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;mps&quot;</span><span class="p">,</span>
+    <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;yolo11n-pose.pt&quot;</span><span class="p">,</span>
+    <span class="n">source_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PoseSequence</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Estimate per-frame keypoints with persistent tori/uke identity.</span>
+
+<span class="sd">    Returns a :class:`~kodokan.pose.PoseSequence` whose person slots are *stable*</span>
+<span class="sd">    across the clip (slot 0 = the track that is, on average, further left).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        video_path: Path to the clip.</span>
+<span class="sd">        n_persons: Number of stable identity slots to keep (2 for tori+uke).</span>
+<span class="sd">        tracker: Ultralytics tracker config (``&quot;botsort.yaml&quot;`` or ``&quot;bytetrack.yaml&quot;``).</span>
+<span class="sd">        conf_thresh: Minimum mean per-person confidence to count a detection.</span>
+<span class="sd">        frame_step: Analyze every n-th frame.</span>
+<span class="sd">        frame_range: Optional ``(start, stop)`` frame window.</span>
+<span class="sd">        device: Torch device (``&quot;mps&quot;``/``&quot;cpu&quot;``).</span>
+<span class="sd">        model_name: YOLO-pose weights (resolved under the data models dir).</span>
+<span class="sd">        source_url: Provenance URL.</span>
+<span class="sd">        progress: Print progress.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">ultralytics</span><span class="w"> </span><span class="kn">import</span> <span class="n">YOLO</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">models_dir</span>
+
+    <span class="n">weight</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">weight</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">()</span> <span class="ow">and</span> <span class="n">weight</span><span class="o">.</span><span class="n">parent</span> <span class="o">==</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">):</span>
+        <span class="n">weight</span> <span class="o">=</span> <span class="n">models_dir</span><span class="p">()</span> <span class="o">/</span> <span class="n">model_name</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">YOLO</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">weight</span><span class="p">))</span>
+
+    <span class="n">fps</span><span class="p">,</span> <span class="n">n_total</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">_video_meta</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">video_path</span><span class="p">))</span>
+    <span class="n">start</span><span class="p">,</span> <span class="n">stop</span> <span class="o">=</span> <span class="n">frame_range</span> <span class="ow">or</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_total</span> <span class="ow">or</span> <span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">)</span>
+
+    <span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">video_path</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">start</span><span class="p">:</span>
+        <span class="n">cap</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">CAP_PROP_POS_FRAMES</span><span class="p">,</span> <span class="n">start</span><span class="p">)</span>
+
+    <span class="c1"># pass 1: per-frame {track_id: (17,3)}</span>
+    <span class="n">per_frame</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">indices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="n">start</span>
+    <span class="k">while</span> <span class="n">idx</span> <span class="o">&lt;</span> <span class="n">stop</span><span class="p">:</span>
+        <span class="n">ok</span><span class="p">,</span> <span class="n">frame</span> <span class="o">=</span> <span class="n">cap</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ok</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">idx</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">%</span> <span class="n">frame_step</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">track</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">persist</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">tracker</span><span class="o">=</span><span class="n">tracker</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">d</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">boxes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">r</span><span class="o">.</span><span class="n">boxes</span><span class="o">.</span><span class="n">id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">r</span><span class="o">.</span><span class="n">keypoints</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">ids</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">boxes</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">int</span><span class="p">()</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>
+                <span class="n">kk</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">keypoints</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span>  <span class="c1"># (n,17,3)</span>
+                <span class="k">for</span> <span class="n">tid</span><span class="p">,</span> <span class="n">kp</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ids</span><span class="p">,</span> <span class="n">kk</span><span class="p">):</span>
+                    <span class="n">d</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">tid</span><span class="p">)]</span> <span class="o">=</span> <span class="n">kp</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+            <span class="n">per_frame</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+            <span class="n">indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">progress</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span> <span class="o">%</span> <span class="mi">50</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  [track] </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span><span class="si">}</span><span class="s2"> frames (frame </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
+
+    <span class="c1"># Per-frame assignment into n_persons stable slots, fusing two cues:</span>
+    <span class="c1">#   (1) BoT-SORT track-id continuity (robust through crossings), then</span>
+    <span class="c1">#   (2) spatial nearest-centroid continuity (survives track fragmentation),</span>
+    <span class="c1">#   (3) lazy left-&gt;right initialization of still-empty slots.</span>
+    <span class="c1"># This avoids the &quot;two temporally-disjoint dominant tracks&quot; failure that a</span>
+    <span class="c1"># global top-2-by-presence binding hits on long, fragment-heavy clips.</span>
+    <span class="n">F</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">per_frame</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">F</span><span class="p">,</span> <span class="n">n_persons</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+    <span class="n">max_gap_px</span> <span class="o">=</span> <span class="n">max_gap_frac</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">width</span> <span class="ow">or</span> <span class="mi">1920</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_centroid</span><span class="p">(</span><span class="n">kp</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">kp</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+    <span class="n">slot_centroid</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_persons</span>
+    <span class="n">slot_tid</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_persons</span>
+    <span class="n">slot_missing</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">]</span> <span class="o">*</span> <span class="n">n_persons</span>
+    <span class="n">n_recover</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">per_frame</span><span class="p">):</span>
+        <span class="n">dets</span> <span class="o">=</span> <span class="p">[(</span><span class="n">tid</span><span class="p">,</span> <span class="n">kp</span><span class="p">)</span> <span class="k">for</span> <span class="n">tid</span><span class="p">,</span> <span class="n">kp</span> <span class="ow">in</span> <span class="n">d</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">kp</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="n">conf_thresh</span><span class="p">]</span>
+        <span class="n">det_c</span> <span class="o">=</span> <span class="p">[</span><span class="n">_centroid</span><span class="p">(</span><span class="n">kp</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">kp</span> <span class="ow">in</span> <span class="n">dets</span><span class="p">]</span>
+        <span class="n">used_slot</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="n">used_det</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+        <span class="c1"># (1) identity continuity: a bound track id reappears</span>
+        <span class="k">for</span> <span class="n">si</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_persons</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">slot_tid</span><span class="p">[</span><span class="n">si</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">for</span> <span class="n">di</span><span class="p">,</span> <span class="p">(</span><span class="n">tid</span><span class="p">,</span> <span class="n">_</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">dets</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">di</span> <span class="ow">in</span> <span class="n">used_det</span> <span class="ow">or</span> <span class="n">tid</span> <span class="o">!=</span> <span class="n">slot_tid</span><span class="p">[</span><span class="n">si</span><span class="p">]:</span>
+                    <span class="k">continue</span>
+                <span class="n">out</span><span class="p">[</span><span class="n">f</span><span class="p">,</span> <span class="n">si</span><span class="p">]</span> <span class="o">=</span> <span class="n">dets</span><span class="p">[</span><span class="n">di</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">slot_centroid</span><span class="p">[</span><span class="n">si</span><span class="p">]</span> <span class="o">=</span> <span class="n">det_c</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+                <span class="n">used_slot</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">si</span><span class="p">)</span>
+                <span class="n">used_det</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">di</span><span class="p">)</span>
+                <span class="k">break</span>
+
+        <span class="c1"># (2) spatial continuity: nearest unused det to each *fresh* initialized empty slot (gated)</span>
+        <span class="n">fresh</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">si</span> <span class="k">for</span> <span class="n">si</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_persons</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">si</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">used_slot</span> <span class="ow">and</span> <span class="n">slot_centroid</span><span class="p">[</span><span class="n">si</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">slot_missing</span><span class="p">[</span><span class="n">si</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">stale_after</span>
+        <span class="p">]</span>
+        <span class="n">cand</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">slot_centroid</span><span class="p">[</span><span class="n">si</span><span class="p">]</span> <span class="o">-</span> <span class="n">det_c</span><span class="p">[</span><span class="n">di</span><span class="p">])),</span> <span class="n">si</span><span class="p">,</span> <span class="n">di</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">si</span> <span class="ow">in</span> <span class="n">fresh</span>
+            <span class="k">for</span> <span class="n">di</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dets</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">di</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">used_det</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">dist_val</span><span class="p">,</span> <span class="n">si</span><span class="p">,</span> <span class="n">di</span> <span class="ow">in</span> <span class="n">cand</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">si</span> <span class="ow">in</span> <span class="n">used_slot</span> <span class="ow">or</span> <span class="n">di</span> <span class="ow">in</span> <span class="n">used_det</span> <span class="ow">or</span> <span class="n">dist_val</span> <span class="o">&gt;</span> <span class="n">max_gap_px</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">out</span><span class="p">[</span><span class="n">f</span><span class="p">,</span> <span class="n">si</span><span class="p">]</span> <span class="o">=</span> <span class="n">dets</span><span class="p">[</span><span class="n">di</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">slot_centroid</span><span class="p">[</span><span class="n">si</span><span class="p">]</span> <span class="o">=</span> <span class="n">det_c</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+            <span class="n">slot_tid</span><span class="p">[</span><span class="n">si</span><span class="p">]</span> <span class="o">=</span> <span class="n">dets</span><span class="p">[</span><span class="n">di</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>  <span class="c1"># re-bind: id may have changed after a fragment</span>
+            <span class="n">used_slot</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">si</span><span class="p">)</span>
+            <span class="n">used_det</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">di</span><span class="p">)</span>
+            <span class="n">n_recover</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># (3) re-acquire / initialize: stale or never-initialized empty slots grab leftover dets</span>
+        <span class="k">for</span> <span class="n">si</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_persons</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">si</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">used_slot</span> <span class="ow">and</span> <span class="n">slot_centroid</span><span class="p">[</span><span class="n">si</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">slot_missing</span><span class="p">[</span><span class="n">si</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">stale_after</span><span class="p">:</span>
+                <span class="n">slot_centroid</span><span class="p">[</span><span class="n">si</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># forget a long-lost target so the slot can re-acquire</span>
+        <span class="n">uninit</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">si</span> <span class="k">for</span> <span class="n">si</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_persons</span><span class="p">)</span> <span class="k">if</span> <span class="n">si</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">used_slot</span> <span class="ow">and</span> <span class="n">slot_centroid</span><span class="p">[</span><span class="n">si</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">leftover</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span>
+            <span class="p">(</span><span class="n">di</span> <span class="k">for</span> <span class="n">di</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dets</span><span class="p">))</span> <span class="k">if</span> <span class="n">di</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">used_det</span><span class="p">),</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">di</span><span class="p">:</span> <span class="n">det_c</span><span class="p">[</span><span class="n">di</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">si</span><span class="p">,</span> <span class="n">di</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">uninit</span><span class="p">,</span> <span class="n">leftover</span><span class="p">):</span>
+            <span class="n">out</span><span class="p">[</span><span class="n">f</span><span class="p">,</span> <span class="n">si</span><span class="p">]</span> <span class="o">=</span> <span class="n">dets</span><span class="p">[</span><span class="n">di</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+            <span class="n">slot_centroid</span><span class="p">[</span><span class="n">si</span><span class="p">]</span> <span class="o">=</span> <span class="n">det_c</span><span class="p">[</span><span class="n">di</span><span class="p">]</span>
+            <span class="n">slot_tid</span><span class="p">[</span><span class="n">si</span><span class="p">]</span> <span class="o">=</span> <span class="n">dets</span><span class="p">[</span><span class="n">di</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">used_slot</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">si</span><span class="p">)</span>
+            <span class="n">used_det</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">di</span><span class="p">)</span>
+
+        <span class="c1"># (4) update miss counters</span>
+        <span class="k">for</span> <span class="n">si</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_persons</span><span class="p">):</span>
+            <span class="n">slot_missing</span><span class="p">[</span><span class="n">si</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span> <span class="k">if</span> <span class="n">si</span> <span class="ow">in</span> <span class="n">used_slot</span> <span class="k">else</span> <span class="n">slot_missing</span><span class="p">[</span><span class="n">si</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="n">progress</span><span class="p">:</span>
+        <span class="n">present</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  [track] both-present </span><span class="si">{</span><span class="nb">float</span><span class="p">((</span><span class="n">present</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">n_persons</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2">&quot;</span>
+              <span class="sa">f</span><span class="s2">&quot;  (spatial recoveries: </span><span class="si">{</span><span class="n">n_recover</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">PoseSequence</span><span class="p">(</span>
+        <span class="n">keypoints</span><span class="o">=</span><span class="n">out</span><span class="p">,</span>
+        <span class="n">frame_indices</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">indices</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">),</span>
+        <span class="n">fps</span><span class="o">=</span><span class="n">fps</span><span class="p">,</span>
+        <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
+        <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+        <span class="n">backend</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;ultralytics+track:</span><span class="si">{</span><span class="n">tracker</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">video_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">video_path</span><span class="p">),</span>
+        <span class="n">source_url</span><span class="o">=</span><span class="n">source_url</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,4 @@
+kodokan
+=======
+.. automodule:: kodokan
+   :members:

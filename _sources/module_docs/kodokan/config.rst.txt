@@ -1,0 +1,4 @@
+kodokan.config
+==============
+.. automodule:: kodokan.config
+   :members:

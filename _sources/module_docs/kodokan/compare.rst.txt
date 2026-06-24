@@ -1,0 +1,4 @@
+kodokan.compare
+===============
+.. automodule:: kodokan.compare
+   :members:

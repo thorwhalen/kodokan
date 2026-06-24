@@ -1,0 +1,15 @@
+.. toctree::
+   :maxdepth: 2
+   :caption: Contents:
+
+   module_docs/kodokan
+   module_docs/kodokan/acquire
+   module_docs/kodokan/compare
+   module_docs/kodokan/config
+   module_docs/kodokan/descriptors
+   module_docs/kodokan/pose
+   module_docs/kodokan/score
+   module_docs/kodokan/segment
+   module_docs/kodokan/store
+   module_docs/kodokan/track
+   module_docs/kodokan/viz

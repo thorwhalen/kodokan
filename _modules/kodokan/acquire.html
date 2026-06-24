@@ -1,0 +1,216 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kodokan.acquire &mdash; kodokan 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            kodokan
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan.html">kodokan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/acquire.html">kodokan.acquire</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/compare.html">kodokan.compare</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/config.html">kodokan.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/descriptors.html">kodokan.descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/pose.html">kodokan.pose</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/score.html">kodokan.score</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/segment.html">kodokan.segment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/store.html">kodokan.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/track.html">kodokan.track</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/viz.html">kodokan.viz</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">kodokan</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">kodokan.acquire</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for kodokan.acquire</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Acquire Kodokan technique clips from YouTube (thin wrapper over ``yb.download``).</span>
+
+<span class="sd">YouTube interaction lives in the ``yb`` package; this module just points it at the</span>
+<span class="sd">kodokan data dir and the *Kodokan 100 Techniques* playlist, and keeps the source</span>
+<span class="sd">URL with every clip (a project requirement). The PV (entry #1, &quot;all techniques</span>
+<span class="sd">once&quot;) is skipped from the main line by default but can be fetched as a reference.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">clips_dir</span>
+
+<span class="c1">#: The official &quot;KODOKAN × IJF ACADEMY 100 Techniques&quot; playlist.</span>
+<span class="n">KODOKAN_PLAYLIST_URL</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;https://www.youtube.com/playlist?list=PLtz539PTepc16H2iu5F3Q3D7_He1EYlIQ&quot;</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="list_techniques">
+<a class="viewcode-back" href="../../module_docs/kodokan/acquire.html#kodokan.acquire.list_techniques">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">list_techniques</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">include_pv</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;List the playlist&#39;s videos (id, title, webpage_url, duration) without downloading.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        include_pv: Include entry #1 (the all-techniques PV) if True.</span>
+<span class="sd">        **kwargs: Forwarded to ``yb.download.youtube_playlist_info``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">yb.download</span><span class="w"> </span><span class="kn">import</span> <span class="n">youtube_playlist_info</span>
+
+    <span class="n">items</span> <span class="o">=</span> <span class="s2">&quot;1:&quot;</span> <span class="k">if</span> <span class="n">include_pv</span> <span class="k">else</span> <span class="s2">&quot;2:&quot;</span>
+    <span class="k">return</span> <span class="n">youtube_playlist_info</span><span class="p">(</span><span class="n">KODOKAN_PLAYLIST_URL</span><span class="p">,</span> <span class="n">playlist_items</span><span class="o">=</span><span class="n">items</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span><span class="s2">&quot;entries&quot;</span><span class="p">]</span></div>
+
+
+
+<div class="viewcode-block" id="local_clips">
+<a class="viewcode-back" href="../../module_docs/kodokan/acquire.html#kodokan.acquire.local_clips">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">local_clips</span><span class="p">(</span><span class="n">directory</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;List already-downloaded clips on disk (decouples processing from download).</span>
+
+<span class="sd">    Reads each ``*.info.json`` sidecar and pairs it with its ``.mp4``. Returns</span>
+<span class="sd">    dicts with ``id``, ``title``, ``webpage_url``, ``path``. Sidecars without a</span>
+<span class="sd">    matching video (e.g. the playlist-level info.json) are skipped.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span> <span class="ow">or</span> <span class="n">clips_dir</span><span class="p">())</span>
+    <span class="n">out</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">ij</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">directory</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.info.json&quot;</span><span class="p">)):</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="n">ij</span><span class="o">.</span><span class="n">name</span><span class="p">[:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="s2">&quot;.info.json&quot;</span><span class="p">)]</span>
+        <span class="n">mp4</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s2">.mp4&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">mp4</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="k">continue</span>
+        <span class="n">info</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">ij</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
+        <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;webpage_url&quot;</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;webpage_url&quot;</span><span class="p">),</span>
+                <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">mp4</span><span class="p">,</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+
+<div class="viewcode-block" id="download_techniques">
+<a class="viewcode-back" href="../../module_docs/kodokan/acquire.html#kodokan.acquire.download_techniques">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">download_techniques</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">playlist_items</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">skip_pv</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="n">download_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">write_info_json</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Download technique clips into the kodokan clips dir (PV skipped by default).</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        playlist_items: yt-dlp 1-based selector (overrides ``skip_pv``), e.g.</span>
+<span class="sd">            ``&quot;2&quot;`` (only Seoi-nage), ``&quot;2:11&quot;`` (the first ten throws), ``&quot;2:&quot;`` (all).</span>
+<span class="sd">        skip_pv: When ``playlist_items`` is not given, skip entry #1 (the PV).</span>
+<span class="sd">        download_dir: Destination (default: :func:`kodokan.config.clips_dir`).</span>
+<span class="sd">        write_info_json: Save each clip&#39;s metadata sidecar (keeps the source URL).</span>
+<span class="sd">        **kwargs: Forwarded to ``yb.download.download_youtube_playlist``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        ``list[yb.download.DownloadResult]`` — media path + trimmed info + sidecars.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">yb.download</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_youtube_playlist</span>
+
+    <span class="k">return</span> <span class="n">download_youtube_playlist</span><span class="p">(</span>
+        <span class="n">KODOKAN_PLAYLIST_URL</span><span class="p">,</span>
+        <span class="n">download_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">download_dir</span> <span class="ow">or</span> <span class="n">clips_dir</span><span class="p">()),</span>
+        <span class="n">playlist_items</span><span class="o">=</span><span class="n">playlist_items</span><span class="p">,</span>
+        <span class="n">skip_first</span><span class="o">=</span><span class="n">skip_pv</span> <span class="ow">and</span> <span class="n">playlist_items</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">write_info_json</span><span class="o">=</span><span class="n">write_info_json</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

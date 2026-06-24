@@ -1,0 +1,4 @@
+kodokan.store
+=============
+.. automodule:: kodokan.store
+   :members:

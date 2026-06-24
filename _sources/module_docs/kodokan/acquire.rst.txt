@@ -1,0 +1,4 @@
+kodokan.acquire
+===============
+.. automodule:: kodokan.acquire
+   :members:

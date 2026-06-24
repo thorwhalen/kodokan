@@ -1,0 +1,444 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kodokan &mdash; kodokan 0.0.1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=f281be69"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="kodokan.acquire" href="kodokan/acquire.html" />
+    <link rel="prev" title="Welcome to kodokan’s documentation!" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            kodokan
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">kodokan</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.PoseSequence"><code class="docutils literal notranslate"><span class="pre">PoseSequence</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#kodokan.PoseSequence.keypoints"><code class="docutils literal notranslate"><span class="pre">PoseSequence.keypoints</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kodokan.PoseSequence.frame_indices"><code class="docutils literal notranslate"><span class="pre">PoseSequence.frame_indices</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kodokan.PoseSequence.fps"><code class="docutils literal notranslate"><span class="pre">PoseSequence.fps</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kodokan.PoseSequence.backend"><code class="docutils literal notranslate"><span class="pre">PoseSequence.backend</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kodokan.PoseSequence.video_path"><code class="docutils literal notranslate"><span class="pre">PoseSequence.video_path</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kodokan.PoseSequence.source_url"><code class="docutils literal notranslate"><span class="pre">PoseSequence.source_url</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kodokan.PoseSequence.save_npz"><code class="docutils literal notranslate"><span class="pre">PoseSequence.save_npz()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#kodokan.PoseSequence.times"><code class="docutils literal notranslate"><span class="pre">PoseSequence.times()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.Segment"><code class="docutils literal notranslate"><span class="pre">Segment</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.angle_features"><code class="docutils literal notranslate"><span class="pre">angle_features()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.build_reference"><code class="docutils literal notranslate"><span class="pre">build_reference()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.compare"><code class="docutils literal notranslate"><span class="pre">compare()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.demo_features"><code class="docutils literal notranslate"><span class="pre">demo_features()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.distance_matrix"><code class="docutils literal notranslate"><span class="pre">distance_matrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.estimate_poses"><code class="docutils literal notranslate"><span class="pre">estimate_poses()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.estimate_poses_tracked"><code class="docutils literal notranslate"><span class="pre">estimate_poses_tracked()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.feedback"><code class="docutils literal notranslate"><span class="pre">feedback()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.load_all_tidy"><code class="docutils literal notranslate"><span class="pre">load_all_tidy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.log_to_rerun"><code class="docutils literal notranslate"><span class="pre">log_to_rerun()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.pose_store"><code class="docutils literal notranslate"><span class="pre">pose_store()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.render_skeleton_video"><code class="docutils literal notranslate"><span class="pre">render_skeleton_video()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.score"><code class="docutils literal notranslate"><span class="pre">score()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.segment_demonstrations"><code class="docutils literal notranslate"><span class="pre">segment_demonstrations()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.segments_store"><code class="docutils literal notranslate"><span class="pre">segments_store()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="kodokan/acquire.html">kodokan.acquire</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kodokan/compare.html">kodokan.compare</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kodokan/config.html">kodokan.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kodokan/descriptors.html">kodokan.descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kodokan/pose.html">kodokan.pose</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kodokan/score.html">kodokan.score</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kodokan/segment.html">kodokan.segment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kodokan/store.html">kodokan.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kodokan/track.html">kodokan.track</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kodokan/viz.html">kodokan.viz</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">kodokan</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">kodokan</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/module_docs/kodokan.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-kodokan">
+<span id="kodokan"></span><h1>kodokan<a class="headerlink" href="#module-kodokan" title="Link to this heading"></a></h1>
+<p>kodokan — study Kodokan Judo throws from video via body-pose analysis.</p>
+<p>A pipeline over the official <em>Kodokan 100 Techniques</em> YouTube playlist: acquire
+clips + metadata, estimate per-frame two-person skeletons, segment each clip into
+its repeated demonstrations, visualize skeletons (overlay-on-video and on a blank
+canvas), and — later — recognize, compare, and score throws.</p>
+<p>Quick start:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.acquire</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_techniques</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.pose</span><span class="w"> </span><span class="kn">import</span> <span class="n">estimate_poses</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.viz</span><span class="w"> </span><span class="kn">import</span> <span class="n">render_skeleton_video</span>
+
+<span class="n">res</span> <span class="o">=</span> <span class="n">download_techniques</span><span class="p">(</span><span class="n">playlist_items</span><span class="o">=</span><span class="s2">&quot;2&quot;</span><span class="p">)</span>          <span class="c1"># Seoi-nage</span>
+<span class="n">seq</span> <span class="o">=</span> <span class="n">estimate_poses</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">source_url</span><span class="o">=</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;webpage_url&quot;</span><span class="p">])</span>
+<span class="n">render_skeleton_video</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">out_path</span><span class="o">=</span><span class="s2">&quot;overlay.mp4&quot;</span><span class="p">,</span> <span class="n">source_video</span><span class="o">=</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+<span class="n">render_skeleton_video</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">out_path</span><span class="o">=</span><span class="s2">&quot;skeleton.mp4&quot;</span><span class="p">,</span> <span class="n">blank_canvas</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See <code class="docutils literal notranslate"><span class="pre">misc/docs/research-architecture.md</span></code> for the tool/architecture rationale.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="kodokan.PoseSequence">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kodokan.</span></span><span class="sig-name descname"><span class="pre">PoseSequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keypoints</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">video_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keypoint_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">('nose',</span> <span class="pre">'left_eye',</span> <span class="pre">'right_eye',</span> <span class="pre">'left_ear',</span> <span class="pre">'right_ear',</span> <span class="pre">'left_shoulder',</span> <span class="pre">'right_shoulder',</span> <span class="pre">'left_elbow',</span> <span class="pre">'right_elbow',</span> <span class="pre">'left_wrist',</span> <span class="pre">'right_wrist',</span> <span class="pre">'left_hip',</span> <span class="pre">'right_hip',</span> <span class="pre">'left_knee',</span> <span class="pre">'right_knee',</span> <span class="pre">'left_ankle',</span> <span class="pre">'right_ankle')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skeleton</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">((5,</span> <span class="pre">7),</span> <span class="pre">(7,</span> <span class="pre">9),</span> <span class="pre">(6,</span> <span class="pre">8),</span> <span class="pre">(8,</span> <span class="pre">10),</span> <span class="pre">(5,</span> <span class="pre">6),</span> <span class="pre">(5,</span> <span class="pre">11),</span> <span class="pre">(6,</span> <span class="pre">12),</span> <span class="pre">(11,</span> <span class="pre">12),</span> <span class="pre">(11,</span> <span class="pre">13),</span> <span class="pre">(13,</span> <span class="pre">15),</span> <span class="pre">(12,</span> <span class="pre">14),</span> <span class="pre">(14,</span> <span class="pre">16),</span> <span class="pre">(0,</span> <span class="pre">1),</span> <span class="pre">(0,</span> <span class="pre">2),</span> <span class="pre">(1,</span> <span class="pre">3),</span> <span class="pre">(2,</span> <span class="pre">4),</span> <span class="pre">(0,</span> <span class="pre">5),</span> <span class="pre">(0,</span> <span class="pre">6))</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/pose.html#PoseSequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.PoseSequence" title="Link to this definition"></a></dt>
+<dd><p>A per-frame, per-person sequence of COCO-17 keypoints for one clip.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kodokan.PoseSequence.keypoints">
+<span class="sig-name descname"><span class="pre">keypoints</span></span><a class="headerlink" href="#kodokan.PoseSequence.keypoints" title="Link to this definition"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">(F,</span> <span class="pre">P,</span> <span class="pre">17,</span> <span class="pre">3)</span></code> float array of (x_px, y_px, confidence);
+<code class="docutils literal notranslate"><span class="pre">NaN</span></code> for empty person slots.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kodokan.PoseSequence.frame_indices">
+<span class="sig-name descname"><span class="pre">frame_indices</span></span><a class="headerlink" href="#kodokan.PoseSequence.frame_indices" title="Link to this definition"></a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">(F,)</span></code> int array of source frame indices analyzed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>numpy.ndarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kodokan.PoseSequence.fps">
+<span class="sig-name descname"><span class="pre">fps</span></span><a class="headerlink" href="#kodokan.PoseSequence.fps" title="Link to this definition"></a></dt>
+<dd><p>Source frames-per-second.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">width,</span> <span class="pre">height</span></span></dt>
+<dd><p>Source frame dimensions in pixels.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kodokan.PoseSequence.backend">
+<span class="sig-name descname"><span class="pre">backend</span></span><a class="headerlink" href="#kodokan.PoseSequence.backend" title="Link to this definition"></a></dt>
+<dd><p>The estimator backend used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kodokan.PoseSequence.video_path">
+<span class="sig-name descname"><span class="pre">video_path</span></span><a class="headerlink" href="#kodokan.PoseSequence.video_path" title="Link to this definition"></a></dt>
+<dd><p>Source clip path (provenance).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kodokan.PoseSequence.source_url">
+<span class="sig-name descname"><span class="pre">source_url</span></span><a class="headerlink" href="#kodokan.PoseSequence.source_url" title="Link to this definition"></a></dt>
+<dd><p>Canonical YouTube URL, if known (provenance; required by project).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str | None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kodokan.PoseSequence.save_npz">
+<span class="sig-name descname"><span class="pre">save_npz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="reference internal" href="../_modules/kodokan/pose.html#PoseSequence.save_npz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.PoseSequence.save_npz" title="Link to this definition"></a></dt>
+<dd><p>Persist as a compressed <code class="docutils literal notranslate"><span class="pre">.npz</span></code> (the dense numeric cache).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kodokan.PoseSequence.times">
+<span class="sig-name descname"><span class="pre">times</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/kodokan/pose.html#PoseSequence.times"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.PoseSequence.times" title="Link to this definition"></a></dt>
+<dd><p>Timestamp (seconds) of each analyzed frame.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="kodokan.Segment">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kodokan.</span></span><span class="sig-name descname"><span class="pre">Segment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_frame</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_frame</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peak_activity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">two_person_frac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/segment.html#Segment"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.Segment" title="Link to this definition"></a></dt>
+<dd><p>One detected demonstration interval.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.angle_features">
+<span class="sig-prename descclassname"><span class="pre">kodokan.</span></span><span class="sig-name descname"><span class="pre">angle_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose_seq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="kodokan/pose.html#kodokan.pose.PoseSequence" title="kodokan.pose.PoseSequence"><span class="pre">PoseSequence</span></a></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">person</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/kodokan/compare.html#angle_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.angle_features" title="Link to this definition"></a></dt>
+<dd><p>Per-frame joint-angle features <code class="docutils literal notranslate"><span class="pre">(F,</span> <span class="pre">n_angles)</span></code> for one person.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.build_reference">
+<span class="sig-prename descclassname"><span class="pre">kodokan.</span></span><span class="sig-name descname"><span class="pre">build_reference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_list</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/kodokan/score.html#build_reference"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.build_reference" title="Link to this definition"></a></dt>
+<dd><p>Pick the medoid demo as reference and record the baseline distance spread.</p>
+<p>Returns <code class="docutils literal notranslate"><span class="pre">{medoid,</span> <span class="pre">reference,</span> <span class="pre">baseline,</span> <span class="pre">distance_matrix}</span></code> where <code class="docutils literal notranslate"><span class="pre">baseline</span></code> is
+the array of normalized-DTW distances from every other demo to the medoid.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.compare">
+<span class="sig-prename descclassname"><span class="pre">kodokan.</span></span><span class="sig-name descname"><span class="pre">compare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features_a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features_b</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/kodokan/compare.html#compare"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.compare" title="Link to this definition"></a></dt>
+<dd><p>DTW-align two angle-feature sequences.</p>
+<p>Returns a dict with <code class="docutils literal notranslate"><span class="pre">distance</span></code> (total DTW cost), <code class="docutils literal notranslate"><span class="pre">normalized</span></code> (cost per
+aligned step — comparable across different-length demos), the warping <code class="docutils literal notranslate"><span class="pre">path</span></code>,
+and the cleaned input arrays <code class="docutils literal notranslate"><span class="pre">a</span></code>/<code class="docutils literal notranslate"><span class="pre">b</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.demo_features">
+<span class="sig-prename descclassname"><span class="pre">kodokan.</span></span><span class="sig-name descname"><span class="pre">demo_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose_seq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="kodokan/pose.html#kodokan.pose.PoseSequence" title="kodokan.pose.PoseSequence"><span class="pre">PoseSequence</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">person</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/kodokan/score.html#demo_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.demo_features" title="Link to this definition"></a></dt>
+<dd><p>Cleaned joint-angle features for one demo window (primary person by default).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.distance_matrix">
+<span class="sig-prename descclassname"><span class="pre">kodokan.</span></span><span class="sig-name descname"><span class="pre">distance_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_seqs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../_modules/kodokan/compare.html#distance_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.distance_matrix" title="Link to this definition"></a></dt>
+<dd><p>Pairwise normalized-DTW distance matrix over a list of feature sequences.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.estimate_poses">
+<span class="sig-prename descclassname"><span class="pre">kodokan.</span></span><span class="sig-name descname"><span class="pre">estimate_poses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">video_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'rtmlib'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_persons</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conf_thresh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">backend_kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="kodokan/pose.html#kodokan.pose.PoseSequence" title="kodokan.pose.PoseSequence"><span class="pre">PoseSequence</span></a></span></span><a class="reference internal" href="../_modules/kodokan/pose.html#estimate_poses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.estimate_poses" title="Link to this definition"></a></dt>
+<dd><p>Estimate per-frame, per-person COCO-17 keypoints for a video clip.</p>
+<p>Simplest use: <code class="docutils literal notranslate"><span class="pre">estimate_poses(&quot;clip.mp4&quot;)</span></code> → a <a class="reference internal" href="#kodokan.PoseSequence" title="kodokan.PoseSequence"><code class="xref py py-class docutils literal notranslate"><span class="pre">PoseSequence</span></code></a> with the
+two highest-confidence people per frame (left→right ordered) via RTMPose.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>video_path</strong> – Path to the video clip.</p></li>
+<li><p><strong>backend</strong> – <code class="docutils literal notranslate"><span class="pre">&quot;rtmlib&quot;</span></code> (RTMPose top-down, CPU/ONNX; default) or
+<code class="docutils literal notranslate"><span class="pre">&quot;ultralytics&quot;</span></code> (YOLO11-pose, MPS).</p></li>
+<li><p><strong>n_persons</strong> – Number of person slots to keep per frame (2 for tori+uke).</p></li>
+<li><p><strong>conf_thresh</strong> – Minimum mean per-person confidence to keep a detection.</p></li>
+<li><p><strong>frame_step</strong> – Analyze every <code class="docutils literal notranslate"><span class="pre">frame_step</span></code>-th frame (1 = every frame).</p></li>
+<li><p><strong>frame_range</strong> – Optional <code class="docutils literal notranslate"><span class="pre">(start,</span> <span class="pre">stop)</span></code> frame index window.</p></li>
+<li><p><strong>device</strong> – Backend device (<code class="docutils literal notranslate"><span class="pre">&quot;cpu&quot;</span></code>/<code class="docutils literal notranslate"><span class="pre">&quot;mps&quot;</span></code>); backend default if <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p></li>
+<li><p><strong>source_url</strong> – Canonical source URL to record as provenance.</p></li>
+<li><p><strong>progress</strong> – Print a progress line periodically.</p></li>
+<li><p><strong>**backend_kwargs</strong> – Forwarded to the backend (e.g. <code class="docutils literal notranslate"><span class="pre">mode=&quot;performance&quot;</span></code>
+for rtmlib, or <code class="docutils literal notranslate"><span class="pre">model_name=&quot;yolo11m-pose.pt&quot;</span></code> for ultralytics).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A <a class="reference internal" href="#kodokan.PoseSequence" title="kodokan.PoseSequence"><code class="xref py py-class docutils literal notranslate"><span class="pre">PoseSequence</span></code></a> of shape <code class="docutils literal notranslate"><span class="pre">(F,</span> <span class="pre">n_persons,</span> <span class="pre">17,</span> <span class="pre">3)</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.estimate_poses_tracked">
+<span class="sig-prename descclassname"><span class="pre">kodokan.</span></span><span class="sig-name descname"><span class="pre">estimate_poses_tracked</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">video_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_persons</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tracker</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'botsort.yaml'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conf_thresh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_gap_frac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stale_after</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'mps'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'yolo11n-pose.pt'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_url</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="kodokan/pose.html#kodokan.pose.PoseSequence" title="kodokan.pose.PoseSequence"><span class="pre">PoseSequence</span></a></span></span><a class="reference internal" href="../_modules/kodokan/track.html#estimate_poses_tracked"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.estimate_poses_tracked" title="Link to this definition"></a></dt>
+<dd><p>Estimate per-frame keypoints with persistent tori/uke identity.</p>
+<p>Returns a <a class="reference internal" href="kodokan/pose.html#kodokan.pose.PoseSequence" title="kodokan.pose.PoseSequence"><code class="xref py py-class docutils literal notranslate"><span class="pre">PoseSequence</span></code></a> whose person slots are <em>stable</em>
+across the clip (slot 0 = the track that is, on average, further left).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>video_path</strong> – Path to the clip.</p></li>
+<li><p><strong>n_persons</strong> – Number of stable identity slots to keep (2 for tori+uke).</p></li>
+<li><p><strong>tracker</strong> – Ultralytics tracker config (<code class="docutils literal notranslate"><span class="pre">&quot;botsort.yaml&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;bytetrack.yaml&quot;</span></code>).</p></li>
+<li><p><strong>conf_thresh</strong> – Minimum mean per-person confidence to count a detection.</p></li>
+<li><p><strong>frame_step</strong> – Analyze every n-th frame.</p></li>
+<li><p><strong>frame_range</strong> – Optional <code class="docutils literal notranslate"><span class="pre">(start,</span> <span class="pre">stop)</span></code> frame window.</p></li>
+<li><p><strong>device</strong> – Torch device (<code class="docutils literal notranslate"><span class="pre">&quot;mps&quot;</span></code>/<code class="docutils literal notranslate"><span class="pre">&quot;cpu&quot;</span></code>).</p></li>
+<li><p><strong>model_name</strong> – YOLO-pose weights (resolved under the data models dir).</p></li>
+<li><p><strong>source_url</strong> – Provenance URL.</p></li>
+<li><p><strong>progress</strong> – Print progress.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.feedback">
+<span class="sig-prename descclassname"><span class="pre">kodokan.</span></span><span class="sig-name descname"><span class="pre">feedback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_phases</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/kodokan/score.html#feedback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.feedback" title="Link to this definition"></a></dt>
+<dd><p>Interpretable difference: per joint-angle and per phase (degrees).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.load_all_tidy">
+<span class="sig-prename descclassname"><span class="pre">kodokan.</span></span><span class="sig-name descname"><span class="pre">load_all_tidy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/store.html#load_all_tidy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.load_all_tidy" title="Link to this definition"></a></dt>
+<dd><p>Concatenate every clip’s tidy table (with a <code class="docutils literal notranslate"><span class="pre">video_id</span></code> column) into one DataFrame.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.log_to_rerun">
+<span class="sig-prename descclassname"><span class="pre">kodokan.</span></span><span class="sig-name descname"><span class="pre">log_to_rerun</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose_seq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="kodokan/pose.html#kodokan.pose.PoseSequence" title="kodokan.pose.PoseSequence"><span class="pre">PoseSequence</span></a></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_video</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spawn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blank_canvas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conf_thresh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">entity_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="../_modules/kodokan/viz.html#log_to_rerun"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.log_to_rerun" title="Link to this definition"></a></dt>
+<dd><p>Log frames + 2D skeletons to Rerun (overlay-on-video and skeleton-only views).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pose_seq</strong> – The sequence to log.</p></li>
+<li><p><strong>source_video</strong> – If given, downscaled frames are logged under <code class="docutils literal notranslate"><span class="pre">video/</span></code> as a backdrop.</p></li>
+<li><p><strong>save</strong> – Write a standalone <code class="docutils literal notranslate"><span class="pre">.rrd</span></code> recording to this path.</p></li>
+<li><p><strong>spawn</strong> – Launch the Rerun viewer.</p></li>
+<li><p><strong>blank_canvas</strong> – Also log a skeleton-only view under <code class="docutils literal notranslate"><span class="pre">skeleton/</span></code>.</p></li>
+<li><p><strong>frame_scale</strong> – Downscale factor for logged video frames (keypoints scaled to match).</p></li>
+<li><p><strong>conf_thresh</strong> – Hide keypoints below this confidence.</p></li>
+<li><p><strong>entity_prefix</strong> – Prefix all entity paths (use distinct prefixes to compare two
+sequences side-by-side in one recording, e.g. <code class="docutils literal notranslate"><span class="pre">&quot;demoA/&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;demoB/&quot;</span></code>).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.pose_store">
+<span class="sig-prename descclassname"><span class="pre">kodokan.</span></span><span class="sig-name descname"><span class="pre">pose_store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/store.html#pose_store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.pose_store" title="Link to this definition"></a></dt>
+<dd><p>A dict-like <code class="docutils literal notranslate"><span class="pre">{video_id:</span> <span class="pre">PoseSequence}</span></code> store backed by per-clip Parquet.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.render_skeleton_video">
+<span class="sig-prename descclassname"><span class="pre">kodokan.</span></span><span class="sig-name descname"><span class="pre">render_skeleton_video</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose_seq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="kodokan/pose.html#kodokan.pose.PoseSequence" title="kodokan.pose.PoseSequence"><span class="pre">PoseSequence</span></a></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">out_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source_video</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blank_canvas</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conf_thresh</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">person_colors</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">((0,</span> <span class="pre">255,</span> <span class="pre">0),</span> <span class="pre">(255,</span> <span class="pre">0,</span> <span class="pre">255),</span> <span class="pre">(255,</span> <span class="pre">255,</span> <span class="pre">0),</span> <span class="pre">(0,</span> <span class="pre">165,</span> <span class="pre">255))</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">background</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thickness</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="reference internal" href="../_modules/kodokan/viz.html#render_skeleton_video"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.render_skeleton_video" title="Link to this definition"></a></dt>
+<dd><p>Render skeletons to an MP4.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pose_seq</strong> – The pose sequence to draw.</p></li>
+<li><p><strong>out_path</strong> – Output <code class="docutils literal notranslate"><span class="pre">.mp4</span></code> path.</p></li>
+<li><p><strong>source_video</strong> – Source clip; required (and used as backdrop) unless
+<code class="docutils literal notranslate"><span class="pre">blank_canvas=True</span></code>.</p></li>
+<li><p><strong>blank_canvas</strong> – If True, draw on a solid <code class="docutils literal notranslate"><span class="pre">background</span></code> instead of the video.</p></li>
+<li><p><strong>conf_thresh</strong> – Hide keypoints/edges below this confidence.</p></li>
+<li><p><strong>fps</strong> – Output fps (defaults to the sequence’s source fps).</p></li>
+<li><p><strong>person_colors</strong> – BGR colors per person slot.</p></li>
+<li><p><strong>background</strong> – BGR background color for the blank canvas.</p></li>
+<li><p><strong>thickness</strong> – Edge thickness / joint radius in pixels.</p></li>
+<li><p><strong>radius</strong> – Edge thickness / joint radius in pixels.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The output path.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.score">
+<span class="sig-prename descclassname"><span class="pre">kodokan.</span></span><span class="sig-name descname"><span class="pre">score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_features</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reference</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../_modules/kodokan/score.html#score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.score" title="Link to this definition"></a></dt>
+<dd><p>Score a query against a reference, calibrated to the genuine-demo spread.</p>
+<p><code class="docutils literal notranslate"><span class="pre">score</span></code> is 0–100: 100 ≈ as close as the closest genuine demo, 0 ≈ as far as the
+90th-percentile (or worse). <code class="docutils literal notranslate"><span class="pre">closer_than_pct</span></code> is the percent of genuine demos
+the query is closer-to-reference than.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.segment_demonstrations">
+<span class="sig-prename descclassname"><span class="pre">kodokan.</span></span><span class="sig-name descname"><span class="pre">segment_demonstrations</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose_seq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="kodokan/pose.html#kodokan.pose.PoseSequence" title="kodokan.pose.PoseSequence"><span class="pre">PoseSequence</span></a></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">video_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_optical_flow</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_two_person_frac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">find_kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="kodokan/segment.html#kodokan.segment.Segment" title="kodokan.segment.Segment"><span class="pre">Segment</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/kodokan/segment.html#segment_demonstrations"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.segment_demonstrations" title="Link to this definition"></a></dt>
+<dd><p>Find demonstrations, annotate each with its two-person coverage, and gate.</p>
+<p>Uses pose motion energy by default (fuse optical flow with <code class="docutils literal notranslate"><span class="pre">use_optical_flow</span></code>).
+Segments whose two-person coverage is below <code class="docutils literal notranslate"><span class="pre">min_two_person_frac</span></code> are dropped
+(a throw demonstration needs both tori and uke), then re-indexed in time order.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.segments_store">
+<span class="sig-prename descclassname"><span class="pre">kodokan.</span></span><span class="sig-name descname"><span class="pre">segments_store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/store.html#segments_store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.segments_store" title="Link to this definition"></a></dt>
+<dd><p>A dict-like <code class="docutils literal notranslate"><span class="pre">{video_id:</span> <span class="pre">&lt;json&gt;}</span></code> store for demo segments (and metadata).</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="Welcome to kodokan’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="kodokan/acquire.html" class="btn btn-neutral float-right" title="kodokan.acquire" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

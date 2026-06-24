@@ -1,0 +1,4 @@
+kodokan.descriptors
+===================
+.. automodule:: kodokan.descriptors
+   :members:
