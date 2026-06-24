@@ -33,7 +33,7 @@ def tori_index(pose_seq: PoseSequence, start_s: float, end_s: float) -> int:
     kp = _window(pose_seq, start_s, end_s)  # (F, P, 17, 3)
     if len(kp) == 0:
         return 0
-    last = kp[int(2 * len(kp) / 3):]
+    last = kp[int(2 * len(kp) / 3) :]
     hip_y = np.nanmean(last[:, :, [11, 12], 1], axis=(0, 2))  # (P,)
     if np.all(np.isnan(hip_y)):
         present = ~np.all(np.isnan(kp[..., 0]), axis=2)
@@ -41,7 +41,9 @@ def tori_index(pose_seq: PoseSequence, start_s: float, end_s: float) -> int:
     return int(np.nanargmin(hip_y))
 
 
-def demo_feature(pose_seq: PoseSequence, start_s: float, end_s: float, *, mode: str) -> np.ndarray:
+def demo_feature(
+    pose_seq: PoseSequence, start_s: float, end_s: float, *, mode: str
+) -> np.ndarray:
     """Per-frame features for one demo under a role/feature mode."""
     kp = _window(pose_seq, start_s, end_s)
     F = len(kp)
@@ -55,7 +57,12 @@ def demo_feature(pose_seq: PoseSequence, start_s: float, end_s: float, *, mode: 
     else:
         raise ValueError(f"unknown mode {mode!r}")
     if mode == "tori_angles_pos":
-        feat = np.stack([np.concatenate([_angles(kp[f, p]), _norm_positions(kp[f, p])]) for f in range(F)])
+        feat = np.stack(
+            [
+                np.concatenate([_angles(kp[f, p]), _norm_positions(kp[f, p])])
+                for f in range(F)
+            ]
+        )
     else:
         feat = np.stack([_angles(kp[f, p]) for f in range(F)])
     return _clean(feat)
@@ -69,13 +76,14 @@ def pooled_descriptor(feat: np.ndarray, *, levels=(1, 2, 4)) -> np.ndarray:
     for lv in levels:
         idx = np.linspace(0, len(feat), lv + 1).astype(int)
         for a, b in zip(idx[:-1], idx[1:]):
-            seg = feat[a:max(b, a + 1)]
+            seg = feat[a : max(b, a + 1)]
             parts.append(seg.mean(0))
             parts.append(seg.std(0))
     return np.concatenate(parts)
 
 
 # ---- leave-one-out evaluators -> accuracy ----
+
 
 def dtw_1nn_accuracy(feature_seqs: list[np.ndarray], labels: list[int]) -> float:
     n = len(feature_seqs)
