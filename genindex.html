@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; kodokan 0.0.1 documentation</title>
+  <title>Index &mdash; kodokan 0.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="_static/documentation_options.js?v=e3a6060d"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -52,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/config.html">kodokan.config</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/descriptors.html">kodokan.descriptors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/pose.html">kodokan.pose</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/recognize.html">kodokan.recognize</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/score.html">kodokan.score</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/segment.html">kodokan.segment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/store.html">kodokan.store</a></li>
@@ -169,14 +170,16 @@
 </li>
       <li><a href="module_docs/kodokan/descriptors.html#kodokan.descriptors.demo_descriptor">demo_descriptor() (in module kodokan.descriptors)</a>
 </li>
+      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.demo_feature">demo_feature() (in module kodokan.recognize)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/kodokan.html#kodokan.demo_features">demo_features() (in module kodokan)</a>
 
       <ul>
         <li><a href="module_docs/kodokan/score.html#kodokan.score.demo_features">(in module kodokan.score)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/kodokan.html#kodokan.distance_matrix">distance_matrix() (in module kodokan)</a>
 
       <ul>
@@ -300,6 +303,13 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li>
+    kodokan.recognize
+
+      <ul>
+        <li><a href="module_docs/kodokan/recognize.html#module-kodokan.recognize">module</a>
+</li>
+      </ul></li>
+      <li>
     kodokan.score
 
       <ul>
@@ -386,6 +396,8 @@
 </li>
         <li><a href="module_docs/kodokan/pose.html#module-kodokan.pose">kodokan.pose</a>
 </li>
+        <li><a href="module_docs/kodokan/recognize.html#module-kodokan.recognize">kodokan.recognize</a>
+</li>
         <li><a href="module_docs/kodokan/score.html#module-kodokan.score">kodokan.score</a>
 </li>
         <li><a href="module_docs/kodokan/segment.html#module-kodokan.segment">kodokan.segment</a>
@@ -414,6 +426,8 @@
       <li><a href="module_docs/kodokan/store.html#kodokan.store.parquet_bytes_to_sequence">parquet_bytes_to_sequence() (in module kodokan.store)</a>
 </li>
       <li><a href="module_docs/kodokan/compare.html#kodokan.compare.per_angle_deviation">per_angle_deviation() (in module kodokan.compare)</a>
+</li>
+      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.pooled_descriptor">pooled_descriptor() (in module kodokan.recognize)</a>
 </li>
       <li><a href="module_docs/kodokan/config.html#kodokan.config.pose_dir">pose_dir() (in module kodokan.config)</a>
 </li>
@@ -505,14 +519,16 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/kodokan/compare.html#kodokan.compare.time_stretch">time_stretch() (in module kodokan.compare)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/kodokan/pose.html#kodokan.pose.PoseSequence.times">times() (kodokan.pose.PoseSequence method)</a>
 
       <ul>
         <li><a href="module_docs/kodokan.html#kodokan.PoseSequence.times">(kodokan.PoseSequence method)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.tori_index">tori_index() (in module kodokan.recognize)</a>
+</li>
   </ul></td>
 </tr></table>
 

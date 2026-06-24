@@ -8,6 +8,7 @@
    module_docs/kodokan/config
    module_docs/kodokan/descriptors
    module_docs/kodokan/pose
+   module_docs/kodokan/recognize
    module_docs/kodokan/score
    module_docs/kodokan/segment
    module_docs/kodokan/store

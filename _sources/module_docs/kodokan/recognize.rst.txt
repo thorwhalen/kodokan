@@ -1,0 +1,4 @@
+kodokan.recognize
+=================
+.. automodule:: kodokan.recognize
+   :members:

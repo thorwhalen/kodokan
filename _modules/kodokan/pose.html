@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kodokan.pose &mdash; kodokan 0.0.1 documentation</title>
+  <title>kodokan.pose &mdash; kodokan 0.0.2 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=d45e8c67"></script>
+      <script src="../../_static/documentation_options.js?v=e3a6060d"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -52,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/config.html">kodokan.config</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/descriptors.html">kodokan.descriptors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/pose.html">kodokan.pose</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/recognize.html">kodokan.recognize</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/score.html">kodokan.score</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/segment.html">kodokan.segment</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/store.html">kodokan.store</a></li>
@@ -134,10 +135,24 @@
 
 <span class="c1">#: COCO-17 skeleton edges (pairs of keypoint indices) for drawing/connections.</span>
 <span class="n">COCO17_SKELETON</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span> <span class="o">...</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
-    <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span>
-    <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">13</span><span class="p">),</span> <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">),</span> <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span>
-    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">9</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="mi">13</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">15</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">16</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+    <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
 <span class="p">)</span>
 
 
@@ -223,7 +238,10 @@
 <span class="c1"># Backends (strategy): each returns estimate(frame_bgr) -&gt; (n, 17, 3) array</span>
 <span class="c1"># --------------------------------------------------------------------------- #</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_make_rtmlib_estimator</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_make_rtmlib_estimator</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">rtmlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Body</span>
 
     <span class="n">body</span> <span class="o">=</span> <span class="n">Body</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;onnxruntime&quot;</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span> <span class="ow">or</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
@@ -237,7 +255,9 @@
     <span class="k">return</span> <span class="n">estimate</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_make_yolo_estimator</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_make_yolo_estimator</span><span class="p">(</span>
+    <span class="o">*</span><span class="p">,</span> <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">ultralytics</span><span class="w"> </span><span class="kn">import</span> <span class="n">YOLO</span>
 
     <span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">models_dir</span>
@@ -250,7 +270,11 @@
 
     <span class="k">def</span><span class="w"> </span><span class="nf">estimate</span><span class="p">(</span><span class="n">frame_bgr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">frame_bgr</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">device</span><span class="o">=</span><span class="n">device</span> <span class="ow">or</span> <span class="s2">&quot;mps&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">keypoints</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">r</span><span class="o">.</span><span class="n">keypoints</span><span class="o">.</span><span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">keypoints</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="n">r</span><span class="o">.</span><span class="n">keypoints</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="ow">or</span> <span class="n">r</span><span class="o">.</span><span class="n">keypoints</span><span class="o">.</span><span class="n">data</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">keypoints</span><span class="o">.</span><span class="n">data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="p">):</span>
             <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">keypoints</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span><span class="o">.</span><span class="n">numpy</span><span class="p">()</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>  <span class="c1"># (n,17,3)</span>
 
@@ -342,7 +366,9 @@
 
     <span class="n">video_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">video_path</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">backend</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_BACKENDS</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unknown backend </span><span class="si">{</span><span class="n">backend</span><span class="si">!r}</span><span class="s2">; choose from </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">_BACKENDS</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;unknown backend </span><span class="si">{</span><span class="n">backend</span><span class="si">!r}</span><span class="s2">; choose from </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">_BACKENDS</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
 
     <span class="n">fps</span><span class="p">,</span> <span class="n">n_total</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span> <span class="o">=</span> <span class="n">_video_meta</span><span class="p">(</span><span class="n">video_path</span><span class="p">)</span>
     <span class="n">start</span><span class="p">,</span> <span class="n">stop</span> <span class="o">=</span> <span class="n">frame_range</span> <span class="ow">or</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_total</span> <span class="ow">or</span> <span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">)</span>
@@ -366,7 +392,10 @@
             <span class="n">per_frame</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">_select_persons</span><span class="p">(</span><span class="n">dets</span><span class="p">,</span> <span class="n">n_persons</span><span class="p">,</span> <span class="n">conf_thresh</span><span class="p">))</span>
             <span class="n">indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">progress</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span> <span class="o">%</span> <span class="mi">50</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  [</span><span class="si">{</span><span class="n">backend</span><span class="si">}</span><span class="s2">] analyzed </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span><span class="si">}</span><span class="s2"> frames (frame </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;  [</span><span class="si">{</span><span class="n">backend</span><span class="si">}</span><span class="s2">] analyzed </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span><span class="si">}</span><span class="s2"> frames (frame </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+                    <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                <span class="p">)</span>
         <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
 

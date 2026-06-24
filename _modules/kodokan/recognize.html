@@ -1,0 +1,275 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kodokan.recognize &mdash; kodokan 0.0.2 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=e3a6060d"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            kodokan
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan.html">kodokan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/acquire.html">kodokan.acquire</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/compare.html">kodokan.compare</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/config.html">kodokan.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/descriptors.html">kodokan.descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/pose.html">kodokan.pose</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/recognize.html">kodokan.recognize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/score.html">kodokan.score</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/segment.html">kodokan.segment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/store.html">kodokan.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/track.html">kodokan.track</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/viz.html">kodokan.viz</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">kodokan</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">kodokan.recognize</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for kodokan.recognize</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Learned-vs-DTW technique recognition experiments (data-appropriate, no GPU).</span>
+
+<span class="sd">The feature bake-off showed DTW on hand-crafted angles can&#39;t tell techniques apart.</span>
+<span class="sd">This module tests whether the bottleneck is the *classifier*, the *features*, or</span>
+<span class="sd">tori/uke *role inconsistency*, with leave-one-out CV on the small dataset:</span>
+
+<span class="sd">- feature modes: ``primary_angles`` (baseline), ``tori_angles`` (role-consistent —</span>
+<span class="sd">  tori picked as the person left standing), ``tori_angles_pos``.</span>
+<span class="sd">- methods: ``dtw_1nn`` (DTW nearest-neighbour), ``pool_centroid`` / ``pool_knn``</span>
+<span class="sd">  (temporal-pyramid pooled descriptor + nearest-centroid / kNN), and ``pool_lda_knn``</span>
+<span class="sd">  (LDA-reduced + kNN, if scikit-learn is available).</span>
+
+<span class="sd">Everything is numpy (sklearn optional), appropriate for ~80 samples where deep nets</span>
+<span class="sd">would overfit; the same harness scales to more techniques once more data is collected.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.compare</span><span class="w"> </span><span class="kn">import</span> <span class="n">_clean</span><span class="p">,</span> <span class="n">compare</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.descriptors</span><span class="w"> </span><span class="kn">import</span> <span class="n">_angles</span><span class="p">,</span> <span class="n">_norm_positions</span><span class="p">,</span> <span class="n">_window</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.pose</span><span class="w"> </span><span class="kn">import</span> <span class="n">PoseSequence</span>
+
+
+<div class="viewcode-block" id="tori_index">
+<a class="viewcode-back" href="../../module_docs/kodokan/recognize.html#kodokan.recognize.tori_index">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">tori_index</span><span class="p">(</span><span class="n">pose_seq</span><span class="p">:</span> <span class="n">PoseSequence</span><span class="p">,</span> <span class="n">start_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">end_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Heuristic tori (thrower) = the person whose hips stay highest at the finish.</span>
+
+<span class="sd">    In image coordinates y grows downward, so uke (thrown to the ground) has larger</span>
+<span class="sd">    hip-y over the last third of the demo; tori (still standing) has smaller hip-y.</span>
+<span class="sd">    Falls back to the most-present person if undecidable.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">kp</span> <span class="o">=</span> <span class="n">_window</span><span class="p">(</span><span class="n">pose_seq</span><span class="p">,</span> <span class="n">start_s</span><span class="p">,</span> <span class="n">end_s</span><span class="p">)</span>  <span class="c1"># (F, P, 17, 3)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kp</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="n">last</span> <span class="o">=</span> <span class="n">kp</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">kp</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3</span><span class="p">):]</span>
+    <span class="n">hip_y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">last</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">[</span><span class="mi">11</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span> <span class="mi">1</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>  <span class="c1"># (P,)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">hip_y</span><span class="p">)):</span>
+        <span class="n">present</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">kp</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">present</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">nanargmin</span><span class="p">(</span><span class="n">hip_y</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="demo_feature">
+<a class="viewcode-back" href="../../module_docs/kodokan/recognize.html#kodokan.recognize.demo_feature">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">demo_feature</span><span class="p">(</span><span class="n">pose_seq</span><span class="p">:</span> <span class="n">PoseSequence</span><span class="p">,</span> <span class="n">start_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">end_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Per-frame features for one demo under a role/feature mode.&quot;&quot;&quot;</span>
+    <span class="n">kp</span> <span class="o">=</span> <span class="n">_window</span><span class="p">(</span><span class="n">pose_seq</span><span class="p">,</span> <span class="n">start_s</span><span class="p">,</span> <span class="n">end_s</span><span class="p">)</span>
+    <span class="n">F</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">kp</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">F</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;primary_angles&quot;</span><span class="p">:</span>
+        <span class="n">present</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">kp</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">present</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span>
+    <span class="k">elif</span> <span class="n">mode</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;tori_angles&quot;</span><span class="p">,</span> <span class="s2">&quot;tori_angles_pos&quot;</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">tori_index</span><span class="p">(</span><span class="n">pose_seq</span><span class="p">,</span> <span class="n">start_s</span><span class="p">,</span> <span class="n">end_s</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;unknown mode </span><span class="si">{</span><span class="n">mode</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;tori_angles_pos&quot;</span><span class="p">:</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">_angles</span><span class="p">(</span><span class="n">kp</span><span class="p">[</span><span class="n">f</span><span class="p">,</span> <span class="n">p</span><span class="p">]),</span> <span class="n">_norm_positions</span><span class="p">(</span><span class="n">kp</span><span class="p">[</span><span class="n">f</span><span class="p">,</span> <span class="n">p</span><span class="p">])])</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">F</span><span class="p">)])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">feat</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">_angles</span><span class="p">(</span><span class="n">kp</span><span class="p">[</span><span class="n">f</span><span class="p">,</span> <span class="n">p</span><span class="p">])</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">F</span><span class="p">)])</span>
+    <span class="k">return</span> <span class="n">_clean</span><span class="p">(</span><span class="n">feat</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="pooled_descriptor">
+<a class="viewcode-back" href="../../module_docs/kodokan/recognize.html#kodokan.recognize.pooled_descriptor">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pooled_descriptor</span><span class="p">(</span><span class="n">feat</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Temporal-pyramid pooled fixed-length descriptor (mean+std per segment).&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">feat</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">lv</span> <span class="ow">in</span> <span class="n">levels</span><span class="p">:</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">feat</span><span class="p">),</span> <span class="n">lv</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">idx</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">idx</span><span class="p">[</span><span class="mi">1</span><span class="p">:]):</span>
+            <span class="n">seg</span> <span class="o">=</span> <span class="n">feat</span><span class="p">[</span><span class="n">a</span><span class="p">:</span><span class="nb">max</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+            <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span></div>
+
+
+
+<span class="c1"># ---- leave-one-out evaluators -&gt; accuracy ----</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">dtw_1nn_accuracy</span><span class="p">(</span><span class="n">feature_seqs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">labels</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_seqs</span><span class="p">)</span>
+    <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">best</span><span class="p">,</span> <span class="n">best_j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">compare</span><span class="p">(</span><span class="n">feature_seqs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">feature_seqs</span><span class="p">[</span><span class="n">j</span><span class="p">])[</span><span class="s2">&quot;normalized&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="ow">and</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">best</span><span class="p">:</span>
+                <span class="n">best</span><span class="p">,</span> <span class="n">best_j</span> <span class="o">=</span> <span class="n">d</span><span class="p">,</span> <span class="n">j</span>
+        <span class="k">if</span> <span class="n">best_j</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">labels</span><span class="p">[</span><span class="n">best_j</span><span class="p">]</span> <span class="o">==</span> <span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+            <span class="n">correct</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">correct</span> <span class="o">/</span> <span class="n">n</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_standardize</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="n">mu</span><span class="p">,</span> <span class="n">sd</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">X</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">X</span> <span class="o">-</span> <span class="n">mu</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">sd</span> <span class="o">+</span> <span class="mf">1e-9</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">pool_centroid_accuracy</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="n">Xs</span> <span class="o">=</span> <span class="n">_standardize</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">classes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Xs</span><span class="p">)):</span>
+        <span class="n">cents</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">classes</span><span class="p">:</span>
+            <span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">==</span> <span class="n">c</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">Xs</span><span class="p">))</span> <span class="o">!=</span> <span class="n">i</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">mask</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+                <span class="n">cents</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="o">=</span> <span class="n">Xs</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">pred</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">cents</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">c</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">Xs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">-</span> <span class="n">cents</span><span class="p">[</span><span class="n">c</span><span class="p">]))</span>
+        <span class="n">correct</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pred</span> <span class="o">==</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">correct</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">Xs</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">pool_knn_accuracy</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="n">Xs</span> <span class="o">=</span> <span class="n">_standardize</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">Xs</span><span class="p">)</span>
+    <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">Xs</span> <span class="o">-</span> <span class="n">Xs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="n">nn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">d</span><span class="p">)[:</span><span class="n">k</span><span class="p">]</span>
+        <span class="n">vals</span><span class="p">,</span> <span class="n">cnts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">nn</span><span class="p">],</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">correct</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">vals</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">cnts</span><span class="p">)]</span> <span class="o">==</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">correct</span> <span class="o">/</span> <span class="n">n</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">pool_lda_knn_accuracy</span><span class="p">(</span><span class="n">X</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">sklearn.discriminant_analysis</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearDiscriminantAnalysis</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    <span class="n">Xs</span> <span class="o">=</span> <span class="n">_standardize</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">Xs</span><span class="p">)</span>
+    <span class="n">correct</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">tr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">!=</span> <span class="n">i</span>
+        <span class="n">lda</span> <span class="o">=</span> <span class="n">LinearDiscriminantAnalysis</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">Z</span> <span class="o">=</span> <span class="n">lda</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">Xs</span><span class="p">[</span><span class="n">tr</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">tr</span><span class="p">])</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">Xs</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">Z</span> <span class="o">-</span> <span class="n">Z</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="n">nn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">d</span><span class="p">)[:</span><span class="n">k</span><span class="p">]</span>
+        <span class="n">vals</span><span class="p">,</span> <span class="n">cnts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">nn</span><span class="p">],</span> <span class="n">return_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">correct</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">vals</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">cnts</span><span class="p">)]</span> <span class="o">==</span> <span class="n">y</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">correct</span> <span class="o">/</span> <span class="n">n</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
