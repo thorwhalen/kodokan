@@ -24,6 +24,7 @@ from kodokan.track import estimate_poses_tracked
 from kodokan.viz import render_skeleton_video, log_to_rerun
 from kodokan.segment import segment_demonstrations, Segment
 from kodokan.compare import compare, angle_features, distance_matrix, ANGLE_NAMES
+from kodokan.score import build_reference, score, feedback, demo_features
 from kodokan.store import pose_store, segments_store, load_all_tidy
 
 __all__ = [
@@ -43,4 +44,8 @@ __all__ = [
     "pose_store",
     "segments_store",
     "load_all_tidy",
+    "build_reference",
+    "score",
+    "feedback",
+    "demo_features",
 ]
