@@ -47,6 +47,29 @@ classifiers are data-starved at ~8 demos/class); (b) **better pose** (whole-body
 133-kpt, cleaner multi-person 3D, better tori/uke ID); (c) then deep skeleton models
 (PoseC3D / few-shot JEANIE) become viable. The same LOO harness validates each.
 
+## Update — scaled to 28 techniques (236 demos)
+
+We scaled the dataset to 28 usable techniques (#002–#031, 236 two-person demos) and
+re-ran the LOO harness:
+
+| feature | method | 10-tech acc (×chance) | 28-tech acc (×chance) |
+|---|---|---|---|
+| `primary_angles` | `pool_lda_knn` | 0.244 (2.4×) | 0.093 (2.6×) |
+| `tori_angles` | `pool_lda_knn` | 0.305 (3.0×) | 0.178 (4.9×) |
+| `tori_angles_pos` | `pool_lda_knn` | **0.341 (3.4×)** | **0.242 (6.7×)** |
+
+Two clear takeaways:
+1. Raw accuracy drops with 2.8× more classes (harder), but the **signal-to-chance
+   ratio roughly doubles** (3.4× → 6.7×) — more data makes the learned representation
+   generalize better. 24% top-1 over **28 judo techniques** from monocular video is a
+   meaningful baseline.
+2. **Role-consistency is the dominant lever at scale:** primary-person features barely
+   clear chance (2.6×), while tori-only reaches 6.7×. Getting tori/uke identity right
+   matters more than any other single choice here.
+
+Path confirmed: keep scaling data + improving pose/role quality, then deep skeleton
+models — each validated by this harness.
+
 Reproduce: `PYTHONPATH=<repo> python examples/eval_learned.py --feature <f> --method <m>`
 (features/methods in `kodokan/recognize.py`); full sweep via the
 `kodokan-recognition-bakeoff` workflow.

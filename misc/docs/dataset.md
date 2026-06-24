@@ -16,7 +16,10 @@ Data lives **outside the repo** under `~/kodokan_data` (override `KODOKAN_DATA_D
 
 ## Contents (this build)
 
-10 techniques · **86 demonstrations** · 18,323 analyzed frames · 7.7 MB Parquet.
+Now **30 clips** (#002–#031; 28 usable techniques after dropping two category-divider
+videos with <3 demos) — re-run `batch_pipeline.py` with `--items 12:31` etc. to extend
+(it skips clips already in the store). The table below is the original 10-technique build
+(10 techniques · 86 demonstrations · 18,323 frames · 7.7 MB Parquet).
 
 | video_id | technique | frames | both-present | demos |
 |---|---|---|---|---|

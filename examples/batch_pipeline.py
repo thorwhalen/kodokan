@@ -25,6 +25,7 @@ def main():
     ap.add_argument("--items", default="2:11", help="yt-dlp 1-based playlist selector (#002-#011)")
     ap.add_argument("--frame-step", type=int, default=1)
     ap.add_argument("--device", default="mps")
+    ap.add_argument("--force", action="store_true", help="reprocess clips already in the pose store")
     args = ap.parse_args()
 
     archive = config.clips_dir() / ".download_archive.txt"
@@ -42,6 +43,9 @@ def main():
         if not path or not Path(path).exists():
             print(f"[skip] {vid} {title!r}: file missing", flush=True)
             continue
+        if not args.force and vid in ps:
+            print(f"[skip] {vid} {title!r}: already in pose store", flush=True)
+            continue
         print(f"\n=== {vid}  {title} ===", flush=True)
         seq = estimate_poses_tracked(
             path, frame_step=args.frame_step, device=args.device, source_url=url, progress=True
@@ -58,7 +62,8 @@ def main():
             "fps": seq.fps,
             "n_demos": len(segs),
             "demos": [
-                dict(index=s.index, start_s=s.start_s, end_s=s.end_s, duration_s=round(s.duration_s, 2))
+                dict(index=s.index, start_s=s.start_s, end_s=s.end_s,
+                     duration_s=round(s.duration_s, 2), two_person_frac=s.two_person_frac)
                 for s in segs
             ],
         }
