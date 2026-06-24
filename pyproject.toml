@@ -7,14 +7,22 @@ build-backend = "hatchling.build"
 [project]
 name = "kodokan"
 version = "0.0.1"
-description = "Resources for Kodokan Judo"
+description = "Study Kodokan Judo throws from video via body-pose analysis"
 readme = "README.md"
 requires-python = ">=3.10"
-keywords = []
+keywords = [
+    "judo",
+    "pose-estimation",
+    "video-analysis",
+    "action-segmentation",
+    "mediapipe",
+]
 authors = [
     { name = "Thor Whalen" },
 ]
-dependencies = []
+dependencies = [
+    "numpy",
+]
 
 [project.license]
 text = "mit"
@@ -25,6 +33,44 @@ Repository = "https://github.com/thorwhalen/kodokan"
 Documentation = "https://thorwhalen.github.io/kodokan"
 
 [project.optional-dependencies]
+pose = [
+    "rtmlib",
+    "onnxruntime",
+    "ultralytics",
+]
+viz = [
+    "opencv-python",
+    "rerun-sdk",
+    "supervision",
+    "matplotlib",
+]
+analysis = [
+    "scipy",
+    "dtaidistance",
+    "pandas",
+    "pyarrow",
+]
+storage = [
+    "dol",
+]
+acquire = [
+    "yb",
+]
+all = [
+    "rtmlib",
+    "onnxruntime",
+    "ultralytics",
+    "opencv-python",
+    "rerun-sdk",
+    "supervision",
+    "matplotlib",
+    "scipy",
+    "dtaidistance",
+    "pandas",
+    "pyarrow",
+    "dol",
+    "yb",
+]
 dev = [
     "pytest>=7.0",
     "pytest-cov>=4.0",
