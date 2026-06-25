@@ -108,7 +108,9 @@ def dtw_1nn_predict(feature_seqs: list[np.ndarray], labels) -> list:
     return preds
 
 
-def loo_pooled_predict(X: np.ndarray, y: np.ndarray, *, method: str = "lda_knn", k: int = 3) -> np.ndarray:
+def loo_pooled_predict(
+    X: np.ndarray, y: np.ndarray, *, method: str = "lda_knn", k: int = 3
+) -> np.ndarray:
     """Leave-one-out predictions; standardization (and LDA) fit on the TRAIN fold only."""
     lda_cls = None
     if method == "lda_knn":
@@ -162,11 +164,15 @@ def dtw_1nn_accuracy(feature_seqs, labels) -> float:
 
 
 def pool_centroid_accuracy(X, y) -> float:
-    return classification_metrics(y, loo_pooled_predict(X, y, method="centroid"))["top1"]
+    return classification_metrics(y, loo_pooled_predict(X, y, method="centroid"))[
+        "top1"
+    ]
 
 
 def pool_knn_accuracy(X, y, k: int = 3) -> float:
-    return classification_metrics(y, loo_pooled_predict(X, y, method="knn", k=k))["top1"]
+    return classification_metrics(y, loo_pooled_predict(X, y, method="knn", k=k))[
+        "top1"
+    ]
 
 
 def pool_lda_knn_accuracy(X, y, k: int = 3) -> float | None:
@@ -174,4 +180,6 @@ def pool_lda_knn_accuracy(X, y, k: int = 3) -> float | None:
         import sklearn.discriminant_analysis  # noqa: F401
     except Exception:
         return None
-    return classification_metrics(y, loo_pooled_predict(X, y, method="lda_knn", k=k))["top1"]
+    return classification_metrics(y, loo_pooled_predict(X, y, method="lda_knn", k=k))[
+        "top1"
+    ]
