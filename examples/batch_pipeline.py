@@ -15,7 +15,13 @@ from pathlib import Path
 import numpy as np
 
 from kodokan import config, store
-from kodokan.acquire import download_techniques, local_clips
+from kodokan.acquire import (
+    canonical_technique_key,
+    download_source,
+    download_techniques,
+    local_clips,
+    source_clips_dir,
+)
 from kodokan.segment import segment_demonstrations
 from kodokan.track import estimate_poses_tracked
 
@@ -23,16 +29,23 @@ from kodokan.track import estimate_poses_tracked
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--items", default="2:11", help="yt-dlp 1-based playlist selector (#002-#011)")
+    ap.add_argument("--source", default="kodokan_ijf", help="registered source key (e.g. efficient_judo)")
     ap.add_argument("--frame-step", type=int, default=1)
     ap.add_argument("--device", default="mps")
     ap.add_argument("--force", action="store_true", help="reprocess clips already in the pose store")
+    ap.add_argument("--download", action="store_true", help="(re)download before processing")
     args = ap.parse_args()
 
-    archive = config.clips_dir() / ".download_archive.txt"
-    print(f"[acquire] playlist items {args.items} (archive: {archive.name}) ...", flush=True)
-    download_techniques(playlist_items=args.items, download_archive=str(archive))
-    clips = local_clips()  # process whatever is on disk (robust to archive skips)
-    print(f"[acquire] {len(clips)} clips on disk", flush=True)
+    cdir = source_clips_dir(args.source)
+    if args.download:
+        archive = cdir / ".download_archive.txt"
+        print(f"[acquire] {args.source} items {args.items} ...", flush=True)
+        if args.source == "kodokan_ijf":
+            download_techniques(playlist_items=args.items, download_dir=cdir, download_archive=str(archive))
+        else:
+            download_source(args.source, playlist_items=args.items, download_dir=cdir, download_archive=str(archive))
+    clips = local_clips(cdir)  # process whatever is on disk for this source
+    print(f"[acquire] {len(clips)} {args.source} clips on disk", flush=True)
 
     ps = store.pose_store()
     ss = store.segments_store()
@@ -59,6 +72,8 @@ def main():
             ss[vid] = {
                 "video_id": vid,
                 "technique": title,
+                "technique_key": canonical_technique_key(title),
+                "source": args.source,
                 "source_url": url,
                 "fps": seq.fps,
                 "n_demos": len(segs),

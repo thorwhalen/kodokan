@@ -109,17 +109,23 @@ def dtw_1nn_predict(feature_seqs: list[np.ndarray], labels) -> list:
 
 
 def loo_pooled_predict(
-    X: np.ndarray, y: np.ndarray, *, method: str = "lda_knn", k: int = 3
+    X: np.ndarray, y: np.ndarray, *, method: str = "lda_knn", k: int = 3, groups=None
 ) -> np.ndarray:
-    """Leave-one-out predictions; standardization (and LDA) fit on the TRAIN fold only."""
+    """Leave-one-out (or leave-one-GROUP-out) predictions; preprocessing fit on train only.
+
+    If ``groups`` is given (e.g. source ``video_id`` per sample), each fold excludes ALL
+    samples sharing the held-out sample's group — i.e. **leave-one-clip-out**, which removes
+    within-clip leakage. Otherwise it is plain leave-one-sample-out.
+    """
     lda_cls = None
     if method == "lda_knn":
         from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as lda_cls
     n = len(X)
     idx = np.arange(n)
+    groups = np.asarray(groups) if groups is not None else None
     preds = np.empty(n, dtype=y.dtype)
     for i in range(n):
-        tr = idx != i
+        tr = (groups != groups[i]) if groups is not None else (idx != i)
         mu, sd = X[tr].mean(0), X[tr].std(0) + 1e-9  # fit on train fold only
         Xtr, xi, ytr = (X[tr] - mu) / sd, (X[i] - mu) / sd, y[tr]
         if method == "centroid":

@@ -34,3 +34,19 @@ def test_pool_classifiers_separable():
     y = np.array([0] * 6 + [1] * 6)
     assert pool_centroid_accuracy(X, y) > 0.9
     assert pool_knn_accuracy(X, y, k=3) > 0.9
+
+
+def test_loo_group_predict_excludes_group():
+    """Leave-one-CLIP-out must train on OTHER groups; separable 2-source data classifies."""
+    from kodokan.recognize import classification_metrics, loo_pooled_predict
+
+    rng = np.random.RandomState(0)
+    # 2 techniques, 2 sources (groups) each, a few demos per (technique, source)
+    X = np.vstack([
+        rng.rand(4, 12), rng.rand(4, 12),            # technique 0, sources A,B
+        rng.rand(4, 12) + 6, rng.rand(4, 12) + 6,    # technique 1, sources C,D
+    ])
+    y = np.array([0] * 8 + [1] * 8)
+    groups = np.array(["A"] * 4 + ["B"] * 4 + ["C"] * 4 + ["D"] * 4)
+    preds = loo_pooled_predict(X, y, method="centroid", groups=groups)
+    assert classification_metrics(y, preds)["top1"] > 0.9
