@@ -26,6 +26,14 @@ from kodokan.segment import segment_demonstrations, Segment
 from kodokan.compare import compare, angle_features, distance_matrix, ANGLE_NAMES
 from kodokan.score import build_reference, score, feedback, demo_features
 from kodokan.store import pose_store, segments_store, load_all_tidy
+from kodokan.flashcards import (
+    make_problem,
+    build_catalog,
+    build_confusability,
+    score_response,
+    next_target,
+    log_response,
+)
 
 __all__ = [
     "estimate_poses",
@@ -48,4 +56,10 @@ __all__ = [
     "score",
     "feedback",
     "demo_features",
+    "make_problem",
+    "build_catalog",
+    "build_confusability",
+    "score_response",
+    "next_target",
+    "log_response",
 ]

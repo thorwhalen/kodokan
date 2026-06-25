@@ -7,10 +7,11 @@
 >
 > | protocol | top-1 | notes |
 > |---|---|---|
-> | within-clip (leave-one-demo-out, leaky) | ~0.08–0.12 | the kind of number reported below |
-> | **cross-clip (leave-one-CLIP-out, honest)** | **~0.02–0.03** | ≈ chance (uniform ~0.018, majority ~0.034) |
+> | within-clip (leave-one-demo-out, leaky) | **0.075** | the kind of number reported below |
+> | **cross-clip (leave-one-CLIP-out, honest)** | **0.004** | ≈ chance (uniform 0.015, majority 0.030) |
 >
-> (52–58 techniques, ~2 clips each, tori_angles_pos+LDA / tori_angles+centroid.) **Across
+> (Definitive: 65 techniques, 130 clips = both sources, tori_angles_pos + LDA+kNN;
+> confound gap 0.071.) **Across
 > independent video sources, the current monocular-2D-pose pipeline recognizes the throw at
 > CHANCE.** The within-clip "signal" (incl. the earlier "0.242 / 6.7× chance") was largely
 > **clip identity** (people/gi/camera/background), confirmed by the within-vs-cross gap.
