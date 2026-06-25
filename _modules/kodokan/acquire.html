@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kodokan.acquire &mdash; kodokan 0.0.4 documentation</title>
+  <title>kodokan.acquire &mdash; kodokan 0.0.5 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=8c5712d9"></script>
+      <script src="../../_static/documentation_options.js?v=282f96c0"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -96,14 +96,81 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">clips_dir</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">clips_dir</span><span class="p">,</span> <span class="n">data_dir</span>
 
 <span class="c1">#: The official &quot;KODOKAN × IJF ACADEMY 100 Techniques&quot; playlist.</span>
 <span class="n">KODOKAN_PLAYLIST_URL</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;https://www.youtube.com/playlist?list=PLtz539PTepc16H2iu5F3Q3D7_He1EYlIQ&quot;</span>
 <span class="p">)</span>
+
+<span class="c1">#: Registered technique-demo sources (for cross-source / leave-one-clip-out validation).</span>
+<span class="c1">#: Each is an *independent* set of demonstrations (different demonstrators/cameras), so the</span>
+<span class="c1">#: SOURCE video can be used as the cross-validation group while ``technique_key`` is the label.</span>
+<span class="n">SOURCES</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;kodokan_ijf&quot;</span><span class="p">:</span> <span class="n">KODOKAN_PLAYLIST_URL</span><span class="p">,</span>  <span class="c1"># 1 video / technique (our original set)</span>
+    <span class="s2">&quot;efficient_judo&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.youtube.com/playlist?list=PLwd8pJWYTk07K6hDg2_N-9xd31gUCsew7&quot;</span><span class="p">,</span>  <span class="c1"># &quot;67 Throws&quot;</span>
+<span class="p">}</span>
+
+
+<div class="viewcode-block" id="canonical_technique_key">
+<a class="viewcode-back" href="../../module_docs/kodokan/acquire.html#kodokan.acquire.canonical_technique_key">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">canonical_technique_key</span><span class="p">(</span><span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalize a clip title to a cross-source technique key.</span>
+
+<span class="sd">    Handles &quot;kanji / Romaji&quot; (Kodokan) and &quot;Romaji - Demo&quot; (Efficient Judo) titles,</span>
+<span class="sd">    the ``-barai``/``-harai`` spelling, and hyphen/space differences. E.g. both</span>
+<span class="sd">    &quot;大外刈 / O-soto-gari&quot; and &quot;Osoto-gari - Demo&quot; -&gt; &quot;osotogari&quot;.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\bdemo\b&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;barai&quot;</span><span class="p">,</span> <span class="s2">&quot;harai&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[^a-z0-9]&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="source_clips_dir">
+<a class="viewcode-back" href="../../module_docs/kodokan/acquire.html#kodokan.acquire.source_clips_dir">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">source_clips_dir</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Per-source clips directory (Kodokan keeps the legacy flat ``clips/`` dir).&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">source</span> <span class="o">==</span> <span class="s2">&quot;kodokan_ijf&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">clips_dir</span><span class="p">()</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">data_dir</span><span class="p">()</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;clips_</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">d</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">d</span></div>
+
+
+
+<div class="viewcode-block" id="download_source">
+<a class="viewcode-back" href="../../module_docs/kodokan/acquire.html#kodokan.acquire.download_source">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">download_source</span><span class="p">(</span>
+    <span class="n">source</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">playlist_items</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">download_dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">write_info_json</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Download a registered SOURCE playlist into its own clips dir.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        source: a key of :data:`SOURCES` (e.g. ``&quot;efficient_judo&quot;``).</span>
+<span class="sd">        playlist_items: yt-dlp 1-based selector (default: all entries).</span>
+<span class="sd">        download_dir: override (default: :func:`source_clips_dir`).</span>
+<span class="sd">        **kwargs: forwarded to ``yb.download.download_youtube_playlist``.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">yb.download</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_youtube_playlist</span>
+
+    <span class="k">return</span> <span class="n">download_youtube_playlist</span><span class="p">(</span>
+        <span class="n">SOURCES</span><span class="p">[</span><span class="n">source</span><span class="p">],</span>
+        <span class="n">download_dir</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">download_dir</span> <span class="ow">or</span> <span class="n">source_clips_dir</span><span class="p">(</span><span class="n">source</span><span class="p">)),</span>
+        <span class="n">playlist_items</span><span class="o">=</span><span class="n">playlist_items</span><span class="p">,</span>
+        <span class="n">write_info_json</span><span class="o">=</span><span class="n">write_info_json</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
 
 
 <div class="viewcode-block" id="list_techniques">

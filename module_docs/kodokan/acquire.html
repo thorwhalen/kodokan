@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kodokan.acquire &mdash; kodokan 0.0.4 documentation</title>
+  <title>kodokan.acquire &mdash; kodokan 0.0.5 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=8c5712d9"></script>
+      <script src="../../_static/documentation_options.js?v=282f96c0"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -52,9 +52,13 @@
 <li class="toctree-l1"><a class="reference internal" href="../kodokan.html">kodokan</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">kodokan.acquire</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#kodokan.acquire.KODOKAN_PLAYLIST_URL"><code class="docutils literal notranslate"><span class="pre">KODOKAN_PLAYLIST_URL</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.acquire.SOURCES"><code class="docutils literal notranslate"><span class="pre">SOURCES</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.acquire.canonical_technique_key"><code class="docutils literal notranslate"><span class="pre">canonical_technique_key()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.acquire.download_source"><code class="docutils literal notranslate"><span class="pre">download_source()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#kodokan.acquire.download_techniques"><code class="docutils literal notranslate"><span class="pre">download_techniques()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#kodokan.acquire.list_techniques"><code class="docutils literal notranslate"><span class="pre">list_techniques()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#kodokan.acquire.local_clips"><code class="docutils literal notranslate"><span class="pre">local_clips()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.acquire.source_clips_dir"><code class="docutils literal notranslate"><span class="pre">source_clips_dir()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="compare.html">kodokan.compare</a></li>
@@ -106,6 +110,39 @@ once”) is skipped from the main line by default but can be fetched as a refere
 <dd><p>The official “KODOKAN × IJF ACADEMY 100 Techniques” playlist.</p>
 </dd></dl>
 
+<dl class="py data">
+<dt class="sig sig-object py" id="kodokan.acquire.SOURCES">
+<span class="sig-prename descclassname"><span class="pre">kodokan.acquire.</span></span><span class="sig-name descname"><span class="pre">SOURCES</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'efficient_judo':</span> <span class="pre">'https://www.youtube.com/playlist?list=PLwd8pJWYTk07K6hDg2_N-9xd31gUCsew7',</span> <span class="pre">'kodokan_ijf':</span> <span class="pre">'https://www.youtube.com/playlist?list=PLtz539PTepc16H2iu5F3Q3D7_He1EYlIQ'}</span></span><a class="headerlink" href="#kodokan.acquire.SOURCES" title="Link to this definition"></a></dt>
+<dd><p>Registered technique-demo sources (for cross-source / leave-one-clip-out validation).
+Each is an <em>independent</em> set of demonstrations (different demonstrators/cameras), so the
+SOURCE video can be used as the cross-validation group while <code class="docutils literal notranslate"><span class="pre">technique_key</span></code> is the label.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.acquire.canonical_technique_key">
+<span class="sig-prename descclassname"><span class="pre">kodokan.acquire.</span></span><span class="sig-name descname"><span class="pre">canonical_technique_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../_modules/kodokan/acquire.html#canonical_technique_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.acquire.canonical_technique_key" title="Link to this definition"></a></dt>
+<dd><p>Normalize a clip title to a cross-source technique key.</p>
+<p>Handles “kanji / Romaji” (Kodokan) and “Romaji - Demo” (Efficient Judo) titles,
+the <code class="docutils literal notranslate"><span class="pre">-barai</span></code>/<code class="docutils literal notranslate"><span class="pre">-harai</span></code> spelling, and hyphen/space differences. E.g. both
+“大外刈 / O-soto-gari” and “Osoto-gari - Demo” -&gt; “osotogari”.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.acquire.download_source">
+<span class="sig-prename descclassname"><span class="pre">kodokan.acquire.</span></span><span class="sig-name descname"><span class="pre">download_source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist_items</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_info_json</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kodokan/acquire.html#download_source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.acquire.download_source" title="Link to this definition"></a></dt>
+<dd><p>Download a registered SOURCE playlist into its own clips dir.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> – a key of <a class="reference internal" href="#kodokan.acquire.SOURCES" title="kodokan.acquire.SOURCES"><code class="xref py py-data docutils literal notranslate"><span class="pre">SOURCES</span></code></a> (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;efficient_judo&quot;</span></code>).</p></li>
+<li><p><strong>playlist_items</strong> – yt-dlp 1-based selector (default: all entries).</p></li>
+<li><p><strong>download_dir</strong> – override (default: <a class="reference internal" href="#kodokan.acquire.source_clips_dir" title="kodokan.acquire.source_clips_dir"><code class="xref py py-func docutils literal notranslate"><span class="pre">source_clips_dir()</span></code></a>).</p></li>
+<li><p><strong>**kwargs</strong> – forwarded to <code class="docutils literal notranslate"><span class="pre">yb.download.download_youtube_playlist</span></code>.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py function">
 <dt class="sig sig-object py" id="kodokan.acquire.download_techniques">
 <span class="sig-prename descclassname"><span class="pre">kodokan.acquire.</span></span><span class="sig-name descname"><span class="pre">download_techniques</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">playlist_items</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_pv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">download_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">write_info_json</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kodokan/acquire.html#download_techniques"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.acquire.download_techniques" title="Link to this definition"></a></dt>
@@ -148,6 +185,12 @@ once”) is skipped from the main line by default but can be fetched as a refere
 <p>Reads each <code class="docutils literal notranslate"><span class="pre">*.info.json</span></code> sidecar and pairs it with its <code class="docutils literal notranslate"><span class="pre">.mp4</span></code>. Returns
 dicts with <code class="docutils literal notranslate"><span class="pre">id</span></code>, <code class="docutils literal notranslate"><span class="pre">title</span></code>, <code class="docutils literal notranslate"><span class="pre">webpage_url</span></code>, <code class="docutils literal notranslate"><span class="pre">path</span></code>. Sidecars without a
 matching video (e.g. the playlist-level info.json) are skipped.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.acquire.source_clips_dir">
+<span class="sig-prename descclassname"><span class="pre">kodokan.acquire.</span></span><span class="sig-name descname"><span class="pre">source_clips_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Path</span></span></span><a class="reference internal" href="../../_modules/kodokan/acquire.html#source_clips_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.acquire.source_clips_dir" title="Link to this definition"></a></dt>
+<dd><p>Per-source clips directory (Kodokan keeps the legacy flat <code class="docutils literal notranslate"><span class="pre">clips/</span></code> dir).</p>
 </dd></dl>
 
 </section>
