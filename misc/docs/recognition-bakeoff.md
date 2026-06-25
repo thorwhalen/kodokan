@@ -1,5 +1,22 @@
 # Recognition bake-off — what separates judo techniques (with validity caveats)
 
+> ## 🚨 RESULT THAT SUPERSEDES EVERYTHING BELOW: cross-source ≈ chance
+> We acquired a **second independent source** (Efficient Judo) and ran the honest
+> **leave-one-CLIP-out** eval (`examples/eval_cross_source.py`) over techniques present in
+> both sources (group = source video). On the **same data**, two protocols:
+>
+> | protocol | top-1 | notes |
+> |---|---|---|
+> | within-clip (leave-one-demo-out, leaky) | ~0.08–0.12 | the kind of number reported below |
+> | **cross-clip (leave-one-CLIP-out, honest)** | **~0.02–0.03** | ≈ chance (uniform ~0.018, majority ~0.034) |
+>
+> (52–58 techniques, ~2 clips each, tori_angles_pos+LDA / tori_angles+centroid.) **Across
+> independent video sources, the current monocular-2D-pose pipeline recognizes the throw at
+> CHANCE.** The within-clip "signal" (incl. the earlier "0.242 / 6.7× chance") was largely
+> **clip identity** (people/gi/camera/background), confirmed by the within-vs-cross gap.
+> The numbers in the rest of this doc are within-clip and should be read as such.
+> See `adversarial-review.md`; next steps in issue #9/#10 and the strategy note below.
+
 > **⚠️ Validity update (adversarial review, see `adversarial-review.md`).**
 > **Each technique class == one YouTube video**, so leave-one-demo-out trains/tests on
 > reps from the *same clip*; the numbers below are a **within-clip upper bound** and do

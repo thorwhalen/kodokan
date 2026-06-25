@@ -68,19 +68,22 @@ def main():
     y = np.array([kidx[r[0]] for r in rows])
     groups = np.array([r[2] for r in rows])  # video_id == CV group
 
-    preds = loo_pooled_predict(X, y, method=args.method, groups=groups)
-    m = classification_metrics(y, preds)
+    # Same data, two protocols: leave-one-CLIP-out (honest) vs leave-one-demo-out (within-clip).
+    # The gap between them IS the clip-identity confound, quantified on identical classes.
+    m_cross = classification_metrics(y, loo_pooled_predict(X, y, method=args.method, groups=groups))
+    m_within = classification_metrics(y, loo_pooled_predict(X, y, method=args.method))
     print(json.dumps({
-        "eval": "leave-one-CLIP-out (cross-source, honest)",
         "feature": args.feature,
         "method": args.method,
         "n_techniques": len(keys),
         "n_clips": int(len(set(groups))),
-        "n_demos": m["n"],
+        "n_demos": m_cross["n"],
         "sources": sorted({r[1] for r in rows}),
-        "top1": m["top1"],
-        "balanced_accuracy": m["balanced"],
-        "majority_baseline": m["majority_baseline"],
+        "cross_clip_top1": m_cross["top1"],            # HONEST (leave-one-clip-out)
+        "cross_clip_balanced": m_cross["balanced"],
+        "within_clip_top1": m_within["top1"],          # leaky upper bound (same data)
+        "confound_gap": round(m_within["top1"] - m_cross["top1"], 3),
+        "majority_baseline": m_cross["majority_baseline"],
         "chance_uniform": round(1.0 / len(keys), 3),
     }))
 
