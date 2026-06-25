@@ -1,0 +1,4 @@
+kodokan.learning
+================
+.. automodule:: kodokan.learning
+   :members:

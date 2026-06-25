@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kodokan.flashcards &mdash; kodokan 0.0.8 documentation</title>
+  <title>kodokan.flashcards &mdash; kodokan 0.0.9 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=53b53b71"></script>
+      <script src="../../_static/documentation_options.js?v=f7cdbf68"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -52,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/config.html">kodokan.config</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/descriptors.html">kodokan.descriptors</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/flashcards.html">kodokan.flashcards</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/learning.html">kodokan.learning</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/pose.html">kodokan.pose</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/recognize.html">kodokan.recognize</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/score.html">kodokan.score</a></li>
@@ -112,6 +113,13 @@
 
 <span class="n">PathLike</span> <span class="o">=</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span>
 <span class="n">MODES</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;name_to_video&quot;</span><span class="p">,</span> <span class="s2">&quot;video_to_name&quot;</span><span class="p">)</span>
+
+<span class="c1"># Playlist section-header entries (e.g. &quot;足技 / Ashi-waza&quot;) are category names, not</span>
+<span class="c1"># throws; their canonical keys are excluded from the quiz catalog.</span>
+<span class="n">DIVIDER_KEYS</span> <span class="o">=</span> <span class="nb">frozenset</span><span class="p">({</span>
+    <span class="s2">&quot;tewaza&quot;</span><span class="p">,</span> <span class="s2">&quot;ashiwaza&quot;</span><span class="p">,</span> <span class="s2">&quot;koshiwaza&quot;</span><span class="p">,</span> <span class="s2">&quot;sutemiwaza&quot;</span><span class="p">,</span> <span class="s2">&quot;masutemiwaza&quot;</span><span class="p">,</span> <span class="s2">&quot;yokosutemiwaza&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ukiwaza&quot;</span><span class="p">,</span> <span class="s2">&quot;nagewaza&quot;</span><span class="p">,</span> <span class="s2">&quot;katamewaza&quot;</span><span class="p">,</span> <span class="s2">&quot;osaekomiwaza&quot;</span><span class="p">,</span> <span class="s2">&quot;shimewaza&quot;</span><span class="p">,</span> <span class="s2">&quot;kansetsuwaza&quot;</span><span class="p">,</span>
+<span class="p">})</span>
 
 
 <div class="viewcode-block" id="Problem">
@@ -334,9 +342,11 @@
     <span class="n">catalog</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">vid</span> <span class="ow">in</span> <span class="n">ss</span><span class="p">:</span>
         <span class="n">rec</span> <span class="o">=</span> <span class="n">ss</span><span class="p">[</span><span class="n">vid</span><span class="p">]</span>
-        <span class="n">key</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;technique_key&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">canonical_technique_key</span><span class="p">(</span>
-            <span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;technique&quot;</span><span class="p">,</span> <span class="n">vid</span><span class="p">)</span>
-        <span class="p">)</span>
+        <span class="c1"># recompute the key from the title so the canonical rules (e.g. &quot;Escapes&quot;</span>
+        <span class="c1"># merging) apply even to segments tagged before those rules existed.</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">canonical_technique_key</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;technique&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">vid</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">DIVIDER_KEYS</span><span class="p">:</span>  <span class="c1"># skip playlist section-header pseudo-entries</span>
+            <span class="k">continue</span>
         <span class="c1"># clean display name: romaji part, drop &quot;- Demo&quot; / &quot;Escapes&quot; production suffixes</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;technique&quot;</span><span class="p">,</span> <span class="n">vid</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
         <span class="n">name</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s*-\s*demo\b&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>

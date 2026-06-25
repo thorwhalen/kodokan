@@ -1,0 +1,240 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kodokan.learning &mdash; kodokan 0.0.9 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=f7cdbf68"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="kodokan.pose" href="pose.html" />
+    <link rel="prev" title="kodokan.flashcards" href="flashcards.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            kodokan
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../kodokan.html">kodokan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acquire.html">kodokan.acquire</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compare.html">kodokan.compare</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">kodokan.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="descriptors.html">kodokan.descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flashcards.html">kodokan.flashcards</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">kodokan.learning</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#design-notes">Design notes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.learning.ConfusionWeighted"><code class="docutils literal notranslate"><span class="pre">ConfusionWeighted</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.learning.FSRSLite"><code class="docutils literal notranslate"><span class="pre">FSRSLite</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.learning.Leitner"><code class="docutils literal notranslate"><span class="pre">Leitner</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.learning.SM2"><code class="docutils literal notranslate"><span class="pre">SM2</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.learning.Selection"><code class="docutils literal notranslate"><span class="pre">Selection</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.learning.Strategy"><code class="docutils literal notranslate"><span class="pre">Strategy</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.learning.UniformRandom"><code class="docutils literal notranslate"><span class="pre">UniformRandom</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.learning.empirical_confusion"><code class="docutils literal notranslate"><span class="pre">empirical_confusion()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.learning.item_accuracy"><code class="docutils literal notranslate"><span class="pre">item_accuracy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.learning.list_strategies"><code class="docutils literal notranslate"><span class="pre">list_strategies()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.learning.make_strategy"><code class="docutils literal notranslate"><span class="pre">make_strategy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.learning.pick_distractors"><code class="docutils literal notranslate"><span class="pre">pick_distractors()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pose.html">kodokan.pose</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recognize.html">kodokan.recognize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="score.html">kodokan.score</a></li>
+<li class="toctree-l1"><a class="reference internal" href="segment.html">kodokan.segment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store.html">kodokan.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="track.html">kodokan.track</a></li>
+<li class="toctree-l1"><a class="reference internal" href="viz.html">kodokan.viz</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">kodokan</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">kodokan.learning</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/module_docs/kodokan/learning.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-kodokan.learning">
+<span id="kodokan-learning"></span><h1>kodokan.learning<a class="headerlink" href="#module-kodokan.learning" title="Link to this heading"></a></h1>
+<p>Adaptive learning engine for the flashcard quiz — selectable strategies.</p>
+<p>A <a class="reference internal" href="#kodokan.learning.Strategy" title="kodokan.learning.Strategy"><code class="xref py py-class docutils literal notranslate"><span class="pre">Strategy</span></code></a> maps the recorded response <strong>history</strong> to the next <strong>problem</strong>
+— which technique to ask (target) and which distractors to show — both drawn from
+an active study <em>set</em>. Strategies are research-backed (spaced repetition + MCQ
+learning science; see <code class="docutils literal notranslate"><span class="pre">misc/docs/learning-research.md</span></code>) and the user picks one in
+settings. The function from recorded data → next question is therefore a swappable
+strategy (open/closed): add a class, register it, and it appears in the UI.</p>
+<section id="design-notes">
+<h2>Design notes<a class="headerlink" href="#design-notes" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>History is a list of plain response dicts (the logged record schema below), so the
+engine has no storage dependency and is trivially testable.</p></li>
+<li><p>Per-item adaptive state (Leitner box, SM-2 ease, FSRS stability) is reconstructed by
+<em>replaying</em> the history — no mutable server state to corrupt.</p></li>
+<li><p>Spacing intervals are in <strong>days</strong>; within a single dense session most items aren’t
+“due”, so every scheduler falls back to an urgency ranking (most-overdue / lowest
+recall / box weight) instead of stalling.</p></li>
+</ul>
+<p>Record schema (one dict per answered problem):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">response_id</span><span class="p">,</span> <span class="n">problem_id</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">session_id</span><span class="p">,</span> <span class="n">strategy_key</span><span class="p">,</span>
+<span class="n">target_key</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">choice_keys</span><span class="p">,</span> <span class="n">chosen_key</span><span class="p">,</span>
+<span class="n">correct</span><span class="p">,</span> <span class="n">score</span><span class="p">,</span> <span class="n">timed_out</span><span class="p">,</span> <span class="n">response_time_ms</span><span class="p">,</span>
+<span class="n">ts_presented</span><span class="p">,</span> <span class="n">ts_answered</span>            <span class="c1"># ISO-8601 UTC</span>
+</pre></div>
+</div>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="kodokan.learning.ConfusionWeighted">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kodokan.learning.</span></span><span class="sig-name descname"><span class="pre">ConfusionWeighted</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_choices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recency_halflife_days</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'float'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">7.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epsilon_explore</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'float'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prior</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'float'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kodokan/learning.html#ConfusionWeighted"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.learning.ConfusionWeighted" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="kodokan.learning.FSRSLite">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kodokan.learning.</span></span><span class="sig-name descname"><span class="pre">FSRSLite</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_choices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_retention</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'float'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_init</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'float'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stability_growth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'float'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lapse_floor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'float'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kodokan/learning.html#FSRSLite"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.learning.FSRSLite" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="kodokan.learning.Leitner">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kodokan.learning.</span></span><span class="sig-name descname"><span class="pre">Leitner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_choices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_boxes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">intervals</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'tuple'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">(1,</span> <span class="pre">2,</span> <span class="pre">4,</span> <span class="pre">8,</span> <span class="pre">16)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">demotion</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'str'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'reset'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kodokan/learning.html#Leitner"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.learning.Leitner" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="kodokan.learning.SM2">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kodokan.learning.</span></span><span class="sig-name descname"><span class="pre">SM2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_choices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ef_start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'float'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ef_min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'float'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fast_ms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3500</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slow_ms</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">9000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kodokan/learning.html#SM2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.learning.SM2" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="kodokan.learning.Selection">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kodokan.learning.</span></span><span class="sig-name descname"><span class="pre">Selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choice_keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kodokan/learning.html#Selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.learning.Selection" title="Link to this definition"></a></dt>
+<dd><p>A chosen target plus the full ordered option set (includes the target).</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="kodokan.learning.Strategy">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kodokan.learning.</span></span><span class="sig-name descname"><span class="pre">Strategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_choices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kodokan/learning.html#Strategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.learning.Strategy" title="Link to this definition"></a></dt>
+<dd><p>Base strategy: target selection is overridden; distractors default to confusable.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="kodokan.learning.UniformRandom">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kodokan.learning.</span></span><span class="sig-name descname"><span class="pre">UniformRandom</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n_choices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'int'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">anti_repeat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="s"><span class="pre">'bool'</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kodokan/learning.html#UniformRandom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.learning.UniformRandom" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.learning.empirical_confusion">
+<span class="sig-prename descclassname"><span class="pre">kodokan.learning.</span></span><span class="sig-name descname"><span class="pre">empirical_confusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">history</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">halflife_days</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">7.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">now</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/kodokan/learning.html#empirical_confusion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.learning.empirical_confusion" title="Link to this definition"></a></dt>
+<dd><p>Per-learner confusion matrix from wrong answers: <code class="docutils literal notranslate"><span class="pre">{correct:</span> <span class="pre">{chosen_wrong:</span> <span class="pre">weight}}</span></code>.</p>
+<p>Each mistake contributes a recency-decayed, partial-credit-shortfall weight, so the
+throws a learner <em>actually</em> mixes up (recently) dominate.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.learning.item_accuracy">
+<span class="sig-prename descclassname"><span class="pre">kodokan.learning.</span></span><span class="sig-name descname"><span class="pre">item_accuracy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">history</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kodokan/learning.html#item_accuracy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.learning.item_accuracy" title="Link to this definition"></a></dt>
+<dd><p>Per-item running stats: <code class="docutils literal notranslate"><span class="pre">{key:</span> <span class="pre">{n,</span> <span class="pre">wrong,</span> <span class="pre">last_ts,</span> <span class="pre">last_correct}}</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.learning.list_strategies">
+<span class="sig-prename descclassname"><span class="pre">kodokan.learning.</span></span><span class="sig-name descname"><span class="pre">list_strategies</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kodokan/learning.html#list_strategies"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.learning.list_strategies" title="Link to this definition"></a></dt>
+<dd><p>Describe available strategies (for the settings UI).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.learning.make_strategy">
+<span class="sig-prename descclassname"><span class="pre">kodokan.learning.</span></span><span class="sig-name descname"><span class="pre">make_strategy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#kodokan.learning.Strategy" title="kodokan.learning.Strategy"><span class="pre">Strategy</span></a></span></span><a class="reference internal" href="../../_modules/kodokan/learning.html#make_strategy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.learning.make_strategy" title="Link to this definition"></a></dt>
+<dd><p>Instantiate a strategy by key (default = confusion-weighted); unknown params ignored.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.learning.pick_distractors">
+<span class="sig-prename descclassname"><span class="pre">kodokan.learning.</span></span><span class="sig-name descname"><span class="pre">pick_distractors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">study_set</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">top_up</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kodokan/learning.html#pick_distractors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.learning.pick_distractors" title="Link to this definition"></a></dt>
+<dd><p>Pick <code class="docutils literal notranslate"><span class="pre">n</span></code> distractors from <code class="docutils literal notranslate"><span class="pre">study_set</span></code>, preferring confusable ones.</p>
+<p><code class="docutils literal notranslate"><span class="pre">similarity</span></code> maps <code class="docutils literal notranslate"><span class="pre">target</span> <span class="pre">-&gt;</span> <span class="pre">{key:</span> <span class="pre">weight}</span></code> (pose-shape or empirical confusion).
+Falls back to uniform when absent; tops up from the rest of the set if the
+confusable pool is too small (so the answer set always has <code class="docutils literal notranslate"><span class="pre">n</span></code> options when possible).</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="flashcards.html" class="btn btn-neutral float-left" title="kodokan.flashcards" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pose.html" class="btn btn-neutral float-right" title="kodokan.pose" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
