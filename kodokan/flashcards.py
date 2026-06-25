@@ -45,7 +45,10 @@ class Problem:
 # Distractor / target selection (pure, seedable)
 # --------------------------------------------------------------------------- #
 
-def _weighted_sample(items: list, weights: list[float], k: int, rng: random.Random) -> list:
+
+def _weighted_sample(
+    items: list, weights: list[float], k: int, rng: random.Random
+) -> list:
     """Sample k distinct items proportional to weights (no replacement)."""
     items, weights = list(items), [max(w, 1e-9) for w in weights]
     chosen = []
@@ -96,7 +99,9 @@ def make_problem(
     rng = rng or random.Random()
     clip_for = clip_for or (lambda k: (catalog[k].get("clips") or [None])[0])
 
-    distractors = confusable_distractors(target_key, list(catalog), n=n_choices - 1, similarity=similarity, rng=rng)
+    distractors = confusable_distractors(
+        target_key, list(catalog), n=n_choices - 1, similarity=similarity, rng=rng
+    )
     option_keys = distractors + [target_key]
     rng.shuffle(option_keys)
     correct_index = option_keys.index(target_key)
@@ -106,7 +111,10 @@ def make_problem(
         choices = [{"key": k, "name": catalog[k]["name"]} for k in option_keys]
     else:  # name_to_video
         prompt = {"name": catalog[target_key]["name"]}
-        choices = [{"key": k, "name": catalog[k]["name"], "clip": clip_for(k)} for k in option_keys]
+        choices = [
+            {"key": k, "name": catalog[k]["name"], "clip": clip_for(k)}
+            for k in option_keys
+        ]
 
     return Problem(
         problem_id=f"{mode}-{target_key}-{rng.randrange(10**9)}",
@@ -122,7 +130,10 @@ def make_problem(
 # Confusion-aware scoring + adaptive selection
 # --------------------------------------------------------------------------- #
 
-def score_response(correct_key: str, chosen_key: str, *, similarity=None, max_partial: float = 0.5) -> float:
+
+def score_response(
+    correct_key: str, chosen_key: str, *, similarity=None, max_partial: float = 0.5
+) -> float:
     """Confusion-weighted credit in [0, 1].
 
     Correct = 1.0. A wrong answer earns *partial* credit proportional to how confusable
@@ -157,6 +168,7 @@ def next_target(keys, history, *, focus=None, rng: random.Random | None = None) 
 # Response logging (dol store) + store-backed catalog/confusability
 # --------------------------------------------------------------------------- #
 
+
 def responses_store(directory: PathLike | None = None):
     """A dict-like JSON store of logged responses (per-user, timestamped)."""
     from dol import JsonFiles
@@ -168,8 +180,15 @@ def responses_store(directory: PathLike | None = None):
     return JsonFiles(directory)
 
 
-def log_response(problem: Problem, chosen_index: int, *, user: str = "default", store=None,
-                 similarity=None, timestamp: str | None = None) -> dict:
+def log_response(
+    problem: Problem,
+    chosen_index: int,
+    *,
+    user: str = "default",
+    store=None,
+    similarity=None,
+    timestamp: str | None = None,
+) -> dict:
     """Record a response (datetime + exact problem + choice + correctness + score)."""
     store = store if store is not None else responses_store()
     ts = timestamp or datetime.now(timezone.utc).isoformat()
@@ -185,7 +204,9 @@ def log_response(problem: Problem, chosen_index: int, *, user: str = "default", 
         "correct": bool(problem.is_correct(chosen_index)),
         "score": score_response(problem.target_key, chosen_key, similarity=similarity),
     }
-    store[f"{user}__{ts}.json".replace(":", "-")] = rec  # filesystem-safe (no '/' subdir, no ':')
+    store[f"{user}__{ts}.json".replace(":", "-")] = (
+        rec  # filesystem-safe (no '/' subdir, no ':')
+    )
     return rec
 
 
@@ -202,27 +223,38 @@ def build_catalog(*, min_two_person_frac: float = 0.4, min_demo_s: float = 1.0):
     catalog: dict[str, dict] = {}
     for vid in ss:
         rec = ss[vid]
-        key = rec.get("technique_key") or canonical_technique_key(rec.get("technique", vid))
+        key = rec.get("technique_key") or canonical_technique_key(
+            rec.get("technique", vid)
+        )
         # clean display name: romaji part, drop "- Demo" / "Escapes" production suffixes
         name = rec.get("technique", vid).split("/")[-1].strip()
         name = re.sub(r"\s*-\s*demo\b", "", name, flags=re.I)
         name = re.sub(r"\s+escapes?\b", "", name, flags=re.I).strip()
-        demos = [d for d in rec.get("demos", [])
-                 if d.get("two_person_frac", 1.0) >= min_two_person_frac
-                 and (d["end_s"] - d["start_s"]) >= min_demo_s]
+        demos = [
+            d
+            for d in rec.get("demos", [])
+            if d.get("two_person_frac", 1.0) >= min_two_person_frac
+            and (d["end_s"] - d["start_s"]) >= min_demo_s
+        ]
         if not demos:
             continue
         entry = catalog.setdefault(key, {"name": name, "clips": []})
-        entry["clips"].append({
-            "video_id": vid,
-            "source": rec.get("source", "unknown"),
-            "source_url": rec.get("source_url"),
-            "demos": [{"start_s": d["start_s"], "end_s": d["end_s"]} for d in demos[:3]],
-        })
+        entry["clips"].append(
+            {
+                "video_id": vid,
+                "source": rec.get("source", "unknown"),
+                "source_url": rec.get("source_url"),
+                "demos": [
+                    {"start_s": d["start_s"], "end_s": d["end_s"]} for d in demos[:3]
+                ],
+            }
+        )
     return catalog
 
 
-def build_confusability(catalog: dict | None = None, *, feature: str = "tori_angles_pos") -> dict:
+def build_confusability(
+    catalog: dict | None = None, *, feature: str = "tori_angles_pos"
+) -> dict:
     """Technique×technique similarity (0..1) from mean pooled pose descriptors.
 
     ``similarity[a][b]`` high ⇒ techniques a, b look alike in pose-space (likely
@@ -257,6 +289,7 @@ def build_confusability(catalog: dict | None = None, *, feature: str = "tori_ang
     M = (M - M.mean(0)) / (M.std(0) + 1e-9)
     D = cdist(M, M)
     S = 1.0 - D / (D.max() + 1e-9)
-    return {keys[i]: {keys[j]: float(round(S[i, j], 3)) for j in range(len(keys)) if j != i}
-            for i in range(len(keys))}
-
+    return {
+        keys[i]: {keys[j]: float(round(S[i, j], 3)) for j in range(len(keys)) if j != i}
+        for i in range(len(keys))
+    }
