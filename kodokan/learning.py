@@ -34,10 +34,21 @@ from dataclasses import dataclass, field
 from datetime import datetime, timezone
 
 RECORD_FIELDS = (
-    "response_id", "problem_id", "user", "session_id", "strategy_key",
-    "target_key", "mode", "choice_keys", "chosen_key",
-    "correct", "score", "timed_out", "response_time_ms",
-    "ts_presented", "ts_answered",
+    "response_id",
+    "problem_id",
+    "user",
+    "session_id",
+    "strategy_key",
+    "target_key",
+    "mode",
+    "choice_keys",
+    "chosen_key",
+    "correct",
+    "score",
+    "timed_out",
+    "response_time_ms",
+    "ts_presented",
+    "ts_answered",
 )
 
 
@@ -67,6 +78,7 @@ class Selection:
 # History helpers (operate on the logged record dicts)
 # --------------------------------------------------------------------------- #
 
+
 def _events_by_item(history) -> dict[str, list[dict]]:
     by = defaultdict(list)
     for r in history:
@@ -77,7 +89,9 @@ def _events_by_item(history) -> dict[str, list[dict]]:
     return by
 
 
-def empirical_confusion(history, *, halflife_days: float = 7.0, now: datetime | None = None) -> dict:
+def empirical_confusion(
+    history, *, halflife_days: float = 7.0, now: datetime | None = None
+) -> dict:
     """Per-learner confusion matrix from wrong answers: ``{correct: {chosen_wrong: weight}}``.
 
     Each mistake contributes a recency-decayed, partial-credit-shortfall weight, so the
@@ -91,7 +105,9 @@ def empirical_confusion(history, *, halflife_days: float = 7.0, now: datetime | 
         correct_k, chosen_k = r.get("target_key"), r["chosen_key"]
         if not correct_k or chosen_k == correct_k:
             continue
-        decay = 0.5 ** (_days_since(r.get("ts_answered"), now) / max(halflife_days, 1e-6))
+        decay = 0.5 ** (
+            _days_since(r.get("ts_answered"), now) / max(halflife_days, 1e-6)
+        )
         shortfall = 1.0 - float(r.get("score") or 0.0)
         conf[correct_k][chosen_k] += decay * max(shortfall, 0.25)
     return {k: dict(v) for k, v in conf.items()}
@@ -102,14 +118,19 @@ def item_accuracy(history) -> dict[str, dict]:
     stats: dict[str, dict] = {}
     for k, evs in _events_by_item(history).items():
         wrong = sum(1 for r in evs if not r.get("correct"))
-        stats[k] = {"n": len(evs), "wrong": wrong,
-                    "last_ts": evs[-1].get("ts_answered"), "last_correct": bool(evs[-1].get("correct"))}
+        stats[k] = {
+            "n": len(evs),
+            "wrong": wrong,
+            "last_ts": evs[-1].get("ts_answered"),
+            "last_correct": bool(evs[-1].get("correct")),
+        }
     return stats
 
 
 # --------------------------------------------------------------------------- #
 # Distractor selection (shared)
 # --------------------------------------------------------------------------- #
+
 
 def _weighted_sample(items, weights, k, rng):
     items, weights = list(items), [max(float(w), 1e-9) for w in weights]
@@ -151,6 +172,7 @@ def pick_distractors(target, study_set, *, n, similarity=None, rng, top_up=True)
 # Strategies
 # --------------------------------------------------------------------------- #
 
+
 @dataclass
 class Strategy:
     """Base strategy: target selection is overridden; distractors default to confusable."""
@@ -166,8 +188,16 @@ class Strategy:
     def distractor_similarity(self, history, *, now):
         return None  # subclasses may return a similarity matrix; else caller's pose-sim
 
-    def next_selection(self, history, study_set, *, mode="video_to_name",
-                       similarity=None, now=None, rng=None) -> Selection:
+    def next_selection(
+        self,
+        history,
+        study_set,
+        *,
+        mode="video_to_name",
+        similarity=None,
+        now=None,
+        rng=None,
+    ) -> Selection:
         now = now or datetime.now(timezone.utc)
         rng = rng or random.Random()
         study_set = [k for k in dict.fromkeys(study_set)]  # dedupe, keep order
@@ -175,7 +205,9 @@ class Strategy:
             raise ValueError("empty study set")
         target = self.pick_target(history, study_set, now=now, rng=rng)
         sim = self.distractor_similarity(history, now=now) or similarity
-        distractors = pick_distractors(target, study_set, n=self.n_choices - 1, similarity=sim, rng=rng)
+        distractors = pick_distractors(
+            target, study_set, n=self.n_choices - 1, similarity=sim, rng=rng
+        )
         options = [*distractors, target]
         rng.shuffle(options)
         return Selection(target_key=target, choice_keys=options)
@@ -190,7 +222,11 @@ class UniformRandom(Strategy):
 
     def pick_target(self, history, study_set, *, now, rng):
         last = history[-1]["target_key"] if history else None
-        pool = [k for k in study_set if k != last] if (self.anti_repeat and len(study_set) > 1) else list(study_set)
+        pool = (
+            [k for k in study_set if k != last]
+            if (self.anti_repeat and len(study_set) > 1)
+            else list(study_set)
+        )
         return rng.choice(pool)
 
 
@@ -256,7 +292,9 @@ class SM2(Strategy):
             if rt is not None and rt >= self.slow_ms:
                 return 3
             return 4
-        return 2 if float(r.get("score") or 0) > 0 else 1  # confusable miss vs clear miss
+        return (
+            2 if float(r.get("score") or 0) > 0 else 1
+        )  # confusable miss vs clear miss
 
     def _state(self, history):
         st = {}
@@ -266,11 +304,20 @@ class SM2(Strategy):
                 q = self._grade(r)
                 ef = max(self.ef_min, ef + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02)))
                 if q >= 3:
-                    interval = self.i1 if n == 0 else (self.i2 if n == 1 else round(interval * ef))
+                    interval = (
+                        self.i1
+                        if n == 0
+                        else (self.i2 if n == 1 else round(interval * ef))
+                    )
                     n += 1
                 else:
                     n, interval = 0, self.i1
-            st[k] = {"ef": ef, "n": n, "I": interval, "last": evs[-1].get("ts_answered")}
+            st[k] = {
+                "ef": ef,
+                "n": n,
+                "I": interval,
+                "last": evs[-1].get("ts_answered"),
+            }
         return st
 
     def pick_target(self, history, study_set, *, now, rng):
@@ -279,7 +326,9 @@ class SM2(Strategy):
         if unseen:
             return rng.choice(unseen)
         # most overdue first (days past due = elapsed - interval)
-        return max(study_set, key=lambda k: _days_since(st[k]["last"], now) - st[k]["I"])
+        return max(
+            study_set, key=lambda k: _days_since(st[k]["last"], now) - st[k]["I"]
+        )
 
 
 @dataclass
@@ -292,7 +341,9 @@ class ConfusionWeighted(Strategy):
     prior: float = 1.0
 
     def _confusion_score(self, history, now):
-        conf = empirical_confusion(history, halflife_days=self.recency_halflife_days, now=now)
+        conf = empirical_confusion(
+            history, halflife_days=self.recency_halflife_days, now=now
+        )
         return {k: sum(v.values()) for k, v in conf.items()}
 
     def pick_target(self, history, study_set, *, now, rng):
@@ -308,7 +359,9 @@ class ConfusionWeighted(Strategy):
 
     def distractor_similarity(self, history, *, now):
         # drive distractors from the learner's own confusion pairs (fallback: pose-sim via caller)
-        conf = empirical_confusion(history, halflife_days=self.recency_halflife_days, now=now)
+        conf = empirical_confusion(
+            history, halflife_days=self.recency_halflife_days, now=now
+        )
         return conf or None
 
 
@@ -344,7 +397,9 @@ class FSRSLite(Strategy):
         unseen = [k for k in study_set if k not in st]
         if unseen:
             return rng.choice(unseen)
-        return min(study_set, key=lambda k: self._recall(k, st, now))  # weakest memory first
+        return min(
+            study_set, key=lambda k: self._recall(k, st, now)
+        )  # weakest memory first
 
     def distractor_similarity(self, history, *, now):
         conf = empirical_confusion(history, now=now)
@@ -373,8 +428,12 @@ def list_strategies() -> list[dict]:
     """Describe available strategies (for the settings UI)."""
     out = []
     for key, cls in STRATEGIES.items():
-        out.append({
-            "key": key, "name": cls.name, "description": cls.description,
-            "is_default": key == DEFAULT_STRATEGY,
-        })
+        out.append(
+            {
+                "key": key,
+                "name": cls.name,
+                "description": cls.description,
+                "is_default": key == DEFAULT_STRATEGY,
+            }
+        )
     return out

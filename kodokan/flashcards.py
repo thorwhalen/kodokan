@@ -27,10 +27,22 @@ MODES = ("name_to_video", "video_to_name")
 
 # Playlist section-header entries (e.g. "足技 / Ashi-waza") are category names, not
 # throws; their canonical keys are excluded from the quiz catalog.
-DIVIDER_KEYS = frozenset({
-    "tewaza", "ashiwaza", "koshiwaza", "sutemiwaza", "masutemiwaza", "yokosutemiwaza",
-    "ukiwaza", "nagewaza", "katamewaza", "osaekomiwaza", "shimewaza", "kansetsuwaza",
-})
+DIVIDER_KEYS = frozenset(
+    {
+        "tewaza",
+        "ashiwaza",
+        "koshiwaza",
+        "sutemiwaza",
+        "masutemiwaza",
+        "yokosutemiwaza",
+        "ukiwaza",
+        "nagewaza",
+        "katamewaza",
+        "osaekomiwaza",
+        "shimewaza",
+        "kansetsuwaza",
+    }
+)
 
 
 @dataclass
