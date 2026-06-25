@@ -37,6 +37,7 @@ def canonical_technique_key(title: str) -> str:
     """
     s = title.split("/")[-1].lower()
     s = re.sub(r"\bdemo\b", "", s)
+    s = re.sub(r"\bescapes?\b", "", s)  # merge "<pin> Escapes" demos into the technique
     s = s.replace("barai", "harai")
     return re.sub(r"[^a-z0-9]", "", s)
 

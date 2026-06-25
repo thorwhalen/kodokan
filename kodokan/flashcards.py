@@ -25,6 +25,13 @@ from pathlib import Path
 PathLike = str | Path
 MODES = ("name_to_video", "video_to_name")
 
+# Playlist section-header entries (e.g. "足技 / Ashi-waza") are category names, not
+# throws; their canonical keys are excluded from the quiz catalog.
+DIVIDER_KEYS = frozenset({
+    "tewaza", "ashiwaza", "koshiwaza", "sutemiwaza", "masutemiwaza", "yokosutemiwaza",
+    "ukiwaza", "nagewaza", "katamewaza", "osaekomiwaza", "shimewaza", "kansetsuwaza",
+})
+
 
 @dataclass
 class Problem:
@@ -223,9 +230,11 @@ def build_catalog(*, min_two_person_frac: float = 0.4, min_demo_s: float = 1.0):
     catalog: dict[str, dict] = {}
     for vid in ss:
         rec = ss[vid]
-        key = rec.get("technique_key") or canonical_technique_key(
-            rec.get("technique", vid)
-        )
+        # recompute the key from the title so the canonical rules (e.g. "Escapes"
+        # merging) apply even to segments tagged before those rules existed.
+        key = canonical_technique_key(rec.get("technique") or vid)
+        if key in DIVIDER_KEYS:  # skip playlist section-header pseudo-entries
+            continue
         # clean display name: romaji part, drop "- Demo" / "Escapes" production suffixes
         name = rec.get("technique", vid).split("/")[-1].strip()
         name = re.sub(r"\s*-\s*demo\b", "", name, flags=re.I)
