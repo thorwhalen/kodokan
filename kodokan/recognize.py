@@ -82,12 +82,20 @@ def pooled_descriptor(feat: np.ndarray, *, levels=(1, 2, 4)) -> np.ndarray:
     return np.concatenate(parts)
 
 
-# ---- leave-one-out evaluators -> accuracy ----
+# ---- leave-one-out evaluation (LEAKAGE-FREE: all preprocessing fit on train fold) ----
+#
+# NOTE on a deeper confound: in the Kodokan dataset each technique class == one source
+# video, so leave-one-DEMO-out trains and tests on reps from the SAME clip. The model
+# can exploit clip-identity cues (people/gi/camera/background), so these numbers are an
+# UPPER BOUND on true technique recognition. Honest validation needs >=2 independent
+# source clips per technique and leave-one-CLIP-out (group CV by video_id). See
+# misc/docs/adversarial-review.md.
 
 
-def dtw_1nn_accuracy(feature_seqs: list[np.ndarray], labels: list[int]) -> float:
+def dtw_1nn_predict(feature_seqs: list[np.ndarray], labels) -> list:
+    """Leave-one-out 1-NN by DTW distance; returns predicted label per item."""
     n = len(feature_seqs)
-    correct = 0
+    preds: list = [None] * n
     for i in range(n):
         best, best_j = np.inf, -1
         for j in range(n):
@@ -96,62 +104,74 @@ def dtw_1nn_accuracy(feature_seqs: list[np.ndarray], labels: list[int]) -> float
             d = compare(feature_seqs[i], feature_seqs[j])["normalized"]
             if np.isfinite(d) and d < best:
                 best, best_j = d, j
-        if best_j >= 0 and labels[best_j] == labels[i]:
-            correct += 1
-    return correct / n
+        preds[i] = labels[best_j] if best_j >= 0 else None
+    return preds
 
 
-def _standardize(X: np.ndarray) -> np.ndarray:
-    mu, sd = X.mean(0), X.std(0)
-    return (X - mu) / (sd + 1e-9)
-
-
-def pool_centroid_accuracy(X: np.ndarray, y: np.ndarray) -> float:
-    Xs = _standardize(X)
-    classes = np.unique(y)
-    correct = 0
-    for i in range(len(Xs)):
-        cents = {}
-        for c in classes:
-            mask = (y == c) & (np.arange(len(Xs)) != i)
-            if mask.any():
-                cents[c] = Xs[mask].mean(0)
-        pred = min(cents, key=lambda c: np.linalg.norm(Xs[i] - cents[c]))
-        correct += int(pred == y[i])
-    return correct / len(Xs)
-
-
-def pool_knn_accuracy(X: np.ndarray, y: np.ndarray, k: int = 3) -> float:
-    Xs = _standardize(X)
-    n = len(Xs)
-    correct = 0
+def loo_pooled_predict(X: np.ndarray, y: np.ndarray, *, method: str = "lda_knn", k: int = 3) -> np.ndarray:
+    """Leave-one-out predictions; standardization (and LDA) fit on the TRAIN fold only."""
+    lda_cls = None
+    if method == "lda_knn":
+        from sklearn.discriminant_analysis import LinearDiscriminantAnalysis as lda_cls
+    n = len(X)
+    idx = np.arange(n)
+    preds = np.empty(n, dtype=y.dtype)
     for i in range(n):
-        d = np.linalg.norm(Xs - Xs[i], axis=1)
-        d[i] = np.inf
-        nn = np.argsort(d)[:k]
-        vals, cnts = np.unique(y[nn], return_counts=True)
-        correct += int(vals[np.argmax(cnts)] == y[i])
-    return correct / n
+        tr = idx != i
+        mu, sd = X[tr].mean(0), X[tr].std(0) + 1e-9  # fit on train fold only
+        Xtr, xi, ytr = (X[tr] - mu) / sd, (X[i] - mu) / sd, y[tr]
+        if method == "centroid":
+            classes = np.unique(ytr)
+            cents = np.stack([Xtr[ytr == c].mean(0) for c in classes])
+            preds[i] = classes[int(np.argmin(np.linalg.norm(cents - xi, axis=1)))]
+        elif method in ("knn", "lda_knn"):
+            if method == "lda_knn":
+                try:
+                    m = lda_cls()
+                    Xtr, xi = m.fit(Xtr, ytr).transform(Xtr), m.transform(xi[None])[0]
+                except Exception:
+                    pass  # singular fold: fall back to standardized kNN
+            d = np.linalg.norm(Xtr - xi, axis=1)
+            nn = np.argsort(d)[:k]
+            vals, cnts = np.unique(ytr[nn], return_counts=True)
+            preds[i] = vals[int(np.argmax(cnts))]
+        else:
+            raise ValueError(f"unknown method {method!r}")
+    return preds
 
 
-def pool_lda_knn_accuracy(X: np.ndarray, y: np.ndarray, k: int = 3) -> float | None:
+def classification_metrics(y_true, y_pred) -> dict:
+    """Top-1, balanced (macro-recall), majority-class baseline, n_classes, n."""
+    y_true = np.asarray(y_true)
+    yp = np.array([p if p is not None else -1 for p in y_pred])
+    classes = np.unique(y_true)
+    recalls = [float((yp[y_true == c] == c).mean()) for c in classes]
+    _, cnts = np.unique(y_true, return_counts=True)
+    return {
+        "top1": round(float((yp == y_true).mean()), 3),
+        "balanced": round(float(np.mean(recalls)), 3),
+        "majority_baseline": round(float(cnts.max() / len(y_true)), 3),
+        "n_classes": int(len(classes)),
+        "n": int(len(y_true)),
+    }
+
+
+# Thin backward-compatible accuracy wrappers (top-1).
+def dtw_1nn_accuracy(feature_seqs, labels) -> float:
+    return classification_metrics(labels, dtw_1nn_predict(feature_seqs, labels))["top1"]
+
+
+def pool_centroid_accuracy(X, y) -> float:
+    return classification_metrics(y, loo_pooled_predict(X, y, method="centroid"))["top1"]
+
+
+def pool_knn_accuracy(X, y, k: int = 3) -> float:
+    return classification_metrics(y, loo_pooled_predict(X, y, method="knn", k=k))["top1"]
+
+
+def pool_lda_knn_accuracy(X, y, k: int = 3) -> float | None:
     try:
-        from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+        import sklearn.discriminant_analysis  # noqa: F401
     except Exception:
         return None
-    Xs = _standardize(X)
-    n = len(Xs)
-    correct = 0
-    for i in range(n):
-        tr = np.arange(n) != i
-        lda = LinearDiscriminantAnalysis()
-        try:
-            Z = lda.fit(Xs[tr], y[tr]).transform(Xs)
-        except Exception:
-            return None
-        d = np.linalg.norm(Z - Z[i], axis=1)
-        d[i] = np.inf
-        nn = np.argsort(d)[:k]
-        vals, cnts = np.unique(y[nn], return_counts=True)
-        correct += int(vals[np.argmax(cnts)] == y[i])
-    return correct / n
+    return classification_metrics(y, loo_pooled_predict(X, y, method="lda_knn", k=k))["top1"]

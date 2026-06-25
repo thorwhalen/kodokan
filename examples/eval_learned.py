@@ -14,11 +14,10 @@ import numpy as np
 
 from kodokan import store
 from kodokan.recognize import (
+    classification_metrics,
     demo_feature,
-    dtw_1nn_accuracy,
-    pool_centroid_accuracy,
-    pool_knn_accuracy,
-    pool_lda_knn_accuracy,
+    dtw_1nn_predict,
+    loo_pooled_predict,
     pooled_descriptor,
 )
 
@@ -37,8 +36,11 @@ def main():
     feats, labels = [], []
     n_classes = 0
     for vid in sorted(ps):
-        seq = ps[vid]
-        rec = ss[vid] if vid in ss else {}
+        try:  # robust to a clip being written by a concurrent batch run
+            seq = ps[vid]
+            rec = ss[vid] if vid in ss else {}
+        except Exception:
+            continue
         demos = [d for d in rec.get("demos", []) if d.get("two_person_frac", 0) >= MIN_2P]
         fs = [demo_feature(seq, d["start_s"], d["end_s"], mode=args.feature) for d in demos]
         fs = [f for f in fs if len(f) >= 4]
@@ -48,24 +50,23 @@ def main():
             n_classes += 1
 
     y = np.array(labels)
-    n = len(feats)
     if args.method == "dtw_1nn":
-        acc = dtw_1nn_accuracy(feats, labels)
+        preds = dtw_1nn_predict(feats, labels)
     else:
         X = np.stack([pooled_descriptor(f) for f in feats])
-        acc = {
-            "pool_centroid": pool_centroid_accuracy,
-            "pool_knn": pool_knn_accuracy,
-            "pool_lda_knn": pool_lda_knn_accuracy,
-        }[args.method](X, y)
+        preds = loo_pooled_predict(X, y, method=args.method.replace("pool_", ""))
 
+    m = classification_metrics(y, preds)
     print(json.dumps({
         "feature": args.feature,
         "method": args.method,
-        "n_samples": n,
-        "n_classes": n_classes,
-        "accuracy": round(acc, 3) if acc is not None else None,
-        "chance": round(1.0 / n_classes, 3) if n_classes else None,
+        "n_samples": m["n"],
+        "n_classes": m["n_classes"],
+        "accuracy": m["top1"],          # leakage-free LOO top-1 (within-clip: upper bound)
+        "balanced_accuracy": m["balanced"],
+        "majority_baseline": m["majority_baseline"],
+        "chance_uniform": round(1.0 / m["n_classes"], 3) if m["n_classes"] else None,
+        "caveat": "within-clip LOO (class==1 video); upper bound, not clip-independent",
     }))
 
 

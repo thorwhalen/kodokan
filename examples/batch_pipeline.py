@@ -47,30 +47,34 @@ def main():
             print(f"[skip] {vid} {title!r}: already in pose store", flush=True)
             continue
         print(f"\n=== {vid}  {title} ===", flush=True)
-        seq = estimate_poses_tracked(
-            path, frame_step=args.frame_step, device=args.device, source_url=url, progress=True
-        )
-        ps[vid] = seq
-        segs = segment_demonstrations(
-            seq, smooth_sigma=5, low_quantile=0.25, high_quantile=0.5,
-            min_duration_s=1.5, merge_gap_s=0.6, min_two_person_frac=0.3,
-        )
-        ss[vid] = {
-            "video_id": vid,
-            "technique": title,
-            "source_url": url,
-            "fps": seq.fps,
-            "n_demos": len(segs),
-            "demos": [
-                dict(index=s.index, start_s=s.start_s, end_s=s.end_s,
-                     duration_s=round(s.duration_s, 2), two_person_frac=s.two_person_frac)
-                for s in segs
-            ],
-        }
-        present = ~np.all(np.isnan(seq.keypoints[..., 0]), axis=2)
-        both = f"{(present.sum(1) == 2).mean():.0%}"
-        summary.append((vid, title, seq.n_frames, both, len(segs)))
-        print(f"  stored {seq.keypoints.shape}  both-present={both}  demos={len(segs)}", flush=True)
+        try:
+            seq = estimate_poses_tracked(
+                path, frame_step=args.frame_step, device=args.device, source_url=url, progress=True
+            )
+            ps[vid] = seq  # cached incrementally -> the run is resumable on re-launch
+            segs = segment_demonstrations(
+                seq, smooth_sigma=5, low_quantile=0.25, high_quantile=0.5,
+                min_duration_s=1.5, merge_gap_s=0.6, min_two_person_frac=0.3,
+            )
+            ss[vid] = {
+                "video_id": vid,
+                "technique": title,
+                "source_url": url,
+                "fps": seq.fps,
+                "n_demos": len(segs),
+                "demos": [
+                    dict(index=s.index, start_s=s.start_s, end_s=s.end_s,
+                         duration_s=round(s.duration_s, 2), two_person_frac=s.two_person_frac)
+                    for s in segs
+                ],
+            }
+            present = ~np.all(np.isnan(seq.keypoints[..., 0]), axis=2)
+            both = f"{(present.sum(1) == 2).mean():.0%}"
+            summary.append((vid, title, seq.n_frames, both, len(segs)))
+            print(f"  stored {seq.keypoints.shape}  both-present={both}  demos={len(segs)}", flush=True)
+        except Exception as e:  # one bad clip must not kill a multi-hour run
+            print(f"[error] {vid} {title!r}: {type(e).__name__}: {e}", flush=True)
+            continue
 
     print("\n=== SUMMARY ===", flush=True)
     print(f"{'video_id':12} {'frames':>6} {'2p%':>4} {'demos':>5}  technique", flush=True)

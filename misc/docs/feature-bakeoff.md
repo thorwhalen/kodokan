@@ -1,5 +1,15 @@
 # Feature descriptor bake-off — why 2D isn't enough
 
+> **⚠️ Validity caveats (adversarial review, see `adversarial-review.md`).**
+> (1) The **"3D refutes the viewpoint hypothesis"** conclusion below is **withdrawn**:
+> MediaPipe per-crop world landmarks are camera-aligned (not canonicalized) and the bbox
+> crop distorts them, so those "3D angles" were **not** actually viewpoint-invariant — the
+> experiment doesn't test what it claimed. A valid test needs pelvis-frame (Procrustes)
+> canonicalization. (2) The DTW "normalized" distance had a length bias (now fixed) and the
+> medoid reference was built in-sample, so the **exact AUC values are biased-optimistic**;
+> the **null conclusion ("descriptors ~at chance") is robust** (the biases inflate apparent
+> separability, yet it was still ~chance), but re-run with the fixes before citing exact AUCs.
+
 After the Stage-5 scoring scaffold showed poor technique discrimination, we measured
 *which* 2D feature descriptor (if any) separates the 10 techniques, using the eval
 harness `examples/eval_features.py` (medoid reference per technique; technique-ID =

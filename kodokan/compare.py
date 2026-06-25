@@ -96,10 +96,12 @@ def compare(features_a: np.ndarray, features_b: np.ndarray) -> dict:
     if len(a) < 2 or len(b) < 2:
         return {"distance": np.nan, "normalized": np.nan, "path": [], "a": a, "b": b}
     path = dtw_ndim.warping_path(a, b)  # list of (i, j)
-    dist = dtw_ndim.distance(a, b)
+    # Mean Euclidean cost per aligned step. (dist/len(path) would leave a ~1/sqrt(len)
+    # length bias because dist is an L2 path cost, not a sum of per-step distances.)
+    steps = [float(np.linalg.norm(a[i] - b[j])) for i, j in path]
     return {
-        "distance": float(dist),
-        "normalized": float(dist / max(1, len(path))),
+        "distance": float(dtw_ndim.distance(a, b)),
+        "normalized": float(np.mean(steps)) if steps else float("nan"),
         "path": path,
         "a": a,
         "b": b,

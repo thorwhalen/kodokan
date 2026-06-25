@@ -1,4 +1,14 @@
-# Recognition bake-off — learned classifiers + role-consistent features work
+# Recognition bake-off — what separates judo techniques (with validity caveats)
+
+> **⚠️ Validity update (adversarial review, see `adversarial-review.md`).**
+> **Each technique class == one YouTube video**, so leave-one-demo-out trains/tests on
+> reps from the *same clip*; the numbers below are a **within-clip upper bound** and do
+> **not** prove clip-independent technique recognition (the model may key on the video,
+> not the throw). Honest validation needs ≥2 independent clips/technique + leave-one-clip-out.
+> Two code leakages were found and **fixed** (per-fold standardization; DTW length-bias);
+> re-running leak-free left the headline numbers **unchanged** (the leakage was immaterial).
+> Reporting now also includes **balanced accuracy** and an **empirical majority-class
+> baseline** (top-1 alone is misleading on imbalanced, many-tiny-class data).
 
 The feature bake-off showed the original approach (primary-person joint angles +
 DTW) can't tell techniques apart. This experiment asks whether the bottleneck is the
@@ -67,8 +77,27 @@ Two clear takeaways:
    clear chance (2.6×), while tori-only reaches 6.7×. Getting tori/uke identity right
    matters more than any other single choice here.
 
-Path confirmed: keep scaling data + improving pose/role quality, then deep skeleton
-models — each validated by this harness.
+## Leak-free re-run (28 techniques) + balanced accuracy
+
+After fixing the standardization/DTW leakages, the 28-technique numbers are **unchanged**,
+now reported with balanced accuracy and the empirical majority-class baseline (0.059):
+
+| feature | method | top-1 | balanced | note |
+|---|---|---|---|---|
+| primary_angles | pool_lda_knn | 0.093 | 0.088 | role-inconsistent baseline |
+| tori_angles | pool_lda_knn | 0.178 | 0.164 | +role-consistency |
+| **tori_angles_pos** | **pool_lda_knn** | **0.242** | **0.229** | +richer features (best) |
+| primary_angles | pool_centroid | 0.097 | 0.101 | |
+| tori_angles_pos | pool_knn | 0.148 | 0.135 | learned-projection (LDA) helps |
+
+The role-consistency and learned-classifier levers survive the leak fix. **But** all of
+this is the within-clip upper bound (see the validity box at top): until there are ≥2
+independent clips per technique, we cannot separate "recognizes the throw" from
+"recognizes the video". That is the next experiment (leave-one-clip-out).
+
+Path: (1) acquire multi-source clips → leave-one-clip-out (the validity fix); (2) improve
+pose/role quality (validated tori detection, whole-body, canonicalized 3D); (3) deep
+skeleton models — each validated by this harness with balanced accuracy + CIs.
 
 Reproduce: `PYTHONPATH=<repo> python examples/eval_learned.py --feature <f> --method <m>`
 (features/methods in `kodokan/recognize.py`); full sweep via the
