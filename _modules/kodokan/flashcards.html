@@ -1,0 +1,407 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kodokan.flashcards &mdash; kodokan 0.0.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=bbaf98b3"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            kodokan
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan.html">kodokan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/acquire.html">kodokan.acquire</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/compare.html">kodokan.compare</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/config.html">kodokan.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/descriptors.html">kodokan.descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/flashcards.html">kodokan.flashcards</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/pose.html">kodokan.pose</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/recognize.html">kodokan.recognize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/score.html">kodokan.score</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/segment.html">kodokan.segment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/store.html">kodokan.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/track.html">kodokan.track</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/viz.html">kodokan.viz</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">kodokan</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">kodokan.flashcards</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for kodokan.flashcards</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Technique-recognition learning game (app #6) — logic layer.</span>
+
+<span class="sd">Help students learn to recognize/name throws. No throw-detection is needed (ground</span>
+<span class="sd">truth is known): we generate multiple-choice problems from the clip library —</span>
+<span class="sd">**name -&gt; pick the video** or **video -&gt; pick the name** — with *confusable*</span>
+<span class="sd">distractors, log every response (timestamped, with the exact problem) for adaptive</span>
+<span class="sd">learning, and score with confusion-aware weighting.</span>
+
+<span class="sd">&quot;Confusability&quot; between techniques is a **pose-shape similarity** (closeness of their</span>
+<span class="sd">mean pooled descriptors) — an honest proxy for visual confusability that does NOT</span>
+<span class="sd">require a working recognizer (the cross-source recognizer is currently at chance). It</span>
+<span class="sd">can be swapped for the model&#39;s confusion matrix once recognition generalizes.</span>
+
+<span class="sd">This module is the (UI-agnostic) logic + storage; a web UI plugs into it later.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="n">PathLike</span> <span class="o">=</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span>
+<span class="n">MODES</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;name_to_video&quot;</span><span class="p">,</span> <span class="s2">&quot;video_to_name&quot;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Problem">
+<a class="viewcode-back" href="../../module_docs/kodokan/flashcards.html#kodokan.Problem">[docs]</a>
+<span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Problem</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;One multiple-choice flashcard problem.&quot;&quot;&quot;</span>
+
+    <span class="n">problem_id</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">target_key</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">prompt</span><span class="p">:</span> <span class="nb">dict</span>  <span class="c1"># {&quot;name&quot;: str} or {&quot;clip&quot;: {...}}</span>
+    <span class="n">choices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span>  <span class="c1"># each: {&quot;key&quot;, &quot;name&quot;, optionally &quot;clip&quot;}</span>
+    <span class="n">correct_index</span><span class="p">:</span> <span class="nb">int</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">is_correct</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">chosen_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">chosen_index</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">correct_index</span></div>
+
+
+
+<span class="c1"># --------------------------------------------------------------------------- #</span>
+<span class="c1"># Distractor / target selection (pure, seedable)</span>
+<span class="c1"># --------------------------------------------------------------------------- #</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_weighted_sample</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">weights</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Sample k distinct items proportional to weights (no replacement).&quot;&quot;&quot;</span>
+    <span class="n">items</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">items</span><span class="p">),</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">w</span><span class="p">,</span> <span class="mf">1e-9</span><span class="p">)</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">weights</span><span class="p">]</span>
+    <span class="n">chosen</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">items</span><span class="p">))):</span>
+        <span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">weights</span><span class="p">)</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">*</span> <span class="n">total</span>
+        <span class="n">acc</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">weights</span><span class="p">):</span>
+            <span class="n">acc</span> <span class="o">+=</span> <span class="n">w</span>
+            <span class="k">if</span> <span class="n">r</span> <span class="o">&lt;=</span> <span class="n">acc</span><span class="p">:</span>
+                <span class="n">chosen</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">items</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">i</span><span class="p">))</span>
+                <span class="n">weights</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+                <span class="k">break</span>
+    <span class="k">return</span> <span class="n">chosen</span>
+
+
+<div class="viewcode-block" id="confusable_distractors">
+<a class="viewcode-back" href="../../module_docs/kodokan/flashcards.html#kodokan.confusable_distractors">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">confusable_distractors</span><span class="p">(</span><span class="n">target_key</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">similarity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pick ``n`` distractor keys, preferring those most confusable with the target.&quot;&quot;&quot;</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">rng</span> <span class="ow">or</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">()</span>
+    <span class="n">pool</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="n">target_key</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">similarity</span> <span class="ow">and</span> <span class="n">target_key</span> <span class="ow">in</span> <span class="n">similarity</span><span class="p">:</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="n">similarity</span><span class="p">[</span><span class="n">target_key</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">pool</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">weights</span><span class="p">):</span>
+            <span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">pool</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">pool</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_weighted_sample</span><span class="p">(</span><span class="n">pool</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="make_problem">
+<a class="viewcode-back" href="../../module_docs/kodokan/flashcards.html#kodokan.make_problem">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">make_problem</span><span class="p">(</span>
+    <span class="n">catalog</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">target_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;video_to_name&quot;</span><span class="p">,</span>
+    <span class="n">n_choices</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
+    <span class="n">similarity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">rng</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">clip_for</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Problem</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build a multiple-choice problem for ``target_key`` from a technique ``catalog``.</span>
+
+<span class="sd">    ``catalog`` maps ``technique_key -&gt; {&quot;name&quot;: str, &quot;clips&quot;: [clip dicts]}``.</span>
+<span class="sd">    ``clip_for(key)`` returns a looping clip for a key (default: first clip); for</span>
+<span class="sd">    ``name_to_video`` the choices are clips, for ``video_to_name`` they are names.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">MODES</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;mode must be one of </span><span class="si">{</span><span class="n">MODES</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">rng</span> <span class="ow">or</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">()</span>
+    <span class="n">clip_for</span> <span class="o">=</span> <span class="n">clip_for</span> <span class="ow">or</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;clips&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[</span><span class="kc">None</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">distractors</span> <span class="o">=</span> <span class="n">confusable_distractors</span><span class="p">(</span><span class="n">target_key</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">catalog</span><span class="p">),</span> <span class="n">n</span><span class="o">=</span><span class="n">n_choices</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">similarity</span><span class="o">=</span><span class="n">similarity</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
+    <span class="n">option_keys</span> <span class="o">=</span> <span class="n">distractors</span> <span class="o">+</span> <span class="p">[</span><span class="n">target_key</span><span class="p">]</span>
+    <span class="n">rng</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">option_keys</span><span class="p">)</span>
+    <span class="n">correct_index</span> <span class="o">=</span> <span class="n">option_keys</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">target_key</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;video_to_name&quot;</span><span class="p">:</span>
+        <span class="n">prompt</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;clip&quot;</span><span class="p">:</span> <span class="n">clip_for</span><span class="p">(</span><span class="n">target_key</span><span class="p">)}</span>
+        <span class="n">choices</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="n">k</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">catalog</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]}</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">option_keys</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># name_to_video</span>
+        <span class="n">prompt</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">catalog</span><span class="p">[</span><span class="n">target_key</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">]}</span>
+        <span class="n">choices</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="n">k</span><span class="p">,</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">catalog</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="s2">&quot;clip&quot;</span><span class="p">:</span> <span class="n">clip_for</span><span class="p">(</span><span class="n">k</span><span class="p">)}</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">option_keys</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">Problem</span><span class="p">(</span>
+        <span class="n">problem_id</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">target_key</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">rng</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span>
+        <span class="n">target_key</span><span class="o">=</span><span class="n">target_key</span><span class="p">,</span>
+        <span class="n">prompt</span><span class="o">=</span><span class="n">prompt</span><span class="p">,</span>
+        <span class="n">choices</span><span class="o">=</span><span class="n">choices</span><span class="p">,</span>
+        <span class="n">correct_index</span><span class="o">=</span><span class="n">correct_index</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="c1"># --------------------------------------------------------------------------- #</span>
+<span class="c1"># Confusion-aware scoring + adaptive selection</span>
+<span class="c1"># --------------------------------------------------------------------------- #</span>
+
+<div class="viewcode-block" id="score_response">
+<a class="viewcode-back" href="../../module_docs/kodokan/flashcards.html#kodokan.score_response">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">score_response</span><span class="p">(</span><span class="n">correct_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">chosen_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">similarity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_partial</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Confusion-weighted credit in [0, 1].</span>
+
+<span class="sd">    Correct = 1.0. A wrong answer earns *partial* credit proportional to how confusable</span>
+<span class="sd">    the chosen technique is with the correct one (an honest mistake between look-alike</span>
+<span class="sd">    throws is penalized less than confusing two obviously different throws).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">chosen_key</span> <span class="o">==</span> <span class="n">correct_key</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">1.0</span>
+    <span class="n">sim</span> <span class="o">=</span> <span class="p">(</span><span class="n">similarity</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">correct_key</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">chosen_key</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">round</span><span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">max_partial</span><span class="p">,</span> <span class="nb">max</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">sim</span><span class="p">))</span> <span class="o">*</span> <span class="n">max_partial</span><span class="p">),</span> <span class="mi">3</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="next_target">
+<a class="viewcode-back" href="../../module_docs/kodokan/flashcards.html#kodokan.next_target">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">next_target</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">history</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">focus</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pick the next technique to quiz: unseen and often-missed (within ``focus``) first.</span>
+
+<span class="sd">    Spaced-repetition-ish weight = (wrongs + 1) / (seen + 1): unseen -&gt; 1, frequently</span>
+<span class="sd">    wrong -&gt; high, mastered -&gt; low. ``history`` is a list of response dicts.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">rng</span> <span class="ow">or</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">()</span>
+    <span class="n">cand</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">focus</span> <span class="ow">or</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">focus</span><span class="p">)]</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">cand</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;no candidate techniques (empty focus set?)&quot;</span><span class="p">)</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">cand</span><span class="p">:</span>
+        <span class="n">seen</span> <span class="o">=</span> <span class="p">[</span><span class="n">h</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">history</span> <span class="k">if</span> <span class="n">h</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;target_key&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">k</span><span class="p">]</span>
+        <span class="n">wrong</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">seen</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">h</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">))</span>
+        <span class="n">weights</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">wrong</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">seen</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">_weighted_sample</span><span class="p">(</span><span class="n">cand</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">rng</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+
+<span class="c1"># --------------------------------------------------------------------------- #</span>
+<span class="c1"># Response logging (dol store) + store-backed catalog/confusability</span>
+<span class="c1"># --------------------------------------------------------------------------- #</span>
+
+<div class="viewcode-block" id="responses_store">
+<a class="viewcode-back" href="../../module_docs/kodokan/flashcards.html#kodokan.responses_store">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">responses_store</span><span class="p">(</span><span class="n">directory</span><span class="p">:</span> <span class="n">PathLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A dict-like JSON store of logged responses (per-user, timestamped).&quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">dol</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonFiles</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">data_dir</span>
+
+    <span class="n">directory</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">directory</span> <span class="ow">or</span> <span class="p">(</span><span class="n">data_dir</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;responses&quot;</span><span class="p">))</span>
+    <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">JsonFiles</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="log_response">
+<a class="viewcode-back" href="../../module_docs/kodokan/flashcards.html#kodokan.log_response">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">log_response</span><span class="p">(</span><span class="n">problem</span><span class="p">:</span> <span class="n">Problem</span><span class="p">,</span> <span class="n">chosen_index</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span> <span class="n">store</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">similarity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">timestamp</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Record a response (datetime + exact problem + choice + correctness + score).&quot;&quot;&quot;</span>
+    <span class="n">store</span> <span class="o">=</span> <span class="n">store</span> <span class="k">if</span> <span class="n">store</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">responses_store</span><span class="p">()</span>
+    <span class="n">ts</span> <span class="o">=</span> <span class="n">timestamp</span> <span class="ow">or</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
+    <span class="n">chosen_key</span> <span class="o">=</span> <span class="n">problem</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="n">chosen_index</span><span class="p">][</span><span class="s2">&quot;key&quot;</span><span class="p">]</span>
+    <span class="n">rec</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;ts&quot;</span><span class="p">:</span> <span class="n">ts</span><span class="p">,</span>
+        <span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="n">user</span><span class="p">,</span>
+        <span class="s2">&quot;problem_id&quot;</span><span class="p">:</span> <span class="n">problem</span><span class="o">.</span><span class="n">problem_id</span><span class="p">,</span>
+        <span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="n">problem</span><span class="o">.</span><span class="n">mode</span><span class="p">,</span>
+        <span class="s2">&quot;target_key&quot;</span><span class="p">:</span> <span class="n">problem</span><span class="o">.</span><span class="n">target_key</span><span class="p">,</span>
+        <span class="s2">&quot;choice_keys&quot;</span><span class="p">:</span> <span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="s2">&quot;key&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">problem</span><span class="o">.</span><span class="n">choices</span><span class="p">],</span>
+        <span class="s2">&quot;chosen_key&quot;</span><span class="p">:</span> <span class="n">chosen_key</span><span class="p">,</span>
+        <span class="s2">&quot;correct&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">is_correct</span><span class="p">(</span><span class="n">chosen_index</span><span class="p">)),</span>
+        <span class="s2">&quot;score&quot;</span><span class="p">:</span> <span class="n">score_response</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">target_key</span><span class="p">,</span> <span class="n">chosen_key</span><span class="p">,</span> <span class="n">similarity</span><span class="o">=</span><span class="n">similarity</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="n">store</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">user</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">ts</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)]</span> <span class="o">=</span> <span class="n">rec</span>  <span class="c1"># filesystem-safe (no &#39;/&#39; subdir, no &#39;:&#39;)</span>
+    <span class="k">return</span> <span class="n">rec</span></div>
+
+
+
+<div class="viewcode-block" id="build_catalog">
+<a class="viewcode-back" href="../../module_docs/kodokan/flashcards.html#kodokan.build_catalog">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_catalog</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">min_two_person_frac</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">min_demo_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build ``{technique_key: {&quot;name&quot;, &quot;clips&quot;:[...]}}`` from the pose/segments stores.</span>
+
+<span class="sd">    Aggregates all sources: each clip contributes its demo intervals (for looping media),</span>
+<span class="sd">    so a technique present in several sources offers varied multiple-choice media.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">kodokan</span><span class="w"> </span><span class="kn">import</span> <span class="n">store</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.acquire</span><span class="w"> </span><span class="kn">import</span> <span class="n">canonical_technique_key</span>
+
+    <span class="n">ss</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">segments_store</span><span class="p">()</span>
+    <span class="n">catalog</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">vid</span> <span class="ow">in</span> <span class="n">ss</span><span class="p">:</span>
+        <span class="n">rec</span> <span class="o">=</span> <span class="n">ss</span><span class="p">[</span><span class="n">vid</span><span class="p">]</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;technique_key&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">canonical_technique_key</span><span class="p">(</span><span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;technique&quot;</span><span class="p">,</span> <span class="n">vid</span><span class="p">))</span>
+        <span class="c1"># clean display name: romaji part, drop &quot;- Demo&quot; / &quot;Escapes&quot; production suffixes</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;technique&quot;</span><span class="p">,</span> <span class="n">vid</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s*-\s*demo\b&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span>
+        <span class="n">name</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\s+escapes?\b&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">flags</span><span class="o">=</span><span class="n">re</span><span class="o">.</span><span class="n">I</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">demos</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;demos&quot;</span><span class="p">,</span> <span class="p">[])</span>
+                 <span class="k">if</span> <span class="n">d</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;two_person_frac&quot;</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">min_two_person_frac</span>
+                 <span class="ow">and</span> <span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">&quot;end_s&quot;</span><span class="p">]</span> <span class="o">-</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;start_s&quot;</span><span class="p">])</span> <span class="o">&gt;=</span> <span class="n">min_demo_s</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">demos</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">entry</span> <span class="o">=</span> <span class="n">catalog</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;clips&quot;</span><span class="p">:</span> <span class="p">[]})</span>
+        <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;clips&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;video_id&quot;</span><span class="p">:</span> <span class="n">vid</span><span class="p">,</span>
+            <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source&quot;</span><span class="p">,</span> <span class="s2">&quot;unknown&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;source_url&quot;</span><span class="p">:</span> <span class="n">rec</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;source_url&quot;</span><span class="p">),</span>
+            <span class="s2">&quot;demos&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;start_s&quot;</span><span class="p">:</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;start_s&quot;</span><span class="p">],</span> <span class="s2">&quot;end_s&quot;</span><span class="p">:</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;end_s&quot;</span><span class="p">]}</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">demos</span><span class="p">[:</span><span class="mi">3</span><span class="p">]],</span>
+        <span class="p">})</span>
+    <span class="k">return</span> <span class="n">catalog</span></div>
+
+
+
+<div class="viewcode-block" id="build_confusability">
+<a class="viewcode-back" href="../../module_docs/kodokan/flashcards.html#kodokan.build_confusability">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_confusability</span><span class="p">(</span><span class="n">catalog</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">feature</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;tori_angles_pos&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Technique×technique similarity (0..1) from mean pooled pose descriptors.</span>
+
+<span class="sd">    ``similarity[a][b]`` high ⇒ techniques a, b look alike in pose-space (likely</span>
+<span class="sd">    confusable for a learner). An honest, recognizer-free proxy; swap for the model&#39;s</span>
+<span class="sd">    confusion matrix once cross-source recognition works.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.spatial.distance</span><span class="w"> </span><span class="kn">import</span> <span class="n">cdist</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">kodokan</span><span class="w"> </span><span class="kn">import</span> <span class="n">store</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.recognize</span><span class="w"> </span><span class="kn">import</span> <span class="n">demo_feature</span><span class="p">,</span> <span class="n">pooled_descriptor</span>
+
+    <span class="n">catalog</span> <span class="o">=</span> <span class="n">catalog</span> <span class="ow">or</span> <span class="n">build_catalog</span><span class="p">()</span>
+    <span class="n">ps</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">pose_store</span><span class="p">()</span>
+    <span class="n">vecs</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">catalog</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">descs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">clip</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">[</span><span class="s2">&quot;clips&quot;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="n">clip</span><span class="p">[</span><span class="s2">&quot;video_id&quot;</span><span class="p">]</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ps</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="n">seq</span> <span class="o">=</span> <span class="n">ps</span><span class="p">[</span><span class="n">clip</span><span class="p">[</span><span class="s2">&quot;video_id&quot;</span><span class="p">]]</span>
+            <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">clip</span><span class="p">[</span><span class="s2">&quot;demos&quot;</span><span class="p">]:</span>
+                <span class="n">f</span> <span class="o">=</span> <span class="n">demo_feature</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;start_s&quot;</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="s2">&quot;end_s&quot;</span><span class="p">],</span> <span class="n">mode</span><span class="o">=</span><span class="n">feature</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">f</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">4</span><span class="p">:</span>
+                    <span class="n">descs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pooled_descriptor</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">descs</span><span class="p">:</span>
+            <span class="n">vecs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">descs</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">vecs</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{}</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">vecs</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">])</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="p">(</span><span class="n">M</span> <span class="o">-</span> <span class="n">M</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">M</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-9</span><span class="p">)</span>
+    <span class="n">D</span> <span class="o">=</span> <span class="n">cdist</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">M</span><span class="p">)</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">D</span> <span class="o">/</span> <span class="p">(</span><span class="n">D</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1e-9</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">keys</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span> <span class="p">{</span><span class="n">keys</span><span class="p">[</span><span class="n">j</span><span class="p">]:</span> <span class="nb">float</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">],</span> <span class="mi">3</span><span class="p">))</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">))</span> <span class="k">if</span> <span class="n">j</span> <span class="o">!=</span> <span class="n">i</span><span class="p">}</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">keys</span><span class="p">))}</span></div>
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

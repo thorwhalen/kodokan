@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; kodokan 0.0.6 documentation</title>
+  <title>Index &mdash; kodokan 0.0.7 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=1fd71caa"></script>
+      <script src="_static/documentation_options.js?v=bbaf98b3"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -51,6 +51,7 @@
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/compare.html">kodokan.compare</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/config.html">kodokan.config</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/descriptors.html">kodokan.descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/flashcards.html">kodokan.flashcards</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/pose.html">kodokan.pose</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/recognize.html">kodokan.recognize</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/score.html">kodokan.score</a></li>
@@ -97,6 +98,7 @@
  | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
+ | <a href="#N"><strong>N</strong></a>
  | <a href="#O"><strong>O</strong></a>
  | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
@@ -130,8 +132,20 @@
         <li><a href="module_docs/kodokan.html#kodokan.PoseSequence.backend">(kodokan.PoseSequence attribute)</a>
 </li>
       </ul></li>
+      <li><a href="module_docs/kodokan.html#kodokan.build_catalog">build_catalog() (in module kodokan)</a>
+
+      <ul>
+        <li><a href="module_docs/kodokan/flashcards.html#kodokan.flashcards.build_catalog">(in module kodokan.flashcards)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/kodokan.html#kodokan.build_confusability">build_confusability() (in module kodokan)</a>
+
+      <ul>
+        <li><a href="module_docs/kodokan/flashcards.html#kodokan.flashcards.build_confusability">(in module kodokan.flashcards)</a>
+</li>
+      </ul></li>
       <li><a href="module_docs/kodokan.html#kodokan.build_reference">build_reference() (in module kodokan)</a>
 
       <ul>
@@ -150,10 +164,10 @@
 </li>
       <li><a href="module_docs/kodokan/config.html#kodokan.config.clips_dir">clips_dir() (in module kodokan.config)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/kodokan/pose.html#kodokan.pose.COCO17_KEYPOINTS">COCO17_KEYPOINTS (in module kodokan.pose)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/kodokan/pose.html#kodokan.pose.COCO17_SKELETON">COCO17_SKELETON (in module kodokan.pose)</a>
 </li>
       <li><a href="module_docs/kodokan.html#kodokan.compare">compare() (in module kodokan)</a>
@@ -162,6 +176,8 @@
         <li><a href="module_docs/kodokan/compare.html#kodokan.compare.compare">(in module kodokan.compare)</a>
 </li>
       </ul></li>
+      <li><a href="module_docs/kodokan/flashcards.html#kodokan.flashcards.confusable_distractors">confusable_distractors() (in module kodokan.flashcards)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -302,6 +318,13 @@
 </li>
       </ul></li>
       <li>
+    kodokan.flashcards
+
+      <ul>
+        <li><a href="module_docs/kodokan/flashcards.html#module-kodokan.flashcards">module</a>
+</li>
+      </ul></li>
+      <li>
     kodokan.pose
 
       <ul>
@@ -370,10 +393,16 @@
         <li><a href="module_docs/kodokan/store.html#kodokan.store.load_all_tidy">(in module kodokan.store)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/kodokan/acquire.html#kodokan.acquire.local_clips">local_clips() (in module kodokan.acquire)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/kodokan.html#kodokan.log_response">log_response() (in module kodokan)</a>
+
+      <ul>
+        <li><a href="module_docs/kodokan/flashcards.html#kodokan.flashcards.log_response">(in module kodokan.flashcards)</a>
+</li>
+      </ul></li>
       <li><a href="module_docs/kodokan.html#kodokan.log_to_rerun">log_to_rerun() (in module kodokan)</a>
 
       <ul>
@@ -388,6 +417,12 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/kodokan.html#kodokan.make_problem">make_problem() (in module kodokan)</a>
+
+      <ul>
+        <li><a href="module_docs/kodokan/flashcards.html#kodokan.flashcards.make_problem">(in module kodokan.flashcards)</a>
+</li>
+      </ul></li>
       <li><a href="module_docs/kodokan/config.html#kodokan.config.models_dir">models_dir() (in module kodokan.config)</a>
 </li>
       <li>
@@ -404,6 +439,8 @@
 </li>
         <li><a href="module_docs/kodokan/descriptors.html#module-kodokan.descriptors">kodokan.descriptors</a>
 </li>
+        <li><a href="module_docs/kodokan/flashcards.html#module-kodokan.flashcards">kodokan.flashcards</a>
+</li>
         <li><a href="module_docs/kodokan/pose.html#module-kodokan.pose">kodokan.pose</a>
 </li>
         <li><a href="module_docs/kodokan/recognize.html#module-kodokan.recognize">kodokan.recognize</a>
@@ -417,6 +454,18 @@
         <li><a href="module_docs/kodokan/track.html#module-kodokan.track">kodokan.track</a>
 </li>
         <li><a href="module_docs/kodokan/viz.html#module-kodokan.viz">kodokan.viz</a>
+</li>
+      </ul></li>
+  </ul></td>
+</tr></table>
+
+<h2 id="N">N</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/kodokan.html#kodokan.next_target">next_target() (in module kodokan)</a>
+
+      <ul>
+        <li><a href="module_docs/kodokan/flashcards.html#kodokan.flashcards.next_target">(in module kodokan.flashcards)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -459,6 +508,8 @@
       </ul></li>
       <li><a href="module_docs/kodokan/compare.html#kodokan.compare.primary_person">primary_person() (in module kodokan.compare)</a>
 </li>
+      <li><a href="module_docs/kodokan/flashcards.html#kodokan.flashcards.Problem">Problem (class in kodokan.flashcards)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -471,6 +522,10 @@
         <li><a href="module_docs/kodokan/viz.html#kodokan.viz.render_skeleton_video">(in module kodokan.viz)</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/kodokan/flashcards.html#kodokan.flashcards.responses_store">responses_store() (in module kodokan.flashcards)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -487,6 +542,12 @@
 
       <ul>
         <li><a href="module_docs/kodokan/score.html#kodokan.score.score">(in module kodokan.score)</a>
+</li>
+      </ul></li>
+      <li><a href="module_docs/kodokan.html#kodokan.score_response">score_response() (in module kodokan)</a>
+
+      <ul>
+        <li><a href="module_docs/kodokan/flashcards.html#kodokan.flashcards.score_response">(in module kodokan.flashcards)</a>
 </li>
       </ul></li>
       <li><a href="module_docs/kodokan.html#kodokan.Segment">Segment (class in kodokan)</a>

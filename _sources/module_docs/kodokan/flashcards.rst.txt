@@ -1,0 +1,4 @@
+kodokan.flashcards
+==================
+.. automodule:: kodokan.flashcards
+   :members:

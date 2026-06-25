@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>&lt;no title&gt; &mdash; kodokan 0.0.6 documentation</title>
+  <title>&lt;no title&gt; &mdash; kodokan 0.0.7 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=1fd71caa"></script>
+      <script src="_static/documentation_options.js?v=bbaf98b3"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -52,6 +52,7 @@
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/compare.html">kodokan.compare</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/config.html">kodokan.config</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/descriptors.html">kodokan.descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/flashcards.html">kodokan.flashcards</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/pose.html">kodokan.pose</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/recognize.html">kodokan.recognize</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/score.html">kodokan.score</a></li>
@@ -92,6 +93,8 @@
 <li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan.html#kodokan.PoseSequence"><code class="docutils literal notranslate"><span class="pre">PoseSequence</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan.html#kodokan.Segment"><code class="docutils literal notranslate"><span class="pre">Segment</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan.html#kodokan.angle_features"><code class="docutils literal notranslate"><span class="pre">angle_features()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan.html#kodokan.build_catalog"><code class="docutils literal notranslate"><span class="pre">build_catalog()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan.html#kodokan.build_confusability"><code class="docutils literal notranslate"><span class="pre">build_confusability()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan.html#kodokan.build_reference"><code class="docutils literal notranslate"><span class="pre">build_reference()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan.html#kodokan.compare"><code class="docutils literal notranslate"><span class="pre">compare()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan.html#kodokan.demo_features"><code class="docutils literal notranslate"><span class="pre">demo_features()</span></code></a></li>
@@ -100,10 +103,14 @@
 <li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan.html#kodokan.estimate_poses_tracked"><code class="docutils literal notranslate"><span class="pre">estimate_poses_tracked()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan.html#kodokan.feedback"><code class="docutils literal notranslate"><span class="pre">feedback()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan.html#kodokan.load_all_tidy"><code class="docutils literal notranslate"><span class="pre">load_all_tidy()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan.html#kodokan.log_response"><code class="docutils literal notranslate"><span class="pre">log_response()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan.html#kodokan.log_to_rerun"><code class="docutils literal notranslate"><span class="pre">log_to_rerun()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan.html#kodokan.make_problem"><code class="docutils literal notranslate"><span class="pre">make_problem()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan.html#kodokan.next_target"><code class="docutils literal notranslate"><span class="pre">next_target()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan.html#kodokan.pose_store"><code class="docutils literal notranslate"><span class="pre">pose_store()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan.html#kodokan.render_skeleton_video"><code class="docutils literal notranslate"><span class="pre">render_skeleton_video()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan.html#kodokan.score"><code class="docutils literal notranslate"><span class="pre">score()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan.html#kodokan.score_response"><code class="docutils literal notranslate"><span class="pre">score_response()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan.html#kodokan.segment_demonstrations"><code class="docutils literal notranslate"><span class="pre">segment_demonstrations()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan.html#kodokan.segments_store"><code class="docutils literal notranslate"><span class="pre">segments_store()</span></code></a></li>
 </ul>
@@ -141,6 +148,18 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/descriptors.html">kodokan.descriptors</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan/descriptors.html#kodokan.descriptors.demo_descriptor"><code class="docutils literal notranslate"><span class="pre">demo_descriptor()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/flashcards.html">kodokan.flashcards</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan/flashcards.html#kodokan.flashcards.Problem"><code class="docutils literal notranslate"><span class="pre">Problem</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan/flashcards.html#kodokan.flashcards.build_catalog"><code class="docutils literal notranslate"><span class="pre">build_catalog()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan/flashcards.html#kodokan.flashcards.build_confusability"><code class="docutils literal notranslate"><span class="pre">build_confusability()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan/flashcards.html#kodokan.flashcards.confusable_distractors"><code class="docutils literal notranslate"><span class="pre">confusable_distractors()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan/flashcards.html#kodokan.flashcards.log_response"><code class="docutils literal notranslate"><span class="pre">log_response()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan/flashcards.html#kodokan.flashcards.make_problem"><code class="docutils literal notranslate"><span class="pre">make_problem()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan/flashcards.html#kodokan.flashcards.next_target"><code class="docutils literal notranslate"><span class="pre">next_target()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan/flashcards.html#kodokan.flashcards.responses_store"><code class="docutils literal notranslate"><span class="pre">responses_store()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="module_docs/kodokan/flashcards.html#kodokan.flashcards.score_response"><code class="docutils literal notranslate"><span class="pre">score_response()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/pose.html">kodokan.pose</a><ul>

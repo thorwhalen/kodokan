@@ -1,0 +1,215 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kodokan.flashcards &mdash; kodokan 0.0.7 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=bbaf98b3"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="kodokan.pose" href="pose.html" />
+    <link rel="prev" title="kodokan.descriptors" href="descriptors.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            kodokan
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../kodokan.html">kodokan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acquire.html">kodokan.acquire</a></li>
+<li class="toctree-l1"><a class="reference internal" href="compare.html">kodokan.compare</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">kodokan.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="descriptors.html">kodokan.descriptors</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">kodokan.flashcards</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.flashcards.Problem"><code class="docutils literal notranslate"><span class="pre">Problem</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.flashcards.build_catalog"><code class="docutils literal notranslate"><span class="pre">build_catalog()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.flashcards.build_confusability"><code class="docutils literal notranslate"><span class="pre">build_confusability()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.flashcards.confusable_distractors"><code class="docutils literal notranslate"><span class="pre">confusable_distractors()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.flashcards.log_response"><code class="docutils literal notranslate"><span class="pre">log_response()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.flashcards.make_problem"><code class="docutils literal notranslate"><span class="pre">make_problem()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.flashcards.next_target"><code class="docutils literal notranslate"><span class="pre">next_target()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.flashcards.responses_store"><code class="docutils literal notranslate"><span class="pre">responses_store()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.flashcards.score_response"><code class="docutils literal notranslate"><span class="pre">score_response()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pose.html">kodokan.pose</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recognize.html">kodokan.recognize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="score.html">kodokan.score</a></li>
+<li class="toctree-l1"><a class="reference internal" href="segment.html">kodokan.segment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store.html">kodokan.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="track.html">kodokan.track</a></li>
+<li class="toctree-l1"><a class="reference internal" href="viz.html">kodokan.viz</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">kodokan</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">kodokan.flashcards</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/module_docs/kodokan/flashcards.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-kodokan.flashcards">
+<span id="kodokan-flashcards"></span><h1>kodokan.flashcards<a class="headerlink" href="#module-kodokan.flashcards" title="Link to this heading"></a></h1>
+<p>Technique-recognition learning game (app #6) — logic layer.</p>
+<p>Help students learn to recognize/name throws. No throw-detection is needed (ground
+truth is known): we generate multiple-choice problems from the clip library —
+<strong>name -&gt; pick the video</strong> or <strong>video -&gt; pick the name</strong> — with <em>confusable</em>
+distractors, log every response (timestamped, with the exact problem) for adaptive
+learning, and score with confusion-aware weighting.</p>
+<p>“Confusability” between techniques is a <strong>pose-shape similarity</strong> (closeness of their
+mean pooled descriptors) — an honest proxy for visual confusability that does NOT
+require a working recognizer (the cross-source recognizer is currently at chance). It
+can be swapped for the model’s confusion matrix once recognition generalizes.</p>
+<p>This module is the (UI-agnostic) logic + storage; a web UI plugs into it later.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="kodokan.flashcards.Problem">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kodokan.flashcards.</span></span><span class="sig-name descname"><span class="pre">Problem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">correct_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kodokan/flashcards.html#Problem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.flashcards.Problem" title="Link to this definition"></a></dt>
+<dd><p>One multiple-choice flashcard problem.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.flashcards.build_catalog">
+<span class="sig-prename descclassname"><span class="pre">kodokan.flashcards.</span></span><span class="sig-name descname"><span class="pre">build_catalog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_two_person_frac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_demo_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kodokan/flashcards.html#build_catalog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.flashcards.build_catalog" title="Link to this definition"></a></dt>
+<dd><p>Build <code class="docutils literal notranslate"><span class="pre">{technique_key:</span> <span class="pre">{&quot;name&quot;,</span> <span class="pre">&quot;clips&quot;:[...]}}</span></code> from the pose/segments stores.</p>
+<p>Aggregates all sources: each clip contributes its demo intervals (for looping media),
+so a technique present in several sources offers varied multiple-choice media.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.flashcards.build_confusability">
+<span class="sig-prename descclassname"><span class="pre">kodokan.flashcards.</span></span><span class="sig-name descname"><span class="pre">build_confusability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">catalog</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tori_angles_pos'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/kodokan/flashcards.html#build_confusability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.flashcards.build_confusability" title="Link to this definition"></a></dt>
+<dd><p>Technique×technique similarity (0..1) from mean pooled pose descriptors.</p>
+<p><code class="docutils literal notranslate"><span class="pre">similarity[a][b]</span></code> high ⇒ techniques a, b look alike in pose-space (likely
+confusable for a learner). An honest, recognizer-free proxy; swap for the model’s
+confusion matrix once cross-source recognition works.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.flashcards.confusable_distractors">
+<span class="sig-prename descclassname"><span class="pre">kodokan.flashcards.</span></span><span class="sig-name descname"><span class="pre">confusable_distractors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keys</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="reference internal" href="../../_modules/kodokan/flashcards.html#confusable_distractors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.flashcards.confusable_distractors" title="Link to this definition"></a></dt>
+<dd><p>Pick <code class="docutils literal notranslate"><span class="pre">n</span></code> distractor keys, preferring those most confusable with the target.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.flashcards.log_response">
+<span class="sig-prename descclassname"><span class="pre">kodokan.flashcards.</span></span><span class="sig-name descname"><span class="pre">log_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">problem</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#kodokan.flashcards.Problem" title="kodokan.flashcards.Problem"><span class="pre">Problem</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">chosen_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">user</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timestamp</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="../../_modules/kodokan/flashcards.html#log_response"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.flashcards.log_response" title="Link to this definition"></a></dt>
+<dd><p>Record a response (datetime + exact problem + choice + correctness + score).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.flashcards.make_problem">
+<span class="sig-prename descclassname"><span class="pre">kodokan.flashcards.</span></span><span class="sig-name descname"><span class="pre">make_problem</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">catalog</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'video_to_name'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_choices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Random</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_for</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#kodokan.flashcards.Problem" title="kodokan.flashcards.Problem"><span class="pre">Problem</span></a></span></span><a class="reference internal" href="../../_modules/kodokan/flashcards.html#make_problem"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.flashcards.make_problem" title="Link to this definition"></a></dt>
+<dd><p>Build a multiple-choice problem for <code class="docutils literal notranslate"><span class="pre">target_key</span></code> from a technique <code class="docutils literal notranslate"><span class="pre">catalog</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">catalog</span></code> maps <code class="docutils literal notranslate"><span class="pre">technique_key</span> <span class="pre">-&gt;</span> <span class="pre">{&quot;name&quot;:</span> <span class="pre">str,</span> <span class="pre">&quot;clips&quot;:</span> <span class="pre">[clip</span> <span class="pre">dicts]}</span></code>.
+<code class="docutils literal notranslate"><span class="pre">clip_for(key)</span></code> returns a looping clip for a key (default: first clip); for
+<code class="docutils literal notranslate"><span class="pre">name_to_video</span></code> the choices are clips, for <code class="docutils literal notranslate"><span class="pre">video_to_name</span></code> they are names.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.flashcards.next_target">
+<span class="sig-prename descclassname"><span class="pre">kodokan.flashcards.</span></span><span class="sig-name descname"><span class="pre">next_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">keys</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">history</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">focus</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rng</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Random</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="../../_modules/kodokan/flashcards.html#next_target"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.flashcards.next_target" title="Link to this definition"></a></dt>
+<dd><p>Pick the next technique to quiz: unseen and often-missed (within <code class="docutils literal notranslate"><span class="pre">focus</span></code>) first.</p>
+<p>Spaced-repetition-ish weight = (wrongs + 1) / (seen + 1): unseen -&gt; 1, frequently
+wrong -&gt; high, mastered -&gt; low. <code class="docutils literal notranslate"><span class="pre">history</span></code> is a list of response dicts.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.flashcards.responses_store">
+<span class="sig-prename descclassname"><span class="pre">kodokan.flashcards.</span></span><span class="sig-name descname"><span class="pre">responses_store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Path</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kodokan/flashcards.html#responses_store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.flashcards.responses_store" title="Link to this definition"></a></dt>
+<dd><p>A dict-like JSON store of logged responses (per-user, timestamped).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.flashcards.score_response">
+<span class="sig-prename descclassname"><span class="pre">kodokan.flashcards.</span></span><span class="sig-name descname"><span class="pre">score_response</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">correct_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">chosen_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">similarity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_partial</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="../../_modules/kodokan/flashcards.html#score_response"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.flashcards.score_response" title="Link to this definition"></a></dt>
+<dd><p>Confusion-weighted credit in [0, 1].</p>
+<p>Correct = 1.0. A wrong answer earns <em>partial</em> credit proportional to how confusable
+the chosen technique is with the correct one (an honest mistake between look-alike
+throws is penalized less than confusing two obviously different throws).</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="descriptors.html" class="btn btn-neutral float-left" title="kodokan.descriptors" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pose.html" class="btn btn-neutral float-right" title="kodokan.pose" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
