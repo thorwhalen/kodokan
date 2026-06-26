@@ -35,7 +35,6 @@ DIVIDER_KEYS = frozenset(
         "sutemiwaza",
         "masutemiwaza",
         "yokosutemiwaza",
-        "ukiwaza",
         "nagewaza",
         "katamewaza",
         "osaekomiwaza",

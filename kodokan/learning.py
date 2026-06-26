@@ -30,7 +30,7 @@ from __future__ import annotations
 import math
 import random
 from collections import defaultdict
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, timezone
 
 RECORD_FIELDS = (
@@ -105,12 +105,42 @@ def empirical_confusion(
         correct_k, chosen_k = r.get("target_key"), r["chosen_key"]
         if not correct_k or chosen_k == correct_k:
             continue
-        decay = 0.5 ** (
-            _days_since(r.get("ts_answered"), now) / max(halflife_days, 1e-6)
-        )
+        days = _days_since(r.get("ts_answered"), now)
+        decay = 0.5 ** (days / max(halflife_days, 1e-6)) if math.isfinite(days) else 1.0
         shortfall = 1.0 - float(r.get("score") or 0.0)
         conf[correct_k][chosen_k] += decay * max(shortfall, 0.25)
     return {k: dict(v) for k, v in conf.items()}
+
+
+def _symmetric_confusion(history, **kw) -> dict:
+    """Symmetric confusability view of the directional confusion matrix.
+
+    Perceptual confusability is symmetric (if A is mistaken for B, B↔A are both hard to
+    tell apart), so for *distractor* selection we fold the directional matrix together.
+    """
+    conf = empirical_confusion(history, **kw)
+    sym: dict[str, dict[str, float]] = defaultdict(lambda: defaultdict(float))
+    for a, row in conf.items():
+        for b, w in row.items():
+            sym[a][b] += w
+            sym[b][a] += w
+    return {k: dict(v) for k, v in sym.items()}
+
+
+def merge_similarity(base: dict | None, overlay: dict | None, *, boost: float = 2.0) -> dict:
+    """Additively merge two ``target -> {key: weight}`` matrices (overlay boosted).
+
+    Keeps the dense ``base`` (pose-shape) for every target and *adds* the sparse
+    ``overlay`` (per-learner confusion) on top — so confusable distractors are always
+    available, with the learner's personal confusers weighted up rather than replacing
+    pose-similarity for not-yet-confused targets.
+    """
+    out = {k: dict(v) for k, v in (base or {}).items()}
+    for k, row in (overlay or {}).items():
+        d = out.setdefault(k, {})
+        for j, w in row.items():
+            d[j] = d.get(j, 0.0) + boost * w
+    return out
 
 
 def item_accuracy(history) -> dict[str, dict]:
@@ -204,7 +234,9 @@ class Strategy:
         if not study_set:
             raise ValueError("empty study set")
         target = self.pick_target(history, study_set, now=now, rng=rng)
-        sim = self.distractor_similarity(history, now=now) or similarity
+        # merge per-learner confusion ON TOP OF pose-similarity (never replace it), so
+        # confusable distractors are available even for not-yet-confused targets.
+        sim = merge_similarity(similarity, self.distractor_similarity(history, now=now))
         distractors = pick_distractors(
             target, study_set, n=self.n_choices - 1, similarity=sim, rng=rng
         )
@@ -236,8 +268,14 @@ class Leitner(Strategy):
     name = "Leitner boxes"
     description = "Spaced repetition by boxes: a right answer moves a throw up a box (seen less often), a wrong answer drops it back."
     n_boxes: int = 5
-    intervals: tuple = (1, 2, 4, 8, 16)  # days per box; len must equal n_boxes
+    intervals: tuple = (1, 2, 4, 8, 16)  # days per box; auto-extended to n_boxes
     demotion: str = "reset"  # "reset" -> box 1, "step" -> box-1
+
+    def __post_init__(self):
+        iv = list(self.intervals)
+        while len(iv) < self.n_boxes:  # keep box/interval invariant even if n_boxes overridden
+            iv.append(iv[-1] * 2 if iv else 1)
+        self.intervals = tuple(iv)
 
     def _boxes(self, history):
         by = _events_by_item(history)
@@ -284,7 +322,7 @@ class SM2(Strategy):
 
     def _grade(self, r) -> int:
         if r.get("timed_out"):
-            return 0
+            return 3 if r.get("correct") else 0  # correct-but-slow is a weak pass, not a lapse
         rt = r.get("response_time_ms")
         if r.get("correct"):
             if rt is not None and rt <= self.fast_ms:
@@ -325,10 +363,12 @@ class SM2(Strategy):
         unseen = [k for k in study_set if k not in st]
         if unseen:
             return rng.choice(unseen)
-        # most overdue first (days past due = elapsed - interval)
-        return max(
-            study_set, key=lambda k: _days_since(st[k]["last"], now) - st[k]["I"]
-        )
+        # sample weighted by overdue-ness (not a hard argmax) so a dense session
+        # interleaves rather than repeating one item; more overdue -> higher weight.
+        overdue = {k: _days_since(st[k]["last"], now) - st[k]["I"] for k in study_set}
+        lo = min(overdue.values())
+        weights = [overdue[k] - lo + 0.1 for k in study_set]
+        return _weighted_sample(study_set, weights, 1, rng)[0]
 
 
 @dataclass
@@ -337,7 +377,7 @@ class ConfusionWeighted(Strategy):
     name = "Confusion-weighted"
     description = "Focuses on the throws you actually mix up, and pits them against the very throws you confuse them with. Recommended."
     recency_halflife_days: float = 7.0
-    epsilon_explore: float = 0.15
+    epsilon_explore: float = 0.1
     prior: float = 1.0
 
     def _confusion_score(self, history, now):
@@ -358,8 +398,8 @@ class ConfusionWeighted(Strategy):
         return _weighted_sample(study_set, weights, 1, rng)[0]
 
     def distractor_similarity(self, history, *, now):
-        # drive distractors from the learner's own confusion pairs (fallback: pose-sim via caller)
-        conf = empirical_confusion(
+        # symmetric per-learner confusion pairs, merged over pose-sim by next_selection
+        conf = _symmetric_confusion(
             history, halflife_days=self.recency_halflife_days, now=now
         )
         return conf or None
@@ -397,12 +437,12 @@ class FSRSLite(Strategy):
         unseen = [k for k in study_set if k not in st]
         if unseen:
             return rng.choice(unseen)
-        return min(
-            study_set, key=lambda k: self._recall(k, st, now)
-        )  # weakest memory first
+        # sample weighted by forgetting (1 - recall), not a hard argmin, to interleave
+        weights = [1.0 - self._recall(k, st, now) + 0.05 for k in study_set]
+        return _weighted_sample(study_set, weights, 1, rng)[0]
 
     def distractor_similarity(self, history, *, now):
-        conf = empirical_confusion(history, now=now)
+        conf = _symmetric_confusion(history, now=now)
         return conf or None
 
 

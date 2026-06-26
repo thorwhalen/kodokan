@@ -78,6 +78,26 @@ def test_leitner_promotes_and_demotes():
     assert boxes["a"] == 1 and boxes["b"] > boxes["a"]
 
 
+def test_confusion_weighted_merges_pose_after_a_mistake():
+    # regression: a logged confusion must NOT replace pose-similarity for other targets
+    pose = {"c": {"d": 10.0}}  # c is pose-confusable with d
+    strat = L.make_strategy("confusion_weighted", epsilon_explore=0.0)
+    hist = [_rec("a", False, chosen="b", days_ago=1)]  # only a<->b confused so far
+    sels = [strat.next_selection(hist, ["c", "d", "e", "f", "g"], similarity=pose, now=NOW, rng=random.Random(i))
+            for i in range(40)]
+    c_sels = [s for s in sels if s.target_key == "c"]
+    assert c_sels and all("d" in s.choice_keys for s in c_sels)  # pose-confusable d still surfaces
+
+
+def test_sm2_and_fsrs_do_not_degenerate_to_one_item():
+    hist = [_rec(k, True, days_ago=2) for k in ("a", "b", "c", "d")]  # all seen, equal-ish state
+    for key in ("sm2", "fsrs_lite"):
+        strat = L.make_strategy(key)
+        picks = {strat.next_selection(hist, ["a", "b", "c", "d"], now=NOW, rng=random.Random(i)).target_key
+                 for i in range(30)}
+        assert len(picks) > 1, f"{key} repeats a single item"
+
+
 def test_sm2_grade_and_unseen_priority():
     strat = L.make_strategy("sm2")
     assert strat._grade(_rec("a", True, rt=1000)) == 5      # fast correct
