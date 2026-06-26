@@ -127,7 +127,9 @@ def _symmetric_confusion(history, **kw) -> dict:
     return {k: dict(v) for k, v in sym.items()}
 
 
-def merge_similarity(base: dict | None, overlay: dict | None, *, boost: float = 2.0) -> dict:
+def merge_similarity(
+    base: dict | None, overlay: dict | None, *, boost: float = 2.0
+) -> dict:
     """Additively merge two ``target -> {key: weight}`` matrices (overlay boosted).
 
     Keeps the dense ``base`` (pose-shape) for every target and *adds* the sparse
@@ -273,7 +275,9 @@ class Leitner(Strategy):
 
     def __post_init__(self):
         iv = list(self.intervals)
-        while len(iv) < self.n_boxes:  # keep box/interval invariant even if n_boxes overridden
+        while (
+            len(iv) < self.n_boxes
+        ):  # keep box/interval invariant even if n_boxes overridden
             iv.append(iv[-1] * 2 if iv else 1)
         self.intervals = tuple(iv)
 
@@ -322,7 +326,9 @@ class SM2(Strategy):
 
     def _grade(self, r) -> int:
         if r.get("timed_out"):
-            return 3 if r.get("correct") else 0  # correct-but-slow is a weak pass, not a lapse
+            return (
+                3 if r.get("correct") else 0
+            )  # correct-but-slow is a weak pass, not a lapse
         rt = r.get("response_time_ms")
         if r.get("correct"):
             if rt is not None and rt <= self.fast_ms:

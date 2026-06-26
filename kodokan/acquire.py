@@ -39,7 +39,9 @@ def canonical_technique_key(title: str) -> str:
     s = re.sub(r"\bdemo\b", "", s)
     s = re.sub(r"\bescapes?\b", "", s)  # merge "<pin> Escapes" demos into the technique
     s = s.replace("barai", "harai")
-    s = s.replace("siho", "shiho")  # IJF "Kami-siho-gatame" vs "shiho" spelling -> one key
+    s = s.replace(
+        "siho", "shiho"
+    )  # IJF "Kami-siho-gatame" vs "shiho" spelling -> one key
     return re.sub(r"[^a-z0-9]", "", s)
 
 
