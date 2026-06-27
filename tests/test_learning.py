@@ -107,3 +107,31 @@ def test_sm2_grade_and_unseen_priority():
     hist = [_rec("a", True, days_ago=0.01)]
     picks = {strat.next_selection(hist, ["a", "b", "c", "d"], now=NOW, rng=random.Random(i)).target_key for i in range(20)}
     assert "a" not in picks  # a was just seen; unseen b/c/d chosen
+
+
+# --- #22: generalized recording model (item_key / content_domain) ------------- #
+
+def test_item_key_falls_back_to_target_key():
+    """Legacy rows (no item_key) aggregate exactly as before under target_key."""
+    legacy = _rec("a", True)  # no item_key field
+    assert L._item_key(legacy) == "a"
+    assert "a" in L._events_by_item([legacy])
+
+
+def test_events_keyed_on_item_key_for_word_rows():
+    """Word rows aggregate by their item_key (the word slug), not target_key."""
+    word_row = {**_rec("seoinage", True), "content_domain": "word", "item_key": "nage"}
+    by = L._events_by_item([word_row])
+    assert "nage" in by and "seoinage" not in by
+    stats = L.item_accuracy([word_row])
+    assert stats["nage"]["n"] == 1 and stats["nage"]["last_correct"] is True
+
+
+def test_word_rows_do_not_disturb_throw_selection():
+    """A strategy fed mixed history still selects only from the throw study set."""
+    strat = L.make_strategy("confusion_weighted", epsilon_explore=0.0)
+    word_noise = [{**_rec("w1", False, chosen="w2"), "content_domain": "word", "item_key": "w1"}]
+    throw_hist = [_rec("a", False, chosen="b", days_ago=1)]
+    sel = strat.next_selection(word_noise + throw_hist, SET, now=NOW, rng=random.Random(0))
+    assert sel.target_key in SET
+    assert set(sel.choice_keys) <= set(SET)

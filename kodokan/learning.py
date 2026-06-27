@@ -41,6 +41,8 @@ RECORD_FIELDS = (
     "strategy_key",
     "target_key",
     "mode",
+    "content_domain",  # "throw" | "word" (default "throw" for legacy rows)
+    "item_key",  # generic per-item key (throw or word slug); == target_key for throws
     "choice_keys",
     "chosen_key",
     "correct",
@@ -79,11 +81,21 @@ class Selection:
 # --------------------------------------------------------------------------- #
 
 
+def _item_key(r) -> str | None:
+    """Generic per-item key: the throw or vocab word a row is about.
+
+    Falls back to ``target_key`` for legacy rows logged before the word games existed,
+    so existing throw history aggregates exactly as before.
+    """
+    return r.get("item_key") or r.get("target_key")
+
+
 def _events_by_item(history) -> dict[str, list[dict]]:
     by = defaultdict(list)
     for r in history:
-        if r.get("target_key"):
-            by[r["target_key"]].append(r)
+        k = _item_key(r)
+        if k:
+            by[k].append(r)
     for evs in by.values():
         evs.sort(key=lambda r: r.get("ts_answered") or r.get("ts_presented") or "")
     return by
