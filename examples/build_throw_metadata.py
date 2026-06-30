@@ -24,6 +24,9 @@ from kodokan.acquire import canonical_technique_key
 
 MD = Path("/Users/thorwhalen/Dropbox/py/proj/t/kodokan/misc/docs/judo_throws_classification.md")
 CATALOG = Path("/Users/thorwhalen/Dropbox/py/proj/tt/papp/migrated_apps/kodokan/data/catalog.json")
+# Curated 'commonly-confused throws' map (slug -> [slug]), from authoritative judo pedagogy
+# (Kodokan-official series + corroborating sources) — replaces the weak pose-similarity proxy (#33).
+CONFUSABLE = Path("/Users/thorwhalen/Dropbox/py/proj/t/kodokan/misc/docs/confusable_curated.json")
 OUT_DIR = Path("/Users/thorwhalen/Dropbox/py/proj/tt/papp/migrated_apps/kodokan/data")
 
 
@@ -144,9 +147,23 @@ def main():
             "category": cl.get("category"),  # None for katame-waza (not in nage-waza ref)
             "words": sorted(set(throw_words.get(key, []))),
             "clips": cat.get("clips", []),
-            "confusable": cat.get("confusable", []),
+            "confusable": [],  # filled below from the curated slug map
             "hasClips": bool(cat.get("clips")),
         }
+
+    # Curated confusable map (slug -> [slug]); store as catalog KEYS to match the app's lookups.
+    curated = json.loads(CONFUSABLE.read_text())["confusable"]
+    slug2key = {t["slug"]: k for k, t in throws.items()}
+    unresolved = set()
+    for key, t in throws.items():
+        out = []
+        for s in curated.get(t["slug"], []):
+            k = slug2key.get(s)
+            if k:
+                out.append(k)
+            else:
+                unresolved.add(s)
+        t["confusable"] = out
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     (OUT_DIR / "vocab.json").write_text(json.dumps({"words": vocab}, ensure_ascii=False, indent=1))
@@ -161,6 +178,8 @@ def main():
     print(f"official without clips (text-only games/info ok): {sorted(official - have_clips)}")
     print(f"our catalog throws NOT in official file (katame etc.): {sorted(set(catalog) - official)}")
     print(f"throws with no composed kanji (unmatched tokens): {no_kanji}")
+    n_conf = sum(1 for t in throws.values() if t["confusable"])
+    print(f"throws with curated confusables: {n_conf}; unresolved curated slugs: {sorted(unresolved)}")
     print(f"sample: osotogari -> {json.dumps(throws.get('osotogari', {}).get('jp'), ensure_ascii=False)} {throws.get('osotogari',{}).get('en')} / {throws.get('osotogari',{}).get('fr')}")
 
 

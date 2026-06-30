@@ -27,6 +27,7 @@ APP_DIR = Path("/Users/thorwhalen/Dropbox/py/proj/tt/papp/migrated_apps/kodokan"
 CLIPS_OUT = APP_DIR / "frontend" / "clips"
 CATALOG_OUT = APP_DIR / "data" / "catalog.json"
 LOOP_MAX_S, LOOP_MIN_S, N_CONFUSABLE, HEIGHT = 7.0, 1.5, 8, 480
+MAX_REPS_PER_SOURCE = 4  # export up to this many demo repetitions per source video (#34)
 
 # (x, y, w, h) as fractions of the frame — region to blur per source
 SOURCE_BLUR = {
@@ -40,14 +41,23 @@ SOURCE_DIRS = {  # source -> downloaded-clips dir
 _VID_RE = re.compile(r"\(([A-Za-z0-9_-]{6,})\)\.mp4$")
 
 
-def _loop_segment(demos):
+def _rep_segments(demos, max_reps=MAX_REPS_PER_SOURCE):
+    """All demo repetitions worth showing (≥LOOP_MIN_S), capped at ``max_reps`` (#34).
+
+    Returns a list of (start_s, duration) tuples — one per repetition — so the app can offer
+    several example clips per throw instead of just one. Falls back to the first demo (even if
+    short) when none clear the minimum, so a source video always yields at least one clip.
+    """
+    reps = []
     for d in demos:
         dur = d["end_s"] - d["start_s"]
         if dur >= LOOP_MIN_S:
-            return float(d["start_s"]), min(dur, LOOP_MAX_S)
-    if demos:
-        return float(demos[0]["start_s"]), LOOP_MAX_S
-    return None
+            reps.append((float(d["start_s"]), min(dur, LOOP_MAX_S)))
+        if len(reps) >= max_reps:
+            break
+    if not reps and demos:
+        reps.append((float(demos[0]["start_s"]), LOOP_MAX_S))
+    return reps
 
 
 def _index_videos():
@@ -96,26 +106,31 @@ def main():
         clips = []
         for c in entry["clips"]:
             vid = c["video_id"]
-            seg = _loop_segment(c.get("demos", []))
-            if vid not in vindex or seg is None:
+            reps = _rep_segments(c.get("demos", []))
+            if vid not in vindex or not reps:
                 continue
             src_file, source = vindex[vid]
-            start, dur = seg
-            out_file = CLIPS_OUT / f"{vid}.mp4"
-            if force or not out_file.exists():
-                if _make_clip(src_file, source, start, dur, out_file):
-                    made += 1
+            base_url = c.get("source_url") or f"https://www.youtube.com/watch?v={vid}"
+            for i, (start, dur) in enumerate(reps, 1):
+                # rep 1 keeps the historical {vid}.mp4 name (reuses already-cut clips);
+                # extra reps are {vid}_2.mp4, {vid}_3.mp4, …
+                name = f"{vid}.mp4" if i == 1 else f"{vid}_{i}.mp4"
+                out_file = CLIPS_OUT / name
+                if force or not out_file.exists():
+                    if _make_clip(src_file, source, start, dur, out_file):
+                        made += 1
+                    else:
+                        failed += 1
+                        continue
                 else:
-                    failed += 1
-                    continue
-            else:
-                skipped += 1
-            clips.append({
-                "file": f"clips/{vid}.mp4",
-                "videoId": vid,
-                "source": source,
-                "url": c.get("source_url") or f"https://www.youtube.com/watch?v={vid}",
-            })
+                    skipped += 1
+                clips.append({
+                    "file": f"clips/{name}",
+                    "videoId": vid,
+                    "source": source,
+                    # deep-link the "watch original" to this repetition's timestamp
+                    "url": f"{base_url}&t={int(start)}s",
+                })
         if not clips:
             continue
         confusable = [k for k, _ in sorted(sim.get(key, {}).items(), key=lambda kv: -kv[1])[:N_CONFUSABLE]]
