@@ -1,0 +1,2180 @@
+{
+ "_doc": "Per-clip face-privacy treatment for stylized kodokan clips. See adr-video-face-privacy.md.",
+ "legend": {
+  "animegan + blur_anime=false": "AnimeGAN cartoon face, NO blur on top (initial rollout, nage-waza throws)",
+  "animegan + blur_anime=true": "AnimeGAN cartoon face WITH a soft blur on top (post-switch throws)",
+  "blur": "Head-band blur, no anime (katame-waza pins/chokes \u2014 always)"
+ },
+ "clips": {
+  "-1DeK0IDOg8.mp4": {
+   "throw": "uchimakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "-1DeK0IDOg8_2.mp4": {
+   "throw": "uchimakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "-CZO8Mj5cA8.mp4": {
+   "throw": "osotomakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "-CZO8Mj5cA8_2.mp4": {
+   "throw": "osotomakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "-CZO8Mj5cA8_3.mp4": {
+   "throw": "osotomakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "-euJliq9XcY.mp4": {
+   "throw": "tomoenage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "-euJliq9XcY_2.mp4": {
+   "throw": "tomoenage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "-euJliq9XcY_3.mp4": {
+   "throw": "tomoenage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "0aY2Tmchzs8.mp4": {
+   "throw": "uragatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "0aY2Tmchzs8_2.mp4": {
+   "throw": "uragatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "0itJFhV9pDQ.mp4": {
+   "throw": "ouchigari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "0itJFhV9pDQ_2.mp4": {
+   "throw": "ouchigari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "0itJFhV9pDQ_3.mp4": {
+   "throw": "ouchigari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "1NFwJBKI-3E.mp4": {
+   "throw": "kanibasami",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "1NFwJBKI-3E_2.mp4": {
+   "throw": "kanibasami",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "1NFwJBKI-3E_3.mp4": {
+   "throw": "kanibasami",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "23ATiD6TsZs.mp4": {
+   "throw": "haraitsurikomiashi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "23ATiD6TsZs_2.mp4": {
+   "throw": "haraitsurikomiashi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "23ATiD6TsZs_3.mp4": {
+   "throw": "haraitsurikomiashi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "2DsVvDw7b8g.mp4": {
+   "throw": "osotootoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "2DsVvDw7b8g_2.mp4": {
+   "throw": "osotootoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "2DsVvDw7b8g_3.mp4": {
+   "throw": "osotootoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "3Jb3tZvr9Ng.mp4": {
+   "throw": "kouchigari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "3Jb3tZvr9Ng_2.mp4": {
+   "throw": "kouchigari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "3Jb3tZvr9Ng_3.mp4": {
+   "throw": "kouchigari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "3LLBrF4w86Q.mp4": {
+   "throw": "kibisugaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "3LLBrF4w86Q_2.mp4": {
+   "throw": "kibisugaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "3LLBrF4w86Q_3.mp4": {
+   "throw": "kibisugaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "4BUUvqxi_Kk.mp4": {
+   "throw": "deashiharai",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "4BUUvqxi_Kk_2.mp4": {
+   "throw": "deashiharai",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "4BUUvqxi_Kk_3.mp4": {
+   "throw": "deashiharai",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "4HJumX7ArOI.mp4": {
+   "throw": "tsurikomigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "4HJumX7ArOI_2.mp4": {
+   "throw": "tsurikomigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "4HJumX7ArOI_3.mp4": {
+   "throw": "tsurikomigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "4LR49U48iyw.mp4": {
+   "throw": "sumigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "4LR49U48iyw_2.mp4": {
+   "throw": "sumigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "4LR49U48iyw_3.mp4": {
+   "throw": "sumigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "4U3It-7PPsc.mp4": {
+   "throw": "haraigoshigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "4U3It-7PPsc_2.mp4": {
+   "throw": "haraigoshigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "4U3It-7PPsc_3.mp4": {
+   "throw": "haraigoshigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "4hzlipey14I.mp4": {
+   "throw": "uranage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "4hzlipey14I_2.mp4": {
+   "throw": "uranage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "4pQd_bEnlf0.mp4": {
+   "throw": "utsurigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "4pQd_bEnlf0_2.mp4": {
+   "throw": "utsurigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "4pQd_bEnlf0_3.mp4": {
+   "throw": "utsurigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "4x6S3Q-Ktv8.mp4": {
+   "throw": "taiotoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "4x6S3Q-Ktv8_2.mp4": {
+   "throw": "taiotoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "4x6S3Q-Ktv8_3.mp4": {
+   "throw": "taiotoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "51Htlp7xEvE.mp4": {
+   "throw": "tsurigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "51Htlp7xEvE_2.mp4": {
+   "throw": "tsurigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "51Htlp7xEvE_3.mp4": {
+   "throw": "tsurigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "55-rFmBx53g.mp4": {
+   "throw": "tateshihogatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "55-rFmBx53g_2.mp4": {
+   "throw": "tateshihogatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "5BowcjduxVc.mp4": {
+   "throw": "uchimakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "5BowcjduxVc_2.mp4": {
+   "throw": "uchimakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "5BowcjduxVc_3.mp4": {
+   "throw": "uchimakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "5E20xuzaXNw.mp4": {
+   "throw": "kouchigari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "5E20xuzaXNw_2.mp4": {
+   "throw": "kouchigari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "5E20xuzaXNw_3.mp4": {
+   "throw": "kouchigari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "5VhduA5xkbA.mp4": {
+   "throw": "sumigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "5VhduA5xkbA_2.mp4": {
+   "throw": "sumigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "5VhduA5xkbA_3.mp4": {
+   "throw": "sumigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "5_TS0YHdxcQ.mp4": {
+   "throw": "kesagatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "5_TS0YHdxcQ_2.mp4": {
+   "throw": "kesagatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "5_TS0YHdxcQ_3.mp4": {
+   "throw": "kesagatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "5jVF6r366Kg.mp4": {
+   "throw": "ukigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "5jVF6r366Kg_2.mp4": {
+   "throw": "ukigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "5jVF6r366Kg_3.mp4": {
+   "throw": "ukigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "699i--pvYmE.mp4": {
+   "throw": "sasaetsurikomiashi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "699i--pvYmE_2.mp4": {
+   "throw": "sasaetsurikomiashi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "699i--pvYmE_3.mp4": {
+   "throw": "sasaetsurikomiashi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "6CRBGLGz9j8.mp4": {
+   "throw": "hanemakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "6CRBGLGz9j8_2.mp4": {
+   "throw": "hanemakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "6H5tmncOY4Q.mp4": {
+   "throw": "ukiotoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "6H5tmncOY4Q_2.mp4": {
+   "throw": "ukiotoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "6H5tmncOY4Q_3.mp4": {
+   "throw": "ukiotoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "7fCvyc_rQTI.mp4": {
+   "throw": "uchimata",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "7fCvyc_rQTI_2.mp4": {
+   "throw": "uchimata",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "7fCvyc_rQTI_3.mp4": {
+   "throw": "uchimata",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "858jvGv7pQE.mp4": {
+   "throw": "dakiwakare",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "858jvGv7pQE_2.mp4": {
+   "throw": "dakiwakare",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "880WbHvHv6A.mp4": {
+   "throw": "tomoenage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "880WbHvHv6A_2.mp4": {
+   "throw": "tomoenage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "880WbHvHv6A_3.mp4": {
+   "throw": "tomoenage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "92zUYWBp5N8.mp4": {
+   "throw": "hikikomigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "92zUYWBp5N8_2.mp4": {
+   "throw": "hikikomigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "92zUYWBp5N8_3.mp4": {
+   "throw": "hikikomigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "93YEMueeF24.mp4": {
+   "throw": "osotogari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "93YEMueeF24_2.mp4": {
+   "throw": "osotogari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "93YEMueeF24_3.mp4": {
+   "throw": "osotogari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "9bZAZSBtnGs.mp4": {
+   "throw": "hanegoshigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "9bZAZSBtnGs_2.mp4": {
+   "throw": "hanegoshigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "9bZAZSBtnGs_3.mp4": {
+   "throw": "hanegoshigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "9f0n8jez7iA.mp4": {
+   "throw": "hadakajime",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "9f0n8jez7iA_2.mp4": {
+   "throw": "hadakajime",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "9f0n8jez7iA_3.mp4": {
+   "throw": "hadakajime",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "A6-lTECSR3c.mp4": {
+   "throw": "ouchigari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "A6-lTECSR3c_2.mp4": {
+   "throw": "ouchigari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "A6-lTECSR3c_3.mp4": {
+   "throw": "ouchigari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "AJy_muVxkaE.mp4": {
+   "throw": "uchimatamakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "AJy_muVxkaE_2.mp4": {
+   "throw": "uchimatamakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "BHLQS4K85bs.mp4": {
+   "throw": "morotegari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "BHLQS4K85bs_2.mp4": {
+   "throw": "morotegari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "BHLQS4K85bs_3.mp4": {
+   "throw": "morotegari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "BYD0IRZPlxI.mp4": {
+   "throw": "yokoguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "BYD0IRZPlxI_2.mp4": {
+   "throw": "yokoguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "BcfGFR1CWss.mp4": {
+   "throw": "sotomakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "BcfGFR1CWss_2.mp4": {
+   "throw": "sotomakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "CYH7zR_yqq4.mp4": {
+   "throw": "osotootoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "CYH7zR_yqq4_2.mp4": {
+   "throw": "osotootoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "DGDv2oMwmas.mp4": {
+   "throw": "osotomakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "DGDv2oMwmas_2.mp4": {
+   "throw": "osotomakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "DGDv2oMwmas_3.mp4": {
+   "throw": "osotomakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "DUiZ8JZkGx8.mp4": {
+   "throw": "taiotoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "DUiZ8JZkGx8_2.mp4": {
+   "throw": "taiotoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "DUiZ8JZkGx8_3.mp4": {
+   "throw": "taiotoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "E81rR10wfXU.mp4": {
+   "throw": "utsurigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "E81rR10wfXU_2.mp4": {
+   "throw": "utsurigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "EiqyoVcIAi8.mp4": {
+   "throw": "okurierijime",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "EiqyoVcIAi8_2.mp4": {
+   "throw": "okurierijime",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "EiqyoVcIAi8_3.mp4": {
+   "throw": "okurierijime",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "FQnOlCxo4oI.mp4": {
+   "throw": "ipponseoinage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "FQnOlCxo4oI_2.mp4": {
+   "throw": "ipponseoinage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "FQnOlCxo4oI_3.mp4": {
+   "throw": "ipponseoinage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "Fgi9b8DJ5sQ.mp4": {
+   "throw": "uranage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "GwweWqqFB5g.mp4": {
+   "throw": "tsubamegaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "GwweWqqFB5g_2.mp4": {
+   "throw": "tsubamegaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "GwweWqqFB5g_3.mp4": {
+   "throw": "tsubamegaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "HFuMjOv0WN8.mp4": {
+   "throw": "kamishihogatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "HFuMjOv0WN8_2.mp4": {
+   "throw": "kamishihogatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "HFuMjOv0WN8_3.mp4": {
+   "throw": "kamishihogatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "Hr0cOMGBDYo.mp4": {
+   "throw": "dakiwakare",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "Hr0cOMGBDYo_2.mp4": {
+   "throw": "dakiwakare",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "Hr0cOMGBDYo_3.mp4": {
+   "throw": "dakiwakare",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "JtB79Ma4htw.mp4": {
+   "throw": "ukiwaza",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "JtB79Ma4htw_2.mp4": {
+   "throw": "ukiwaza",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "JtB79Ma4htw_3.mp4": {
+   "throw": "ukiwaza",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "JtVbwSfr2DM.mp4": {
+   "throw": "morotegari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "JtVbwSfr2DM_2.mp4": {
+   "throw": "morotegari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "JtVbwSfr2DM_3.mp4": {
+   "throw": "morotegari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "KyLgGFs-tEk.mp4": {
+   "throw": "sodetsurikomigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "KyLgGFs-tEk_2.mp4": {
+   "throw": "sodetsurikomigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "KyLgGFs-tEk_3.mp4": {
+   "throw": "sodetsurikomigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "MGlyKmSuzdc.mp4": {
+   "throw": "yamaarashi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "MGlyKmSuzdc_2.mp4": {
+   "throw": "yamaarashi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "MGlyKmSuzdc_3.mp4": {
+   "throw": "yamaarashi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "MWd5CYkm2zI.mp4": {
+   "throw": "haraimakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "MWd5CYkm2zI_2.mp4": {
+   "throw": "haraimakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "McfzA0yRVt4.mp4": {
+   "throw": "tsurikomigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "McfzA0yRVt4_2.mp4": {
+   "throw": "tsurikomigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "McfzA0yRVt4_3.mp4": {
+   "throw": "tsurikomigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "MehP6I5cY2c.mp4": {
+   "throw": "yokoguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "MehP6I5cY2c_2.mp4": {
+   "throw": "yokoguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "MiGljHOokvE.mp4": {
+   "throw": "sasaetsurikomiashi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "MiGljHOokvE_2.mp4": {
+   "throw": "sasaetsurikomiashi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "MiGljHOokvE_3.mp4": {
+   "throw": "sasaetsurikomiashi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "MnNG67pF_a0.mp4": {
+   "throw": "yokootoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "MnNG67pF_a0_2.mp4": {
+   "throw": "yokootoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "MnNG67pF_a0_3.mp4": {
+   "throw": "yokootoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "Mwz5At87OxE.mp4": {
+   "throw": "ogoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "Mwz5At87OxE_2.mp4": {
+   "throw": "ogoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "Mwz5At87OxE_3.mp4": {
+   "throw": "ogoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "NDaQuJOFBYk.mp4": {
+   "throw": "kesagatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "NDaQuJOFBYk_2.mp4": {
+   "throw": "kesagatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "NDaQuJOFBYk_3.mp4": {
+   "throw": "kesagatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "OmKfUXAAdZ0.mp4": {
+   "throw": "ipponseoinage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "OmKfUXAAdZ0_2.mp4": {
+   "throw": "ipponseoinage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "OmKfUXAAdZ0_3.mp4": {
+   "throw": "ipponseoinage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "PPe7E_7d7UI.mp4": {
+   "throw": "kuzurekamishihogatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "PPe7E_7d7UI_2.mp4": {
+   "throw": "kuzurekamishihogatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "PUCN_gTYhfY.mp4": {
+   "throw": "yamaarashi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "PUCN_gTYhfY_2.mp4": {
+   "throw": "yamaarashi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "QsmAxpmYLOI.mp4": {
+   "throw": "sodetsurikomigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "QsmAxpmYLOI_2.mp4": {
+   "throw": "sodetsurikomigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "QsmAxpmYLOI_3.mp4": {
+   "throw": "sodetsurikomigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "ROeayhvom9U.mp4": {
+   "throw": "ashiguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "ROeayhvom9U_2.mp4": {
+   "throw": "ashiguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "ROeayhvom9U_3.mp4": {
+   "throw": "ashiguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "SBapox2M2dE.mp4": {
+   "throw": "ushirokesagatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "SBapox2M2dE_2.mp4": {
+   "throw": "ushirokesagatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "SBapox2M2dE_3.mp4": {
+   "throw": "ushirokesagatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "SU7Id6uVJ44.mp4": {
+   "throw": "koshiguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "SU7Id6uVJ44_2.mp4": {
+   "throw": "koshiguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "SU7Id6uVJ44_3.mp4": {
+   "throw": "koshiguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "SnZciTAY9vc.mp4": {
+   "throw": "oguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "SnZciTAY9vc_2.mp4": {
+   "throw": "oguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "SnZciTAY9vc_3.mp4": {
+   "throw": "oguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "Sy6sLWxkWYw.mp4": {
+   "throw": "uchimatagaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "Sy6sLWxkWYw_2.mp4": {
+   "throw": "uchimatagaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "Sy6sLWxkWYw_3.mp4": {
+   "throw": "uchimatagaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "T3rSf8CcHg4.mp4": {
+   "throw": "kosotogari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "T3rSf8CcHg4_2.mp4": {
+   "throw": "kosotogari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "T3rSf8CcHg4_3.mp4": {
+   "throw": "kosotogari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "TT7XJVSEQxA.mp4": {
+   "throw": "yokoshihogatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "TT7XJVSEQxA_2.mp4": {
+   "throw": "yokoshihogatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "TT7XJVSEQxA_3.mp4": {
+   "throw": "yokoshihogatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "TmTWgrmViZc.mp4": {
+   "throw": "tawaragaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "TmTWgrmViZc_2.mp4": {
+   "throw": "tawaragaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "TmTWgrmViZc_3.mp4": {
+   "throw": "tawaragaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "Uu9XXHHYMRo.mp4": {
+   "throw": "yokootoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "Uu9XXHHYMRo_2.mp4": {
+   "throw": "yokootoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "Uu9XXHHYMRo_3.mp4": {
+   "throw": "yokootoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "V5jQkLDww7g.mp4": {
+   "throw": "ouchigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "V5jQkLDww7g_2.mp4": {
+   "throw": "ouchigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "V5jQkLDww7g_3.mp4": {
+   "throw": "ouchigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "VBaHzKaCXss.mp4": {
+   "throw": "haraimakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "WV745XfBsgA.mp4": {
+   "throw": "hikikomigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "WV745XfBsgA_2.mp4": {
+   "throw": "hikikomigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "WV745XfBsgA_3.mp4": {
+   "throw": "hikikomigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "YUrogQWdwiY.mp4": {
+   "throw": "kuzurekamishihogatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "YUrogQWdwiY_2.mp4": {
+   "throw": "kuzurekamishihogatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "YUrogQWdwiY_3.mp4": {
+   "throw": "kuzurekamishihogatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "_-5Un6jLtRY.mp4": {
+   "throw": "seoinage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "_-5Un6jLtRY_2.mp4": {
+   "throw": "seoinage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "_-5Un6jLtRY_3.mp4": {
+   "throw": "seoinage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "_rag76pFL9U.mp4": {
+   "throw": "tsurigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "_rag76pFL9U_2.mp4": {
+   "throw": "tsurigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "_rag76pFL9U_3.mp4": {
+   "throw": "tsurigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "bPKwtB4lyOQ.mp4": {
+   "throw": "ukigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "bPKwtB4lyOQ_2.mp4": {
+   "throw": "ukigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "bPKwtB4lyOQ_3.mp4": {
+   "throw": "ukigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "bWG9O1BVKtQ.mp4": {
+   "throw": "sotomakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "bWG9O1BVKtQ_2.mp4": {
+   "throw": "sotomakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "bWG9O1BVKtQ_3.mp4": {
+   "throw": "sotomakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "bp1tscHlePI.mp4": {
+   "throw": "yokowakare",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "bp1tscHlePI_2.mp4": {
+   "throw": "yokowakare",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "bp1tscHlePI_3.mp4": {
+   "throw": "yokowakare",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "bpc82SrunUU.mp4": {
+   "throw": "obitorigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "bpc82SrunUU_2.mp4": {
+   "throw": "obitorigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "bpc82SrunUU_3.mp4": {
+   "throw": "obitorigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "c-A_nP7mKAc.mp4": {
+   "throw": "osotogari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "c-A_nP7mKAc_2.mp4": {
+   "throw": "osotogari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "c-A_nP7mKAc_3.mp4": {
+   "throw": "osotogari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "c7pqq2sC8Ng.mp4": {
+   "throw": "ashiguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "c7pqq2sC8Ng_2.mp4": {
+   "throw": "ashiguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "c7pqq2sC8Ng_3.mp4": {
+   "throw": "ashiguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "cnHRhSy8yi4.mp4": {
+   "throw": "kataguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "cnHRhSy8yi4_2.mp4": {
+   "throw": "kataguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "cnHRhSy8yi4_3.mp4": {
+   "throw": "kataguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "cs_zkgefvqM.mp4": {
+   "throw": "haraigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "d8Cmcfvh7M8.mp4": {
+   "throw": "ukiotoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "d8Cmcfvh7M8_2.mp4": {
+   "throw": "ukiotoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "d8Cmcfvh7M8_3.mp4": {
+   "throw": "ukiotoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "dCyZTXyjIXE.mp4": {
+   "throw": "ouchigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "dCyZTXyjIXE_2.mp4": {
+   "throw": "ouchigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "dCyZTXyjIXE_3.mp4": {
+   "throw": "ouchigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "eeAHZB0v3XY.mp4": {
+   "throw": "uragatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "eeAHZB0v3XY_2.mp4": {
+   "throw": "uragatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "eeAHZB0v3XY_3.mp4": {
+   "throw": "uragatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "fWlPaLwvBV8.mp4": {
+   "throw": "yokowakare",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "fWlPaLwvBV8_2.mp4": {
+   "throw": "yokowakare",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "gGPXvWL8VbE.mp4": {
+   "throw": "haraitsurikomiashi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "gGPXvWL8VbE_2.mp4": {
+   "throw": "haraitsurikomiashi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "gGPXvWL8VbE_3.mp4": {
+   "throw": "haraitsurikomiashi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "gW9LEvVmG2o.mp4": {
+   "throw": "deashiharai",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "gW9LEvVmG2o_2.mp4": {
+   "throw": "deashiharai",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "gW9LEvVmG2o_3.mp4": {
+   "throw": "deashiharai",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "iUpSu5J-bgw.mp4": {
+   "throw": "uchimata",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "iUpSu5J-bgw_2.mp4": {
+   "throw": "uchimata",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "iUpSu5J-bgw_3.mp4": {
+   "throw": "uchimata",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "jZXENTLpJCI.mp4": {
+   "throw": "uchimatamakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "jeQ541ScLB4.mp4": {
+   "throw": "kosotogari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "jeQ541ScLB4_2.mp4": {
+   "throw": "kosotogari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "jeQ541ScLB4_3.mp4": {
+   "throw": "kosotogari",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "k2cHry9HByQ.mp4": {
+   "throw": "namijujijime",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "k2cHry9HByQ_2.mp4": {
+   "throw": "namijujijime",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "k2cHry9HByQ_3.mp4": {
+   "throw": "namijujijime",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "m_HEibNx3Gw.mp4": {
+   "throw": "tsubamegaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "m_HEibNx3Gw_2.mp4": {
+   "throw": "tsubamegaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "m_HEibNx3Gw_3.mp4": {
+   "throw": "tsubamegaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "ne3i9DoBQU0.mp4": {
+   "throw": "seoiotoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "ne3i9DoBQU0_2.mp4": {
+   "throw": "seoiotoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "ne3i9DoBQU0_3.mp4": {
+   "throw": "seoiotoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "psG_Xx8NiIA.mp4": {
+   "throw": "koshiguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "psG_Xx8NiIA_2.mp4": {
+   "throw": "koshiguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "psG_Xx8NiIA_3.mp4": {
+   "throw": "koshiguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "qTo8HlAAkOo.mp4": {
+   "throw": "haraigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "qTo8HlAAkOo_2.mp4": {
+   "throw": "haraigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "qTo8HlAAkOo_3.mp4": {
+   "throw": "haraigoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "rzOSmEiuVtg.mp4": {
+   "throw": "uchimatagaeshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "rzOSmEiuVtg_2.mp4": {
+   "throw": "uchimatagaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "rzOSmEiuVtg_3.mp4": {
+   "throw": "uchimatagaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "seGsXy9I4G8.mp4": {
+   "throw": "kamishihogatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "seGsXy9I4G8_2.mp4": {
+   "throw": "kamishihogatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "seGsXy9I4G8_3.mp4": {
+   "throw": "kamishihogatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "sn13Bu3bxHE.mp4": {
+   "throw": "sukuinage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "sn13Bu3bxHE_2.mp4": {
+   "throw": "sukuinage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "sn13Bu3bxHE_3.mp4": {
+   "throw": "sukuinage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "t2hgLa7BZbE.mp4": {
+   "throw": "haraigoshigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "t2hgLa7BZbE_2.mp4": {
+   "throw": "haraigoshigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "t2hgLa7BZbE_3.mp4": {
+   "throw": "haraigoshigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "tJylJYfBliA.mp4": {
+   "throw": "kibisugaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "tJylJYfBliA_2.mp4": {
+   "throw": "kibisugaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "tJylJYfBliA_3.mp4": {
+   "throw": "kibisugaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "ujxkj6EJSb0.mp4": {
+   "throw": "oguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "ujxkj6EJSb0_2.mp4": {
+   "throw": "oguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "ujxkj6EJSb0_3.mp4": {
+   "throw": "oguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "vU6aJ2kFxoI.mp4": {
+   "throw": "sukuinage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "vU6aJ2kFxoI_2.mp4": {
+   "throw": "sukuinage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "vU6aJ2kFxoI_3.mp4": {
+   "throw": "sukuinage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "vqT3W-ByaEw.mp4": {
+   "throw": "hanegoshigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "vqT3W-ByaEw_2.mp4": {
+   "throw": "hanegoshigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "vqT3W-ByaEw_3.mp4": {
+   "throw": "hanegoshigaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "vu1TMVNnq34.mp4": {
+   "throw": "seoiotoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "vu1TMVNnq34_2.mp4": {
+   "throw": "seoiotoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "vu1TMVNnq34_3.mp4": {
+   "throw": "seoiotoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "wG5kQT7M8is.mp4": {
+   "throw": "hanemakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "wG5kQT7M8is_2.mp4": {
+   "throw": "hanemakikomi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "wRiFwMLCjPg.mp4": {
+   "throw": "kataguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "wRiFwMLCjPg_2.mp4": {
+   "throw": "kataguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "wRiFwMLCjPg_3.mp4": {
+   "throw": "kataguruma",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "weVOpJ63gII.mp4": {
+   "throw": "ukiwaza",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "weVOpJ63gII_2.mp4": {
+   "throw": "ukiwaza",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "weVOpJ63gII_3.mp4": {
+   "throw": "ukiwaza",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "yK_GSamSPko.mp4": {
+   "throw": "yokoshihogatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "yK_GSamSPko_2.mp4": {
+   "throw": "yokoshihogatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "yhu1mfy2vJ4.mp4": {
+   "throw": "ogoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "yhu1mfy2vJ4_2.mp4": {
+   "throw": "ogoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "yhu1mfy2vJ4_3.mp4": {
+   "throw": "ogoshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "zIq0xI0ogxk.mp4": {
+   "throw": "seoinage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "zIq0xI0ogxk_2.mp4": {
+   "throw": "seoinage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "zIq0xI0ogxk_3.mp4": {
+   "throw": "seoinage",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "zORVnrrPnmM.mp4": {
+   "throw": "tawaragaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "zORVnrrPnmM_2.mp4": {
+   "throw": "tawaragaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "zORVnrrPnmM_3.mp4": {
+   "throw": "tawaragaeshi",
+   "mode": "animegan",
+   "blur_anime": false
+  },
+  "PUCN_gTYhfY_3.mp4": {
+   "throw": "yamaarashi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "AMHWDFR4ryo.mp4": {
+   "throw": "ukigatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "AMHWDFR4ryo_2.mp4": {
+   "throw": "ukigatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "AMHWDFR4ryo_3.mp4": {
+   "throw": "ukigatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "e_lAjik1SUM.mp4": {
+   "throw": "ukigatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "e_lAjik1SUM_2.mp4": {
+   "throw": "ukigatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "e_lAjik1SUM_3.mp4": {
+   "throw": "ukigatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "lLU9wv52ni0.mp4": {
+   "throw": "sumiotoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "lLU9wv52ni0_2.mp4": {
+   "throw": "sumiotoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "lLU9wv52ni0_3.mp4": {
+   "throw": "sumiotoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "CL6tPu1Khc4.mp4": {
+   "throw": "sumiotoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "CL6tPu1Khc4_2.mp4": {
+   "throw": "sumiotoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "CL6tPu1Khc4_3.mp4": {
+   "throw": "sumiotoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "8ZjM3X_EANo.mp4": {
+   "throw": "osotogaeshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "8ZjM3X_EANo_2.mp4": {
+   "throw": "osotogaeshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "8ZjM3X_EANo_3.mp4": {
+   "throw": "osotogaeshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "FVHAn45Gd6w.mp4": {
+   "throw": "osotogaeshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "FVHAn45Gd6w_2.mp4": {
+   "throw": "osotogaeshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "M9_7De6A1kk.mp4": {
+   "throw": "hanegoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "M9_7De6A1kk_2.mp4": {
+   "throw": "hanegoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "M9_7De6A1kk_3.mp4": {
+   "throw": "hanegoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "n7GP5S41Os8.mp4": {
+   "throw": "hanegoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "n7GP5S41Os8_2.mp4": {
+   "throw": "hanegoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "n7GP5S41Os8_3.mp4": {
+   "throw": "hanegoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "sqQ4tr3iERE.mp4": {
+   "throw": "ushirogoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "3dGTN6sGbmk_2.mp4": {
+   "throw": "obiotoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "3dGTN6sGbmk_3.mp4": {
+   "throw": "obiotoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "hRuTyKJChsw.mp4": {
+   "throw": "kuchikitaoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "hRuTyKJChsw_2.mp4": {
+   "throw": "kuchikitaoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "hRuTyKJChsw_3.mp4": {
+   "throw": "kuchikitaoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "ZNL47q1aJNY.mp4": {
+   "throw": "kuchikitaoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "ZNL47q1aJNY_2.mp4": {
+   "throw": "kuchikitaoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "ZNL47q1aJNY_3.mp4": {
+   "throw": "kuchikitaoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "2WHtL7Rzwfs.mp4": {
+   "throw": "okuriashiharai",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "2WHtL7Rzwfs_2.mp4": {
+   "throw": "okuriashiharai",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "2WHtL7Rzwfs_3.mp4": {
+   "throw": "okuriashiharai",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "nw1ZdRjrdRI.mp4": {
+   "throw": "okuriashiharai",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "nw1ZdRjrdRI_2.mp4": {
+   "throw": "okuriashiharai",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "nw1ZdRjrdRI_3.mp4": {
+   "throw": "okuriashiharai",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "92KbCm6pQeI.mp4": {
+   "throw": "osotoguruma",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "92KbCm6pQeI_2.mp4": {
+   "throw": "osotoguruma",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "92KbCm6pQeI_3.mp4": {
+   "throw": "osotoguruma",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "CdjR9VyQaL0.mp4": {
+   "throw": "osotoguruma",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "CdjR9VyQaL0_2.mp4": {
+   "throw": "osotoguruma",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "CdjR9VyQaL0_3.mp4": {
+   "throw": "osotoguruma",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "zQR3IOXxO_Q.mp4": {
+   "throw": "katagatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "tP1Sj1uDfSo_2.mp4": {
+   "throw": "yokogake",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "tP1Sj1uDfSo_3.mp4": {
+   "throw": "yokogake",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "8b6kY4s4zH4.mp4": {
+   "throw": "kosotogake",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "8b6kY4s4zH4_2.mp4": {
+   "throw": "kosotogake",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "8b6kY4s4zH4_3.mp4": {
+   "throw": "kosotogake",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "jl99iUTlIVY.mp4": {
+   "throw": "kosotogake",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "jl99iUTlIVY_2.mp4": {
+   "throw": "kosotogake",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "0Fpw60A1_pw.mp4": {
+   "throw": "uchimatasukashi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "0Fpw60A1_pw_2.mp4": {
+   "throw": "uchimatasukashi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "0Fpw60A1_pw_3.mp4": {
+   "throw": "uchimatasukashi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "V-RS3uhtVWM.mp4": {
+   "throw": "uchimatasukashi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "V-RS3uhtVWM_2.mp4": {
+   "throw": "uchimatasukashi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "V-RS3uhtVWM_3.mp4": {
+   "throw": "uchimatasukashi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "_MWAdYi_LC4.mp4": {
+   "throw": "kouchigaeshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "_MWAdYi_LC4_2.mp4": {
+   "throw": "kouchigaeshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "_MWAdYi_LC4_3.mp4": {
+   "throw": "kouchigaeshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "aENEt9_VmuU.mp4": {
+   "throw": "kouchigaeshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "aENEt9_VmuU_2.mp4": {
+   "throw": "kouchigaeshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "aENEt9_VmuU_3.mp4": {
+   "throw": "kouchigaeshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "3VZVUAmiMD8.mp4": {
+   "throw": "katajujijime",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "3VZVUAmiMD8_2.mp4": {
+   "throw": "katajujijime",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "3VZVUAmiMD8_3.mp4": {
+   "throw": "katajujijime",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "5lFXv3crN30.mp4": {
+   "throw": "dakiage",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "5lFXv3crN30_2.mp4": {
+   "throw": "dakiage",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "Q2fb9jaoUFQ.mp4": {
+   "throw": "kuzurekesagatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "Q2fb9jaoUFQ_2.mp4": {
+   "throw": "kuzurekesagatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "Q2fb9jaoUFQ_3.mp4": {
+   "throw": "kuzurekesagatame",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "a1RZvytW3OI.mp4": {
+   "throw": "hizaguruma",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "a1RZvytW3OI_2.mp4": {
+   "throw": "hizaguruma",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "a1RZvytW3OI_3.mp4": {
+   "throw": "hizaguruma",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "JPJx9-oAVns.mp4": {
+   "throw": "hizaguruma",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "JPJx9-oAVns_2.mp4": {
+   "throw": "hizaguruma",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "JPJx9-oAVns_3.mp4": {
+   "throw": "hizaguruma",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "3b9Me3Fohpk.mp4": {
+   "throw": "taniotoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "3b9Me3Fohpk_2.mp4": {
+   "throw": "taniotoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "3b9Me3Fohpk_3.mp4": {
+   "throw": "taniotoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "wS9pM3y8YH4.mp4": {
+   "throw": "taniotoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "wS9pM3y8YH4_2.mp4": {
+   "throw": "taniotoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "wS9pM3y8YH4_3.mp4": {
+   "throw": "taniotoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "-SQCIZFscNs.mp4": {
+   "throw": "kawazugake",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "-SQCIZFscNs_2.mp4": {
+   "throw": "kawazugake",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "-SQCIZFscNs_3.mp4": {
+   "throw": "kawazugake",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "w6G57bWACi0.mp4": {
+   "throw": "kawazugake",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "w6G57bWACi0_2.mp4": {
+   "throw": "kawazugake",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "t3tQriIPdlI.mp4": {
+   "throw": "gyakujujijime",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "t3tQriIPdlI_2.mp4": {
+   "throw": "gyakujujijime",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "3dGTN6sGbmk.mp4": {
+   "throw": "obiotoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "ORIYstuxYT8.mp4": {
+   "throw": "ushirogoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "ORIYstuxYT8_2.mp4": {
+   "throw": "ushirogoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "ORIYstuxYT8_3.mp4": {
+   "throw": "ushirogoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "YntUIakl428.mp4": {
+   "throw": "yokogake",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "YntUIakl428_2.mp4": {
+   "throw": "yokogake",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "YntUIakl428_3.mp4": {
+   "throw": "yokogake",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "_1eygIXLD_w.mp4": {
+   "throw": "kouchimakikomi",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "_1eygIXLD_w_2.mp4": {
+   "throw": "kouchimakikomi",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "_1eygIXLD_w_3.mp4": {
+   "throw": "kouchimakikomi",
+   "mode": "blur",
+   "blur_anime": false
+  },
+  "ff8U2TVZIYI.mp4": {
+   "throw": "obiotoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "ff8U2TVZIYI_2.mp4": {
+   "throw": "obiotoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "ff8U2TVZIYI_3.mp4": {
+   "throw": "obiotoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "sqQ4tr3iERE_2.mp4": {
+   "throw": "ushirogoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "sqQ4tr3iERE_3.mp4": {
+   "throw": "ushirogoshi",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "tP1Sj1uDfSo.mp4": {
+   "throw": "yokogake",
+   "mode": "animegan",
+   "blur_anime": true
+  },
+  "zQR3IOXxO_Q_2.mp4": {
+   "throw": "katagatame",
+   "mode": "blur",
+   "blur_anime": false
+  }
+ }
+}
