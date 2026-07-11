@@ -22,7 +22,8 @@ from kodokan.config import viz_dir
 from kodokan.score import build_reference, demo_features, feedback, score
 
 SEOI = "zIq0xI0ogxk"
-MIN_2P = 0.4  # only score demos where both judoka are reasonably visible
+# only score demos where both judoka are reasonably visible (config SSOT)
+from kodokan.config import EVAL_MIN_TWO_PERSON_FRAC as MIN_2P
 
 
 def load_techniques(ps, ss):

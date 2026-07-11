@@ -228,7 +228,7 @@ def log_response(
     return rec
 
 
-def build_catalog(*, min_two_person_frac: float = 0.4, min_demo_s: float = 1.0):
+def build_catalog(*, min_two_person_frac: float | None = None, min_demo_s: float = 1.0):
     """Build ``{technique_key: {"name", "clips":[...]}}`` from the pose/segments stores.
 
     Aggregates all sources: each clip contributes its demo intervals (for looping media),
@@ -236,7 +236,10 @@ def build_catalog(*, min_two_person_frac: float = 0.4, min_demo_s: float = 1.0):
     """
     from kodokan import store
     from kodokan.acquire import canonical_technique_key
+    from kodokan.config import EVAL_MIN_TWO_PERSON_FRAC
 
+    if min_two_person_frac is None:
+        min_two_person_frac = EVAL_MIN_TWO_PERSON_FRAC
     ss = store.segments_store()
     catalog: dict[str, dict] = {}
     for vid in ss:

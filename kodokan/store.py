@@ -158,3 +158,78 @@ def load_all_tidy(store=None):
     store = store or pose_store()
     frames = [sequence_to_tidy_df(store[k], video_id=k) for k in store]
     return pd.concat(frames, ignore_index=True) if frames else pd.DataFrame()
+
+
+# ---- store integrity checks (adversarial-review item: dup / out-of-bounds rows) ----
+
+
+def check_tidy_integrity(
+    df,
+    *,
+    width: int | None = None,
+    height: int | None = None,
+    oob_margin_frac: float = 0.05,
+) -> dict:
+    """Row-level integrity checks on a tidy pose DataFrame.
+
+    Returns counts of anomalies (all should be ``0`` for a clean store):
+
+    - ``n_duplicate_rows``: rows sharing a ``(fidx, person, keypoint)`` key (each
+      such triple must be unique per clip).
+    - ``n_oob_xy``: keypoints falling outside the frame by more than
+      ``oob_margin_frac`` of its size (only checked when ``width``/``height`` are
+      given; a small margin is tolerated since limbs can extend just past frame).
+    - ``n_bad_conf``: confidences outside ``[0, 1]``.
+    - ``n_nan_xy``: non-finite coordinates (occluded rows should have been dropped).
+    """
+    key_cols = [c for c in ("fidx", "person", "keypoint") if c in df.columns]
+    n_dup = int(df.duplicated(subset=key_cols).sum()) if key_cols else 0
+    value_cols = [c for c in ("x", "y", "conf") if c in df.columns]
+    if len(df) == 0 or len(value_cols) < 3:  # nothing (or not a tidy table) to check
+        return {
+            "n_rows": int(len(df)),
+            "n_duplicate_rows": n_dup,
+            "n_oob_xy": 0,
+            "n_bad_conf": 0,
+            "n_nan_xy": 0,
+            "ok": n_dup == 0,
+        }
+    x, y, conf = (df[c].to_numpy(dtype=float) for c in ("x", "y", "conf"))
+    n_nan = int((~np.isfinite(x) | ~np.isfinite(y)).sum())
+    n_bad_conf = int(((conf < 0) | (conf > 1)).sum())
+    n_oob = 0
+    if width and height:
+        mx, my = oob_margin_frac * width, oob_margin_frac * height
+        n_oob = int(
+            ((x < -mx) | (x > width + mx) | (y < -my) | (y > height + my)).sum()
+        )
+    return {
+        "n_rows": int(len(df)),
+        "n_duplicate_rows": n_dup,
+        "n_oob_xy": n_oob,
+        "n_bad_conf": n_bad_conf,
+        "n_nan_xy": n_nan,
+        "ok": n_dup == 0 and n_oob == 0 and n_bad_conf == 0 and n_nan == 0,
+    }
+
+
+def check_sequence_integrity(seq: PoseSequence) -> dict:
+    """Integrity report for a single :class:`PoseSequence` (via its tidy table)."""
+    df = sequence_to_tidy_df(seq, drop_missing=True)
+    return check_tidy_integrity(df, width=seq.width, height=seq.height)
+
+
+def store_integrity_report(store=None) -> dict:
+    """Run :func:`check_sequence_integrity` over every clip in a pose store.
+
+    Returns ``{video_id: report}``; a clip that fails to load records
+    ``{"error": ...}`` rather than aborting the whole sweep.
+    """
+    store = store or pose_store()
+    report: dict[str, dict] = {}
+    for k in store:
+        try:
+            report[k] = check_sequence_integrity(store[k])
+        except Exception as e:  # pragma: no cover - defensive over a live store
+            report[k] = {"error": str(e)}
+    return report

@@ -13,6 +13,8 @@ PYTHONPATH=<repo> python examples/dataset_overview.py    # stats + contact sheet
 
 Data lives **outside the repo** under `~/kodokan_data` (override `KODOKAN_DATA_DIR`):
 `clips/` (mp4 + `.info.json`), `pose/*.parquet` (pose store), `pose/segments/*.json` (segments store).
+All of it is downloaded or pipeline-derived — see [`regenerate-data.md`](regenerate-data.md)
+to rebuild any part from scratch.
 
 ## Contents (this build)
 

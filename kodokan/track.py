@@ -16,6 +16,7 @@ dominant fragments; fragment-merging/ReID-stitching is a later refinement (see
 
 from __future__ import annotations
 
+import warnings
 from pathlib import Path
 
 import numpy as np
@@ -213,3 +214,42 @@ def estimate_poses_tracked(
         video_path=str(video_path),
         source_url=source_url,
     )
+
+
+def identity_swap_rate(pose_seq: PoseSequence) -> dict:
+    """Ground-truth-free track-identity discontinuity rate (a tracking-quality metric).
+
+    For each consecutive frame pair in which *all* person slots are present, we
+    solve the minimum-cost assignment between the two frames' person centroids.
+    When the optimal assignment is not the identity (slot *i* → slot *i*), the
+    slots' spatial positions are better explained by a **label swap** — a proxy
+    for a tori/uke identity swap that the review asked us to instrument. A stable
+    tracker trends toward ``0``.
+
+    Returns ``{n_pairs, n_swaps, swap_rate}``.
+
+    Caveat (honest): this also fires on a *genuine* physical crossing that the
+    tracker correctly follows through, so read ``swap_rate`` as a relative
+    diagnostic (compare trackers/clips), not an absolute error count.
+    """
+    from scipy.optimize import linear_sum_assignment
+
+    with warnings.catch_warnings():  # all-NaN person slots are expected (guarded below)
+        warnings.simplefilter("ignore", RuntimeWarning)
+        cent = np.nanmean(pose_seq.keypoints[..., :2], axis=2)  # (F, P, 2)
+    present = np.all(np.isfinite(cent), axis=2)  # (F, P)
+    P = cent.shape[1]
+    ident = np.arange(P)
+    n_pairs = n_swaps = 0
+    for f in range(len(cent) - 1):
+        if not (present[f].all() and present[f + 1].all()):
+            continue
+        cost = np.linalg.norm(cent[f, :, None, :] - cent[f + 1, None, :, :], axis=2)
+        _, col = linear_sum_assignment(cost)
+        n_pairs += 1
+        n_swaps += not np.array_equal(col, ident)
+    return {
+        "n_pairs": n_pairs,
+        "n_swaps": int(n_swaps),
+        "swap_rate": round(n_swaps / n_pairs, 4) if n_pairs else 0.0,
+    }

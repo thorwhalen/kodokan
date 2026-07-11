@@ -39,7 +39,8 @@ def main():
     t_low, t_high = np.quantile(e, 0.25), np.quantile(e, 0.5)
     segs = segment_demonstrations(
         seq, smooth_sigma=5, low_quantile=0.25, high_quantile=0.5,
-        min_duration_s=1.5, merge_gap_s=0.6, min_two_person_frac=0.3,
+        min_duration_s=1.5, merge_gap_s=0.6,
+        min_two_person_frac=config.SEGMENT_MIN_TWO_PERSON_FRAC,
     )
     period = estimate_period(pose_motion_energy(seq), fps)
     sim, sub_fi = self_similarity_matrix(seq, max_frames=300)

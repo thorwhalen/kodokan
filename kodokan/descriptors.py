@@ -40,12 +40,43 @@ def _angles(kp17: np.ndarray) -> np.ndarray:
     return out
 
 
-def _norm_positions(kp17: np.ndarray) -> np.ndarray:
-    xy = kp17[:, :2].astype(float)
+def _torso_scale(xy: np.ndarray, *, floor_frac: float = 0.1) -> np.floating:
+    """Robust body scale for position normalization (hip→shoulder length, floored).
+
+    The raw torso length collapses toward zero when the torso is edge-on to the
+    camera (shoulders projecting onto the hips). Dividing positions by a near-zero
+    scale explodes them into per-clip *outlier fingerprints* — exactly the kind of
+    spurious cue the adversarial review flagged. We therefore floor the torso
+    length by ``floor_frac`` of the person's keypoint bounding-box diagonal, a
+    projection-robust body-size proxy that stays finite even edge-on. Missing
+    hip/shoulder keypoints yield ``nan`` (so the frame is dropped downstream), as
+    before.
+    """
     hip = (xy[_HIP[0]] + xy[_HIP[1]]) / 2
     sho = (xy[_SHO[0]] + xy[_SHO[1]]) / 2
-    scale = np.linalg.norm(sho - hip) + 1e-6
-    return ((xy - hip) / scale).reshape(-1)  # (34,)
+    torso = np.linalg.norm(sho - hip)  # nan if hip/shoulder missing
+    finite = xy[np.all(np.isfinite(xy), axis=1)]
+    bbox_diag = (
+        float(np.hypot(*(finite.max(0) - finite.min(0)))) if len(finite) >= 2 else 0.0
+    )
+    # np.maximum propagates nan, so a missing torso stays nan (frame dropped).
+    return np.maximum(np.maximum(torso, floor_frac * bbox_diag), 1e-6)
+
+
+def _norm_positions(kp17: np.ndarray, *, clip: float | None = 8.0) -> np.ndarray:
+    """Hip-centered, torso-scaled keypoint positions ``(34,)`` (robust scale).
+
+    Positions are in torso-length units, so a whole body spans only a few units
+    from the hip center; ``clip`` bounds residual outliers (``None`` disables it).
+    ``nan`` passes through both the scale and the clip, so occluded frames are
+    still dropped by :func:`kodokan.compare._clean`.
+    """
+    xy = kp17[:, :2].astype(float)
+    hip = (xy[_HIP[0]] + xy[_HIP[1]]) / 2
+    out = (xy - hip) / _torso_scale(xy)
+    if clip is not None:
+        out = np.clip(out, -clip, clip)
+    return out.reshape(-1)  # (34,)
 
 
 def _window(pose_seq: PoseSequence, start_s: float, end_s: float):

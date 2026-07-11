@@ -34,6 +34,57 @@ def test_segments_store_roundtrip(tmp_path):
     from kodokan.store import segments_store
 
     ss = segments_store(tmp_path)
-    ss["vid1"] = {"technique": "X", "demos": [{"index": 0, "start_s": 1.0, "end_s": 2.0}]}
+    ss["vid1"] = {
+        "technique": "X",
+        "demos": [{"index": 0, "start_s": 1.0, "end_s": 2.0}],
+    }
     assert ss["vid1"]["technique"] == "X"
     assert "vid1" in list(ss)
+
+
+def test_sequence_integrity_clean(synth_seq):
+    pytest.importorskip("pandas")
+    from kodokan.store import check_sequence_integrity
+
+    rep = check_sequence_integrity(synth_seq)
+    assert rep["ok"]
+    assert rep["n_duplicate_rows"] == 0
+    assert rep["n_oob_xy"] == 0 and rep["n_bad_conf"] == 0 and rep["n_nan_xy"] == 0
+
+
+def test_tidy_integrity_flags_dup_oob_conf():
+    pd = pytest.importorskip("pandas")
+    from kodokan.store import check_tidy_integrity
+
+    # one duplicate (fidx,person,keypoint), one out-of-bounds x, one bad conf
+    df = pd.DataFrame(
+        {
+            "fidx": [0, 0, 0, 1],
+            "person": [0, 0, 0, 0],
+            "keypoint": [0, 1, 1, 0],  # rows 1 & 2 duplicate (0,0,1)
+            "x": [10.0, 20.0, 20.0, 9999.0],  # last row out of bounds
+            "y": [10.0, 20.0, 20.0, 30.0],
+            "conf": [0.9, 0.9, 1.5, 0.9],  # 1.5 is invalid
+        }
+    )
+    rep = check_tidy_integrity(df, width=1280, height=720)
+    assert rep["n_duplicate_rows"] == 1
+    assert rep["n_oob_xy"] == 1
+    assert rep["n_bad_conf"] == 1
+    assert not rep["ok"]
+
+
+def test_tidy_integrity_handles_missing_columns_and_empty():
+    pd = pytest.importorskip("pandas")
+    from kodokan.store import check_tidy_integrity
+
+    # missing x/y/conf columns must not raise (returns a clean, guarded report)
+    rep = check_tidy_integrity(
+        pd.DataFrame({"fidx": [0, 1], "person": [0, 0], "keypoint": [0, 0]})
+    )
+    assert rep["n_rows"] == 2 and rep["n_oob_xy"] == 0
+    # empty df is fine too
+    empty = check_tidy_integrity(
+        pd.DataFrame(columns=["fidx", "person", "keypoint", "x", "y", "conf"])
+    )
+    assert empty["n_rows"] == 0 and empty["ok"]

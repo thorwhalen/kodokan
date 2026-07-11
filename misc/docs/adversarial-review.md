@@ -46,20 +46,54 @@ were **not actually viewpoint-invariant**. The experiment doesn't test what it c
 before computing angles, plus square/letterboxed crops and stride-matched, person-matched
 comparison. Tracked as a research task.
 
-## Deferred (tracked in issues), by priority
+## Deferred items — status (issue #10)
 
-1. **Multi-source data → leave-one-clip-out** — the real validity fix.
-2. **Tori/uke heuristic validation** — `tori_index` (lowest finish-frame hip-y) is
-   camera-dependent and unvalidated; the "role-consistency is the dominant lever" causal
-   claim is plausible but needs ground-truth tori labels + an abstain/instrumentation path.
-3. **3D pelvis-frame canonicalization** + fair (stride/person-matched) 2D-vs-3D re-run.
-4. **`feature-bakeoff` rigor** — leave-one-demo-out medoid (no self-zero), standard
-   ROC-AUC, re-run with the fixed DTW normalization.
-5. **Robust position normalization** (`descriptors._norm_positions`) — clip/floor torso
-   scale to avoid outlier "fingerprints".
-6. **Confidence intervals / repeated CV / per-class confusion**; **shared `MIN_2P`/
-   thresholds config** (batch used 0.3, eval 0.4); tracker **swap-rate metric**;
-   store **integrity checks** (duplicate/oob rows).
+1. **Multi-source data → leave-one-clip-out** — ✅ **DONE** (issue #9). The second source
+   (*Efficient Judo*, 66 overlapping techniques) is acquired and posed; the definitive
+   cross-source **leave-one-CLIP-out = 0.004 top-1 over 65 techniques** (uniform chance
+   0.015). The pipeline recognizes throws **at chance across independent sources** — the
+   within-clip numbers were clip identity. Harness: `examples/eval_cross_source.py`.
+2. **Tori/uke heuristic validation** — ⚠️ **PARTIAL**. `recognize.tori_decision` now returns
+   a confidence **margin** (finish hip-y separation in torso-length units) plus
+   `abstained`/`fell_back` flags, and `tori_decision_stats` aggregates them (`eval_learned`
+   reports them). Over 804 demos: **fell-back 0.0%, abstained 16.8%, median margin 0.96
+   torso-lengths** — confident on ~83% of demos. **Still open:** the heuristic is
+   *instrumented*, not *validated* — there is no hand-labeled tori ground truth to check it
+   against.
+3. **3D pelvis-frame canonicalization** + fair 2D-vs-3D re-run — ⚠️ **PARTIAL**.
+   `kodokan.canon3d` (`pelvis_frame` / `canonicalize_pose`) lands the Procrustes
+   canonicalization, unit-tested for invariance to camera rotation + translation + scale.
+   Canonical 3D **positions** are meaningfully more separable than raw camera-frame ones
+   (**0.232 acc / AUC 0.564** vs **0.049 / AUC 0.451**, 10 techniques). But joint **angles**
+   are *already* invariant to rigid + isotropic-scale transforms, so canonicalization is a
+   mathematical **no-op for angle features** (verified: identical numbers) — the earlier
+   angle-based 3D conclusion is unaffected by it. **Still open:** canonicalization cannot
+   undo the *anisotropic* bbox-crop distortion this review named, so a complete viewpoint
+   re-test still needs **square/letterboxed re-lifting** plus a **stride- & person-matched**
+   2D-vs-3D comparison.
+4. **`feature-bakeoff` rigor** — ✅ **DONE (code)**. `recognize.loo_medoid_separability` does
+   a true **leave-one-demo-out medoid** (a held-out demo never influences its own technique's
+   reference, so there are no self-zeros to filter), and `recognize.roc_auc_distances` is a
+   **standard ROC-AUC** (Mann–Whitney U, ties = 0.5). Both `eval_features.py` and
+   `eval_features_3d.py` use it, on the fixed DTW normalization. (The full 2D DTW re-run at
+   131-technique scale is O(n²·DTW) and slow; not yet re-run.)
+5. **Robust position normalization** — ✅ **DONE**. `descriptors._torso_scale` floors the
+   torso scale by a fraction of the person's keypoint bbox diagonal (projection-robust) and
+   `_norm_positions` clips residual outliers, so an edge-on torso can no longer collapse the
+   scale toward zero and explode positions into a per-clip outlier "fingerprint".
+6. **CIs / per-class confusion; shared thresholds; swap-rate; store integrity** — ✅ **DONE**.
+   `classification_metrics(n_boot=…)` adds percentile-bootstrap 95% CIs and `confusion_pairs`
+   reports the most-frequent true→pred errors; `config.SEGMENT_MIN_TWO_PERSON_FRAC` /
+   `EVAL_MIN_TWO_PERSON_FRAC` are the single source of truth for the 0.3/0.4 gates (they
+   differ *on purpose* — lenient when segmenting, strict when consuming);
+   `track.identity_swap_rate` is a ground-truth-free identity-discontinuity metric; and
+   `store.check_tidy_integrity` / `store_integrity_report` check duplicate / out-of-bounds /
+   bad-confidence rows.
+
+With CIs, the role-consistency lever still holds at the current 131-technique scale:
+`tori_angles_pos` **0.086** [0.068, 0.109] vs `primary_angles` **0.057** [0.040, 0.074]
+(majority 0.021, uniform chance 0.008) — but this remains a **within-clip upper bound**,
+and item 1 shows it collapses to chance across independent clips.
 
 ## Revised, honest conclusions
 

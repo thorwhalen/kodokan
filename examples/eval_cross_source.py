@@ -19,7 +19,7 @@ from kodokan import store
 from kodokan.acquire import SOURCES, canonical_technique_key, source_clips_dir
 from kodokan.recognize import classification_metrics, demo_feature, loo_pooled_predict, pooled_descriptor
 
-MIN_2P = 0.4
+from kodokan.config import EVAL_MIN_TWO_PERSON_FRAC as MIN_2P
 
 
 def _source_of(vid: str) -> str | None:
