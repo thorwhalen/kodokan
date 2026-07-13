@@ -12,9 +12,23 @@ Per-source burned-in name locations (fractions of frame), found by inspecting fr
 
 Idempotent: skips clips already generated unless --force. Usage::
     PYTHONPATH=<repo> python examples/generate_webapp_clips.py [--force]
+
+Two outputs, two very different lifecycles — do not merge them:
+
+- **clips** → the app's DATA root (``~/.local/share/kodokan/clips``, override with
+  ``KODOKAN_APP_DATA_DIR``). Media: regenerable, big, not in git. It lives outside the app
+  directory because the deploy mirrors that directory with ``rsync --delete``, which would
+  wipe anything git does not know about. Ship them with
+  ``deploy.py cmd-push-data --app kodokan``.
+- **catalog.json** → the app's ``data/`` directory, which *is* in git. It is code-shaped:
+  small, structured, reviewed in diffs, deployed with the code.
+
+Writing the clips back into the app directory would recreate exactly the lifecycle
+conflation this was migrated out of. See ~/.claude/skills/app-data-lifecycle/SKILL.md.
 """
 
 import json
+import os
 import re
 import subprocess
 import sys
@@ -23,8 +37,20 @@ from pathlib import Path
 from kodokan import flashcards as fc
 from kodokan.acquire import source_clips_dir
 
-APP_DIR = Path("/Users/thorwhalen/Dropbox/py/proj/tt/papp/migrated_apps/kodokan")
-CLIPS_OUT = APP_DIR / "frontend" / "clips"
+#: The enlace app's source directory (code + the tracked catalog). Override with
+#: ``KODOKAN_APP_DIR``; defaults to the papp checkout sitting beside this repo.
+APP_DIR = Path(
+    os.environ.get("KODOKAN_APP_DIR")
+    or Path(__file__).resolve().parents[3] / "tt/papp/migrated_apps/kodokan"
+).expanduser()
+
+#: Where the generated clips go: the app's DATA root, never the app directory.
+#: Mirrors ``stores.py`` in the app (same env var, same default).
+_APP_DATA_DIR = Path(
+    os.environ.get("KODOKAN_APP_DATA_DIR") or Path.home() / ".local/share/kodokan"
+).expanduser()
+CLIPS_OUT = _APP_DATA_DIR / "clips"
+
 CATALOG_OUT = APP_DIR / "data" / "catalog.json"
 LOOP_MAX_S, LOOP_MIN_S, N_CONFUSABLE, HEIGHT = 7.0, 1.5, 8, 480
 MAX_REPS_PER_SOURCE = 4  # export up to this many demo repetitions per source video (#34)
