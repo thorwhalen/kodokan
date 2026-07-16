@@ -311,6 +311,29 @@ def classification_metrics(y_true, y_pred, *, n_boot: int = 0, seed: int = 0) ->
     return out
 
 
+def _rankdata_avg(a: np.ndarray) -> np.ndarray:
+    """Average ranks (tied values share their mean rank), numpy-only.
+
+    Equivalent to ``scipy.stats.rankdata(a)`` (method ``"average"``); implemented
+    here so :func:`roc_auc_distances` needs no scipy (keeping the metric usable in
+    the numpy-only base install).
+    """
+    a = np.asarray(a, float)
+    order = a.argsort(kind="mergesort")
+    ranks = np.empty(len(a), float)
+    ranks[order] = np.arange(1, len(a) + 1)
+    sa = a[order]
+    i, n = 0, len(a)
+    while i < n:  # average the ranks within each run of equal values
+        j = i
+        while j + 1 < n and sa[j + 1] == sa[i]:
+            j += 1
+        if j > i:
+            ranks[order[i : j + 1]] = (i + j) / 2 + 1
+        i = j + 1
+    return ranks
+
+
 def roc_auc_distances(genuine, impostor) -> float:
     """Standard ROC-AUC for a *distance* score: ``P(impostor > genuine)`` (ties=0.5).
 
@@ -319,13 +342,11 @@ def roc_auc_distances(genuine, impostor) -> float:
     estimate). Larger = better separation (impostor demos sit farther than genuine
     ones). NaNs are dropped; returns ``nan`` if either side is empty.
     """
-    from scipy.stats import rankdata
-
     g = np.asarray([v for v in genuine if np.isfinite(v)], float)
     im = np.asarray([v for v in impostor if np.isfinite(v)], float)
     if not len(g) or not len(im):
         return float("nan")
-    r = rankdata(np.concatenate([g, im]))
+    r = _rankdata_avg(np.concatenate([g, im]))
     u_g = r[: len(g)].sum() - len(g) * (len(g) + 1) / 2  # #(genuine>impostor)+0.5·ties
     # AUC = P(impostor > genuine) + 0.5·P(tie) = 1 - U_g/(|g|·|im|)
     return float(1.0 - u_g / (len(g) * len(im)))

@@ -160,7 +160,7 @@ def test_confusion_pairs():
 
 
 def test_roc_auc_distances():
-    pytest.importorskip("scipy")
+    # numpy-only (no scipy) so it runs in the base install
     from kodokan.recognize import roc_auc_distances
 
     genuine = [0.1, 0.2, 0.15]
@@ -170,6 +170,15 @@ def test_roc_auc_distances():
     import math
 
     assert math.isnan(roc_auc_distances([], impostor))  # empty side -> nan, no crash
+
+
+def test_rankdata_avg_matches_reference():
+    """The numpy rankdata (ties averaged) matches the known average-rank result."""
+    from kodokan.recognize import _rankdata_avg
+
+    # values 3,1,4,1,5 -> the two 1s tie for ranks 1,2 -> both 1.5
+    got = _rankdata_avg([3, 1, 4, 1, 5])
+    assert list(got) == [3.0, 1.5, 4.0, 1.5, 5.0]
 
 
 def test_classification_metrics_empty_is_clean():
