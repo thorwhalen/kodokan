@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kodokan.store &mdash; kodokan 0.0.16 documentation</title>
+  <title>kodokan.store &mdash; kodokan 0.0.17 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=c7cdf6fe"></script>
+      <script src="../../_static/documentation_options.js?v=63b572e7"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -48,6 +48,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan.html">kodokan</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/acquire.html">kodokan.acquire</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/canon3d.html">kodokan.canon3d</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/compare.html">kodokan.compare</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/config.html">kodokan.config</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/descriptors.html">kodokan.descriptors</a></li>
@@ -264,6 +265,90 @@
     <span class="n">store</span> <span class="o">=</span> <span class="n">store</span> <span class="ow">or</span> <span class="n">pose_store</span><span class="p">()</span>
     <span class="n">frames</span> <span class="o">=</span> <span class="p">[</span><span class="n">sequence_to_tidy_df</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">video_id</span><span class="o">=</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">store</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">frames</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="n">frames</span> <span class="k">else</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span></div>
+
+
+
+<span class="c1"># ---- store integrity checks (adversarial-review item: dup / out-of-bounds rows) ----</span>
+
+
+<div class="viewcode-block" id="check_tidy_integrity">
+<a class="viewcode-back" href="../../module_docs/kodokan/store.html#kodokan.check_tidy_integrity">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_tidy_integrity</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">oob_margin_frac</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Row-level integrity checks on a tidy pose DataFrame.</span>
+
+<span class="sd">    Returns counts of anomalies (all should be ``0`` for a clean store):</span>
+
+<span class="sd">    - ``n_duplicate_rows``: rows sharing a ``(fidx, person, keypoint)`` key (each</span>
+<span class="sd">      such triple must be unique per clip).</span>
+<span class="sd">    - ``n_oob_xy``: keypoints falling outside the frame by more than</span>
+<span class="sd">      ``oob_margin_frac`` of its size (only checked when ``width``/``height`` are</span>
+<span class="sd">      given; a small margin is tolerated since limbs can extend just past frame).</span>
+<span class="sd">    - ``n_bad_conf``: confidences outside ``[0, 1]``.</span>
+<span class="sd">    - ``n_nan_xy``: non-finite coordinates (occluded rows should have been dropped).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">key_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;fidx&quot;</span><span class="p">,</span> <span class="s2">&quot;person&quot;</span><span class="p">,</span> <span class="s2">&quot;keypoint&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="n">n_dup</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">key_cols</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="k">if</span> <span class="n">key_cols</span> <span class="k">else</span> <span class="mi">0</span>
+    <span class="n">value_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;conf&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">value_cols</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1"># nothing (or not a tidy table) to check</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s2">&quot;n_rows&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)),</span>
+            <span class="s2">&quot;n_duplicate_rows&quot;</span><span class="p">:</span> <span class="n">n_dup</span><span class="p">,</span>
+            <span class="s2">&quot;n_oob_xy&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;n_bad_conf&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;n_nan_xy&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;ok&quot;</span><span class="p">:</span> <span class="n">n_dup</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">conf</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;conf&quot;</span><span class="p">))</span>
+    <span class="n">n_nan</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">|</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">y</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+    <span class="n">n_bad_conf</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(((</span><span class="n">conf</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">conf</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+    <span class="n">n_oob</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">width</span> <span class="ow">and</span> <span class="n">height</span><span class="p">:</span>
+        <span class="n">mx</span><span class="p">,</span> <span class="n">my</span> <span class="o">=</span> <span class="n">oob_margin_frac</span> <span class="o">*</span> <span class="n">width</span><span class="p">,</span> <span class="n">oob_margin_frac</span> <span class="o">*</span> <span class="n">height</span>
+        <span class="n">n_oob</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span>
+            <span class="p">((</span><span class="n">x</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">mx</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">width</span> <span class="o">+</span> <span class="n">mx</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">y</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">my</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">height</span> <span class="o">+</span> <span class="n">my</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;n_rows&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)),</span>
+        <span class="s2">&quot;n_duplicate_rows&quot;</span><span class="p">:</span> <span class="n">n_dup</span><span class="p">,</span>
+        <span class="s2">&quot;n_oob_xy&quot;</span><span class="p">:</span> <span class="n">n_oob</span><span class="p">,</span>
+        <span class="s2">&quot;n_bad_conf&quot;</span><span class="p">:</span> <span class="n">n_bad_conf</span><span class="p">,</span>
+        <span class="s2">&quot;n_nan_xy&quot;</span><span class="p">:</span> <span class="n">n_nan</span><span class="p">,</span>
+        <span class="s2">&quot;ok&quot;</span><span class="p">:</span> <span class="n">n_dup</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">n_oob</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">n_bad_conf</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">n_nan</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="check_sequence_integrity">
+<a class="viewcode-back" href="../../module_docs/kodokan/store.html#kodokan.check_sequence_integrity">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">check_sequence_integrity</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">PoseSequence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Integrity report for a single :class:`PoseSequence` (via its tidy table).&quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">sequence_to_tidy_df</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">drop_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">check_tidy_integrity</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">seq</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">seq</span><span class="o">.</span><span class="n">height</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="store_integrity_report">
+<a class="viewcode-back" href="../../module_docs/kodokan/store.html#kodokan.store_integrity_report">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">store_integrity_report</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run :func:`check_sequence_integrity` over every clip in a pose store.</span>
+
+<span class="sd">    Returns ``{video_id: report}``; a clip that fails to load records</span>
+<span class="sd">    ``{&quot;error&quot;: ...}`` rather than aborting the whole sweep.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">store</span> <span class="o">=</span> <span class="n">store</span> <span class="ow">or</span> <span class="n">pose_store</span><span class="p">()</span>
+    <span class="n">report</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">store</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">report</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">check_sequence_integrity</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># pragma: no cover - defensive over a live store</span>
+            <span class="n">report</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span>
+    <span class="k">return</span> <span class="n">report</span></div>
 
 </pre></div>
 

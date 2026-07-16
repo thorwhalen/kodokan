@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kodokan.config &mdash; kodokan 0.0.16 documentation</title>
+  <title>kodokan.config &mdash; kodokan 0.0.17 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=c7cdf6fe"></script>
+      <script src="../../_static/documentation_options.js?v=63b572e7"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -51,9 +51,12 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../kodokan.html">kodokan</a></li>
 <li class="toctree-l1"><a class="reference internal" href="acquire.html">kodokan.acquire</a></li>
+<li class="toctree-l1"><a class="reference internal" href="canon3d.html">kodokan.canon3d</a></li>
 <li class="toctree-l1"><a class="reference internal" href="compare.html">kodokan.compare</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">kodokan.config</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.config.EVAL_MIN_TWO_PERSON_FRAC"><code class="docutils literal notranslate"><span class="pre">EVAL_MIN_TWO_PERSON_FRAC</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#kodokan.config.KODOKAN_DATA_ENV"><code class="docutils literal notranslate"><span class="pre">KODOKAN_DATA_ENV</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.config.SEGMENT_MIN_TWO_PERSON_FRAC"><code class="docutils literal notranslate"><span class="pre">SEGMENT_MIN_TWO_PERSON_FRAC</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#kodokan.config.clips_dir"><code class="docutils literal notranslate"><span class="pre">clips_dir()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#kodokan.config.data_dir"><code class="docutils literal notranslate"><span class="pre">data_dir()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="#kodokan.config.models_dir"><code class="docutils literal notranslate"><span class="pre">models_dir()</span></code></a></li>
@@ -104,10 +107,37 @@
 <em>outside</em> the repo by default — under <code class="docutils literal notranslate"><span class="pre">~/kodokan_data</span></code> — so they don’t bloat
 the (Dropbox-synced) source tree. Override the root with the
 <code class="docutils literal notranslate"><span class="pre">KODOKAN_DATA_DIR</span></code> environment variable.</p>
+<p>On the dev Mac <code class="docutils literal notranslate"><span class="pre">~/kodokan_data</span></code> is a symlink into an off-machine-backed data
+area; code addresses it transparently through the symlink either way. None of
+this data is precious — every subfolder is downloaded or pipeline-derived; see
+<code class="docutils literal notranslate"><span class="pre">misc/docs/regenerate-data.md</span></code> for how to rebuild it from scratch.</p>
+<dl class="py data">
+<dt class="sig sig-object py" id="kodokan.config.EVAL_MIN_TWO_PERSON_FRAC">
+<span class="sig-prename descclassname"><span class="pre">kodokan.config.</span></span><span class="sig-name descname"><span class="pre">EVAL_MIN_TWO_PERSON_FRAC</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.4</span></span><a class="headerlink" href="#kodokan.config.EVAL_MIN_TWO_PERSON_FRAC" title="Link to this definition"></a></dt>
+<dd><p>Quality gate used when <em>consuming</em> stored demos for recognition/scoring/
+catalog building: only trust demos where both judoka are clearly visible.
+Stricter than the segmentation gate on purpose. Used by the eval harnesses,
+<a class="reference internal" href="flashcards.html#kodokan.flashcards.build_catalog" title="kodokan.flashcards.build_catalog"><code class="xref py py-func docutils literal notranslate"><span class="pre">kodokan.flashcards.build_catalog()</span></code></a>, and scoring.</p>
+</dd></dl>
+
 <dl class="py data">
 <dt class="sig sig-object py" id="kodokan.config.KODOKAN_DATA_ENV">
 <span class="sig-prename descclassname"><span class="pre">kodokan.config.</span></span><span class="sig-name descname"><span class="pre">KODOKAN_DATA_ENV</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'KODOKAN_DATA_DIR'</span></span><a class="headerlink" href="#kodokan.config.KODOKAN_DATA_ENV" title="Link to this definition"></a></dt>
 <dd><p>Env var overriding the data root (default <code class="docutils literal notranslate"><span class="pre">~/kodokan_data</span></code>).</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="kodokan.config.SEGMENT_MIN_TWO_PERSON_FRAC">
+<span class="sig-prename descclassname"><span class="pre">kodokan.config.</span></span><span class="sig-name descname"><span class="pre">SEGMENT_MIN_TWO_PERSON_FRAC</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.3</span></span><a class="headerlink" href="#kodokan.config.SEGMENT_MIN_TWO_PERSON_FRAC" title="Link to this definition"></a></dt>
+<dd><p>keep a detected demonstration
+only if both judoka are present for at least this fraction of its frames.
+Deliberately lenient — we would rather store a borderline demo (and filter it
+later) than silently drop a real one. Used by the batch/segmentation step.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Inclusion gate used when <em>segmenting</em> a clip</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py function">

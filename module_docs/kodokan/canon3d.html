@@ -1,0 +1,198 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kodokan.canon3d &mdash; kodokan 0.0.17 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=63b572e7"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="kodokan.compare" href="compare.html" />
+    <link rel="prev" title="kodokan.acquire" href="acquire.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            kodokan
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../kodokan.html">kodokan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="acquire.html">kodokan.acquire</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">kodokan.canon3d</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.canon3d.BLAZEPOSE33"><code class="docutils literal notranslate"><span class="pre">BLAZEPOSE33</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.canon3d.BodyJoints"><code class="docutils literal notranslate"><span class="pre">BodyJoints</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.canon3d.COCO17"><code class="docutils literal notranslate"><span class="pre">COCO17</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.canon3d.canonicalize_pose"><code class="docutils literal notranslate"><span class="pre">canonicalize_pose()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.canon3d.canonicalize_sequence"><code class="docutils literal notranslate"><span class="pre">canonicalize_sequence()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#kodokan.canon3d.pelvis_frame"><code class="docutils literal notranslate"><span class="pre">pelvis_frame()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="compare.html">kodokan.compare</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">kodokan.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="descriptors.html">kodokan.descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="flashcards.html">kodokan.flashcards</a></li>
+<li class="toctree-l1"><a class="reference internal" href="learning.html">kodokan.learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pose.html">kodokan.pose</a></li>
+<li class="toctree-l1"><a class="reference internal" href="recognize.html">kodokan.recognize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="score.html">kodokan.score</a></li>
+<li class="toctree-l1"><a class="reference internal" href="segment.html">kodokan.segment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="store.html">kodokan.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="track.html">kodokan.track</a></li>
+<li class="toctree-l1"><a class="reference internal" href="viz.html">kodokan.viz</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">kodokan</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">kodokan.canon3d</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/module_docs/kodokan/canon3d.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-kodokan.canon3d">
+<span id="kodokan-canon3d"></span><h1>kodokan.canon3d<a class="headerlink" href="#module-kodokan.canon3d" title="Link to this heading"></a></h1>
+<p>Pelvis-frame (Procrustes) canonicalization of 3D world landmarks.</p>
+<p>The Stage-5 <em>“3D refutes viewpoint”</em> conclusion was <strong>withdrawn</strong> by the
+adversarial review (<code class="docutils literal notranslate"><span class="pre">misc/docs/adversarial-review.md</span></code>): MediaPipe per-crop
+world landmarks are camera-aligned — not canonicalized — and the bounding-box
+crop distorts their scale/orientation, so 3D joint angles computed straight off
+them are <strong>not</strong> actually viewpoint-invariant. Before a fair 2D-vs-3D test, each
+frame’s landmarks must be expressed in a <em>subject-centered anatomical frame</em>:
+origin at the pelvis, axes fixed to the body (hip line + spine), scale normalized
+by torso length. This module provides that canonicalization as a pure, testable
+geometric function.</p>
+<p>After <a class="reference internal" href="#kodokan.canon3d.canonicalize_pose" title="kodokan.canon3d.canonicalize_pose"><code class="xref py py-func docutils literal notranslate"><span class="pre">canonicalize_pose()</span></code></a>, two demonstrations of the same articulated pose
+seen from different camera azimuths map to the <strong>same</strong> canonical coordinates
+(invariant to camera rotation, translation, and — with <code class="docutils literal notranslate"><span class="pre">scale=True</span></code> — subject
+size). Downstream angle/position features are then genuinely viewpoint-invariant.</p>
+<p>Indices default to the MediaPipe <strong>BlazePose-33</strong> convention used by the repo’s
+3D lift (<code class="docutils literal notranslate"><span class="pre">scripts/lift_3d_mediapipe.py</span></code>); pass <code class="docutils literal notranslate"><span class="pre">joints=COCO17</span></code> (or a custom
+<a class="reference internal" href="#kodokan.canon3d.BodyJoints" title="kodokan.canon3d.BodyJoints"><code class="xref py py-class docutils literal notranslate"><span class="pre">BodyJoints</span></code></a>) to reuse it for any layout exposing both hips and shoulders.</p>
+<dl class="py data">
+<dt class="sig sig-object py" id="kodokan.canon3d.BLAZEPOSE33">
+<span class="sig-prename descclassname"><span class="pre">kodokan.canon3d.</span></span><span class="sig-name descname"><span class="pre">BLAZEPOSE33</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">BodyJoints(l_hip=23,</span> <span class="pre">r_hip=24,</span> <span class="pre">l_shoulder=11,</span> <span class="pre">r_shoulder=12)</span></span><a class="headerlink" href="#kodokan.canon3d.BLAZEPOSE33" title="Link to this definition"></a></dt>
+<dd><p>MediaPipe BlazePose-33 (the repo’s 3D-lift output format).</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="kodokan.canon3d.BodyJoints">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kodokan.canon3d.</span></span><span class="sig-name descname"><span class="pre">BodyJoints</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">l_hip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_hip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l_shoulder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_shoulder</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kodokan/canon3d.html#BodyJoints"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.canon3d.BodyJoints" title="Link to this definition"></a></dt>
+<dd><p>Landmark indices needed to build the pelvis anatomical frame.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="kodokan.canon3d.COCO17">
+<span class="sig-prename descclassname"><span class="pre">kodokan.canon3d.</span></span><span class="sig-name descname"><span class="pre">COCO17</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">BodyJoints(l_hip=11,</span> <span class="pre">r_hip=12,</span> <span class="pre">l_shoulder=5,</span> <span class="pre">r_shoulder=6)</span></span><a class="headerlink" href="#kodokan.canon3d.COCO17" title="Link to this definition"></a></dt>
+<dd><p>COCO-17 (the 2D pose format), for reusing the canonicalization on 2.5D data.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.canon3d.canonicalize_pose">
+<span class="sig-prename descclassname"><span class="pre">kodokan.canon3d.</span></span><span class="sig-name descname"><span class="pre">canonicalize_pose</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">landmarks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">joints</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#kodokan.canon3d.BodyJoints" title="kodokan.canon3d.BodyJoints"><span class="pre">BodyJoints</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">BodyJoints(l_hip=23,</span> <span class="pre">r_hip=24,</span> <span class="pre">l_shoulder=11,</span> <span class="pre">r_shoulder=12)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../../_modules/kodokan/canon3d.html#canonicalize_pose"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.canon3d.canonicalize_pose" title="Link to this definition"></a></dt>
+<dd><p>Express one frame’s 3D landmarks <code class="docutils literal notranslate"><span class="pre">(K,</span> <span class="pre">C&gt;=3)</span></code> in the pelvis frame <code class="docutils literal notranslate"><span class="pre">(K,</span> <span class="pre">3)</span></code>.</p>
+<p>Removes camera rotation + translation (and, with <code class="docutils literal notranslate"><span class="pre">scale=True</span></code>, subject size
+by dividing by torso length). Columns beyond <code class="docutils literal notranslate"><span class="pre">xyz</span></code> (e.g. visibility) are
+dropped; <code class="docutils literal notranslate"><span class="pre">nan</span></code> inputs propagate (so occluded frames stay droppable).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.canon3d.canonicalize_sequence">
+<span class="sig-prename descclassname"><span class="pre">kodokan.canon3d.</span></span><span class="sig-name descname"><span class="pre">canonicalize_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">world</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">joints</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#kodokan.canon3d.BodyJoints" title="kodokan.canon3d.BodyJoints"><span class="pre">BodyJoints</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">BodyJoints(l_hip=23,</span> <span class="pre">r_hip=24,</span> <span class="pre">l_shoulder=11,</span> <span class="pre">r_shoulder=12)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="../../_modules/kodokan/canon3d.html#canonicalize_sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.canon3d.canonicalize_sequence" title="Link to this definition"></a></dt>
+<dd><p>Canonicalize every frame/person of a <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">K,</span> <span class="pre">C)</span></code> landmark stack → <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">K,</span> <span class="pre">3)</span></code>.</p>
+<p>Each frame (and person) is canonicalized to <em>its own</em> pelvis frame — the
+viewpoint-invariant choice for pose-only technique features.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.canon3d.pelvis_frame">
+<span class="sig-prename descclassname"><span class="pre">kodokan.canon3d.</span></span><span class="sig-name descname"><span class="pre">pelvis_frame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">landmarks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">joints</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#kodokan.canon3d.BodyJoints" title="kodokan.canon3d.BodyJoints"><span class="pre">BodyJoints</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">BodyJoints(l_hip=23,</span> <span class="pre">r_hip=24,</span> <span class="pre">l_shoulder=11,</span> <span class="pre">r_shoulder=12)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kodokan/canon3d.html#pelvis_frame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.canon3d.pelvis_frame" title="Link to this definition"></a></dt>
+<dd><p>Anatomical frame of a single pose: <code class="docutils literal notranslate"><span class="pre">(pelvis_origin,</span> <span class="pre">R)</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">R</span></code> (shape <code class="docutils literal notranslate"><span class="pre">(3,</span> <span class="pre">3)</span></code>, rows are the new basis) maps world coordinates into
+the subject frame: <strong>x</strong> = subject’s right (hip line), <strong>y</strong> = up
+(pelvis→neck spine), <strong>z</strong> = forward (<code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">×</span> <span class="pre">x</span></code>). The hip line is
+orthogonalized against the spine so the basis is orthonormal (Gram-Schmidt).</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="acquire.html" class="btn btn-neutral float-left" title="kodokan.acquire" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="compare.html" class="btn btn-neutral float-right" title="kodokan.compare" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

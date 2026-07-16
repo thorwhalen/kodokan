@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kodokan.track &mdash; kodokan 0.0.16 documentation</title>
+  <title>kodokan.track &mdash; kodokan 0.0.17 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=c7cdf6fe"></script>
+      <script src="../../_static/documentation_options.js?v=63b572e7"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -48,6 +48,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan.html">kodokan</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/acquire.html">kodokan.acquire</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/canon3d.html">kodokan.canon3d</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/compare.html">kodokan.compare</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/config.html">kodokan.config</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/descriptors.html">kodokan.descriptors</a></li>
@@ -105,6 +106,7 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -304,6 +306,48 @@
         <span class="n">video_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">video_path</span><span class="p">),</span>
         <span class="n">source_url</span><span class="o">=</span><span class="n">source_url</span><span class="p">,</span>
     <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="identity_swap_rate">
+<a class="viewcode-back" href="../../module_docs/kodokan/track.html#kodokan.identity_swap_rate">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">identity_swap_rate</span><span class="p">(</span><span class="n">pose_seq</span><span class="p">:</span> <span class="n">PoseSequence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ground-truth-free track-identity discontinuity rate (a tracking-quality metric).</span>
+
+<span class="sd">    For each consecutive frame pair in which *all* person slots are present, we</span>
+<span class="sd">    solve the minimum-cost assignment between the two frames&#39; person centroids.</span>
+<span class="sd">    When the optimal assignment is not the identity (slot *i* → slot *i*), the</span>
+<span class="sd">    slots&#39; spatial positions are better explained by a **label swap** — a proxy</span>
+<span class="sd">    for a tori/uke identity swap that the review asked us to instrument. A stable</span>
+<span class="sd">    tracker trends toward ``0``.</span>
+
+<span class="sd">    Returns ``{n_pairs, n_swaps, swap_rate}``.</span>
+
+<span class="sd">    Caveat (honest): this also fires on a *genuine* physical crossing that the</span>
+<span class="sd">    tracker correctly follows through, so read ``swap_rate`` as a relative</span>
+<span class="sd">    diagnostic (compare trackers/clips), not an absolute error count.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">linear_sum_assignment</span>
+
+    <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>  <span class="c1"># all-NaN person slots are expected (guarded below)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">)</span>
+        <span class="n">cent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">pose_seq</span><span class="o">.</span><span class="n">keypoints</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># (F, P, 2)</span>
+    <span class="n">present</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">cent</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># (F, P)</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">cent</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">ident</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+    <span class="n">n_pairs</span> <span class="o">=</span> <span class="n">n_swaps</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cent</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">present</span><span class="p">[</span><span class="n">f</span><span class="p">]</span><span class="o">.</span><span class="n">all</span><span class="p">()</span> <span class="ow">and</span> <span class="n">present</span><span class="p">[</span><span class="n">f</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">all</span><span class="p">()):</span>
+            <span class="k">continue</span>
+        <span class="n">cost</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">cent</span><span class="p">[</span><span class="n">f</span><span class="p">,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">-</span> <span class="n">cent</span><span class="p">[</span><span class="n">f</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">col</span> <span class="o">=</span> <span class="n">linear_sum_assignment</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
+        <span class="n">n_pairs</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">n_swaps</span> <span class="o">+=</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">ident</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;n_pairs&quot;</span><span class="p">:</span> <span class="n">n_pairs</span><span class="p">,</span>
+        <span class="s2">&quot;n_swaps&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_swaps</span><span class="p">),</span>
+        <span class="s2">&quot;swap_rate&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">n_swaps</span> <span class="o">/</span> <span class="n">n_pairs</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="k">if</span> <span class="n">n_pairs</span> <span class="k">else</span> <span class="mf">0.0</span><span class="p">,</span>
+    <span class="p">}</span></div>
 
 </pre></div>
 

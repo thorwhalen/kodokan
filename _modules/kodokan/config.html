@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kodokan.config &mdash; kodokan 0.0.16 documentation</title>
+  <title>kodokan.config &mdash; kodokan 0.0.17 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=c7cdf6fe"></script>
+      <script src="../../_static/documentation_options.js?v=63b572e7"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -48,6 +48,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan.html">kodokan</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/acquire.html">kodokan.acquire</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/canon3d.html">kodokan.canon3d</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/compare.html">kodokan.compare</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/config.html">kodokan.config</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/descriptors.html">kodokan.descriptors</a></li>
@@ -93,6 +94,11 @@
 <span class="sd">*outside* the repo by default — under ``~/kodokan_data`` — so they don&#39;t bloat</span>
 <span class="sd">the (Dropbox-synced) source tree. Override the root with the</span>
 <span class="sd">``KODOKAN_DATA_DIR`` environment variable.</span>
+
+<span class="sd">On the dev Mac ``~/kodokan_data`` is a symlink into an off-machine-backed data</span>
+<span class="sd">area; code addresses it transparently through the symlink either way. None of</span>
+<span class="sd">this data is precious — every subfolder is downloaded or pipeline-derived; see</span>
+<span class="sd">``misc/docs/regenerate-data.md`` for how to rebuild it from scratch.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
@@ -102,6 +108,29 @@
 
 <span class="c1">#: Env var overriding the data root (default ``~/kodokan_data``).</span>
 <span class="n">KODOKAN_DATA_ENV</span> <span class="o">=</span> <span class="s2">&quot;KODOKAN_DATA_DIR&quot;</span>
+
+<span class="c1"># ---------------------------------------------------------------------------</span>
+<span class="c1"># Two-person coverage thresholds (single source of truth).</span>
+<span class="c1">#</span>
+<span class="c1"># A demo&#39;s ``two_person_frac`` is the fraction of its frames in which *both*</span>
+<span class="c1"># judoka are tracked. Two distinct gates use it, on purpose, at different</span>
+<span class="c1"># strictness — they were previously scattered as bare ``0.3``/``0.4`` literals</span>
+<span class="c1"># across the pipeline and eval scripts (adversarial-review item), which made the</span>
+<span class="c1"># discrepancy look like a bug. They are centralized (and their intent</span>
+<span class="c1"># documented) here so every call site imports the same named constant.</span>
+<span class="c1"># ---------------------------------------------------------------------------</span>
+
+<span class="c1">#: Inclusion gate used when *segmenting* a clip: keep a detected demonstration</span>
+<span class="c1">#: only if both judoka are present for at least this fraction of its frames.</span>
+<span class="c1">#: Deliberately lenient — we would rather store a borderline demo (and filter it</span>
+<span class="c1">#: later) than silently drop a real one. Used by the batch/segmentation step.</span>
+<span class="n">SEGMENT_MIN_TWO_PERSON_FRAC</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span>
+
+<span class="c1">#: Quality gate used when *consuming* stored demos for recognition/scoring/</span>
+<span class="c1">#: catalog building: only trust demos where both judoka are clearly visible.</span>
+<span class="c1">#: Stricter than the segmentation gate on purpose. Used by the eval harnesses,</span>
+<span class="c1">#: :func:`kodokan.flashcards.build_catalog`, and scoring.</span>
+<span class="n">EVAL_MIN_TWO_PERSON_FRAC</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.4</span>
 
 
 <div class="viewcode-block" id="data_dir">

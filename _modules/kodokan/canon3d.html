@@ -1,0 +1,237 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>kodokan.canon3d &mdash; kodokan 0.0.17 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=63b572e7"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=f281be69"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            kodokan
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan.html">kodokan</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/acquire.html">kodokan.acquire</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/canon3d.html">kodokan.canon3d</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/compare.html">kodokan.compare</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/config.html">kodokan.config</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/descriptors.html">kodokan.descriptors</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/flashcards.html">kodokan.flashcards</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/learning.html">kodokan.learning</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/pose.html">kodokan.pose</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/recognize.html">kodokan.recognize</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/score.html">kodokan.score</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/segment.html">kodokan.segment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/store.html">kodokan.store</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/track.html">kodokan.track</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/viz.html">kodokan.viz</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">kodokan</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">kodokan.canon3d</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for kodokan.canon3d</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Pelvis-frame (Procrustes) canonicalization of 3D world landmarks.</span>
+
+<span class="sd">The Stage-5 *&quot;3D refutes viewpoint&quot;* conclusion was **withdrawn** by the</span>
+<span class="sd">adversarial review (``misc/docs/adversarial-review.md``): MediaPipe per-crop</span>
+<span class="sd">world landmarks are camera-aligned — not canonicalized — and the bounding-box</span>
+<span class="sd">crop distorts their scale/orientation, so 3D joint angles computed straight off</span>
+<span class="sd">them are **not** actually viewpoint-invariant. Before a fair 2D-vs-3D test, each</span>
+<span class="sd">frame&#39;s landmarks must be expressed in a *subject-centered anatomical frame*:</span>
+<span class="sd">origin at the pelvis, axes fixed to the body (hip line + spine), scale normalized</span>
+<span class="sd">by torso length. This module provides that canonicalization as a pure, testable</span>
+<span class="sd">geometric function.</span>
+
+<span class="sd">After :func:`canonicalize_pose`, two demonstrations of the same articulated pose</span>
+<span class="sd">seen from different camera azimuths map to the **same** canonical coordinates</span>
+<span class="sd">(invariant to camera rotation, translation, and — with ``scale=True`` — subject</span>
+<span class="sd">size). Downstream angle/position features are then genuinely viewpoint-invariant.</span>
+
+<span class="sd">Indices default to the MediaPipe **BlazePose-33** convention used by the repo&#39;s</span>
+<span class="sd">3D lift (``scripts/lift_3d_mediapipe.py``); pass ``joints=COCO17`` (or a custom</span>
+<span class="sd">:class:`BodyJoints`) to reuse it for any layout exposing both hips and shoulders.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+
+<div class="viewcode-block" id="BodyJoints">
+<a class="viewcode-back" href="../../module_docs/kodokan/canon3d.html#kodokan.canon3d.BodyJoints">[docs]</a>
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BodyJoints</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Landmark indices needed to build the pelvis anatomical frame.&quot;&quot;&quot;</span>
+
+    <span class="n">l_hip</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">r_hip</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">l_shoulder</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">r_shoulder</span><span class="p">:</span> <span class="nb">int</span></div>
+
+
+
+<span class="c1">#: MediaPipe BlazePose-33 (the repo&#39;s 3D-lift output format).</span>
+<span class="n">BLAZEPOSE33</span> <span class="o">=</span> <span class="n">BodyJoints</span><span class="p">(</span><span class="n">l_hip</span><span class="o">=</span><span class="mi">23</span><span class="p">,</span> <span class="n">r_hip</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">l_shoulder</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">r_shoulder</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="c1">#: COCO-17 (the 2D pose format), for reusing the canonicalization on 2.5D data.</span>
+<span class="n">COCO17</span> <span class="o">=</span> <span class="n">BodyJoints</span><span class="p">(</span><span class="n">l_hip</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">r_hip</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">l_shoulder</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">r_shoulder</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_unit</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="c1"># A degenerate (near-zero) axis means the pose can&#39;t define a frame; surface it</span>
+    <span class="c1"># as nan so it propagates through R and the frame is dropped downstream (rather</span>
+    <span class="c1"># than silently returning a finite-but-meaningless basis).</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">v</span> <span class="o">/</span> <span class="n">n</span> <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mf">1e-9</span> <span class="k">else</span> <span class="n">np</span><span class="o">.</span><span class="n">full_like</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="pelvis_frame">
+<a class="viewcode-back" href="../../module_docs/kodokan/canon3d.html#kodokan.canon3d.pelvis_frame">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">pelvis_frame</span><span class="p">(</span>
+    <span class="n">landmarks</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">joints</span><span class="p">:</span> <span class="n">BodyJoints</span> <span class="o">=</span> <span class="n">BLAZEPOSE33</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Anatomical frame of a single pose: ``(pelvis_origin, R)``.</span>
+
+<span class="sd">    ``R`` (shape ``(3, 3)``, rows are the new basis) maps world coordinates into</span>
+<span class="sd">    the subject frame: **x** = subject&#39;s right (hip line), **y** = up</span>
+<span class="sd">    (pelvis→neck spine), **z** = forward (``y × x``). The hip line is</span>
+<span class="sd">    orthogonalized against the spine so the basis is orthonormal (Gram-Schmidt).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">lm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">landmarks</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">pelvis</span> <span class="o">=</span> <span class="p">(</span><span class="n">lm</span><span class="p">[</span><span class="n">joints</span><span class="o">.</span><span class="n">l_hip</span><span class="p">]</span> <span class="o">+</span> <span class="n">lm</span><span class="p">[</span><span class="n">joints</span><span class="o">.</span><span class="n">r_hip</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">neck</span> <span class="o">=</span> <span class="p">(</span><span class="n">lm</span><span class="p">[</span><span class="n">joints</span><span class="o">.</span><span class="n">l_shoulder</span><span class="p">]</span> <span class="o">+</span> <span class="n">lm</span><span class="p">[</span><span class="n">joints</span><span class="o">.</span><span class="n">r_shoulder</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">up</span> <span class="o">=</span> <span class="n">_unit</span><span class="p">(</span><span class="n">neck</span> <span class="o">-</span> <span class="n">pelvis</span><span class="p">)</span>
+    <span class="n">right</span> <span class="o">=</span> <span class="n">_unit</span><span class="p">(</span><span class="n">lm</span><span class="p">[</span><span class="n">joints</span><span class="o">.</span><span class="n">r_hip</span><span class="p">]</span> <span class="o">-</span> <span class="n">lm</span><span class="p">[</span><span class="n">joints</span><span class="o">.</span><span class="n">l_hip</span><span class="p">])</span>
+    <span class="n">right</span> <span class="o">=</span> <span class="n">_unit</span><span class="p">(</span><span class="n">right</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">right</span><span class="p">,</span> <span class="n">up</span><span class="p">)</span> <span class="o">*</span> <span class="n">up</span><span class="p">)</span>  <span class="c1"># orthogonalize against the spine</span>
+    <span class="n">fwd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">up</span><span class="p">,</span> <span class="n">right</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pelvis</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">right</span><span class="p">,</span> <span class="n">up</span><span class="p">,</span> <span class="n">fwd</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="canonicalize_pose">
+<a class="viewcode-back" href="../../module_docs/kodokan/canon3d.html#kodokan.canon3d.canonicalize_pose">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">canonicalize_pose</span><span class="p">(</span>
+    <span class="n">landmarks</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">joints</span><span class="p">:</span> <span class="n">BodyJoints</span> <span class="o">=</span> <span class="n">BLAZEPOSE33</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Express one frame&#39;s 3D landmarks ``(K, C&gt;=3)`` in the pelvis frame ``(K, 3)``.</span>
+
+<span class="sd">    Removes camera rotation + translation (and, with ``scale=True``, subject size</span>
+<span class="sd">    by dividing by torso length). Columns beyond ``xyz`` (e.g. visibility) are</span>
+<span class="sd">    dropped; ``nan`` inputs propagate (so occluded frames stay droppable).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">xyz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">landmarks</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">pelvis</span><span class="p">,</span> <span class="n">R</span> <span class="o">=</span> <span class="n">pelvis_frame</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="n">joints</span><span class="o">=</span><span class="n">joints</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">xyz</span> <span class="o">-</span> <span class="n">pelvis</span><span class="p">)</span> <span class="o">@</span> <span class="n">R</span><span class="o">.</span><span class="n">T</span>
+    <span class="k">if</span> <span class="n">scale</span><span class="p">:</span>
+        <span class="n">neck</span> <span class="o">=</span> <span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="n">joints</span><span class="o">.</span><span class="n">l_shoulder</span><span class="p">]</span> <span class="o">+</span> <span class="n">out</span><span class="p">[</span><span class="n">joints</span><span class="o">.</span><span class="n">r_shoulder</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="n">torso</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">neck</span><span class="p">))</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">out</span> <span class="o">/</span> <span class="p">(</span><span class="n">torso</span> <span class="k">if</span> <span class="n">torso</span> <span class="o">&gt;</span> <span class="mf">1e-9</span> <span class="k">else</span> <span class="mf">1.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span></div>
+
+
+
+<div class="viewcode-block" id="canonicalize_sequence">
+<a class="viewcode-back" href="../../module_docs/kodokan/canon3d.html#kodokan.canon3d.canonicalize_sequence">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">canonicalize_sequence</span><span class="p">(</span>
+    <span class="n">world</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">joints</span><span class="p">:</span> <span class="n">BodyJoints</span> <span class="o">=</span> <span class="n">BLAZEPOSE33</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Canonicalize every frame/person of a ``(..., K, C)`` landmark stack → ``(..., K, 3)``.</span>
+
+<span class="sd">    Each frame (and person) is canonicalized to *its own* pelvis frame — the</span>
+<span class="sd">    viewpoint-invariant choice for pose-only technique features.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">world</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">lead</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">world</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">flat</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">world</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">canonicalize_pose</span><span class="p">(</span><span class="n">fr</span><span class="p">,</span> <span class="n">joints</span><span class="o">=</span><span class="n">joints</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="n">scale</span><span class="p">)</span> <span class="k">for</span> <span class="n">fr</span> <span class="ow">in</span> <span class="n">flat</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">lead</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p></p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

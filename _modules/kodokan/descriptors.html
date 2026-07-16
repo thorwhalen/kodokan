@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kodokan.descriptors &mdash; kodokan 0.0.16 documentation</title>
+  <title>kodokan.descriptors &mdash; kodokan 0.0.17 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=c7cdf6fe"></script>
+      <script src="../../_static/documentation_options.js?v=63b572e7"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -48,6 +48,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan.html">kodokan</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/acquire.html">kodokan.acquire</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/canon3d.html">kodokan.canon3d</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/compare.html">kodokan.compare</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/config.html">kodokan.config</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/descriptors.html">kodokan.descriptors</a></li>
@@ -129,12 +130,43 @@
     <span class="k">return</span> <span class="n">out</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_norm_positions</span><span class="p">(</span><span class="n">kp17</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-    <span class="n">xy</span> <span class="o">=</span> <span class="n">kp17</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_torso_scale</span><span class="p">(</span><span class="n">xy</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">floor_frac</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Robust body scale for position normalization (hip→shoulder length, floored).</span>
+
+<span class="sd">    The raw torso length collapses toward zero when the torso is edge-on to the</span>
+<span class="sd">    camera (shoulders projecting onto the hips). Dividing positions by a near-zero</span>
+<span class="sd">    scale explodes them into per-clip *outlier fingerprints* — exactly the kind of</span>
+<span class="sd">    spurious cue the adversarial review flagged. We therefore floor the torso</span>
+<span class="sd">    length by ``floor_frac`` of the person&#39;s keypoint bounding-box diagonal, a</span>
+<span class="sd">    projection-robust body-size proxy that stays finite even edge-on. Missing</span>
+<span class="sd">    hip/shoulder keypoints yield ``nan`` (so the frame is dropped downstream), as</span>
+<span class="sd">    before.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">hip</span> <span class="o">=</span> <span class="p">(</span><span class="n">xy</span><span class="p">[</span><span class="n">_HIP</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="n">xy</span><span class="p">[</span><span class="n">_HIP</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span> <span class="o">/</span> <span class="mi">2</span>
     <span class="n">sho</span> <span class="o">=</span> <span class="p">(</span><span class="n">xy</span><span class="p">[</span><span class="n">_SHO</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="n">xy</span><span class="p">[</span><span class="n">_SHO</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span> <span class="o">/</span> <span class="mi">2</span>
-    <span class="n">scale</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">sho</span> <span class="o">-</span> <span class="n">hip</span><span class="p">)</span> <span class="o">+</span> <span class="mf">1e-6</span>
-    <span class="k">return</span> <span class="p">((</span><span class="n">xy</span> <span class="o">-</span> <span class="n">hip</span><span class="p">)</span> <span class="o">/</span> <span class="n">scale</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># (34,)</span>
+    <span class="n">torso</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">sho</span> <span class="o">-</span> <span class="n">hip</span><span class="p">)</span>  <span class="c1"># nan if hip/shoulder missing</span>
+    <span class="n">finite</span> <span class="o">=</span> <span class="n">xy</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">xy</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)]</span>
+    <span class="n">bbox_diag</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">hypot</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">finite</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">-</span> <span class="n">finite</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="mi">0</span><span class="p">))))</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">finite</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span> <span class="k">else</span> <span class="mf">0.0</span>
+    <span class="p">)</span>
+    <span class="c1"># np.maximum propagates nan, so a missing torso stays nan (frame dropped).</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">torso</span><span class="p">,</span> <span class="n">floor_frac</span> <span class="o">*</span> <span class="n">bbox_diag</span><span class="p">),</span> <span class="mf">1e-6</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_norm_positions</span><span class="p">(</span><span class="n">kp17</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">clip</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="mf">8.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Hip-centered, torso-scaled keypoint positions ``(34,)`` (robust scale).</span>
+
+<span class="sd">    Positions are in torso-length units, so a whole body spans only a few units</span>
+<span class="sd">    from the hip center; ``clip`` bounds residual outliers (``None`` disables it).</span>
+<span class="sd">    ``nan`` passes through both the scale and the clip, so occluded frames are</span>
+<span class="sd">    still dropped by :func:`kodokan.compare._clean`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">xy</span> <span class="o">=</span> <span class="n">kp17</span><span class="p">[:,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">hip</span> <span class="o">=</span> <span class="p">(</span><span class="n">xy</span><span class="p">[</span><span class="n">_HIP</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="n">xy</span><span class="p">[</span><span class="n">_HIP</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">xy</span> <span class="o">-</span> <span class="n">hip</span><span class="p">)</span> <span class="o">/</span> <span class="n">_torso_scale</span><span class="p">(</span><span class="n">xy</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">clip</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="o">-</span><span class="n">clip</span><span class="p">,</span> <span class="n">clip</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">out</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># (34,)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_window</span><span class="p">(</span><span class="n">pose_seq</span><span class="p">:</span> <span class="n">PoseSequence</span><span class="p">,</span> <span class="n">start_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">end_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>

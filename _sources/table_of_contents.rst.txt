@@ -4,6 +4,7 @@
 
    module_docs/kodokan
    module_docs/kodokan/acquire
+   module_docs/kodokan/canon3d
    module_docs/kodokan/compare
    module_docs/kodokan/config
    module_docs/kodokan/descriptors

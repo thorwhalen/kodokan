@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kodokan.flashcards &mdash; kodokan 0.0.16 documentation</title>
+  <title>kodokan.flashcards &mdash; kodokan 0.0.17 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=c7cdf6fe"></script>
+      <script src="../../_static/documentation_options.js?v=63b572e7"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -48,6 +48,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan.html">kodokan</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/acquire.html">kodokan.acquire</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/canon3d.html">kodokan.canon3d</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/compare.html">kodokan.compare</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/config.html">kodokan.config</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../module_docs/kodokan/descriptors.html">kodokan.descriptors</a></li>
@@ -340,7 +341,7 @@
 
 <div class="viewcode-block" id="build_catalog">
 <a class="viewcode-back" href="../../module_docs/kodokan/flashcards.html#kodokan.build_catalog">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">build_catalog</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">min_two_person_frac</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">min_demo_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_catalog</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">min_two_person_frac</span><span class="p">:</span> <span class="nb">float</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">min_demo_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build ``{technique_key: {&quot;name&quot;, &quot;clips&quot;:[...]}}`` from the pose/segments stores.</span>
 
 <span class="sd">    Aggregates all sources: each clip contributes its demo intervals (for looping media),</span>
@@ -348,7 +349,10 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">kodokan</span><span class="w"> </span><span class="kn">import</span> <span class="n">store</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.acquire</span><span class="w"> </span><span class="kn">import</span> <span class="n">canonical_technique_key</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">EVAL_MIN_TWO_PERSON_FRAC</span>
 
+    <span class="k">if</span> <span class="n">min_two_person_frac</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">min_two_person_frac</span> <span class="o">=</span> <span class="n">EVAL_MIN_TWO_PERSON_FRAC</span>
     <span class="n">ss</span> <span class="o">=</span> <span class="n">store</span><span class="o">.</span><span class="n">segments_store</span><span class="p">()</span>
     <span class="n">catalog</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">vid</span> <span class="ow">in</span> <span class="n">ss</span><span class="p">:</span>

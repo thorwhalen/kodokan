@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kodokan &mdash; kodokan 0.0.16 documentation</title>
+  <title>kodokan &mdash; kodokan 0.0.17 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=c7cdf6fe"></script>
+      <script src="../_static/documentation_options.js?v=63b572e7"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -86,6 +86,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="kodokan/acquire.html">kodokan.acquire</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kodokan/canon3d.html">kodokan.canon3d</a></li>
 <li class="toctree-l1"><a class="reference internal" href="kodokan/compare.html">kodokan.compare</a></li>
 <li class="toctree-l1"><a class="reference internal" href="kodokan/config.html">kodokan.config</a></li>
 <li class="toctree-l1"><a class="reference internal" href="kodokan/descriptors.html">kodokan.descriptors</a></li>
@@ -248,7 +249,7 @@ canvas), and — later — recognize, compare, and score throws.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="kodokan.build_catalog">
-<span class="sig-prename descclassname"><span class="pre">kodokan.</span></span><span class="sig-name descname"><span class="pre">build_catalog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_two_person_frac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_demo_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/flashcards.html#build_catalog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.build_catalog" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">kodokan.</span></span><span class="sig-name descname"><span class="pre">build_catalog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_two_person_frac</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_demo_s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/flashcards.html#build_catalog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.build_catalog" title="Link to this definition"></a></dt>
 <dd><p>Build <code class="docutils literal notranslate"><span class="pre">{technique_key:</span> <span class="pre">{&quot;name&quot;,</span> <span class="pre">&quot;clips&quot;:[...]}}</span></code> from the pose/segments stores.</p>
 <p>Aggregates all sources: each clip contributes its demo intervals (for looping media),
 so a technique present in several sources offers varied multiple-choice media.</p>

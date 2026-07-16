@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; kodokan 0.0.16 documentation</title>
+  <title>Index &mdash; kodokan 0.0.17 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=c7cdf6fe"></script>
+      <script src="_static/documentation_options.js?v=63b572e7"></script>
       <script src="_static/doctools.js?v=fd6eb6e6"></script>
       <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -48,6 +48,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan.html">kodokan</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/acquire.html">kodokan.acquire</a></li>
+<li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/canon3d.html">kodokan.canon3d</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/compare.html">kodokan.compare</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/config.html">kodokan.config</a></li>
 <li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/descriptors.html">kodokan.descriptors</a></li>
@@ -113,6 +114,8 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.ToriDecision.abstained">abstained (kodokan.recognize.ToriDecision attribute)</a>
+</li>
       <li><a href="module_docs/kodokan/compare.html#kodokan.compare.ANGLE_DEFS">ANGLE_DEFS (in module kodokan.compare)</a>
 </li>
   </ul></td>
@@ -135,6 +138,10 @@
         <li><a href="module_docs/kodokan.html#kodokan.PoseSequence.backend">(kodokan.PoseSequence attribute)</a>
 </li>
       </ul></li>
+      <li><a href="module_docs/kodokan/canon3d.html#kodokan.canon3d.BLAZEPOSE33">BLAZEPOSE33 (in module kodokan.canon3d)</a>
+</li>
+      <li><a href="module_docs/kodokan/canon3d.html#kodokan.canon3d.BodyJoints">BodyJoints (class in kodokan.canon3d)</a>
+</li>
       <li><a href="module_docs/kodokan.html#kodokan.build_catalog">build_catalog() (in module kodokan)</a>
 
       <ul>
@@ -163,14 +170,24 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/kodokan/acquire.html#kodokan.acquire.canonical_technique_key">canonical_technique_key() (in module kodokan.acquire)</a>
 </li>
+      <li><a href="module_docs/kodokan/canon3d.html#kodokan.canon3d.canonicalize_pose">canonicalize_pose() (in module kodokan.canon3d)</a>
+</li>
+      <li><a href="module_docs/kodokan/canon3d.html#kodokan.canon3d.canonicalize_sequence">canonicalize_sequence() (in module kodokan.canon3d)</a>
+</li>
+      <li><a href="module_docs/kodokan/store.html#kodokan.store.check_sequence_integrity">check_sequence_integrity() (in module kodokan.store)</a>
+</li>
+      <li><a href="module_docs/kodokan/store.html#kodokan.store.check_tidy_integrity">check_tidy_integrity() (in module kodokan.store)</a>
+</li>
       <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.classification_metrics">classification_metrics() (in module kodokan.recognize)</a>
 </li>
       <li><a href="module_docs/kodokan/config.html#kodokan.config.clips_dir">clips_dir() (in module kodokan.config)</a>
 </li>
-      <li><a href="module_docs/kodokan/pose.html#kodokan.pose.COCO17_KEYPOINTS">COCO17_KEYPOINTS (in module kodokan.pose)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/kodokan/canon3d.html#kodokan.canon3d.COCO17">COCO17 (in module kodokan.canon3d)</a>
+</li>
+      <li><a href="module_docs/kodokan/pose.html#kodokan.pose.COCO17_KEYPOINTS">COCO17_KEYPOINTS (in module kodokan.pose)</a>
+</li>
       <li><a href="module_docs/kodokan/pose.html#kodokan.pose.COCO17_SKELETON">COCO17_SKELETON (in module kodokan.pose)</a>
 </li>
       <li><a href="module_docs/kodokan.html#kodokan.compare">compare() (in module kodokan)</a>
@@ -180,6 +197,8 @@
 </li>
       </ul></li>
       <li><a href="module_docs/kodokan/flashcards.html#kodokan.flashcards.confusable_distractors">confusable_distractors() (in module kodokan.flashcards)</a>
+</li>
+      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.confusion_pairs">confusion_pairs() (in module kodokan.recognize)</a>
 </li>
       <li><a href="module_docs/kodokan/learning.html#kodokan.learning.ConfusionWeighted">ConfusionWeighted (class in kodokan.learning)</a>
 </li>
@@ -241,6 +260,8 @@
         <li><a href="module_docs/kodokan/track.html#kodokan.track.estimate_poses_tracked">(in module kodokan.track)</a>
 </li>
       </ul></li>
+      <li><a href="module_docs/kodokan/config.html#kodokan.config.EVAL_MIN_TWO_PERSON_FRAC">EVAL_MIN_TWO_PERSON_FRAC (in module kodokan.config)</a>
+</li>
   </ul></td>
 </tr></table>
 
@@ -253,16 +274,18 @@
         <li><a href="module_docs/kodokan/score.html#kodokan.score.feedback">(in module kodokan.score)</a>
 </li>
       </ul></li>
+      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.ToriDecision.fell_back">fell_back (kodokan.recognize.ToriDecision attribute)</a>
+</li>
       <li><a href="module_docs/kodokan/segment.html#kodokan.segment.find_segments">find_segments() (in module kodokan.segment)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/kodokan/pose.html#kodokan.pose.PoseSequence.fps">fps (kodokan.pose.PoseSequence attribute)</a>
 
       <ul>
         <li><a href="module_docs/kodokan.html#kodokan.PoseSequence.fps">(kodokan.PoseSequence attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/kodokan/pose.html#kodokan.pose.PoseSequence.frame_indices">frame_indices (kodokan.pose.PoseSequence attribute)</a>
 
       <ul>
@@ -277,6 +300,12 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/kodokan/track.html#kodokan.track.identity_swap_rate">identity_swap_rate() (in module kodokan.track)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.ToriDecision.index">index (kodokan.recognize.ToriDecision attribute)</a>
+</li>
       <li><a href="module_docs/kodokan/learning.html#kodokan.learning.item_accuracy">item_accuracy() (in module kodokan.learning)</a>
 </li>
   </ul></td>
@@ -311,6 +340,13 @@
 
       <ul>
         <li><a href="module_docs/kodokan/acquire.html#module-kodokan.acquire">module</a>
+</li>
+      </ul></li>
+      <li>
+    kodokan.canon3d
+
+      <ul>
+        <li><a href="module_docs/kodokan/canon3d.html#module-kodokan.canon3d">module</a>
 </li>
       </ul></li>
       <li>
@@ -421,10 +457,10 @@
         <li><a href="module_docs/kodokan/store.html#kodokan.store.load_all_tidy">(in module kodokan.store)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/kodokan/acquire.html#kodokan.acquire.local_clips">local_clips() (in module kodokan.acquire)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/kodokan.html#kodokan.log_response">log_response() (in module kodokan)</a>
 
       <ul>
@@ -437,6 +473,8 @@
         <li><a href="module_docs/kodokan/viz.html#kodokan.viz.log_to_rerun">(in module kodokan.viz)</a>
 </li>
       </ul></li>
+      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.loo_medoid_separability">loo_medoid_separability() (in module kodokan.recognize)</a>
+</li>
       <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.loo_pooled_predict">loo_pooled_predict() (in module kodokan.recognize)</a>
 </li>
   </ul></td>
@@ -453,6 +491,8 @@
       </ul></li>
       <li><a href="module_docs/kodokan/learning.html#kodokan.learning.make_strategy">make_strategy() (in module kodokan.learning)</a>
 </li>
+      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.ToriDecision.margin">margin (kodokan.recognize.ToriDecision attribute)</a>
+</li>
       <li><a href="module_docs/kodokan/learning.html#kodokan.learning.merge_similarity">merge_similarity() (in module kodokan.learning)</a>
 </li>
       <li><a href="module_docs/kodokan/config.html#kodokan.config.models_dir">models_dir() (in module kodokan.config)</a>
@@ -464,6 +504,8 @@
         <li><a href="module_docs/kodokan.html#module-kodokan">kodokan</a>
 </li>
         <li><a href="module_docs/kodokan/acquire.html#module-kodokan.acquire">kodokan.acquire</a>
+</li>
+        <li><a href="module_docs/kodokan/canon3d.html#module-kodokan.canon3d">kodokan.canon3d</a>
 </li>
         <li><a href="module_docs/kodokan/compare.html#module-kodokan.compare">kodokan.compare</a>
 </li>
@@ -518,6 +560,8 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/kodokan/store.html#kodokan.store.parquet_bytes_to_sequence">parquet_bytes_to_sequence() (in module kodokan.store)</a>
 </li>
+      <li><a href="module_docs/kodokan/canon3d.html#kodokan.canon3d.pelvis_frame">pelvis_frame() (in module kodokan.canon3d)</a>
+</li>
       <li><a href="module_docs/kodokan/compare.html#kodokan.compare.per_angle_deviation">per_angle_deviation() (in module kodokan.compare)</a>
 </li>
       <li><a href="module_docs/kodokan/learning.html#kodokan.learning.pick_distractors">pick_distractors() (in module kodokan.learning)</a>
@@ -526,10 +570,10 @@
 </li>
       <li><a href="module_docs/kodokan/config.html#kodokan.config.pose_dir">pose_dir() (in module kodokan.config)</a>
 </li>
-      <li><a href="module_docs/kodokan/segment.html#kodokan.segment.pose_motion_energy">pose_motion_energy() (in module kodokan.segment)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/kodokan/segment.html#kodokan.segment.pose_motion_energy">pose_motion_energy() (in module kodokan.segment)</a>
+</li>
       <li><a href="module_docs/kodokan.html#kodokan.pose_store">pose_store() (in module kodokan)</a>
 
       <ul>
@@ -561,6 +605,8 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="module_docs/kodokan/flashcards.html#kodokan.flashcards.responses_store">responses_store() (in module kodokan.flashcards)</a>
+</li>
+      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.roc_auc_distances">roc_auc_distances() (in module kodokan.recognize)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -598,6 +644,8 @@
         <li><a href="module_docs/kodokan/segment.html#kodokan.segment.segment_demonstrations">(in module kodokan.segment)</a>
 </li>
       </ul></li>
+      <li><a href="module_docs/kodokan/config.html#kodokan.config.SEGMENT_MIN_TWO_PERSON_FRAC">SEGMENT_MIN_TWO_PERSON_FRAC (in module kodokan.config)</a>
+</li>
       <li><a href="module_docs/kodokan.html#kodokan.segments_store">segments_store() (in module kodokan)</a>
 
       <ul>
@@ -626,6 +674,8 @@
       </ul></li>
       <li><a href="module_docs/kodokan/acquire.html#kodokan.acquire.SOURCES">SOURCES (in module kodokan.acquire)</a>
 </li>
+      <li><a href="module_docs/kodokan/store.html#kodokan.store.store_integrity_report">store_integrity_report() (in module kodokan.store)</a>
+</li>
       <li><a href="module_docs/kodokan/learning.html#kodokan.learning.Strategy">Strategy (class in kodokan.learning)</a>
 </li>
   </ul></td>
@@ -644,7 +694,13 @@
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.tori_decision">tori_decision() (in module kodokan.recognize)</a>
+</li>
+      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.tori_decision_stats">tori_decision_stats() (in module kodokan.recognize)</a>
+</li>
       <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.tori_index">tori_index() (in module kodokan.recognize)</a>
+</li>
+      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.ToriDecision">ToriDecision (class in kodokan.recognize)</a>
 </li>
   </ul></td>
 </tr></table>
