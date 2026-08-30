@@ -45,10 +45,14 @@ bug (the stored skeletons are clean; missing frames are `NaN`, not garbage).
 ```python
 from kodokan.store import pose_store, segments_store, load_all_tidy
 
-ps = pose_store()                  # {video_id: PoseSequence}  (tidy Parquet under the hood)
-seq = ps["zIq0xI0ogxk"]            # (F, 2, 17, 3) COCO-17 (x, y, conf); NaN where a slot is empty
-segs = segments_store()["zIq0xI0ogxk"]   # {technique, source_url, n_demos, demos:[{start_s,end_s,...}]}
-df = load_all_tidy()               # one tidy DataFrame across all clips (video_id, frame, person, keypoint, x, y, conf)
+ps = pose_store()  # {video_id: PoseSequence}  (tidy Parquet under the hood)
+seq = ps["zIq0xI0ogxk"]  # (F, 2, 17, 3) COCO-17 (x, y, conf); NaN where a slot is empty
+segs = segments_store()[
+    "zIq0xI0ogxk"
+]  # {technique, source_url, n_demos, demos:[{start_s,end_s,...}]}
+df = (
+    load_all_tidy()
+)  # one tidy DataFrame across all clips (video_id, frame, person, keypoint, x, y, conf)
 ```
 
 ## Schema

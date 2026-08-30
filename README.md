@@ -10,11 +10,19 @@ from kodokan.track import estimate_poses_tracked
 from kodokan.segment import segment_demonstrations
 from kodokan.viz import render_skeleton_video
 
-res = download_techniques(playlist_items="2")[0]          # Seoi-nage (#002), with metadata
-seq = estimate_poses_tracked(res.path, source_url=res.info["webpage_url"])  # tracked tori/uke COCO-17
-demos = segment_demonstrations(seq, min_two_person_frac=0.3)                # per-demo (start_s, end_s)
-render_skeleton_video(seq, out_path="overlay.mp4", source_video=res.path)  # skeletons on the video
-render_skeleton_video(seq, out_path="skeleton.mp4", blank_canvas=True)      # skeletons on blank canvas
+res = download_techniques(playlist_items="2")[0]  # Seoi-nage (#002), with metadata
+seq = estimate_poses_tracked(
+    res.path, source_url=res.info["webpage_url"]
+)  # tracked tori/uke COCO-17
+demos = segment_demonstrations(
+    seq, min_two_person_frac=0.3
+)  # per-demo (start_s, end_s)
+render_skeleton_video(
+    seq, out_path="overlay.mp4", source_video=res.path
+)  # skeletons on the video
+render_skeleton_video(
+    seq, out_path="skeleton.mp4", blank_canvas=True
+)  # skeletons on blank canvas
 ```
 
 ## What it does
@@ -145,9 +153,10 @@ demonstrations · 18.3k frames) into the `dol` stores. Load it:
 
 ```python
 from kodokan.store import pose_store, segments_store, load_all_tidy
-seq = pose_store()["zIq0xI0ogxk"]          # (F, 2, 17, 3) COCO-17 (x, y, conf)
-demos = segments_store()["zIq0xI0ogxk"]    # demo intervals + source_url
-df = load_all_tidy()                       # tidy DataFrame across all clips
+
+seq = pose_store()["zIq0xI0ogxk"]  # (F, 2, 17, 3) COCO-17 (x, y, conf)
+demos = segments_store()["zIq0xI0ogxk"]  # demo intervals + source_url
+df = load_all_tidy()  # tidy DataFrame across all clips
 ```
 
 See [`misc/docs/dataset.md`](misc/docs/dataset.md).
