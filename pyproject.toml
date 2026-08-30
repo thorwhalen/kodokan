@@ -33,10 +33,19 @@ Repository = "https://github.com/thorwhalen/kodokan"
 Documentation = "https://thorwhalen.github.io/kodokan"
 
 [project.optional-dependencies]
+# AGPL-free. The default pose backend (RTMPose via onnxruntime) needs nothing
+# copyleft, so `pip install kodokan[pose]` stays MIT/Apache/BSD throughout.
 pose = [
     "rtmlib",
     "onnxruntime",
-    "ultralytics",
+]
+# AGPL-3.0-or-later — network copyleft. See README "Licensing of extras" and
+# [tool.wads.licence] below. Held in its own extra so that opting into the
+# strongest copyleft in this project is a decision the user makes by name.
+# Required by kodokan.track (BoT-SORT/ByteTrack identity tracking) and by the
+# non-default estimate_poses(backend="ultralytics").
+track = [
+    "ultralytics", # AGPL-3.0-or-later
 ]
 viz = [
     "opencv-python",
@@ -59,7 +68,7 @@ acquire = [
 all = [
     "rtmlib",
     "onnxruntime",
-    "ultralytics",
+    "ultralytics", # AGPL-3.0-or-later — see README "Licensing of extras"
     "opencv-python",
     "rerun-sdk",
     "supervision",
@@ -201,3 +210,51 @@ ignore_paths = [
     "scrap/",
     "examples/",
 ]
+
+# --------------------------------------------------------------------------
+# Licence adjudication
+#
+# kodokan is MIT and its core dependency list is `numpy` alone, so
+# `pip install kodokan` pulls nothing copyleft. One optional extra does:
+# `track` brings ultralytics, which is AGPL-3.0-or-later. A licence check
+# that looks only at hard dependencies reports kodokan clean — correct, and
+# incomplete. include_extras makes the check look where the exposure is.
+# --------------------------------------------------------------------------
+[tool.wads.licence]
+project_licence = "MIT"
+allow = ["MIT", "BSD-2-Clause", "BSD-3-Clause", "Apache-2.0", "ISC", "PSF-2.0"]
+include_extras = ["track", "all"]
+
+[[tool.wads.licence.exceptions]]
+dependency = "ultralytics"
+licence = "AGPL-3.0-or-later"
+scope = "extra:track, extra:all"
+decided = "2026-08-30"
+decided_in = "https://github.com/thorwhalen/kodokan/issues/42"
+reason = """
+Gated and disclosed, not removable. ultralytics is genuinely load-bearing
+for one feature: kodokan.track.estimate_poses_tracked runs Ultralytics'
+built-in BoT-SORT/ByteTrack to give tori and uke persistent identities
+across a clip. rtmlib is a pose estimator with no multi-object tracker, so
+"drop ultralytics, keep rtmlib" would delete the tracking feature rather
+than reimplement it. As a pose backend ultralytics is merely an alternative
+(estimate_poses defaults to rtmlib), which is why it no longer sits in the
+`pose` extra.
+
+What changed as a result: `pip install kodokan[pose]` is now AGPL-free, and
+AGPL arrives only through `pip install kodokan[track]` (or [all]) — named,
+documented in the README's "Licensing of extras", and repeated in the
+ImportError raised when the tracking path is reached without it.
+
+Why AGPL specifically warrants this over an LGPL entry: section 13's network
+clause. Anyone who deploys kodokan's tracking behind a network service owes
+the complete corresponding source of the whole combined work to its users,
+not just to whoever they hand a binary to. That obligation cannot be
+discharged by "we only import it", and a user who typed `[pose]` should
+never have inherited it silently.
+
+Revisit if a permissively-licensed tracker (BoxMOT's BSD components,
+a standalone ByteTrack, or a supervision-native tracker) proves sufficient
+for two-person judo footage — that would let the feature keep working with
+`track` dropped entirely.
+"""
