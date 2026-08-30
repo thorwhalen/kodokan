@@ -159,10 +159,35 @@ def _make_rtmlib_estimator(
     return estimate
 
 
+_ULTRALYTICS_MISSING = (
+    "ultralytics is required for {what}. Install it with:\n"
+    "    pip install 'kodokan[track]'\n"
+    "Note: ultralytics is AGPL-3.0-or-later — the strongest copyleft in this\n"
+    "project's dependency set, and its section 13 network clause reaches users\n"
+    "you serve over a network, not only people you hand a copy to. See the\n"
+    'README section "Licensing of extras". The default pose backend\n'
+    "(estimate_poses(backend=\"rtmlib\"), pip install 'kodokan[pose]') is\n"
+    "AGPL-free, but it does not provide identity tracking."
+)
+
+
+def _import_yolo(what: str):
+    """Import Ultralytics' YOLO, failing with a message that names the extra.
+
+    Kept in one place so the pose backend and the tracker report the AGPL the
+    same way. See ``[tool.wads.licence]`` in ``pyproject.toml``.
+    """
+    try:
+        from ultralytics import YOLO
+    except ImportError as e:
+        raise ImportError(_ULTRALYTICS_MISSING.format(what=what)) from e
+    return YOLO
+
+
 def _make_yolo_estimator(
     *, device: str | None, model_name: str
 ) -> Callable[[np.ndarray], np.ndarray]:
-    from ultralytics import YOLO
+    YOLO = _import_yolo('the "ultralytics" pose backend')
 
     from kodokan.config import models_dir
 
@@ -249,8 +274,11 @@ def estimate_poses(
 
     Args:
         video_path: Path to the video clip.
-        backend: ``"rtmlib"`` (RTMPose top-down, CPU/ONNX; default) or
-            ``"ultralytics"`` (YOLO11-pose, MPS).
+        backend: ``"rtmlib"`` (RTMPose top-down, CPU/ONNX; default, and the
+            only one installed by ``kodokan[pose]``) or ``"ultralytics"``
+            (YOLO11-pose, MPS), which needs ``kodokan[track]`` — an
+            AGPL-3.0-or-later dependency, see the README's
+            "Licensing of extras".
         n_persons: Number of person slots to keep per frame (2 for tori+uke).
         conf_thresh: Minimum mean per-person confidence to keep a detection.
         frame_step: Analyze every ``frame_step``-th frame (1 = every frame).

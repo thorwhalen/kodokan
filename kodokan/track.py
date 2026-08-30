@@ -59,9 +59,11 @@ def estimate_poses_tracked(
         progress: Print progress.
     """
     import cv2
-    from ultralytics import YOLO
 
     from kodokan.config import models_dir
+    from kodokan.pose import _import_yolo
+
+    YOLO = _import_yolo("estimate_poses_tracked (BoT-SORT/ByteTrack identity tracking)")
 
     weight = Path(model_name)
     if not weight.is_absolute() and weight.parent == Path("."):

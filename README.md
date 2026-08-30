@@ -36,16 +36,21 @@ YouTube acquisition lives in the [`yb`](https://github.com/thorwhalen/yb) packag
 lazily on first use), so the import never fails for a missing one:
 
 ```bash
-pip install -e '.[all]'      # or pick extras: .[pose,viz,analysis,storage,acquire]
+pip install -e '.[all]'      # or pick extras: .[pose,track,viz,analysis,storage,acquire]
 ```
 
-| extra | for | brings |
-|---|---|---|
-| `pose` | pose estimation | rtmlib, onnxruntime, ultralytics |
-| `viz` | rendering | opencv-python, rerun-sdk, supervision, matplotlib |
-| `analysis` | segment / compare / score | scipy, dtaidistance, pandas, pyarrow |
-| `storage` | dol stores | dol |
-| `acquire` | YouTube download | yb |
+| extra | for | brings | licence |
+|---|---|---|---|
+| `pose` | pose estimation (RTMPose, the default backend) | rtmlib, onnxruntime | permissive |
+| `track` | stable tori/uke identity (`estimate_poses_tracked`) | ultralytics (+ `ultralytics-thop`, `ultralytics-platform`) | **AGPL-3.0-or-later** |
+| `viz` | rendering | opencv-python, rerun-sdk, supervision, matplotlib | permissive |
+| `analysis` | segment / compare / score | scipy, dtaidistance, pandas, pyarrow | permissive |
+| `storage` | dol stores | dol | permissive |
+| `acquire` | YouTube download | yb | permissive |
+
+`track` is separated from `pose` on purpose — see
+[Licensing of extras](#licensing-of-extras). The example at the top of this README
+uses `estimate_poses_tracked`, so it needs `track`; `estimate_poses` alone does not.
 
 You also need **ffmpeg** on PATH (acquisition/merge). The optional **3D lift**
 (`scripts/lift_3d_mediapipe.py`) runs in a **separate venv**, because MediaPipe is
@@ -58,6 +63,62 @@ python -m venv ~/.kodokan_mp
 
 Data (videos, keypoints, renders, weights) lives **outside the repo** under
 `~/kodokan_data` (override with `KODOKAN_DATA_DIR`).
+
+## Licensing of extras
+
+kodokan itself is **MIT**, and `pip install kodokan` installs **numpy and nothing
+else** — no copyleft reaches you through the core package.
+
+One extra is different, and it is worth reading before you type it:
+
+> **`kodokan[track]` installs [ultralytics](https://github.com/ultralytics/ultralytics),
+> which is licensed AGPL-3.0-or-later.** `kodokan[all]` includes it too.
+
+It is three distributions, not one — ultralytics pulls two more of its own, and both
+carry the same licence, so listing only the first would understate what lands in your
+environment:
+
+| distribution | licence | how it arrives |
+|---|---|---|
+| `ultralytics` | AGPL-3.0-or-later | declared by the `track` extra |
+| `ultralytics-thop` | AGPL-3.0-or-later | hard dependency of `ultralytics` |
+| `ultralytics-platform` | AGPL-3.0-only | dependency of `ultralytics` on Python ≥ 3.11 |
+
+kodokan imports only the first; the other two arrive with it and are covered by the
+same adjudication.
+
+The AGPL is not "the GPL but for Python". Its section 13 adds a **network clause**:
+if you modify the work and let users interact with it *over a network*, those users
+are entitled to the complete corresponding source of the whole combined work — even
+though you never distributed a copy to anyone. Deploying a judo-analysis service
+built on `kodokan[track]` is exactly that situation. The obligation attaches to the
+combined work, not to ultralytics alone. That is the conservative reading — the one
+this project plans around — rather than settled case law, but "we only import it" is
+not a position worth betting a product on.
+
+If that is not compatible with what you are building, you have two options:
+
+1. **Do not install `track`.** Everything below still works.
+2. **Buy an [Ultralytics Enterprise License](https://www.ultralytics.com/license)**,
+   which Ultralytics sells precisely for commercial use that cannot accept the AGPL.
+
+**What you can do without it.** Everything except identity tracking:
+
+- `estimate_poses(...)` — the default `backend="rtmlib"` (RTMPose over onnxruntime)
+  is AGPL-free and is what `kodokan[pose]` installs. It keeps the two
+  highest-confidence people per frame, ordered left→right *per frame*.
+- `segment`, `compare`, `score`, `store`, `viz`, `acquire` — all permissive.
+
+**What you give up.** `kodokan.track.estimate_poses_tracked` runs Ultralytics'
+built-in BoT-SORT/ByteTrack so tori and uke keep persistent identities across a
+clip instead of swapping whenever they cross. rtmlib is a pose estimator with no
+multi-object tracker, so this is a real feature difference, not a packaging one.
+`estimate_poses(backend="ultralytics")` — the non-default YOLO11-pose backend —
+also needs it. Both raise an `ImportError` naming the extra and the licence rather
+than a bare `ModuleNotFoundError`.
+
+The decision to keep this dependency, and the conditions that should reopen it,
+are recorded in `[tool.wads.licence]` in `pyproject.toml`.
 
 ## The pipeline
 
