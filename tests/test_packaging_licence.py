@@ -6,10 +6,20 @@ That separation is a packaging fact with no runtime expression, so nothing in th
 rest of the suite would notice it being undone -- these tests are what notice.
 """
 
-import tomllib
 from pathlib import Path
 
 import pytest
+
+try:  # Python 3.11+
+    import tomllib
+except ModuleNotFoundError:  # Python 3.10
+    # These invariants are about packaging metadata, not runtime behaviour, so they
+    # are platform- and interpreter-independent: the 3.12 and Windows jobs prove
+    # them for every job. Skipping here beats making the package carry a parser.
+    tomllib = pytest.importorskip(
+        "tomli",
+        reason="reading pyproject.toml needs tomllib (3.11+) or tomli",
+    )
 
 _PYPROJECT = Path(__file__).resolve().parents[1] / "pyproject.toml"
 
