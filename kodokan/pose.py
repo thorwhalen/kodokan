@@ -179,7 +179,7 @@ def _import_yolo(what: str):
     """
     try:
         from ultralytics import YOLO
-    except ImportError as e:  # pragma: no cover - depends on install extras
+    except ImportError as e:
         raise ImportError(_ULTRALYTICS_MISSING.format(what=what)) from e
     return YOLO
 

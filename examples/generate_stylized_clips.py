@@ -52,7 +52,11 @@ MANIFEST = Path(__file__).resolve().parents[1] / "misc" / "docs" / "face_privacy
 # --------------------------------------------------------------------------- #
 
 def _load_models():
-    from ultralytics import YOLO
+    from kodokan.pose import _import_yolo
+
+    # via _import_yolo so a missing ultralytics reports the `track` extra and its
+    # AGPL terms, rather than a bare ModuleNotFoundError
+    YOLO = _import_yolo("the person-detection step of generate_stylized_clips")
     import onnxruntime as ort
     from insightface.app import FaceAnalysis
 

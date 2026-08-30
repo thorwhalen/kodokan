@@ -13,8 +13,13 @@ on a fresh machine. Sizes are indicative (a ~1.3 GB build).
 
 ## Prerequisites
 
-- Repo installed with the relevant extras (`pip install -e '.[pose,viz,analysis,storage,acquire]'`)
-  and **ffmpeg** on PATH — see the README.
+- Repo installed with the relevant extras
+  (`pip install -e '.[pose,track,viz,analysis,storage,acquire]'`) and **ffmpeg** on
+  PATH — see the README. `track` is needed because `examples/batch_pipeline.py`
+  calls `estimate_poses_tracked`; it brings **ultralytics (AGPL-3.0-or-later)**, so
+  read the README's [Licensing of extras](../../README.md#licensing-of-extras)
+  before installing it. Without `track` the pose rebuild stops with an ImportError
+  naming the extra.
 - `KODOKAN_DATA_DIR` pointing where you want the data (or rely on the `~/kodokan_data` default).
 - Network access (YouTube + model-weight downloads).
 
@@ -26,7 +31,7 @@ on a fresh machine. Sizes are indicative (a ~1.3 GB build).
 | `clips_efficient_judo/` | ~332M | downloaded | second source set — the *Efficient Judo* playlist `PLwd8pJWYTk07K6hDg2_N-9xd31gUCsew7` (see `data-sources.md`); acquired via `kodokan.acquire.download_source(source="efficient_judo")` |
 | `pose/` | ~102M | **derived** | `examples/batch_pipeline.py` — tracked two-person pose + demo segmentation → Parquet pose store + JSON segments store. Pure function of `clips/`. |
 | `viz/` | ~73M | **derived** | rendered overlays / Rerun recordings from `kodokan.viz` (e.g. `examples/warmup_seoinage.py`, `segment_review.py`). Pure function of `clips/` + `pose/`. |
-| `models/yolo11n-pose.pt` | ~6M | downloaded | auto-fetched by `ultralytics` on first pose run (`kodokan.pose`); no manual step. |
+| `models/yolo11n-pose.pt` | ~6M | downloaded | auto-fetched by `ultralytics` on the first *tracked* pose run (`kodokan.track`, or `kodokan.pose` with `backend="ultralytics"`); no manual step. Requires the `track` extra — a `[pose]`-only install uses RTMPose and never fetches this weight. |
 | `style_models/face_paint_512_v2_0.onnx` | ~8M | downloaded | AnimeGANv2 `face_paint_512_v2` weights (upstream: `bryandlee/animegan2-pytorch`) exported to ONNX. Used only by `examples/generate_stylized_clips.py`. **This is the one weight without an automated fetch** — keep a copy or re-export from upstream if lost. |
 | `clips_prestyle_backup/`, `clips_styl_anime_only_backup/`, `clips_styl_oldtest/` | ~105M | **snapshots** | manual backups / experiments from the issue #39 stylization rollout — *not* consumed by any pipeline. Safe to delete; regenerate a fresh stylized set with `examples/generate_stylized_clips.py`. |
 

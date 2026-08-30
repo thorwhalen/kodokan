@@ -42,7 +42,7 @@ pip install -e '.[all]'      # or pick extras: .[pose,track,viz,analysis,storage
 | extra | for | brings | licence |
 |---|---|---|---|
 | `pose` | pose estimation (RTMPose, the default backend) | rtmlib, onnxruntime | permissive |
-| `track` | stable tori/uke identity (`estimate_poses_tracked`) | ultralytics | **AGPL-3.0-or-later** |
+| `track` | stable tori/uke identity (`estimate_poses_tracked`) | ultralytics (+ `ultralytics-thop`, `ultralytics-platform`) | **AGPL-3.0-or-later** |
 | `viz` | rendering | opencv-python, rerun-sdk, supervision, matplotlib | permissive |
 | `analysis` | segment / compare / score | scipy, dtaidistance, pandas, pyarrow | permissive |
 | `storage` | dol stores | dol | permissive |
@@ -74,13 +74,33 @@ One extra is different, and it is worth reading before you type it:
 > **`kodokan[track]` installs [ultralytics](https://github.com/ultralytics/ultralytics),
 > which is licensed AGPL-3.0-or-later.** `kodokan[all]` includes it too.
 
+It is three distributions, not one — ultralytics pulls two more of its own, and both
+carry the same licence, so listing only the first would understate what lands in your
+environment:
+
+| distribution | licence | how it arrives |
+|---|---|---|
+| `ultralytics` | AGPL-3.0-or-later | declared by the `track` extra |
+| `ultralytics-thop` | AGPL-3.0-or-later | hard dependency of `ultralytics` |
+| `ultralytics-platform` | AGPL-3.0-only | dependency of `ultralytics` on Python ≥ 3.11 |
+
+kodokan imports only the first; the other two arrive with it and are covered by the
+same adjudication.
+
 The AGPL is not "the GPL but for Python". Its section 13 adds a **network clause**:
 if you modify the work and let users interact with it *over a network*, those users
 are entitled to the complete corresponding source of the whole combined work — even
 though you never distributed a copy to anyone. Deploying a judo-analysis service
 built on `kodokan[track]` is exactly that situation. The obligation attaches to the
-combined work, not to ultralytics alone, and "we only import it" does not discharge
-it. If that is not compatible with what you are building, do not install `track`.
+combined work, not to ultralytics alone. That is the conservative reading — the one
+this project plans around — rather than settled case law, but "we only import it" is
+not a position worth betting a product on.
+
+If that is not compatible with what you are building, you have two options:
+
+1. **Do not install `track`.** Everything below still works.
+2. **Buy an [Ultralytics Enterprise License](https://www.ultralytics.com/license)**,
+   which Ultralytics sells precisely for commercial use that cannot accept the AGPL.
 
 **What you can do without it.** Everything except identity tracking:
 
