@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kodokan.acquire &mdash; kodokan 0.0.17 documentation</title>
+  <title>kodokan.acquire &mdash; kodokan 0.0.18 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=63b572e7"></script>
+      <script src="../../_static/documentation_options.js?v=8bafd125"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -88,13 +88,13 @@
            <div itemprop="articleBody">
              
   <h1>Source code for kodokan.acquire</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Acquire Kodokan technique clips from YouTube (thin wrapper over ``yb.download``).</span>
+<span></span><span class="sd">"""Acquire Kodokan technique clips from YouTube (thin wrapper over ``yb.download``).</span>
 
 <span class="sd">YouTube interaction lives in the ``yb`` package; this module just points it at the</span>
 <span class="sd">kodokan data dir and the *Kodokan 100 Techniques* playlist, and keeps the source</span>
-<span class="sd">URL with every clip (a project requirement). The PV (entry #1, &quot;all techniques</span>
-<span class="sd">once&quot;) is skipped from the main line by default but can be fetched as a reference.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">URL with every clip (a project requirement). The PV (entry #1, "all techniques</span>
+<span class="sd">once") is skipped from the main line by default but can be fetched as a reference.</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -104,47 +104,47 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">clips_dir</span><span class="p">,</span> <span class="n">data_dir</span>
 
-<span class="c1">#: The official &quot;KODOKAN × IJF ACADEMY 100 Techniques&quot; playlist.</span>
+<span class="c1">#: The official "KODOKAN × IJF ACADEMY 100 Techniques" playlist.</span>
 <span class="n">KODOKAN_PLAYLIST_URL</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;https://www.youtube.com/playlist?list=PLtz539PTepc16H2iu5F3Q3D7_He1EYlIQ&quot;</span>
+    <span class="s2">"https://www.youtube.com/playlist?list=PLtz539PTepc16H2iu5F3Q3D7_He1EYlIQ"</span>
 <span class="p">)</span>
 
 <span class="c1">#: Registered technique-demo sources (for cross-source / leave-one-clip-out validation).</span>
 <span class="c1">#: Each is an *independent* set of demonstrations (different demonstrators/cameras), so the</span>
 <span class="c1">#: SOURCE video can be used as the cross-validation group while ``technique_key`` is the label.</span>
 <span class="n">SOURCES</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;kodokan_ijf&quot;</span><span class="p">:</span> <span class="n">KODOKAN_PLAYLIST_URL</span><span class="p">,</span>  <span class="c1"># 1 video / technique (our original set)</span>
-    <span class="s2">&quot;efficient_judo&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.youtube.com/playlist?list=PLwd8pJWYTk07K6hDg2_N-9xd31gUCsew7&quot;</span><span class="p">,</span>  <span class="c1"># &quot;67 Throws&quot;</span>
+    <span class="s2">"kodokan_ijf"</span><span class="p">:</span> <span class="n">KODOKAN_PLAYLIST_URL</span><span class="p">,</span>  <span class="c1"># 1 video / technique (our original set)</span>
+    <span class="s2">"efficient_judo"</span><span class="p">:</span> <span class="s2">"https://www.youtube.com/playlist?list=PLwd8pJWYTk07K6hDg2_N-9xd31gUCsew7"</span><span class="p">,</span>  <span class="c1"># "67 Throws"</span>
 <span class="p">}</span>
 
 
 <div class="viewcode-block" id="canonical_technique_key">
 <a class="viewcode-back" href="../../module_docs/kodokan/acquire.html#kodokan.acquire.canonical_technique_key">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">canonical_technique_key</span><span class="p">(</span><span class="n">title</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Normalize a clip title to a cross-source technique key.</span>
+<span class="w">    </span><span class="sd">"""Normalize a clip title to a cross-source technique key.</span>
 
-<span class="sd">    Handles &quot;kanji / Romaji&quot; (Kodokan) and &quot;Romaji - Demo&quot; (Efficient Judo) titles,</span>
+<span class="sd">    Handles "kanji / Romaji" (Kodokan) and "Romaji - Demo" (Efficient Judo) titles,</span>
 <span class="sd">    the ``-barai``/``-harai`` spelling, and hyphen/space differences. E.g. both</span>
-<span class="sd">    &quot;大外刈 / O-soto-gari&quot; and &quot;Osoto-gari - Demo&quot; -&gt; &quot;osotogari&quot;.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\bdemo\b&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\bescapes?\b&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>  <span class="c1"># merge &quot;&lt;pin&gt; Escapes&quot; demos into the technique</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;barai&quot;</span><span class="p">,</span> <span class="s2">&quot;harai&quot;</span><span class="p">)</span>
+<span class="sd">    "大外刈 / O-soto-gari" and "Osoto-gari - Demo" -&gt; "osotogari".</span>
+<span class="sd">    """</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">"/"</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\bdemo\b"</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"\bescapes?\b"</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>  <span class="c1"># merge "&lt;pin&gt; Escapes" demos into the technique</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"barai"</span><span class="p">,</span> <span class="s2">"harai"</span><span class="p">)</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
-        <span class="s2">&quot;siho&quot;</span><span class="p">,</span> <span class="s2">&quot;shiho&quot;</span>
-    <span class="p">)</span>  <span class="c1"># IJF &quot;Kami-siho-gatame&quot; vs &quot;shiho&quot; spelling -&gt; one key</span>
-    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[^a-z0-9]&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span></div>
+        <span class="s2">"siho"</span><span class="p">,</span> <span class="s2">"shiho"</span>
+    <span class="p">)</span>  <span class="c1"># IJF "Kami-siho-gatame" vs "shiho" spelling -&gt; one key</span>
+    <span class="k">return</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"[^a-z0-9]"</span><span class="p">,</span> <span class="s2">""</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="source_clips_dir">
 <a class="viewcode-back" href="../../module_docs/kodokan/acquire.html#kodokan.acquire.source_clips_dir">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">source_clips_dir</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Per-source clips directory (Kodokan keeps the legacy flat ``clips/`` dir).&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">source</span> <span class="o">==</span> <span class="s2">&quot;kodokan_ijf&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Per-source clips directory (Kodokan keeps the legacy flat ``clips/`` dir)."""</span>
+    <span class="k">if</span> <span class="n">source</span> <span class="o">==</span> <span class="s2">"kodokan_ijf"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">clips_dir</span><span class="p">()</span>
-    <span class="n">d</span> <span class="o">=</span> <span class="n">data_dir</span><span class="p">()</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;clips_</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">data_dir</span><span class="p">()</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"clips_</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">"</span>
     <span class="n">d</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">d</span></div>
 
@@ -160,14 +160,14 @@
     <span class="n">write_info_json</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Download a registered SOURCE playlist into its own clips dir.</span>
+<span class="w">    </span><span class="sd">"""Download a registered SOURCE playlist into its own clips dir.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        source: a key of :data:`SOURCES` (e.g. ``&quot;efficient_judo&quot;``).</span>
+<span class="sd">        source: a key of :data:`SOURCES` (e.g. ``"efficient_judo"``).</span>
 <span class="sd">        playlist_items: yt-dlp 1-based selector (default: all entries).</span>
 <span class="sd">        download_dir: override (default: :func:`source_clips_dir`).</span>
 <span class="sd">        **kwargs: forwarded to ``yb.download.download_youtube_playlist``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">yb.download</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_youtube_playlist</span>
 
     <span class="k">return</span> <span class="n">download_youtube_playlist</span><span class="p">(</span>
@@ -183,17 +183,17 @@
 <div class="viewcode-block" id="list_techniques">
 <a class="viewcode-back" href="../../module_docs/kodokan/acquire.html#kodokan.acquire.list_techniques">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">list_techniques</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">include_pv</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;List the playlist&#39;s videos (id, title, webpage_url, duration) without downloading.</span>
+<span class="w">    </span><span class="sd">"""List the playlist's videos (id, title, webpage_url, duration) without downloading.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        include_pv: Include entry #1 (the all-techniques PV) if True.</span>
 <span class="sd">        **kwargs: Forwarded to ``yb.download.youtube_playlist_info``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">yb.download</span><span class="w"> </span><span class="kn">import</span> <span class="n">youtube_playlist_info</span>
 
-    <span class="n">items</span> <span class="o">=</span> <span class="s2">&quot;1:&quot;</span> <span class="k">if</span> <span class="n">include_pv</span> <span class="k">else</span> <span class="s2">&quot;2:&quot;</span>
+    <span class="n">items</span> <span class="o">=</span> <span class="s2">"1:"</span> <span class="k">if</span> <span class="n">include_pv</span> <span class="k">else</span> <span class="s2">"2:"</span>
     <span class="k">return</span> <span class="n">youtube_playlist_info</span><span class="p">(</span><span class="n">KODOKAN_PLAYLIST_URL</span><span class="p">,</span> <span class="n">playlist_items</span><span class="o">=</span><span class="n">items</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)[</span>
-        <span class="s2">&quot;entries&quot;</span>
+        <span class="s2">"entries"</span>
     <span class="p">]</span></div>
 
 
@@ -201,26 +201,26 @@
 <div class="viewcode-block" id="local_clips">
 <a class="viewcode-back" href="../../module_docs/kodokan/acquire.html#kodokan.acquire.local_clips">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">local_clips</span><span class="p">(</span><span class="n">directory</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;List already-downloaded clips on disk (decouples processing from download).</span>
+<span class="w">    </span><span class="sd">"""List already-downloaded clips on disk (decouples processing from download).</span>
 
 <span class="sd">    Reads each ``*.info.json`` sidecar and pairs it with its ``.mp4``. Returns</span>
 <span class="sd">    dicts with ``id``, ``title``, ``webpage_url``, ``path``. Sidecars without a</span>
 <span class="sd">    matching video (e.g. the playlist-level info.json) are skipped.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">directory</span> <span class="ow">or</span> <span class="n">clips_dir</span><span class="p">())</span>
     <span class="n">out</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">ij</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">directory</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.info.json&quot;</span><span class="p">)):</span>
-        <span class="n">base</span> <span class="o">=</span> <span class="n">ij</span><span class="o">.</span><span class="n">name</span><span class="p">[:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="s2">&quot;.info.json&quot;</span><span class="p">)]</span>
-        <span class="n">mp4</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s2">.mp4&quot;</span>
+    <span class="k">for</span> <span class="n">ij</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">directory</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"*.info.json"</span><span class="p">)):</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="n">ij</span><span class="o">.</span><span class="n">name</span><span class="p">[:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="s2">".info.json"</span><span class="p">)]</span>
+        <span class="n">mp4</span> <span class="o">=</span> <span class="n">directory</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">base</span><span class="si">}</span><span class="s2">.mp4"</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">mp4</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
             <span class="k">continue</span>
         <span class="n">info</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">ij</span><span class="o">.</span><span class="n">read_text</span><span class="p">())</span>
         <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="p">{</span>
-                <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;id&quot;</span><span class="p">),</span>
-                <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">),</span>
-                <span class="s2">&quot;webpage_url&quot;</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;webpage_url&quot;</span><span class="p">),</span>
-                <span class="s2">&quot;path&quot;</span><span class="p">:</span> <span class="n">mp4</span><span class="p">,</span>
+                <span class="s2">"id"</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"id"</span><span class="p">),</span>
+                <span class="s2">"title"</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"title"</span><span class="p">),</span>
+                <span class="s2">"webpage_url"</span><span class="p">:</span> <span class="n">info</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"webpage_url"</span><span class="p">),</span>
+                <span class="s2">"path"</span><span class="p">:</span> <span class="n">mp4</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span></div>
@@ -237,19 +237,19 @@
     <span class="n">write_info_json</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Download technique clips into the kodokan clips dir (PV skipped by default).</span>
+<span class="w">    </span><span class="sd">"""Download technique clips into the kodokan clips dir (PV skipped by default).</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        playlist_items: yt-dlp 1-based selector (overrides ``skip_pv``), e.g.</span>
-<span class="sd">            ``&quot;2&quot;`` (only Seoi-nage), ``&quot;2:11&quot;`` (the first ten throws), ``&quot;2:&quot;`` (all).</span>
+<span class="sd">            ``"2"`` (only Seoi-nage), ``"2:11"`` (the first ten throws), ``"2:"`` (all).</span>
 <span class="sd">        skip_pv: When ``playlist_items`` is not given, skip entry #1 (the PV).</span>
 <span class="sd">        download_dir: Destination (default: :func:`kodokan.config.clips_dir`).</span>
-<span class="sd">        write_info_json: Save each clip&#39;s metadata sidecar (keeps the source URL).</span>
+<span class="sd">        write_info_json: Save each clip's metadata sidecar (keeps the source URL).</span>
 <span class="sd">        **kwargs: Forwarded to ``yb.download.download_youtube_playlist``.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        ``list[yb.download.DownloadResult]`` — media path + trimmed info + sidecars.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">yb.download</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_youtube_playlist</span>
 
     <span class="k">return</span> <span class="n">download_youtube_playlist</span><span class="p">(</span>

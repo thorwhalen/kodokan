@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kodokan &mdash; kodokan 0.0.17 documentation</title>
+  <title>kodokan &mdash; kodokan 0.0.18 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
@@ -15,7 +15,7 @@
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
       <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../_static/documentation_options.js?v=63b572e7"></script>
+      <script src="../_static/documentation_options.js?v=8bafd125"></script>
       <script src="../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -137,10 +137,10 @@ canvas), and — later — recognize, compare, and score throws.</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.pose</span><span class="w"> </span><span class="kn">import</span> <span class="n">estimate_poses</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.viz</span><span class="w"> </span><span class="kn">import</span> <span class="n">render_skeleton_video</span>
 
-<span class="n">res</span> <span class="o">=</span> <span class="n">download_techniques</span><span class="p">(</span><span class="n">playlist_items</span><span class="o">=</span><span class="s2">&quot;2&quot;</span><span class="p">)</span>          <span class="c1"># Seoi-nage</span>
-<span class="n">seq</span> <span class="o">=</span> <span class="n">estimate_poses</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">source_url</span><span class="o">=</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;webpage_url&quot;</span><span class="p">])</span>
-<span class="n">render_skeleton_video</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">out_path</span><span class="o">=</span><span class="s2">&quot;overlay.mp4&quot;</span><span class="p">,</span> <span class="n">source_video</span><span class="o">=</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
-<span class="n">render_skeleton_video</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">out_path</span><span class="o">=</span><span class="s2">&quot;skeleton.mp4&quot;</span><span class="p">,</span> <span class="n">blank_canvas</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">res</span> <span class="o">=</span> <span class="n">download_techniques</span><span class="p">(</span><span class="n">playlist_items</span><span class="o">=</span><span class="s2">"2"</span><span class="p">)</span>          <span class="c1"># Seoi-nage</span>
+<span class="n">seq</span> <span class="o">=</span> <span class="n">estimate_poses</span><span class="p">(</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="n">source_url</span><span class="o">=</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">"webpage_url"</span><span class="p">])</span>
+<span class="n">render_skeleton_video</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">out_path</span><span class="o">=</span><span class="s2">"overlay.mp4"</span><span class="p">,</span> <span class="n">source_video</span><span class="o">=</span><span class="n">res</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+<span class="n">render_skeleton_video</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">out_path</span><span class="o">=</span><span class="s2">"skeleton.mp4"</span><span class="p">,</span> <span class="n">blank_canvas</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>See <code class="docutils literal notranslate"><span class="pre">misc/docs/research-architecture.md</span></code> for the tool/architecture rationale.</p>
@@ -303,8 +303,11 @@ two highest-confidence people per frame (left→right ordered) via RTMPose.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>video_path</strong> – Path to the video clip.</p></li>
-<li><p><strong>backend</strong> – <code class="docutils literal notranslate"><span class="pre">&quot;rtmlib&quot;</span></code> (RTMPose top-down, CPU/ONNX; default) or
-<code class="docutils literal notranslate"><span class="pre">&quot;ultralytics&quot;</span></code> (YOLO11-pose, MPS).</p></li>
+<li><p><strong>backend</strong> – <code class="docutils literal notranslate"><span class="pre">&quot;rtmlib&quot;</span></code> (RTMPose top-down, CPU/ONNX; default, and the
+only one installed by <code class="docutils literal notranslate"><span class="pre">kodokan[pose]</span></code>) or <code class="docutils literal notranslate"><span class="pre">&quot;ultralytics&quot;</span></code>
+(YOLO11-pose, MPS), which needs <code class="docutils literal notranslate"><span class="pre">kodokan[track]</span></code> — an
+AGPL-3.0-or-later dependency, see the README’s
+“Licensing of extras”.</p></li>
 <li><p><strong>n_persons</strong> – Number of person slots to keep per frame (2 for tori+uke).</p></li>
 <li><p><strong>conf_thresh</strong> – Minimum mean per-person confidence to keep a detection.</p></li>
 <li><p><strong>frame_step</strong> – Analyze every <code class="docutils literal notranslate"><span class="pre">frame_step</span></code>-th frame (1 = every frame).</p></li>

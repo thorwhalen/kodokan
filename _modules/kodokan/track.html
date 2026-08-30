@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kodokan.track &mdash; kodokan 0.0.17 documentation</title>
+  <title>kodokan.track &mdash; kodokan 0.0.18 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=63b572e7"></script>
+      <script src="../../_static/documentation_options.js?v=8bafd125"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -88,21 +88,21 @@
            <div itemprop="articleBody">
              
   <h1>Source code for kodokan.track</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Stable tori/uke identity tracking (BoT-SORT / ByteTrack).</span>
+<span></span><span class="sd">"""Stable tori/uke identity tracking (BoT-SORT / ByteTrack).</span>
 
 <span class="sd">The plain :func:`~kodokan.pose.estimate_poses` keeps the top-2 detections and</span>
 <span class="sd">orders them left→right *per frame*, so the two slots swap whenever tori and uke</span>
-<span class="sd">cross. This module instead runs a multi-object tracker (Ultralytics&#39; built-in</span>
+<span class="sd">cross. This module instead runs a multi-object tracker (Ultralytics' built-in</span>
 <span class="sd">BoT-SORT by default — appearance ReID + camera-motion compensation) so each</span>
 <span class="sd">person keeps a persistent ``track_id`` across frames; we then bind the two most</span>
 <span class="sd">persistent tracks to fixed slots for the whole clip (ordered left→right by their</span>
 <span class="sd">clip-average x), giving a stable identity that does not swap mid-throw.</span>
 
-<span class="sd">Limitation: under the heavy mutual occlusion at a throw&#39;s apex a track can</span>
+<span class="sd">Limitation: under the heavy mutual occlusion at a throw's apex a track can</span>
 <span class="sd">fragment (a person reappears with a new id). Top-2-by-presence captures the</span>
 <span class="sd">dominant fragments; fragment-merging/ReID-stitching is a later refinement (see</span>
 <span class="sd">``misc/docs/research-architecture.md`` §4).</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -122,18 +122,18 @@
     <span class="n">video_path</span><span class="p">:</span> <span class="n">PathLike</span><span class="p">,</span>
     <span class="o">*</span><span class="p">,</span>
     <span class="n">n_persons</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
-    <span class="n">tracker</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;botsort.yaml&quot;</span><span class="p">,</span>
+    <span class="n">tracker</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"botsort.yaml"</span><span class="p">,</span>
     <span class="n">conf_thresh</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span>
     <span class="n">max_gap_frac</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.15</span><span class="p">,</span>
     <span class="n">stale_after</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">12</span><span class="p">,</span>
     <span class="n">frame_step</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="n">frame_range</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">&quot;mps&quot;</span><span class="p">,</span>
-    <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;yolo11n-pose.pt&quot;</span><span class="p">,</span>
+    <span class="n">device</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="s2">"mps"</span><span class="p">,</span>
+    <span class="n">model_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"yolo11n-pose.pt"</span><span class="p">,</span>
     <span class="n">source_url</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">progress</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PoseSequence</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Estimate per-frame keypoints with persistent tori/uke identity.</span>
+<span class="w">    </span><span class="sd">"""Estimate per-frame keypoints with persistent tori/uke identity.</span>
 
 <span class="sd">    Returns a :class:`~kodokan.pose.PoseSequence` whose person slots are *stable*</span>
 <span class="sd">    across the clip (slot 0 = the track that is, on average, further left).</span>
@@ -141,22 +141,24 @@
 <span class="sd">    Args:</span>
 <span class="sd">        video_path: Path to the clip.</span>
 <span class="sd">        n_persons: Number of stable identity slots to keep (2 for tori+uke).</span>
-<span class="sd">        tracker: Ultralytics tracker config (``&quot;botsort.yaml&quot;`` or ``&quot;bytetrack.yaml&quot;``).</span>
+<span class="sd">        tracker: Ultralytics tracker config (``"botsort.yaml"`` or ``"bytetrack.yaml"``).</span>
 <span class="sd">        conf_thresh: Minimum mean per-person confidence to count a detection.</span>
 <span class="sd">        frame_step: Analyze every n-th frame.</span>
 <span class="sd">        frame_range: Optional ``(start, stop)`` frame window.</span>
-<span class="sd">        device: Torch device (``&quot;mps&quot;``/``&quot;cpu&quot;``).</span>
+<span class="sd">        device: Torch device (``"mps"``/``"cpu"``).</span>
 <span class="sd">        model_name: YOLO-pose weights (resolved under the data models dir).</span>
 <span class="sd">        source_url: Provenance URL.</span>
 <span class="sd">        progress: Print progress.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">ultralytics</span><span class="w"> </span><span class="kn">import</span> <span class="n">YOLO</span>
 
     <span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">models_dir</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.pose</span><span class="w"> </span><span class="kn">import</span> <span class="n">_import_yolo</span>
+
+    <span class="n">YOLO</span> <span class="o">=</span> <span class="n">_import_yolo</span><span class="p">(</span><span class="s2">"estimate_poses_tracked (BoT-SORT/ByteTrack identity tracking)"</span><span class="p">)</span>
 
     <span class="n">weight</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">weight</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">()</span> <span class="ow">and</span> <span class="n">weight</span><span class="o">.</span><span class="n">parent</span> <span class="o">==</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">weight</span><span class="o">.</span><span class="n">is_absolute</span><span class="p">()</span> <span class="ow">and</span> <span class="n">weight</span><span class="o">.</span><span class="n">parent</span> <span class="o">==</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"."</span><span class="p">):</span>
         <span class="n">weight</span> <span class="o">=</span> <span class="n">models_dir</span><span class="p">()</span> <span class="o">/</span> <span class="n">model_name</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">YOLO</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">weight</span><span class="p">))</span>
 
@@ -192,7 +194,7 @@
             <span class="n">per_frame</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
             <span class="n">indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">progress</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span> <span class="o">%</span> <span class="mi">50</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  [track] </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span><span class="si">}</span><span class="s2"> frames (frame </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"  [track] </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">indices</span><span class="p">)</span><span class="si">}</span><span class="s2"> frames (frame </span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">)"</span><span class="p">,</span> <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
     <span class="n">cap</span><span class="o">.</span><span class="n">release</span><span class="p">()</span>
 
@@ -200,7 +202,7 @@
     <span class="c1">#   (1) BoT-SORT track-id continuity (robust through crossings), then</span>
     <span class="c1">#   (2) spatial nearest-centroid continuity (survives track fragmentation),</span>
     <span class="c1">#   (3) lazy left-&gt;right initialization of still-empty slots.</span>
-    <span class="c1"># This avoids the &quot;two temporally-disjoint dominant tracks&quot; failure that a</span>
+    <span class="c1"># This avoids the "two temporally-disjoint dominant tracks" failure that a</span>
     <span class="c1"># global top-2-by-presence binding hits on long, fragment-heavy clips.</span>
     <span class="n">F</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">per_frame</span><span class="p">)</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">F</span><span class="p">,</span> <span class="n">n_persons</span><span class="p">,</span> <span class="mi">17</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
@@ -292,8 +294,8 @@
     <span class="k">if</span> <span class="n">progress</span><span class="p">:</span>
         <span class="n">present</span> <span class="o">=</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;  [track] both-present </span><span class="si">{</span><span class="nb">float</span><span class="p">((</span><span class="n">present</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">n_persons</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;  (spatial recoveries: </span><span class="si">{</span><span class="n">n_recover</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">"  [track] both-present </span><span class="si">{</span><span class="nb">float</span><span class="p">((</span><span class="n">present</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">n_persons</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2">"</span>
+            <span class="sa">f</span><span class="s2">"  (spatial recoveries: </span><span class="si">{</span><span class="n">n_recover</span><span class="si">}</span><span class="s2">)"</span><span class="p">,</span>
             <span class="n">flush</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">PoseSequence</span><span class="p">(</span>
@@ -302,7 +304,7 @@
         <span class="n">fps</span><span class="o">=</span><span class="n">fps</span><span class="p">,</span>
         <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span>
         <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
-        <span class="n">backend</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;ultralytics+track:</span><span class="si">{</span><span class="n">tracker</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">backend</span><span class="o">=</span><span class="sa">f</span><span class="s2">"ultralytics+track:</span><span class="si">{</span><span class="n">tracker</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
         <span class="n">video_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">video_path</span><span class="p">),</span>
         <span class="n">source_url</span><span class="o">=</span><span class="n">source_url</span><span class="p">,</span>
     <span class="p">)</span></div>
@@ -312,12 +314,12 @@
 <div class="viewcode-block" id="identity_swap_rate">
 <a class="viewcode-back" href="../../module_docs/kodokan/track.html#kodokan.identity_swap_rate">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">identity_swap_rate</span><span class="p">(</span><span class="n">pose_seq</span><span class="p">:</span> <span class="n">PoseSequence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Ground-truth-free track-identity discontinuity rate (a tracking-quality metric).</span>
+<span class="w">    </span><span class="sd">"""Ground-truth-free track-identity discontinuity rate (a tracking-quality metric).</span>
 
 <span class="sd">    For each consecutive frame pair in which *all* person slots are present, we</span>
-<span class="sd">    solve the minimum-cost assignment between the two frames&#39; person centroids.</span>
+<span class="sd">    solve the minimum-cost assignment between the two frames' person centroids.</span>
 <span class="sd">    When the optimal assignment is not the identity (slot *i* → slot *i*), the</span>
-<span class="sd">    slots&#39; spatial positions are better explained by a **label swap** — a proxy</span>
+<span class="sd">    slots' spatial positions are better explained by a **label swap** — a proxy</span>
 <span class="sd">    for a tori/uke identity swap that the review asked us to instrument. A stable</span>
 <span class="sd">    tracker trends toward ``0``.</span>
 
@@ -326,11 +328,11 @@
 <span class="sd">    Caveat (honest): this also fires on a *genuine* physical crossing that the</span>
 <span class="sd">    tracker correctly follows through, so read ``swap_rate`` as a relative</span>
 <span class="sd">    diagnostic (compare trackers/clips), not an absolute error count.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">scipy.optimize</span><span class="w"> </span><span class="kn">import</span> <span class="n">linear_sum_assignment</span>
 
     <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>  <span class="c1"># all-NaN person slots are expected (guarded below)</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">simplefilter</span><span class="p">(</span><span class="s2">"ignore"</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">)</span>
         <span class="n">cent</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">nanmean</span><span class="p">(</span><span class="n">pose_seq</span><span class="o">.</span><span class="n">keypoints</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># (F, P, 2)</span>
     <span class="n">present</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">cent</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># (F, P)</span>
     <span class="n">P</span> <span class="o">=</span> <span class="n">cent</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -344,9 +346,9 @@
         <span class="n">n_pairs</span> <span class="o">+=</span> <span class="mi">1</span>
         <span class="n">n_swaps</span> <span class="o">+=</span> <span class="ow">not</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="n">ident</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;n_pairs&quot;</span><span class="p">:</span> <span class="n">n_pairs</span><span class="p">,</span>
-        <span class="s2">&quot;n_swaps&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_swaps</span><span class="p">),</span>
-        <span class="s2">&quot;swap_rate&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">n_swaps</span> <span class="o">/</span> <span class="n">n_pairs</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="k">if</span> <span class="n">n_pairs</span> <span class="k">else</span> <span class="mf">0.0</span><span class="p">,</span>
+        <span class="s2">"n_pairs"</span><span class="p">:</span> <span class="n">n_pairs</span><span class="p">,</span>
+        <span class="s2">"n_swaps"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">n_swaps</span><span class="p">),</span>
+        <span class="s2">"swap_rate"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">n_swaps</span> <span class="o">/</span> <span class="n">n_pairs</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="k">if</span> <span class="n">n_pairs</span> <span class="k">else</span> <span class="mf">0.0</span><span class="p">,</span>
     <span class="p">}</span></div>
 
 </pre></div>

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kodokan.store &mdash; kodokan 0.0.17 documentation</title>
+  <title>kodokan.store &mdash; kodokan 0.0.18 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=63b572e7"></script>
+      <script src="../../_static/documentation_options.js?v=8bafd125"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -88,7 +88,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for kodokan.store</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;dol-backed stores for the pipeline&#39;s artifacts (the analysis SSOT).</span>
+<span></span><span class="sd">"""dol-backed stores for the pipeline's artifacts (the analysis SSOT).</span>
 
 <span class="sd">Two dict-like stores keyed by ``video_id``:</span>
 
@@ -99,9 +99,9 @@
 <span class="sd">  compressed, and pandas/polars/DuckDB-native (research §6).</span>
 <span class="sd">- :func:`segments_store` — ``video_id -&gt; list[demo dicts]`` as JSON.</span>
 
-<span class="sd">:func:`load_all_tidy` concatenates every clip&#39;s table (adding a ``video_id`` column)</span>
+<span class="sd">:func:`load_all_tidy` concatenates every clip's table (adding a ``video_id`` column)</span>
 <span class="sd">into one DataFrame for cross-clip analysis.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -114,8 +114,8 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">kodokan</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.pose</span><span class="w"> </span><span class="kn">import</span> <span class="n">COCO17_KEYPOINTS</span><span class="p">,</span> <span class="n">PoseSequence</span>
 
-<span class="n">_META_KEY</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;kodokan_meta&quot;</span>
-<span class="n">_TIDY_COLUMNS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;fidx&quot;</span><span class="p">,</span> <span class="s2">&quot;frame&quot;</span><span class="p">,</span> <span class="s2">&quot;t_sec&quot;</span><span class="p">,</span> <span class="s2">&quot;person&quot;</span><span class="p">,</span> <span class="s2">&quot;keypoint&quot;</span><span class="p">,</span> <span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;conf&quot;</span><span class="p">)</span>
+<span class="n">_META_KEY</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">"kodokan_meta"</span>
+<span class="n">_TIDY_COLUMNS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"fidx"</span><span class="p">,</span> <span class="s2">"frame"</span><span class="p">,</span> <span class="s2">"t_sec"</span><span class="p">,</span> <span class="s2">"person"</span><span class="p">,</span> <span class="s2">"keypoint"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="s2">"conf"</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="sequence_to_tidy_df">
@@ -123,12 +123,12 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">sequence_to_tidy_df</span><span class="p">(</span>
     <span class="n">seq</span><span class="p">:</span> <span class="n">PoseSequence</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">video_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">drop_missing</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a :class:`PoseSequence` to a tidy/long DataFrame.</span>
+<span class="w">    </span><span class="sd">"""Convert a :class:`PoseSequence` to a tidy/long DataFrame.</span>
 
 <span class="sd">    One row per (frame, person, keypoint). ``fidx`` is the 0-based analyzed-frame</span>
 <span class="sd">    position; ``frame`` is the source frame index. A ``video_id`` column is added</span>
 <span class="sd">    when given (used by :func:`load_all_tidy`).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
     <span class="n">kp</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">keypoints</span>  <span class="c1"># (F, P, K, 3)</span>
@@ -140,41 +140,41 @@
     <span class="n">frame</span> <span class="o">=</span> <span class="n">seq</span><span class="o">.</span><span class="n">frame_indices</span><span class="p">[</span><span class="n">fidx</span><span class="p">]</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
         <span class="p">{</span>
-            <span class="s2">&quot;fidx&quot;</span><span class="p">:</span> <span class="n">fidx</span><span class="p">,</span>
-            <span class="s2">&quot;frame&quot;</span><span class="p">:</span> <span class="n">frame</span><span class="p">,</span>
-            <span class="s2">&quot;t_sec&quot;</span><span class="p">:</span> <span class="n">frame</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">seq</span><span class="o">.</span><span class="n">fps</span><span class="p">),</span>
-            <span class="s2">&quot;person&quot;</span><span class="p">:</span> <span class="n">person</span><span class="p">,</span>
-            <span class="s2">&quot;keypoint&quot;</span><span class="p">:</span> <span class="n">kpi</span><span class="p">,</span>
-            <span class="s2">&quot;x&quot;</span><span class="p">:</span> <span class="n">flat</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
-            <span class="s2">&quot;y&quot;</span><span class="p">:</span> <span class="n">flat</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
-            <span class="s2">&quot;conf&quot;</span><span class="p">:</span> <span class="n">flat</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span>
+            <span class="s2">"fidx"</span><span class="p">:</span> <span class="n">fidx</span><span class="p">,</span>
+            <span class="s2">"frame"</span><span class="p">:</span> <span class="n">frame</span><span class="p">,</span>
+            <span class="s2">"t_sec"</span><span class="p">:</span> <span class="n">frame</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">seq</span><span class="o">.</span><span class="n">fps</span><span class="p">),</span>
+            <span class="s2">"person"</span><span class="p">:</span> <span class="n">person</span><span class="p">,</span>
+            <span class="s2">"keypoint"</span><span class="p">:</span> <span class="n">kpi</span><span class="p">,</span>
+            <span class="s2">"x"</span><span class="p">:</span> <span class="n">flat</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span>
+            <span class="s2">"y"</span><span class="p">:</span> <span class="n">flat</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span>
+            <span class="s2">"conf"</span><span class="p">:</span> <span class="n">flat</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span>
         <span class="p">}</span>
     <span class="p">)</span>
     <span class="k">if</span> <span class="n">drop_missing</span><span class="p">:</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">video_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;video_id&quot;</span><span class="p">,</span> <span class="n">video_id</span><span class="p">)</span>
+        <span class="n">df</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">"video_id"</span><span class="p">,</span> <span class="n">video_id</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">df</span></div>
 
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_sequence_meta</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">PoseSequence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;fps&quot;</span><span class="p">:</span> <span class="n">seq</span><span class="o">.</span><span class="n">fps</span><span class="p">,</span>
-        <span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="n">seq</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
-        <span class="s2">&quot;height&quot;</span><span class="p">:</span> <span class="n">seq</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
-        <span class="s2">&quot;backend&quot;</span><span class="p">:</span> <span class="n">seq</span><span class="o">.</span><span class="n">backend</span><span class="p">,</span>
-        <span class="s2">&quot;video_path&quot;</span><span class="p">:</span> <span class="n">seq</span><span class="o">.</span><span class="n">video_path</span><span class="p">,</span>
-        <span class="s2">&quot;source_url&quot;</span><span class="p">:</span> <span class="n">seq</span><span class="o">.</span><span class="n">source_url</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;n_persons&quot;</span><span class="p">:</span> <span class="n">seq</span><span class="o">.</span><span class="n">n_persons</span><span class="p">,</span>
-        <span class="s2">&quot;frame_indices&quot;</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">seq</span><span class="o">.</span><span class="n">frame_indices</span><span class="p">],</span>
+        <span class="s2">"fps"</span><span class="p">:</span> <span class="n">seq</span><span class="o">.</span><span class="n">fps</span><span class="p">,</span>
+        <span class="s2">"width"</span><span class="p">:</span> <span class="n">seq</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+        <span class="s2">"height"</span><span class="p">:</span> <span class="n">seq</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
+        <span class="s2">"backend"</span><span class="p">:</span> <span class="n">seq</span><span class="o">.</span><span class="n">backend</span><span class="p">,</span>
+        <span class="s2">"video_path"</span><span class="p">:</span> <span class="n">seq</span><span class="o">.</span><span class="n">video_path</span><span class="p">,</span>
+        <span class="s2">"source_url"</span><span class="p">:</span> <span class="n">seq</span><span class="o">.</span><span class="n">source_url</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">,</span>
+        <span class="s2">"n_persons"</span><span class="p">:</span> <span class="n">seq</span><span class="o">.</span><span class="n">n_persons</span><span class="p">,</span>
+        <span class="s2">"frame_indices"</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">seq</span><span class="o">.</span><span class="n">frame_indices</span><span class="p">],</span>
     <span class="p">}</span>
 
 
 <div class="viewcode-block" id="sequence_to_parquet_bytes">
 <a class="viewcode-back" href="../../module_docs/kodokan/store.html#kodokan.sequence_to_parquet_bytes">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">sequence_to_parquet_bytes</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">PoseSequence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Serialize a :class:`PoseSequence` to Parquet bytes (tidy + schema metadata).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Serialize a :class:`PoseSequence` to Parquet bytes (tidy + schema metadata)."""</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pa</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow.parquet</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pq</span>
 
@@ -184,7 +184,7 @@
     <span class="n">md</span><span class="p">[</span><span class="n">_META_KEY</span><span class="p">]</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">_sequence_meta</span><span class="p">(</span><span class="n">seq</span><span class="p">))</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
     <span class="n">table</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">replace_schema_metadata</span><span class="p">(</span><span class="n">md</span><span class="p">)</span>
     <span class="n">buf</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">()</span>
-    <span class="n">pq</span><span class="o">.</span><span class="n">write_table</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">&quot;zstd&quot;</span><span class="p">)</span>
+    <span class="n">pq</span><span class="o">.</span><span class="n">write_table</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="n">buf</span><span class="p">,</span> <span class="n">compression</span><span class="o">=</span><span class="s2">"zstd"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">buf</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span></div>
 
 
@@ -192,30 +192,30 @@
 <div class="viewcode-block" id="parquet_bytes_to_sequence">
 <a class="viewcode-back" href="../../module_docs/kodokan/store.html#kodokan.parquet_bytes_to_sequence">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">parquet_bytes_to_sequence</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PoseSequence</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reconstruct a :class:`PoseSequence` from Parquet bytes written above.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Reconstruct a :class:`PoseSequence` from Parquet bytes written above."""</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">pyarrow.parquet</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pq</span>
 
     <span class="n">table</span> <span class="o">=</span> <span class="n">pq</span><span class="o">.</span><span class="n">read_table</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">data</span><span class="p">))</span>
     <span class="n">meta</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">schema</span><span class="o">.</span><span class="n">metadata</span><span class="p">[</span><span class="n">_META_KEY</span><span class="p">])</span>
-    <span class="n">frame_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;frame_indices&quot;</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
-    <span class="n">F</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">frame_indices</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;n_persons&quot;</span><span class="p">]),</span> <span class="nb">len</span><span class="p">(</span><span class="n">COCO17_KEYPOINTS</span><span class="p">)</span>
+    <span class="n">frame_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">"frame_indices"</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">F</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">frame_indices</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">"n_persons"</span><span class="p">]),</span> <span class="nb">len</span><span class="p">(</span><span class="n">COCO17_KEYPOINTS</span><span class="p">)</span>
     <span class="n">out</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">((</span><span class="n">F</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">to_pandas</span><span class="p">()</span>
-    <span class="n">fi</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;fidx&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-    <span class="n">pr</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;person&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-    <span class="n">kpi</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;keypoint&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-    <span class="n">out</span><span class="p">[</span><span class="n">fi</span><span class="p">,</span> <span class="n">pr</span><span class="p">,</span> <span class="n">kpi</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-    <span class="n">out</span><span class="p">[</span><span class="n">fi</span><span class="p">,</span> <span class="n">pr</span><span class="p">,</span> <span class="n">kpi</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
-    <span class="n">out</span><span class="p">[</span><span class="n">fi</span><span class="p">,</span> <span class="n">pr</span><span class="p">,</span> <span class="n">kpi</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;conf&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">fi</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"fidx"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">pr</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"person"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">kpi</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"keypoint"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">out</span><span class="p">[</span><span class="n">fi</span><span class="p">,</span> <span class="n">pr</span><span class="p">,</span> <span class="n">kpi</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">out</span><span class="p">[</span><span class="n">fi</span><span class="p">,</span> <span class="n">pr</span><span class="p">,</span> <span class="n">kpi</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">out</span><span class="p">[</span><span class="n">fi</span><span class="p">,</span> <span class="n">pr</span><span class="p">,</span> <span class="n">kpi</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"conf"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">PoseSequence</span><span class="p">(</span>
         <span class="n">keypoints</span><span class="o">=</span><span class="n">out</span><span class="p">,</span>
         <span class="n">frame_indices</span><span class="o">=</span><span class="n">frame_indices</span><span class="p">,</span>
-        <span class="n">fps</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;fps&quot;</span><span class="p">]),</span>
-        <span class="n">width</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;width&quot;</span><span class="p">]),</span>
-        <span class="n">height</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;height&quot;</span><span class="p">]),</span>
-        <span class="n">backend</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;backend&quot;</span><span class="p">]),</span>
-        <span class="n">video_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;video_path&quot;</span><span class="p">]),</span>
-        <span class="n">source_url</span><span class="o">=</span><span class="n">meta</span><span class="p">[</span><span class="s2">&quot;source_url&quot;</span><span class="p">]</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">fps</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">"fps"</span><span class="p">]),</span>
+        <span class="n">width</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">"width"</span><span class="p">]),</span>
+        <span class="n">height</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">"height"</span><span class="p">]),</span>
+        <span class="n">backend</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">"backend"</span><span class="p">]),</span>
+        <span class="n">video_path</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">meta</span><span class="p">[</span><span class="s2">"video_path"</span><span class="p">]),</span>
+        <span class="n">source_url</span><span class="o">=</span><span class="n">meta</span><span class="p">[</span><span class="s2">"source_url"</span><span class="p">]</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
@@ -223,16 +223,16 @@
 <div class="viewcode-block" id="pose_store">
 <a class="viewcode-back" href="../../module_docs/kodokan/store.html#kodokan.pose_store">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pose_store</span><span class="p">(</span><span class="n">directory</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A dict-like ``{video_id: PoseSequence}`` store backed by per-clip Parquet.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""A dict-like ``{video_id: PoseSequence}`` store backed by per-clip Parquet."""</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">dol</span><span class="w"> </span><span class="kn">import</span> <span class="n">Files</span><span class="p">,</span> <span class="n">filt_iter</span><span class="p">,</span> <span class="n">wrap_kvs</span>
 
     <span class="n">directory</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">directory</span> <span class="ow">or</span> <span class="n">config</span><span class="o">.</span><span class="n">pose_dir</span><span class="p">())</span>
     <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">backend</span> <span class="o">=</span> <span class="n">filt_iter</span><span class="p">(</span><span class="n">Files</span><span class="p">(</span><span class="n">directory</span><span class="p">),</span> <span class="n">filt</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">k</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.parquet&quot;</span><span class="p">))</span>
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">filt_iter</span><span class="p">(</span><span class="n">Files</span><span class="p">(</span><span class="n">directory</span><span class="p">),</span> <span class="n">filt</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">k</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".parquet"</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">wrap_kvs</span><span class="p">(</span>
         <span class="n">backend</span><span class="p">,</span>
-        <span class="n">key_of_id</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_id</span><span class="p">:</span> <span class="n">_id</span><span class="p">[:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="s2">&quot;.parquet&quot;</span><span class="p">)],</span>
-        <span class="n">id_of_key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">.parquet&quot;</span><span class="p">,</span>
+        <span class="n">key_of_id</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_id</span><span class="p">:</span> <span class="n">_id</span><span class="p">[:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="s2">".parquet"</span><span class="p">)],</span>
+        <span class="n">id_of_key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">.parquet"</span><span class="p">,</span>
         <span class="n">obj_of_data</span><span class="o">=</span><span class="n">parquet_bytes_to_sequence</span><span class="p">,</span>
         <span class="n">data_of_obj</span><span class="o">=</span><span class="n">sequence_to_parquet_bytes</span><span class="p">,</span>
     <span class="p">)</span></div>
@@ -242,16 +242,16 @@
 <div class="viewcode-block" id="segments_store">
 <a class="viewcode-back" href="../../module_docs/kodokan/store.html#kodokan.segments_store">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">segments_store</span><span class="p">(</span><span class="n">directory</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">Path</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A dict-like ``{video_id: &lt;json&gt;}`` store for demo segments (and metadata).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""A dict-like ``{video_id: &lt;json&gt;}`` store for demo segments (and metadata)."""</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">dol</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonFiles</span><span class="p">,</span> <span class="n">filt_iter</span><span class="p">,</span> <span class="n">wrap_kvs</span>
 
-    <span class="n">directory</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">directory</span> <span class="ow">or</span> <span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">pose_dir</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;segments&quot;</span><span class="p">))</span>
+    <span class="n">directory</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">directory</span> <span class="ow">or</span> <span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">pose_dir</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"segments"</span><span class="p">))</span>
     <span class="n">Path</span><span class="p">(</span><span class="n">directory</span><span class="p">)</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">backend</span> <span class="o">=</span> <span class="n">filt_iter</span><span class="p">(</span><span class="n">JsonFiles</span><span class="p">(</span><span class="n">directory</span><span class="p">),</span> <span class="n">filt</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">k</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.json&quot;</span><span class="p">))</span>
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">filt_iter</span><span class="p">(</span><span class="n">JsonFiles</span><span class="p">(</span><span class="n">directory</span><span class="p">),</span> <span class="n">filt</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">k</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".json"</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">wrap_kvs</span><span class="p">(</span>
         <span class="n">backend</span><span class="p">,</span>
-        <span class="n">key_of_id</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_id</span><span class="p">:</span> <span class="n">_id</span><span class="p">[:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="s2">&quot;.json&quot;</span><span class="p">)],</span>
-        <span class="n">id_of_key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">.json&quot;</span><span class="p">,</span>
+        <span class="n">key_of_id</span><span class="o">=</span><span class="k">lambda</span> <span class="n">_id</span><span class="p">:</span> <span class="n">_id</span><span class="p">[:</span> <span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="s2">".json"</span><span class="p">)],</span>
+        <span class="n">id_of_key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">.json"</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 
@@ -259,7 +259,7 @@
 <div class="viewcode-block" id="load_all_tidy">
 <a class="viewcode-back" href="../../module_docs/kodokan/store.html#kodokan.load_all_tidy">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">load_all_tidy</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Concatenate every clip&#39;s tidy table (with a ``video_id`` column) into one DataFrame.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Concatenate every clip's tidy table (with a ``video_id`` column) into one DataFrame."""</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
     <span class="n">store</span> <span class="o">=</span> <span class="n">store</span> <span class="ow">or</span> <span class="n">pose_store</span><span class="p">()</span>
@@ -280,7 +280,7 @@
     <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">oob_margin_frac</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.05</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Row-level integrity checks on a tidy pose DataFrame.</span>
+<span class="w">    </span><span class="sd">"""Row-level integrity checks on a tidy pose DataFrame.</span>
 
 <span class="sd">    Returns counts of anomalies (all should be ``0`` for a clean store):</span>
 
@@ -291,20 +291,20 @@
 <span class="sd">      given; a small margin is tolerated since limbs can extend just past frame).</span>
 <span class="sd">    - ``n_bad_conf``: confidences outside ``[0, 1]``.</span>
 <span class="sd">    - ``n_nan_xy``: non-finite coordinates (occluded rows should have been dropped).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">key_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;fidx&quot;</span><span class="p">,</span> <span class="s2">&quot;person&quot;</span><span class="p">,</span> <span class="s2">&quot;keypoint&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+<span class="sd">    """</span>
+    <span class="n">key_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"fidx"</span><span class="p">,</span> <span class="s2">"person"</span><span class="p">,</span> <span class="s2">"keypoint"</span><span class="p">)</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
     <span class="n">n_dup</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">duplicated</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="n">key_cols</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="k">if</span> <span class="n">key_cols</span> <span class="k">else</span> <span class="mi">0</span>
-    <span class="n">value_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;conf&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="n">value_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="s2">"conf"</span><span class="p">)</span> <span class="k">if</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">value_cols</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1"># nothing (or not a tidy table) to check</span>
         <span class="k">return</span> <span class="p">{</span>
-            <span class="s2">&quot;n_rows&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)),</span>
-            <span class="s2">&quot;n_duplicate_rows&quot;</span><span class="p">:</span> <span class="n">n_dup</span><span class="p">,</span>
-            <span class="s2">&quot;n_oob_xy&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="s2">&quot;n_bad_conf&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="s2">&quot;n_nan_xy&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-            <span class="s2">&quot;ok&quot;</span><span class="p">:</span> <span class="n">n_dup</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">"n_rows"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)),</span>
+            <span class="s2">"n_duplicate_rows"</span><span class="p">:</span> <span class="n">n_dup</span><span class="p">,</span>
+            <span class="s2">"n_oob_xy"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">"n_bad_conf"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">"n_nan_xy"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">"ok"</span><span class="p">:</span> <span class="n">n_dup</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
         <span class="p">}</span>
-    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">conf</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;x&quot;</span><span class="p">,</span> <span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="s2">&quot;conf&quot;</span><span class="p">))</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">conf</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="s2">"conf"</span><span class="p">))</span>
     <span class="n">n_nan</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">|</span> <span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">y</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
     <span class="n">n_bad_conf</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(((</span><span class="n">conf</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">conf</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
     <span class="n">n_oob</span> <span class="o">=</span> <span class="mi">0</span>
@@ -314,12 +314,12 @@
             <span class="p">((</span><span class="n">x</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">mx</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="n">width</span> <span class="o">+</span> <span class="n">mx</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">y</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">my</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">y</span> <span class="o">&gt;</span> <span class="n">height</span> <span class="o">+</span> <span class="n">my</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span>
-        <span class="s2">&quot;n_rows&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)),</span>
-        <span class="s2">&quot;n_duplicate_rows&quot;</span><span class="p">:</span> <span class="n">n_dup</span><span class="p">,</span>
-        <span class="s2">&quot;n_oob_xy&quot;</span><span class="p">:</span> <span class="n">n_oob</span><span class="p">,</span>
-        <span class="s2">&quot;n_bad_conf&quot;</span><span class="p">:</span> <span class="n">n_bad_conf</span><span class="p">,</span>
-        <span class="s2">&quot;n_nan_xy&quot;</span><span class="p">:</span> <span class="n">n_nan</span><span class="p">,</span>
-        <span class="s2">&quot;ok&quot;</span><span class="p">:</span> <span class="n">n_dup</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">n_oob</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">n_bad_conf</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">n_nan</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">"n_rows"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)),</span>
+        <span class="s2">"n_duplicate_rows"</span><span class="p">:</span> <span class="n">n_dup</span><span class="p">,</span>
+        <span class="s2">"n_oob_xy"</span><span class="p">:</span> <span class="n">n_oob</span><span class="p">,</span>
+        <span class="s2">"n_bad_conf"</span><span class="p">:</span> <span class="n">n_bad_conf</span><span class="p">,</span>
+        <span class="s2">"n_nan_xy"</span><span class="p">:</span> <span class="n">n_nan</span><span class="p">,</span>
+        <span class="s2">"ok"</span><span class="p">:</span> <span class="n">n_dup</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">n_oob</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">n_bad_conf</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">n_nan</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span>
     <span class="p">}</span></div>
 
 
@@ -327,7 +327,7 @@
 <div class="viewcode-block" id="check_sequence_integrity">
 <a class="viewcode-back" href="../../module_docs/kodokan/store.html#kodokan.check_sequence_integrity">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">check_sequence_integrity</span><span class="p">(</span><span class="n">seq</span><span class="p">:</span> <span class="n">PoseSequence</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Integrity report for a single :class:`PoseSequence` (via its tidy table).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Integrity report for a single :class:`PoseSequence` (via its tidy table)."""</span>
     <span class="n">df</span> <span class="o">=</span> <span class="n">sequence_to_tidy_df</span><span class="p">(</span><span class="n">seq</span><span class="p">,</span> <span class="n">drop_missing</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">check_tidy_integrity</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">seq</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">seq</span><span class="o">.</span><span class="n">height</span><span class="p">)</span></div>
 
@@ -336,18 +336,18 @@
 <div class="viewcode-block" id="store_integrity_report">
 <a class="viewcode-back" href="../../module_docs/kodokan/store.html#kodokan.store_integrity_report">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">store_integrity_report</span><span class="p">(</span><span class="n">store</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Run :func:`check_sequence_integrity` over every clip in a pose store.</span>
+<span class="w">    </span><span class="sd">"""Run :func:`check_sequence_integrity` over every clip in a pose store.</span>
 
 <span class="sd">    Returns ``{video_id: report}``; a clip that fails to load records</span>
-<span class="sd">    ``{&quot;error&quot;: ...}`` rather than aborting the whole sweep.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    ``{"error": ...}`` rather than aborting the whole sweep.</span>
+<span class="sd">    """</span>
     <span class="n">store</span> <span class="o">=</span> <span class="n">store</span> <span class="ow">or</span> <span class="n">pose_store</span><span class="p">()</span>
     <span class="n">report</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">store</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">report</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">check_sequence_integrity</span><span class="p">(</span><span class="n">store</span><span class="p">[</span><span class="n">k</span><span class="p">])</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>  <span class="c1"># pragma: no cover - defensive over a live store</span>
-            <span class="n">report</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;error&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span>
+            <span class="n">report</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"error"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)}</span>
     <span class="k">return</span> <span class="n">report</span></div>
 
 </pre></div>

@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kodokan.config &mdash; kodokan 0.0.17 documentation</title>
+  <title>kodokan.config &mdash; kodokan 0.0.18 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=63b572e7"></script>
+      <script src="../../_static/documentation_options.js?v=8bafd125"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -88,10 +88,10 @@
            <div itemprop="articleBody">
              
   <h1>Source code for kodokan.config</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Where kodokan keeps its data (downloaded clips + derived artifacts).</span>
+<span></span><span class="sd">"""Where kodokan keeps its data (downloaded clips + derived artifacts).</span>
 
 <span class="sd">Large/churny artifacts (videos, per-frame keypoints, rendered overlays) live</span>
-<span class="sd">*outside* the repo by default — under ``~/kodokan_data`` — so they don&#39;t bloat</span>
+<span class="sd">*outside* the repo by default — under ``~/kodokan_data`` — so they don't bloat</span>
 <span class="sd">the (Dropbox-synced) source tree. Override the root with the</span>
 <span class="sd">``KODOKAN_DATA_DIR`` environment variable.</span>
 
@@ -99,7 +99,7 @@
 <span class="sd">area; code addresses it transparently through the symlink either way. None of</span>
 <span class="sd">this data is precious — every subfolder is downloaded or pipeline-derived; see</span>
 <span class="sd">``misc/docs/regenerate-data.md`` for how to rebuild it from scratch.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -107,12 +107,12 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="c1">#: Env var overriding the data root (default ``~/kodokan_data``).</span>
-<span class="n">KODOKAN_DATA_ENV</span> <span class="o">=</span> <span class="s2">&quot;KODOKAN_DATA_DIR&quot;</span>
+<span class="n">KODOKAN_DATA_ENV</span> <span class="o">=</span> <span class="s2">"KODOKAN_DATA_DIR"</span>
 
 <span class="c1"># ---------------------------------------------------------------------------</span>
 <span class="c1"># Two-person coverage thresholds (single source of truth).</span>
 <span class="c1">#</span>
-<span class="c1"># A demo&#39;s ``two_person_frac`` is the fraction of its frames in which *both*</span>
+<span class="c1"># A demo's ``two_person_frac`` is the fraction of its frames in which *both*</span>
 <span class="c1"># judoka are tracked. Two distinct gates use it, on purpose, at different</span>
 <span class="c1"># strictness — they were previously scattered as bare ``0.3``/``0.4`` literals</span>
 <span class="c1"># across the pipeline and eval scripts (adversarial-review item), which made the</span>
@@ -136,9 +136,9 @@
 <div class="viewcode-block" id="data_dir">
 <a class="viewcode-back" href="../../module_docs/kodokan/config.html#kodokan.config.data_dir">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">data_dir</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Resolve the kodokan data root (``$KODOKAN_DATA_DIR`` or ``~/kodokan_data``).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Resolve the kodokan data root (``$KODOKAN_DATA_DIR`` or ``~/kodokan_data``)."""</span>
     <span class="n">override</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">KODOKAN_DATA_ENV</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">override</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span> <span class="k">if</span> <span class="n">override</span> <span class="k">else</span> <span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;kodokan_data&quot;</span></div>
+    <span class="k">return</span> <span class="n">Path</span><span class="p">(</span><span class="n">override</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span> <span class="k">if</span> <span class="n">override</span> <span class="k">else</span> <span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span> <span class="o">/</span> <span class="s2">"kodokan_data"</span></div>
 
 
 
@@ -151,32 +151,32 @@
 <div class="viewcode-block" id="clips_dir">
 <a class="viewcode-back" href="../../module_docs/kodokan/config.html#kodokan.config.clips_dir">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">clips_dir</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Directory holding downloaded video clips + their ``*.info.json`` sidecars.&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_subdir</span><span class="p">(</span><span class="s2">&quot;clips&quot;</span><span class="p">)</span></div>
+<span class="w">    </span><span class="sd">"""Directory holding downloaded video clips + their ``*.info.json`` sidecars."""</span>
+    <span class="k">return</span> <span class="n">_subdir</span><span class="p">(</span><span class="s2">"clips"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="pose_dir">
 <a class="viewcode-back" href="../../module_docs/kodokan/config.html#kodokan.config.pose_dir">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pose_dir</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Directory holding extracted per-clip keypoint sequences (NPZ / Parquet).&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_subdir</span><span class="p">(</span><span class="s2">&quot;pose&quot;</span><span class="p">)</span></div>
+<span class="w">    </span><span class="sd">"""Directory holding extracted per-clip keypoint sequences (NPZ / Parquet)."""</span>
+    <span class="k">return</span> <span class="n">_subdir</span><span class="p">(</span><span class="s2">"pose"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="viz_dir">
 <a class="viewcode-back" href="../../module_docs/kodokan/config.html#kodokan.config.viz_dir">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">viz_dir</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Directory holding rendered overlays (MP4) and Rerun recordings (RRD).&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_subdir</span><span class="p">(</span><span class="s2">&quot;viz&quot;</span><span class="p">)</span></div>
+<span class="w">    </span><span class="sd">"""Directory holding rendered overlays (MP4) and Rerun recordings (RRD)."""</span>
+    <span class="k">return</span> <span class="n">_subdir</span><span class="p">(</span><span class="s2">"viz"</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="models_dir">
 <a class="viewcode-back" href="../../module_docs/kodokan/config.html#kodokan.config.models_dir">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">models_dir</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Directory for downloaded model weights (kept out of the repo).&quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">_subdir</span><span class="p">(</span><span class="s2">&quot;models&quot;</span><span class="p">)</span></div>
+<span class="w">    </span><span class="sd">"""Directory for downloaded model weights (kept out of the repo)."""</span>
+    <span class="k">return</span> <span class="n">_subdir</span><span class="p">(</span><span class="s2">"models"</span><span class="p">)</span></div>
 
 </pre></div>
 

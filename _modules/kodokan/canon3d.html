@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kodokan.canon3d &mdash; kodokan 0.0.17 documentation</title>
+  <title>kodokan.canon3d &mdash; kodokan 0.0.18 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=63b572e7"></script>
+      <script src="../../_static/documentation_options.js?v=8bafd125"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -88,14 +88,14 @@
            <div itemprop="articleBody">
              
   <h1>Source code for kodokan.canon3d</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Pelvis-frame (Procrustes) canonicalization of 3D world landmarks.</span>
+<span></span><span class="sd">"""Pelvis-frame (Procrustes) canonicalization of 3D world landmarks.</span>
 
-<span class="sd">The Stage-5 *&quot;3D refutes viewpoint&quot;* conclusion was **withdrawn** by the</span>
+<span class="sd">The Stage-5 *"3D refutes viewpoint"* conclusion was **withdrawn** by the</span>
 <span class="sd">adversarial review (``misc/docs/adversarial-review.md``): MediaPipe per-crop</span>
 <span class="sd">world landmarks are camera-aligned — not canonicalized — and the bounding-box</span>
 <span class="sd">crop distorts their scale/orientation, so 3D joint angles computed straight off</span>
 <span class="sd">them are **not** actually viewpoint-invariant. Before a fair 2D-vs-3D test, each</span>
-<span class="sd">frame&#39;s landmarks must be expressed in a *subject-centered anatomical frame*:</span>
+<span class="sd">frame's landmarks must be expressed in a *subject-centered anatomical frame*:</span>
 <span class="sd">origin at the pelvis, axes fixed to the body (hip line + spine), scale normalized</span>
 <span class="sd">by torso length. This module provides that canonicalization as a pure, testable</span>
 <span class="sd">geometric function.</span>
@@ -105,10 +105,10 @@
 <span class="sd">(invariant to camera rotation, translation, and — with ``scale=True`` — subject</span>
 <span class="sd">size). Downstream angle/position features are then genuinely viewpoint-invariant.</span>
 
-<span class="sd">Indices default to the MediaPipe **BlazePose-33** convention used by the repo&#39;s</span>
+<span class="sd">Indices default to the MediaPipe **BlazePose-33** convention used by the repo's</span>
 <span class="sd">3D lift (``scripts/lift_3d_mediapipe.py``); pass ``joints=COCO17`` (or a custom</span>
 <span class="sd">:class:`BodyJoints`) to reuse it for any layout exposing both hips and shoulders.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -121,7 +121,7 @@
 <a class="viewcode-back" href="../../module_docs/kodokan/canon3d.html#kodokan.canon3d.BodyJoints">[docs]</a>
 <span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">BodyJoints</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Landmark indices needed to build the pelvis anatomical frame.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Landmark indices needed to build the pelvis anatomical frame."""</span>
 
     <span class="n">l_hip</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">r_hip</span><span class="p">:</span> <span class="nb">int</span>
@@ -130,14 +130,14 @@
 
 
 
-<span class="c1">#: MediaPipe BlazePose-33 (the repo&#39;s 3D-lift output format).</span>
+<span class="c1">#: MediaPipe BlazePose-33 (the repo's 3D-lift output format).</span>
 <span class="n">BLAZEPOSE33</span> <span class="o">=</span> <span class="n">BodyJoints</span><span class="p">(</span><span class="n">l_hip</span><span class="o">=</span><span class="mi">23</span><span class="p">,</span> <span class="n">r_hip</span><span class="o">=</span><span class="mi">24</span><span class="p">,</span> <span class="n">l_shoulder</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">r_shoulder</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
 <span class="c1">#: COCO-17 (the 2D pose format), for reusing the canonicalization on 2.5D data.</span>
 <span class="n">COCO17</span> <span class="o">=</span> <span class="n">BodyJoints</span><span class="p">(</span><span class="n">l_hip</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">r_hip</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">l_shoulder</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">r_shoulder</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_unit</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-    <span class="c1"># A degenerate (near-zero) axis means the pose can&#39;t define a frame; surface it</span>
+    <span class="c1"># A degenerate (near-zero) axis means the pose can't define a frame; surface it</span>
     <span class="c1"># as nan so it propagates through R and the frame is dropped downstream (rather</span>
     <span class="c1"># than silently returning a finite-but-meaningless basis).</span>
     <span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
@@ -149,13 +149,13 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">pelvis_frame</span><span class="p">(</span>
     <span class="n">landmarks</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">joints</span><span class="p">:</span> <span class="n">BodyJoints</span> <span class="o">=</span> <span class="n">BLAZEPOSE33</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Anatomical frame of a single pose: ``(pelvis_origin, R)``.</span>
+<span class="w">    </span><span class="sd">"""Anatomical frame of a single pose: ``(pelvis_origin, R)``.</span>
 
 <span class="sd">    ``R`` (shape ``(3, 3)``, rows are the new basis) maps world coordinates into</span>
-<span class="sd">    the subject frame: **x** = subject&#39;s right (hip line), **y** = up</span>
+<span class="sd">    the subject frame: **x** = subject's right (hip line), **y** = up</span>
 <span class="sd">    (pelvis→neck spine), **z** = forward (``y × x``). The hip line is</span>
 <span class="sd">    orthogonalized against the spine so the basis is orthonormal (Gram-Schmidt).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">lm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">landmarks</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
     <span class="n">pelvis</span> <span class="o">=</span> <span class="p">(</span><span class="n">lm</span><span class="p">[</span><span class="n">joints</span><span class="o">.</span><span class="n">l_hip</span><span class="p">]</span> <span class="o">+</span> <span class="n">lm</span><span class="p">[</span><span class="n">joints</span><span class="o">.</span><span class="n">r_hip</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
     <span class="n">neck</span> <span class="o">=</span> <span class="p">(</span><span class="n">lm</span><span class="p">[</span><span class="n">joints</span><span class="o">.</span><span class="n">l_shoulder</span><span class="p">]</span> <span class="o">+</span> <span class="n">lm</span><span class="p">[</span><span class="n">joints</span><span class="o">.</span><span class="n">r_shoulder</span><span class="p">])</span> <span class="o">/</span> <span class="mi">2</span>
@@ -172,12 +172,12 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">canonicalize_pose</span><span class="p">(</span>
     <span class="n">landmarks</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">joints</span><span class="p">:</span> <span class="n">BodyJoints</span> <span class="o">=</span> <span class="n">BLAZEPOSE33</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Express one frame&#39;s 3D landmarks ``(K, C&gt;=3)`` in the pelvis frame ``(K, 3)``.</span>
+<span class="w">    </span><span class="sd">"""Express one frame's 3D landmarks ``(K, C&gt;=3)`` in the pelvis frame ``(K, 3)``.</span>
 
 <span class="sd">    Removes camera rotation + translation (and, with ``scale=True``, subject size</span>
 <span class="sd">    by dividing by torso length). Columns beyond ``xyz`` (e.g. visibility) are</span>
 <span class="sd">    dropped; ``nan`` inputs propagate (so occluded frames stay droppable).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">xyz</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">landmarks</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)[:,</span> <span class="p">:</span><span class="mi">3</span><span class="p">]</span>
     <span class="n">pelvis</span><span class="p">,</span> <span class="n">R</span> <span class="o">=</span> <span class="n">pelvis_frame</span><span class="p">(</span><span class="n">xyz</span><span class="p">,</span> <span class="n">joints</span><span class="o">=</span><span class="n">joints</span><span class="p">)</span>
     <span class="n">out</span> <span class="o">=</span> <span class="p">(</span><span class="n">xyz</span> <span class="o">-</span> <span class="n">pelvis</span><span class="p">)</span> <span class="o">@</span> <span class="n">R</span><span class="o">.</span><span class="n">T</span>
@@ -194,11 +194,11 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">canonicalize_sequence</span><span class="p">(</span>
     <span class="n">world</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">joints</span><span class="p">:</span> <span class="n">BodyJoints</span> <span class="o">=</span> <span class="n">BLAZEPOSE33</span><span class="p">,</span> <span class="n">scale</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Canonicalize every frame/person of a ``(..., K, C)`` landmark stack → ``(..., K, 3)``.</span>
+<span class="w">    </span><span class="sd">"""Canonicalize every frame/person of a ``(..., K, C)`` landmark stack → ``(..., K, 3)``.</span>
 
 <span class="sd">    Each frame (and person) is canonicalized to *its own* pelvis frame — the</span>
 <span class="sd">    viewpoint-invariant choice for pose-only technique features.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">world</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">world</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">lead</span><span class="p">,</span> <span class="n">K</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="n">world</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
     <span class="n">flat</span> <span class="o">=</span> <span class="n">world</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">K</span><span class="p">,</span> <span class="n">world</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>

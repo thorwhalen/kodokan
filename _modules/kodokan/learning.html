@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kodokan.learning &mdash; kodokan 0.0.17 documentation</title>
+  <title>kodokan.learning &mdash; kodokan 0.0.18 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=63b572e7"></script>
+      <script src="../../_static/documentation_options.js?v=8bafd125"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -88,7 +88,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for kodokan.learning</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Adaptive learning engine for the flashcard quiz — selectable strategies.</span>
+<span></span><span class="sd">"""Adaptive learning engine for the flashcard quiz — selectable strategies.</span>
 
 <span class="sd">A :class:`Strategy` maps the recorded response **history** to the next **problem**</span>
 <span class="sd">— which technique to ask (target) and which distractors to show — both drawn from</span>
@@ -103,8 +103,8 @@
 <span class="sd">  engine has no storage dependency and is trivially testable.</span>
 <span class="sd">- Per-item adaptive state (Leitner box, SM-2 ease, FSRS stability) is reconstructed by</span>
 <span class="sd">  *replaying* the history — no mutable server state to corrupt.</span>
-<span class="sd">- Spacing intervals are in **days**; within a single dense session most items aren&#39;t</span>
-<span class="sd">  &quot;due&quot;, so every scheduler falls back to an urgency ranking (most-overdue / lowest</span>
+<span class="sd">- Spacing intervals are in **days**; within a single dense session most items aren't</span>
+<span class="sd">  "due", so every scheduler falls back to an urgency ranking (most-overdue / lowest</span>
 <span class="sd">  recall / box weight) instead of stalling.</span>
 
 <span class="sd">Record schema (one dict per answered problem)::</span>
@@ -113,7 +113,7 @@
 <span class="sd">    target_key, mode, choice_keys, chosen_key,</span>
 <span class="sd">    correct, score, timed_out, response_time_ms,</span>
 <span class="sd">    ts_presented, ts_answered            # ISO-8601 UTC</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -124,23 +124,23 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timezone</span>
 
 <span class="n">RECORD_FIELDS</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;response_id&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;problem_id&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;user&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;session_id&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;strategy_key&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;target_key&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;mode&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;content_domain&quot;</span><span class="p">,</span>  <span class="c1"># &quot;throw&quot; | &quot;word&quot; (default &quot;throw&quot; for legacy rows)</span>
-    <span class="s2">&quot;item_key&quot;</span><span class="p">,</span>  <span class="c1"># generic per-item key (throw or word slug); == target_key for throws</span>
-    <span class="s2">&quot;choice_keys&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;chosen_key&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;correct&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;score&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;timed_out&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;response_time_ms&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ts_presented&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;ts_answered&quot;</span><span class="p">,</span>
+    <span class="s2">"response_id"</span><span class="p">,</span>
+    <span class="s2">"problem_id"</span><span class="p">,</span>
+    <span class="s2">"user"</span><span class="p">,</span>
+    <span class="s2">"session_id"</span><span class="p">,</span>
+    <span class="s2">"strategy_key"</span><span class="p">,</span>
+    <span class="s2">"target_key"</span><span class="p">,</span>
+    <span class="s2">"mode"</span><span class="p">,</span>
+    <span class="s2">"content_domain"</span><span class="p">,</span>  <span class="c1"># "throw" | "word" (default "throw" for legacy rows)</span>
+    <span class="s2">"item_key"</span><span class="p">,</span>  <span class="c1"># generic per-item key (throw or word slug); == target_key for throws</span>
+    <span class="s2">"choice_keys"</span><span class="p">,</span>
+    <span class="s2">"chosen_key"</span><span class="p">,</span>
+    <span class="s2">"correct"</span><span class="p">,</span>
+    <span class="s2">"score"</span><span class="p">,</span>
+    <span class="s2">"timed_out"</span><span class="p">,</span>
+    <span class="s2">"response_time_ms"</span><span class="p">,</span>
+    <span class="s2">"ts_presented"</span><span class="p">,</span>
+    <span class="s2">"ts_answered"</span><span class="p">,</span>
 <span class="p">)</span>
 
 
@@ -148,7 +148,7 @@
     <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">try</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span> <span class="s2">&quot;+00:00&quot;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">fromisoformat</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">"Z"</span><span class="p">,</span> <span class="s2">"+00:00"</span><span class="p">))</span>
     <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
         <span class="k">return</span> <span class="kc">None</span>
 
@@ -162,7 +162,7 @@
 <a class="viewcode-back" href="../../module_docs/kodokan/learning.html#kodokan.learning.Selection">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Selection</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;A chosen target plus the full ordered option set (includes the target).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""A chosen target plus the full ordered option set (includes the target)."""</span>
 
     <span class="n">target_key</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">choice_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span></div>
@@ -175,12 +175,12 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_item_key</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generic per-item key: the throw or vocab word a row is about.</span>
+<span class="w">    </span><span class="sd">"""Generic per-item key: the throw or vocab word a row is about.</span>
 
 <span class="sd">    Falls back to ``target_key`` for legacy rows logged before the word games existed,</span>
 <span class="sd">    so existing throw history aggregates exactly as before.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;item_key&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;target_key&quot;</span><span class="p">)</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"item_key"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"target_key"</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_events_by_item</span><span class="p">(</span><span class="n">history</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]]:</span>
@@ -190,7 +190,7 @@
         <span class="k">if</span> <span class="n">k</span><span class="p">:</span>
             <span class="n">by</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">evs</span> <span class="ow">in</span> <span class="n">by</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-        <span class="n">evs</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ts_answered&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ts_presented&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">evs</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ts_answered"</span><span class="p">)</span> <span class="ow">or</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ts_presented"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">by</span>
 
 
@@ -199,33 +199,33 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">empirical_confusion</span><span class="p">(</span>
     <span class="n">history</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">halflife_days</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">7.0</span><span class="p">,</span> <span class="n">now</span><span class="p">:</span> <span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Per-learner confusion matrix from wrong answers: ``{correct: {chosen_wrong: weight}}``.</span>
+<span class="w">    </span><span class="sd">"""Per-learner confusion matrix from wrong answers: ``{correct: {chosen_wrong: weight}}``.</span>
 
 <span class="sd">    Each mistake contributes a recency-decayed, partial-credit-shortfall weight, so the</span>
 <span class="sd">    throws a learner *actually* mixes up (recently) dominate.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">now</span> <span class="o">=</span> <span class="n">now</span> <span class="ow">or</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">timezone</span><span class="o">.</span><span class="n">utc</span><span class="p">)</span>
     <span class="n">conf</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">history</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;chosen_key&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"correct"</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"chosen_key"</span><span class="p">):</span>
             <span class="k">continue</span>
-        <span class="n">correct_k</span><span class="p">,</span> <span class="n">chosen_k</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;target_key&quot;</span><span class="p">),</span> <span class="n">r</span><span class="p">[</span><span class="s2">&quot;chosen_key&quot;</span><span class="p">]</span>
+        <span class="n">correct_k</span><span class="p">,</span> <span class="n">chosen_k</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"target_key"</span><span class="p">),</span> <span class="n">r</span><span class="p">[</span><span class="s2">"chosen_key"</span><span class="p">]</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">correct_k</span> <span class="ow">or</span> <span class="n">chosen_k</span> <span class="o">==</span> <span class="n">correct_k</span><span class="p">:</span>
             <span class="k">continue</span>
-        <span class="n">days</span> <span class="o">=</span> <span class="n">_days_since</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ts_answered&quot;</span><span class="p">),</span> <span class="n">now</span><span class="p">)</span>
+        <span class="n">days</span> <span class="o">=</span> <span class="n">_days_since</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ts_answered"</span><span class="p">),</span> <span class="n">now</span><span class="p">)</span>
         <span class="n">decay</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">**</span> <span class="p">(</span><span class="n">days</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">halflife_days</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">))</span> <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">days</span><span class="p">)</span> <span class="k">else</span> <span class="mf">1.0</span>
-        <span class="n">shortfall</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;score&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">shortfall</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="nb">float</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"score"</span><span class="p">)</span> <span class="ow">or</span> <span class="mf">0.0</span><span class="p">)</span>
         <span class="n">conf</span><span class="p">[</span><span class="n">correct_k</span><span class="p">][</span><span class="n">chosen_k</span><span class="p">]</span> <span class="o">+=</span> <span class="n">decay</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="n">shortfall</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">conf</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
 
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_symmetric_confusion</span><span class="p">(</span><span class="n">history</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Symmetric confusability view of the directional confusion matrix.</span>
+<span class="w">    </span><span class="sd">"""Symmetric confusability view of the directional confusion matrix.</span>
 
 <span class="sd">    Perceptual confusability is symmetric (if A is mistaken for B, B↔A are both hard to</span>
 <span class="sd">    tell apart), so for *distractor* selection we fold the directional matrix together.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">conf</span> <span class="o">=</span> <span class="n">empirical_confusion</span><span class="p">(</span><span class="n">history</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
     <span class="n">sym</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="k">lambda</span><span class="p">:</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">float</span><span class="p">))</span>
     <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">conf</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -240,13 +240,13 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">merge_similarity</span><span class="p">(</span>
     <span class="n">base</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">overlay</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">boost</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Additively merge two ``target -&gt; {key: weight}`` matrices (overlay boosted).</span>
+<span class="w">    </span><span class="sd">"""Additively merge two ``target -&gt; {key: weight}`` matrices (overlay boosted).</span>
 
 <span class="sd">    Keeps the dense ``base`` (pose-shape) for every target and *adds* the sparse</span>
 <span class="sd">    ``overlay`` (per-learner confusion) on top — so confusable distractors are always</span>
-<span class="sd">    available, with the learner&#39;s personal confusers weighted up rather than replacing</span>
+<span class="sd">    available, with the learner's personal confusers weighted up rather than replacing</span>
 <span class="sd">    pose-similarity for not-yet-confused targets.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">out</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">dict</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">(</span><span class="n">base</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="p">(</span><span class="n">overlay</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">d</span> <span class="o">=</span> <span class="n">out</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="p">{})</span>
@@ -259,15 +259,15 @@
 <div class="viewcode-block" id="item_accuracy">
 <a class="viewcode-back" href="../../module_docs/kodokan/learning.html#kodokan.learning.item_accuracy">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">item_accuracy</span><span class="p">(</span><span class="n">history</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Per-item running stats: ``{key: {n, wrong, last_ts, last_correct}}``.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Per-item running stats: ``{key: {n, wrong, last_ts, last_correct}}``."""</span>
     <span class="n">stats</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">evs</span> <span class="ow">in</span> <span class="n">_events_by_item</span><span class="p">(</span><span class="n">history</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">wrong</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">evs</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">))</span>
+        <span class="n">wrong</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="mi">1</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">evs</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"correct"</span><span class="p">))</span>
         <span class="n">stats</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">evs</span><span class="p">),</span>
-            <span class="s2">&quot;wrong&quot;</span><span class="p">:</span> <span class="n">wrong</span><span class="p">,</span>
-            <span class="s2">&quot;last_ts&quot;</span><span class="p">:</span> <span class="n">evs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ts_answered&quot;</span><span class="p">),</span>
-            <span class="s2">&quot;last_correct&quot;</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">evs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">)),</span>
+            <span class="s2">"n"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">evs</span><span class="p">),</span>
+            <span class="s2">"wrong"</span><span class="p">:</span> <span class="n">wrong</span><span class="p">,</span>
+            <span class="s2">"last_ts"</span><span class="p">:</span> <span class="n">evs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ts_answered"</span><span class="p">),</span>
+            <span class="s2">"last_correct"</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">evs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"correct"</span><span class="p">)),</span>
         <span class="p">}</span>
     <span class="k">return</span> <span class="n">stats</span></div>
 
@@ -297,12 +297,12 @@
 <div class="viewcode-block" id="pick_distractors">
 <a class="viewcode-back" href="../../module_docs/kodokan/learning.html#kodokan.learning.pick_distractors">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">pick_distractors</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">study_set</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">similarity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">top_up</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Pick ``n`` distractors from ``study_set``, preferring confusable ones.</span>
+<span class="w">    </span><span class="sd">"""Pick ``n`` distractors from ``study_set``, preferring confusable ones.</span>
 
 <span class="sd">    ``similarity`` maps ``target -&gt; {key: weight}`` (pose-shape or empirical confusion).</span>
 <span class="sd">    Falls back to uniform when absent; tops up from the rest of the set if the</span>
 <span class="sd">    confusable pool is too small (so the answer set always has ``n`` options when possible).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">pool</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">study_set</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="n">target</span><span class="p">]</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">pool</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">[]</span>
@@ -326,25 +326,25 @@
 <a class="viewcode-back" href="../../module_docs/kodokan/learning.html#kodokan.learning.Strategy">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Strategy</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base strategy: target selection is overridden; distractors default to confusable.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Base strategy: target selection is overridden; distractors default to confusable."""</span>
 
-    <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;base&quot;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Base&quot;</span>
-    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="s2">"base"</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"Base"</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">""</span>
     <span class="n">n_choices</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">pick_target</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">history</span><span class="p">,</span> <span class="n">study_set</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">now</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">distractor_similarity</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">history</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">now</span><span class="p">):</span>
-        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># subclasses may return a similarity matrix; else caller&#39;s pose-sim</span>
+        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># subclasses may return a similarity matrix; else caller's pose-sim</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">next_selection</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">history</span><span class="p">,</span>
         <span class="n">study_set</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
-        <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;video_to_name&quot;</span><span class="p">,</span>
+        <span class="n">mode</span><span class="o">=</span><span class="s2">"video_to_name"</span><span class="p">,</span>
         <span class="n">similarity</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">now</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
         <span class="n">rng</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -353,7 +353,7 @@
         <span class="n">rng</span> <span class="o">=</span> <span class="n">rng</span> <span class="ow">or</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">()</span>
         <span class="n">study_set</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">study_set</span><span class="p">)]</span>  <span class="c1"># dedupe, keep order</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">study_set</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;empty study set&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"empty study set"</span><span class="p">)</span>
         <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pick_target</span><span class="p">(</span><span class="n">history</span><span class="p">,</span> <span class="n">study_set</span><span class="p">,</span> <span class="n">now</span><span class="o">=</span><span class="n">now</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">)</span>
         <span class="c1"># merge per-learner confusion ON TOP OF pose-similarity (never replace it), so</span>
         <span class="c1"># confusable distractors are available even for not-yet-confused targets.</span>
@@ -371,13 +371,13 @@
 <a class="viewcode-back" href="../../module_docs/kodokan/learning.html#kodokan.learning.UniformRandom">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">UniformRandom</span><span class="p">(</span><span class="n">Strategy</span><span class="p">):</span>
-    <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;uniform_random&quot;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Uniform random&quot;</span>
-    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;No memory — every throw in the set is equally likely. The baseline.&quot;</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="s2">"uniform_random"</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"Uniform random"</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">"No memory — every throw in the set is equally likely. The baseline."</span>
     <span class="n">anti_repeat</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">pick_target</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">history</span><span class="p">,</span> <span class="n">study_set</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">now</span><span class="p">,</span> <span class="n">rng</span><span class="p">):</span>
-        <span class="n">last</span> <span class="o">=</span> <span class="n">history</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">&quot;target_key&quot;</span><span class="p">]</span> <span class="k">if</span> <span class="n">history</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">last</span> <span class="o">=</span> <span class="n">history</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="s2">"target_key"</span><span class="p">]</span> <span class="k">if</span> <span class="n">history</span> <span class="k">else</span> <span class="kc">None</span>
         <span class="n">pool</span> <span class="o">=</span> <span class="p">(</span>
             <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">study_set</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="n">last</span><span class="p">]</span>
             <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">anti_repeat</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">study_set</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
@@ -391,12 +391,12 @@
 <a class="viewcode-back" href="../../module_docs/kodokan/learning.html#kodokan.learning.Leitner">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">Leitner</span><span class="p">(</span><span class="n">Strategy</span><span class="p">):</span>
-    <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;leitner&quot;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Leitner boxes&quot;</span>
-    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Spaced repetition by boxes: a right answer moves a throw up a box (seen less often), a wrong answer drops it back.&quot;</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="s2">"leitner"</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"Leitner boxes"</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">"Spaced repetition by boxes: a right answer moves a throw up a box (seen less often), a wrong answer drops it back."</span>
     <span class="n">n_boxes</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span>
     <span class="n">intervals</span><span class="p">:</span> <span class="nb">tuple</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>  <span class="c1"># days per box; auto-extended to n_boxes</span>
-    <span class="n">demotion</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;reset&quot;</span>  <span class="c1"># &quot;reset&quot; -&gt; box 1, &quot;step&quot; -&gt; box-1</span>
+    <span class="n">demotion</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"reset"</span>  <span class="c1"># "reset" -&gt; box 1, "step" -&gt; box-1</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">iv</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">intervals</span><span class="p">)</span>
@@ -412,11 +412,11 @@
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">evs</span> <span class="ow">in</span> <span class="n">by</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">evs</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"correct"</span><span class="p">):</span>
                     <span class="n">b</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">n_boxes</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">demotion</span> <span class="o">==</span> <span class="s2">&quot;reset&quot;</span> <span class="k">else</span> <span class="nb">max</span><span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-            <span class="n">boxes</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">last</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">evs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ts_answered&quot;</span><span class="p">)</span>
+                    <span class="n">b</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">demotion</span> <span class="o">==</span> <span class="s2">"reset"</span> <span class="k">else</span> <span class="nb">max</span><span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+            <span class="n">boxes</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">last</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">b</span><span class="p">,</span> <span class="n">evs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ts_answered"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">boxes</span><span class="p">,</span> <span class="n">last</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">pick_target</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">history</span><span class="p">,</span> <span class="n">study_set</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">now</span><span class="p">,</span> <span class="n">rng</span><span class="p">):</span>
@@ -442,9 +442,9 @@
 <a class="viewcode-back" href="../../module_docs/kodokan/learning.html#kodokan.learning.SM2">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">SM2</span><span class="p">(</span><span class="n">Strategy</span><span class="p">):</span>
-    <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;sm2&quot;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;SuperMemo SM-2&quot;</span>
-    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Classic spaced repetition: each throw gets a personal ease factor; correct answers stretch the interval, mistakes reset it.&quot;</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="s2">"sm2"</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"SuperMemo SM-2"</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">"Classic spaced repetition: each throw gets a personal ease factor; correct answers stretch the interval, mistakes reset it."</span>
     <span class="n">ef_start</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.5</span>
     <span class="n">ef_min</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.3</span>
     <span class="n">i1</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span>
@@ -453,19 +453,19 @@
     <span class="n">slow_ms</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">9000</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_grade</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;timed_out&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"timed_out"</span><span class="p">):</span>
             <span class="k">return</span> <span class="p">(</span>
-                <span class="mi">3</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
+                <span class="mi">3</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"correct"</span><span class="p">)</span> <span class="k">else</span> <span class="mi">0</span>
             <span class="p">)</span>  <span class="c1"># correct-but-slow is a weak pass, not a lapse</span>
-        <span class="n">rt</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;response_time_ms&quot;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">):</span>
+        <span class="n">rt</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"response_time_ms"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"correct"</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">rt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">rt</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fast_ms</span><span class="p">:</span>
                 <span class="k">return</span> <span class="mi">5</span>
             <span class="k">if</span> <span class="n">rt</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">rt</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">slow_ms</span><span class="p">:</span>
                 <span class="k">return</span> <span class="mi">3</span>
             <span class="k">return</span> <span class="mi">4</span>
         <span class="k">return</span> <span class="p">(</span>
-            <span class="mi">2</span> <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;score&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span>
+            <span class="mi">2</span> <span class="k">if</span> <span class="nb">float</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"score"</span><span class="p">)</span> <span class="ow">or</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">1</span>
         <span class="p">)</span>  <span class="c1"># confusable miss vs clear miss</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">history</span><span class="p">):</span>
@@ -485,10 +485,10 @@
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">n</span><span class="p">,</span> <span class="n">interval</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">i1</span>
             <span class="n">st</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
-                <span class="s2">&quot;ef&quot;</span><span class="p">:</span> <span class="n">ef</span><span class="p">,</span>
-                <span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">,</span>
-                <span class="s2">&quot;I&quot;</span><span class="p">:</span> <span class="n">interval</span><span class="p">,</span>
-                <span class="s2">&quot;last&quot;</span><span class="p">:</span> <span class="n">evs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ts_answered&quot;</span><span class="p">),</span>
+                <span class="s2">"ef"</span><span class="p">:</span> <span class="n">ef</span><span class="p">,</span>
+                <span class="s2">"n"</span><span class="p">:</span> <span class="n">n</span><span class="p">,</span>
+                <span class="s2">"I"</span><span class="p">:</span> <span class="n">interval</span><span class="p">,</span>
+                <span class="s2">"last"</span><span class="p">:</span> <span class="n">evs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ts_answered"</span><span class="p">),</span>
             <span class="p">}</span>
         <span class="k">return</span> <span class="n">st</span>
 
@@ -499,7 +499,7 @@
             <span class="k">return</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">unseen</span><span class="p">)</span>
         <span class="c1"># sample weighted by overdue-ness (not a hard argmax) so a dense session</span>
         <span class="c1"># interleaves rather than repeating one item; more overdue -&gt; higher weight.</span>
-        <span class="n">overdue</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">_days_since</span><span class="p">(</span><span class="n">st</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;last&quot;</span><span class="p">],</span> <span class="n">now</span><span class="p">)</span> <span class="o">-</span> <span class="n">st</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;I&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">study_set</span><span class="p">}</span>
+        <span class="n">overdue</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">_days_since</span><span class="p">(</span><span class="n">st</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">"last"</span><span class="p">],</span> <span class="n">now</span><span class="p">)</span> <span class="o">-</span> <span class="n">st</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">"I"</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">study_set</span><span class="p">}</span>
         <span class="n">lo</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">overdue</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
         <span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="n">overdue</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">lo</span> <span class="o">+</span> <span class="mf">0.1</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">study_set</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">_weighted_sample</span><span class="p">(</span><span class="n">study_set</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">rng</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span></div>
@@ -510,9 +510,9 @@
 <a class="viewcode-back" href="../../module_docs/kodokan/learning.html#kodokan.learning.ConfusionWeighted">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">ConfusionWeighted</span><span class="p">(</span><span class="n">Strategy</span><span class="p">):</span>
-    <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;confusion_weighted&quot;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;Confusion-weighted&quot;</span>
-    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Focuses on the throws you actually mix up, and pits them against the very throws you confuse them with. Recommended.&quot;</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="s2">"confusion_weighted"</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"Confusion-weighted"</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">"Focuses on the throws you actually mix up, and pits them against the very throws you confuse them with. Recommended."</span>
     <span class="n">recency_halflife_days</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">7.0</span>
     <span class="n">epsilon_explore</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.1</span>
     <span class="n">prior</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -547,9 +547,9 @@
 <a class="viewcode-back" href="../../module_docs/kodokan/learning.html#kodokan.learning.FSRSLite">[docs]</a>
 <span class="nd">@dataclass</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">FSRSLite</span><span class="p">(</span><span class="n">Strategy</span><span class="p">):</span>
-    <span class="n">key</span> <span class="o">=</span> <span class="s2">&quot;fsrs_lite&quot;</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;FSRS-lite (memory model)&quot;</span>
-    <span class="n">description</span> <span class="o">=</span> <span class="s2">&quot;Models how memory of each throw decays and reschedules it just before you&#39;d forget (target ~90</span><span class="si">% r</span><span class="s2">ecall).&quot;</span>
+    <span class="n">key</span> <span class="o">=</span> <span class="s2">"fsrs_lite"</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s2">"FSRS-lite (memory model)"</span>
+    <span class="n">description</span> <span class="o">=</span> <span class="s2">"Models how memory of each throw decays and reschedules it just before you'd forget (target ~90</span><span class="si">% r</span><span class="s2">ecall)."</span>
     <span class="n">target_retention</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.9</span>
     <span class="n">s_init</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
     <span class="n">stability_growth</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span>
@@ -560,17 +560,17 @@
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">evs</span> <span class="ow">in</span> <span class="n">_events_by_item</span><span class="p">(</span><span class="n">history</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">s_init</span>
             <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">evs</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;correct&quot;</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"correct"</span><span class="p">):</span>
                     <span class="n">s</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stability_growth</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="n">s</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lapse_floor</span><span class="p">,</span> <span class="n">s</span> <span class="o">*</span> <span class="mf">0.5</span><span class="p">)</span>
-            <span class="n">st</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;S&quot;</span><span class="p">:</span> <span class="n">s</span><span class="p">,</span> <span class="s2">&quot;last&quot;</span><span class="p">:</span> <span class="n">evs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;ts_answered&quot;</span><span class="p">)}</span>
+            <span class="n">st</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"S"</span><span class="p">:</span> <span class="n">s</span><span class="p">,</span> <span class="s2">"last"</span><span class="p">:</span> <span class="n">evs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ts_answered"</span><span class="p">)}</span>
         <span class="k">return</span> <span class="n">st</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">_recall</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">st</span><span class="p">,</span> <span class="n">now</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">st</span><span class="p">:</span>
             <span class="k">return</span> <span class="mf">0.0</span>
-        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">_days_since</span><span class="p">(</span><span class="n">st</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;last&quot;</span><span class="p">],</span> <span class="n">now</span><span class="p">)</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">st</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">&quot;S&quot;</span><span class="p">],</span> <span class="mf">1e-6</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">_days_since</span><span class="p">(</span><span class="n">st</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">"last"</span><span class="p">],</span> <span class="n">now</span><span class="p">)</span> <span class="o">/</span> <span class="nb">max</span><span class="p">(</span><span class="n">st</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">"S"</span><span class="p">],</span> <span class="mf">1e-6</span><span class="p">))</span>
 
     <span class="k">def</span><span class="w"> </span><span class="nf">pick_target</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">history</span><span class="p">,</span> <span class="n">study_set</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">now</span><span class="p">,</span> <span class="n">rng</span><span class="p">):</span>
         <span class="n">st</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_state</span><span class="p">(</span><span class="n">history</span><span class="p">)</span>
@@ -599,7 +599,7 @@
 <div class="viewcode-block" id="make_strategy">
 <a class="viewcode-back" href="../../module_docs/kodokan/learning.html#kodokan.learning.make_strategy">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">make_strategy</span><span class="p">(</span><span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">params</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Strategy</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Instantiate a strategy by key (default = confusion-weighted); unknown params ignored.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Instantiate a strategy by key (default = confusion-weighted); unknown params ignored."""</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">fields</span>
 
     <span class="bp">cls</span> <span class="o">=</span> <span class="n">STRATEGIES</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span> <span class="ow">or</span> <span class="n">DEFAULT_STRATEGY</span><span class="p">,</span> <span class="n">STRATEGIES</span><span class="p">[</span><span class="n">DEFAULT_STRATEGY</span><span class="p">])</span>
@@ -611,15 +611,15 @@
 <div class="viewcode-block" id="list_strategies">
 <a class="viewcode-back" href="../../module_docs/kodokan/learning.html#kodokan.learning.list_strategies">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">list_strategies</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Describe available strategies (for the settings UI).&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Describe available strategies (for the settings UI)."""</span>
     <span class="n">out</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="bp">cls</span> <span class="ow">in</span> <span class="n">STRATEGIES</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">out</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
             <span class="p">{</span>
-                <span class="s2">&quot;key&quot;</span><span class="p">:</span> <span class="n">key</span><span class="p">,</span>
-                <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
-                <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
-                <span class="s2">&quot;is_default&quot;</span><span class="p">:</span> <span class="n">key</span> <span class="o">==</span> <span class="n">DEFAULT_STRATEGY</span><span class="p">,</span>
+                <span class="s2">"key"</span><span class="p">:</span> <span class="n">key</span><span class="p">,</span>
+                <span class="s2">"name"</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                <span class="s2">"description"</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+                <span class="s2">"is_default"</span><span class="p">:</span> <span class="n">key</span> <span class="o">==</span> <span class="n">DEFAULT_STRATEGY</span><span class="p">,</span>
             <span class="p">}</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">out</span></div>

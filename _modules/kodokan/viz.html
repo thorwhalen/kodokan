@@ -5,7 +5,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>kodokan.viz &mdash; kodokan 0.0.17 documentation</title>
+  <title>kodokan.viz &mdash; kodokan 0.0.18 documentation</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
@@ -14,7 +14,7 @@
   
       <script src="../../_static/jquery.js?v=5d32c60e"></script>
       <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="../../_static/documentation_options.js?v=63b572e7"></script>
+      <script src="../../_static/documentation_options.js?v=8bafd125"></script>
       <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
       <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
       <script src="../../_static/toggleprompt.js?v=d7ede5d2"></script>
@@ -88,7 +88,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for kodokan.viz</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Visualize a :class:`~kodokan.pose.PoseSequence`.</span>
+<span></span><span class="sd">"""Visualize a :class:`~kodokan.pose.PoseSequence`.</span>
 
 <span class="sd">Two outputs, both requested by the project:</span>
 
@@ -99,7 +99,7 @@
 
 <span class="sd">Persons are drawn in distinct colors (slot 0 green, slot 1 magenta) so tori/uke</span>
 <span class="sd">are visually separable.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
@@ -160,7 +160,7 @@
     <span class="n">thickness</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">,</span>
     <span class="n">radius</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Path</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Render skeletons to an MP4.</span>
+<span class="w">    </span><span class="sd">"""Render skeletons to an MP4.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        pose_seq: The pose sequence to draw.</span>
@@ -169,21 +169,21 @@
 <span class="sd">            ``blank_canvas=True``.</span>
 <span class="sd">        blank_canvas: If True, draw on a solid ``background`` instead of the video.</span>
 <span class="sd">        conf_thresh: Hide keypoints/edges below this confidence.</span>
-<span class="sd">        fps: Output fps (defaults to the sequence&#39;s source fps).</span>
+<span class="sd">        fps: Output fps (defaults to the sequence's source fps).</span>
 <span class="sd">        person_colors: BGR colors per person slot.</span>
 <span class="sd">        background: BGR background color for the blank canvas.</span>
 <span class="sd">        thickness, radius: Edge thickness / joint radius in pixels.</span>
 
 <span class="sd">    Returns:</span>
 <span class="sd">        The output path.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
 
     <span class="n">out_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">out_path</span><span class="p">)</span>
     <span class="n">W</span><span class="p">,</span> <span class="n">H</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">pose_seq</span><span class="o">.</span><span class="n">width</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">pose_seq</span><span class="o">.</span><span class="n">height</span><span class="p">)</span>
     <span class="n">fps</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">fps</span> <span class="ow">or</span> <span class="n">pose_seq</span><span class="o">.</span><span class="n">fps</span><span class="p">)</span>
     <span class="n">writer</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoWriter</span><span class="p">(</span>
-        <span class="nb">str</span><span class="p">(</span><span class="n">out_path</span><span class="p">),</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoWriter_fourcc</span><span class="p">(</span><span class="o">*</span><span class="s2">&quot;mp4v&quot;</span><span class="p">),</span> <span class="n">fps</span><span class="p">,</span> <span class="p">(</span><span class="n">W</span><span class="p">,</span> <span class="n">H</span><span class="p">)</span>
+        <span class="nb">str</span><span class="p">(</span><span class="n">out_path</span><span class="p">),</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoWriter_fourcc</span><span class="p">(</span><span class="o">*</span><span class="s2">"mp4v"</span><span class="p">),</span> <span class="n">fps</span><span class="p">,</span> <span class="p">(</span><span class="n">W</span><span class="p">,</span> <span class="n">H</span><span class="p">)</span>
     <span class="p">)</span>
 
     <span class="n">use_backdrop</span> <span class="o">=</span> <span class="n">source_video</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">blank_canvas</span>
@@ -225,14 +225,14 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_set_time</span><span class="p">(</span><span class="n">rr</span><span class="p">,</span> <span class="n">seconds</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Set the Rerun timeline (compatible with 0.33&#39;s ``set_time`` and older API).&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">rr</span><span class="p">,</span> <span class="s2">&quot;set_time&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Set the Rerun timeline (compatible with 0.33's ``set_time`` and older API)."""</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">rr</span><span class="p">,</span> <span class="s2">"set_time"</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
-            <span class="n">rr</span><span class="o">.</span><span class="n">set_time</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">seconds</span><span class="p">))</span>
+            <span class="n">rr</span><span class="o">.</span><span class="n">set_time</span><span class="p">(</span><span class="s2">"time"</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">seconds</span><span class="p">))</span>
             <span class="k">return</span>
         <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
             <span class="k">pass</span>
-    <span class="n">rr</span><span class="o">.</span><span class="n">set_time_seconds</span><span class="p">(</span><span class="s2">&quot;time&quot;</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">seconds</span><span class="p">))</span>  <span class="c1"># older Rerun</span>
+    <span class="n">rr</span><span class="o">.</span><span class="n">set_time_seconds</span><span class="p">(</span><span class="s2">"time"</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">seconds</span><span class="p">))</span>  <span class="c1"># older Rerun</span>
 
 
 <div class="viewcode-block" id="log_to_rerun">
@@ -246,9 +246,9 @@
     <span class="n">blank_canvas</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">frame_scale</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span>
     <span class="n">conf_thresh</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span>
-    <span class="n">entity_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">entity_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">""</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Log frames + 2D skeletons to Rerun (overlay-on-video and skeleton-only views).</span>
+<span class="w">    </span><span class="sd">"""Log frames + 2D skeletons to Rerun (overlay-on-video and skeleton-only views).</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        pose_seq: The sequence to log.</span>
@@ -259,24 +259,24 @@
 <span class="sd">        frame_scale: Downscale factor for logged video frames (keypoints scaled to match).</span>
 <span class="sd">        conf_thresh: Hide keypoints below this confidence.</span>
 <span class="sd">        entity_prefix: Prefix all entity paths (use distinct prefixes to compare two</span>
-<span class="sd">            sequences side-by-side in one recording, e.g. ``&quot;demoA/&quot;``, ``&quot;demoB/&quot;``).</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">            sequences side-by-side in one recording, e.g. ``"demoA/"``, ``"demoB/"``).</span>
+<span class="sd">    """</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">cv2</span>
     <span class="kn">import</span><span class="w"> </span><span class="nn">rerun</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">rr</span>
 
-    <span class="n">rr</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="s2">&quot;kodokan&quot;</span><span class="p">,</span> <span class="n">spawn</span><span class="o">=</span><span class="n">spawn</span><span class="p">)</span>
+    <span class="n">rr</span><span class="o">.</span><span class="n">init</span><span class="p">(</span><span class="s2">"kodokan"</span><span class="p">,</span> <span class="n">spawn</span><span class="o">=</span><span class="n">spawn</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">save</span><span class="p">:</span>
         <span class="n">rr</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">save</span><span class="p">))</span>
 
     <span class="n">ann</span> <span class="o">=</span> <span class="n">rr</span><span class="o">.</span><span class="n">AnnotationContext</span><span class="p">(</span>
         <span class="p">[</span>
             <span class="n">rr</span><span class="o">.</span><span class="n">ClassDescription</span><span class="p">(</span>
-                <span class="n">info</span><span class="o">=</span><span class="n">rr</span><span class="o">.</span><span class="n">AnnotationInfo</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;person&quot;</span><span class="p">),</span>
+                <span class="n">info</span><span class="o">=</span><span class="n">rr</span><span class="o">.</span><span class="n">AnnotationInfo</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"person"</span><span class="p">),</span>
                 <span class="n">keypoint_connections</span><span class="o">=</span><span class="n">pose_seq</span><span class="o">.</span><span class="n">skeleton</span><span class="p">,</span>
             <span class="p">)</span>
         <span class="p">]</span>
     <span class="p">)</span>
-    <span class="n">rr</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">entity_prefix</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">ann</span><span class="p">,</span> <span class="n">static</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">rr</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">entity_prefix</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">ann</span><span class="p">,</span> <span class="n">static</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
     <span class="n">cap</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">VideoCapture</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">source_video</span><span class="p">))</span> <span class="k">if</span> <span class="n">source_video</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="n">src_idx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
@@ -294,7 +294,7 @@
             <span class="k">if</span> <span class="n">frame</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">small</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">fx</span><span class="o">=</span><span class="n">frame_scale</span><span class="p">,</span> <span class="n">fy</span><span class="o">=</span><span class="n">frame_scale</span><span class="p">)</span>
                 <span class="n">rr</span><span class="o">.</span><span class="n">log</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">entity_prefix</span><span class="si">}</span><span class="s2">video/image&quot;</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">entity_prefix</span><span class="si">}</span><span class="s2">video/image"</span><span class="p">,</span>
                     <span class="n">rr</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="n">cv2</span><span class="o">.</span><span class="n">cvtColor</span><span class="p">(</span><span class="n">small</span><span class="p">,</span> <span class="n">cv2</span><span class="o">.</span><span class="n">COLOR_BGR2RGB</span><span class="p">)),</span>
                 <span class="p">)</span>
 
@@ -308,12 +308,12 @@
             <span class="n">pts</span> <span class="o">=</span> <span class="n">kp</span><span class="p">[</span><span class="n">mask</span><span class="p">,</span> <span class="p">:</span><span class="mi">2</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">cap</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">rr</span><span class="o">.</span><span class="n">log</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">entity_prefix</span><span class="si">}</span><span class="s2">video/person</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">entity_prefix</span><span class="si">}</span><span class="s2">video/person</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
                     <span class="n">rr</span><span class="o">.</span><span class="n">Points2D</span><span class="p">(</span><span class="n">pts</span> <span class="o">*</span> <span class="n">frame_scale</span><span class="p">,</span> <span class="n">keypoint_ids</span><span class="o">=</span><span class="n">ids</span><span class="p">,</span> <span class="n">class_ids</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
                 <span class="p">)</span>
             <span class="k">if</span> <span class="n">blank_canvas</span><span class="p">:</span>
                 <span class="n">rr</span><span class="o">.</span><span class="n">log</span><span class="p">(</span>
-                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">entity_prefix</span><span class="si">}</span><span class="s2">skeleton/person</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+                    <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">entity_prefix</span><span class="si">}</span><span class="s2">skeleton/person</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
                     <span class="n">rr</span><span class="o">.</span><span class="n">Points2D</span><span class="p">(</span><span class="n">pts</span><span class="p">,</span> <span class="n">keypoint_ids</span><span class="o">=</span><span class="n">ids</span><span class="p">,</span> <span class="n">class_ids</span><span class="o">=</span><span class="mi">0</span><span class="p">),</span>
                 <span class="p">)</span>
 
