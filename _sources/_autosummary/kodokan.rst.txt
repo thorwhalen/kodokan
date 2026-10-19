@@ -25,6 +25,7 @@
       demo_features
       make_problem
       build_catalog
+      clip_filename
       build_confusability
       score_response
       next_target

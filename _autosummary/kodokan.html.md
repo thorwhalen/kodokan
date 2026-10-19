@@ -42,6 +42,7 @@ See `misc/docs/research-architecture.md` for the tool/architecture rationale.
 | [`demo_features`](#kodokan.demo_features)(pose_seq, start_s, end_s, \*[, ...]) | Cleaned joint-angle features for one demo window (primary person by default).      |
 | [`make_problem`](#kodokan.make_problem)(catalog, target_key, \*[, mode, ...]) | Build a multiple-choice problem for `target_key` from a technique `catalog`.       |
 | [`build_catalog`](#kodokan.build_catalog)(\*[, min_two_person_frac, ...])      | Build `{technique_key: {"name", "clips":[...]}}` from the pose/segments stores.    |
+| [`clip_filename`](#kodokan.clip_filename)(video_id, start_s, dur_s)            | The web-app clip file for one demo segment, named by the segment's IDENTITY.       |
 | [`build_confusability`](#kodokan.build_confusability)([catalog, feature])            | Technique×technique similarity (0..1) from mean pooled pose descriptors.           |
 | [`score_response`](#kodokan.score_response)(correct_key, chosen_key, \*[, ...]) | Confusion-weighted credit in [0, 1].                                               |
 | [`next_target`](#kodokan.next_target)(keys, history, \*[, focus, rng])       | Pick the next technique to quiz: unseen and often-missed (within `focus`) first.   |
@@ -165,6 +166,17 @@ the array of normalized-DTW distances from every other demo to the medoid.
 
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
+
+### kodokan.clip_filename(video_id, start_s, dur_s)
+
+The web-app clip file for one demo segment, named by the segment’s IDENTITY.
+
+`{video_id}_{start_ms}_{dur_ms}.mp4`: the name says which time span of which source it
+shows, so re-segmenting can never make an existing name show a different cut (#45) — a
+changed segment simply gets a new name. Positional names (`{vid}_3.mp4`) could.
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
 
 ### kodokan.compare(features_a, features_b)
 

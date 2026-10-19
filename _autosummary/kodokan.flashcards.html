@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../_static/documentation_options.js?v=2fd7553c"></script>
+    <script src="../_static/documentation_options.js?v=056c92e6"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -58,7 +58,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.19" />
+  <meta name="docsearch:version" content="0.0.20" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -405,22 +405,25 @@ can be swapped for the model’s confusion matrix once recognition generalizes.<
 <tr class="row-even"><td><p><a class="reference internal" href="#kodokan.flashcards.build_confusability" title="kodokan.flashcards.build_confusability"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build_confusability</span></code></a>([catalog, feature])</p></td>
 <td><p>Technique×technique similarity (0..1) from mean pooled pose descriptors.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.flashcards.confusable_distractors" title="kodokan.flashcards.confusable_distractors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">confusable_distractors</span></code></a>(target_key, keys, *, n)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.flashcards.clip_filename" title="kodokan.flashcards.clip_filename"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clip_filename</span></code></a>(video_id, start_s, dur_s)</p></td>
+<td><p>The web-app clip file for one demo segment, named by the segment's IDENTITY.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.flashcards.confusable_distractors" title="kodokan.flashcards.confusable_distractors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">confusable_distractors</span></code></a>(target_key, keys, *, n)</p></td>
 <td><p>Pick <code class="docutils literal notranslate"><span class="pre">n</span></code> distractor keys, preferring those most confusable with the target.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.flashcards.log_response" title="kodokan.flashcards.log_response"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_response</span></code></a>(problem, chosen_index, *[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.flashcards.log_response" title="kodokan.flashcards.log_response"><code class="xref py py-obj docutils literal notranslate"><span class="pre">log_response</span></code></a>(problem, chosen_index, *[, ...])</p></td>
 <td><p>Record a response (datetime + exact problem + choice + correctness + score).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.flashcards.make_problem" title="kodokan.flashcards.make_problem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_problem</span></code></a>(catalog, target_key, *[, mode, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.flashcards.make_problem" title="kodokan.flashcards.make_problem"><code class="xref py py-obj docutils literal notranslate"><span class="pre">make_problem</span></code></a>(catalog, target_key, *[, mode, ...])</p></td>
 <td><p>Build a multiple-choice problem for <code class="docutils literal notranslate"><span class="pre">target_key</span></code> from a technique <code class="docutils literal notranslate"><span class="pre">catalog</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.flashcards.next_target" title="kodokan.flashcards.next_target"><code class="xref py py-obj docutils literal notranslate"><span class="pre">next_target</span></code></a>(keys, history, *[, focus, rng])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.flashcards.next_target" title="kodokan.flashcards.next_target"><code class="xref py py-obj docutils literal notranslate"><span class="pre">next_target</span></code></a>(keys, history, *[, focus, rng])</p></td>
 <td><p>Pick the next technique to quiz: unseen and often-missed (within <code class="docutils literal notranslate"><span class="pre">focus</span></code>) first.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.flashcards.responses_store" title="kodokan.flashcards.responses_store"><code class="xref py py-obj docutils literal notranslate"><span class="pre">responses_store</span></code></a>([directory])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.flashcards.responses_store" title="kodokan.flashcards.responses_store"><code class="xref py py-obj docutils literal notranslate"><span class="pre">responses_store</span></code></a>([directory])</p></td>
 <td><p>A dict-like JSON store of logged responses (per-user, timestamped).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.flashcards.score_response" title="kodokan.flashcards.score_response"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score_response</span></code></a>(correct_key, chosen_key, *[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.flashcards.score_response" title="kodokan.flashcards.score_response"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score_response</span></code></a>(correct_key, chosen_key, *[, ...])</p></td>
 <td><p>Confusion-weighted credit in [0, 1].</p></td>
 </tr>
 </tbody>
@@ -468,6 +471,20 @@ confusion matrix once cross-source recognition works.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.flashcards.clip_filename">
+<span class="sig-prename descclassname"><span class="pre">kodokan.flashcards.</span></span><span class="sig-name descname"><span class="pre">clip_filename</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">video_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dur_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/flashcards.html#clip_filename"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.flashcards.clip_filename" title="Link to this definition">#</a></dt>
+<dd><p>The web-app clip file for one demo segment, named by the segment’s IDENTITY.</p>
+<p><code class="docutils literal notranslate"><span class="pre">{video_id}_{start_ms}_{dur_ms}.mp4</span></code>: the name says which time span of which source it
+shows, so re-segmenting can never make an existing name show a different cut (#45) — a
+changed segment simply gets a new name. Positional names (<code class="docutils literal notranslate"><span class="pre">{vid}_3.mp4</span></code>) could.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -595,6 +612,7 @@ throws is penalized less than confusing two obviously different throws).</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.flashcards.Problem"><code class="docutils literal notranslate"><span class="pre">Problem</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.flashcards.build_catalog"><code class="docutils literal notranslate"><span class="pre">build_catalog()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.flashcards.build_confusability"><code class="docutils literal notranslate"><span class="pre">build_confusability()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.flashcards.clip_filename"><code class="docutils literal notranslate"><span class="pre">clip_filename()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.flashcards.confusable_distractors"><code class="docutils literal notranslate"><span class="pre">confusable_distractors()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.flashcards.log_response"><code class="docutils literal notranslate"><span class="pre">log_response()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.flashcards.make_problem"><code class="docutils literal notranslate"><span class="pre">make_problem()</span></code></a></li>

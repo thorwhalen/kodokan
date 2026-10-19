@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../../_static/documentation_options.js?v=2fd7553c"></script>
+    <script src="../../_static/documentation_options.js?v=056c92e6"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -411,7 +411,7 @@ window.runMermaid = runMermaid;</script>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.19" />
+  <meta name="docsearch:version" content="0.0.20" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -1008,6 +1008,19 @@ window.runMermaid = runMermaid;</script>
             <span class="p">}</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">catalog</span></div>
+
+
+
+<div class="viewcode-block" id="clip_filename">
+<a class="viewcode-back" href="../../_autosummary/kodokan.flashcards.html#kodokan.clip_filename">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">clip_filename</span><span class="p">(</span><span class="n">video_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">start_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">dur_s</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""The web-app clip file for one demo segment, named by the segment's IDENTITY.</span>
+
+<span class="sd">    ``{video_id}_{start_ms}_{dur_ms}.mp4``: the name says which time span of which source it</span>
+<span class="sd">    shows, so re-segmenting can never make an existing name show a different cut (#45) — a</span>
+<span class="sd">    changed segment simply gets a new name. Positional names (``{vid}_3.mp4``) could.</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">video_id</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">start_s</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">dur_s</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span><span class="si">}</span><span class="s2">.mp4"</span></div>
 
 
 
