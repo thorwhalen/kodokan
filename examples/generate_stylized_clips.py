@@ -16,10 +16,20 @@ never the app directory) and moved over its plain twin as soon as it is done, so
 resumable and the live dir never holds a half-written file. Filenames match, so throws.json /
 catalog.json are unchanged. ``--restyle`` re-renders clips the manifest already covers.
 
+A clip counts as stylized only when the manifest records it AND the live file's sha256 matches
+the hash recorded when it was stylized — so a clip the cutter re-cut plain (``--force``, or a
+deleted-and-regenerated file) is detected and re-stylized, never shipped with real faces.
+
+  --check          exit 1 (listing them) if any catalog clip is not verifiably stylized —
+                   run it before pushing clips to the server
+  --adopt-unhashed one-time migration: record the hash of live files for manifest entries
+                   that predate hashing (only valid while those files are known stylized)
+
 Usage::
-  KODOKAN_DATA_DIR=~/kodokan_data PYTHONPATH=<repo> python examples/generate_stylized_clips.py [--limit N] [--only KEY] [--restyle]
+  KODOKAN_DATA_DIR=~/kodokan_data PYTHONPATH=<repo> python examples/generate_stylized_clips.py [--limit N] [--only KEY] [--restyle] [--check] [--adopt-unhashed]
 """
 
+import hashlib
 import os
 import subprocess
 import sys
@@ -285,6 +295,17 @@ def process_clip(models, src_video, start, dur, out_path, mode="animegan"):
 # batch
 # --------------------------------------------------------------------------- #
 
+def _sha256(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def _is_stylized(manifest, name):
+    """Recorded as stylized AND the live bytes are the ones that were stylized."""
+    rec = manifest["clips"].get(name)
+    live = CLIPS_OUT / name
+    return bool(rec and rec.get("sha256") and live.exists() and _sha256(live) == rec["sha256"])
+
+
 def main():
     only = None
     limit = None
@@ -293,6 +314,8 @@ def main():
     if "--limit" in sys.argv:
         limit = int(sys.argv[sys.argv.index("--limit") + 1])
     restyle = "--restyle" in sys.argv
+    check = "--check" in sys.argv
+    adopt = "--adopt-unhashed" in sys.argv
     import json
     STAGE_DIR.mkdir(parents=True, exist_ok=True)
     vindex = _index_videos()
@@ -305,6 +328,18 @@ def main():
     # Per-clip treatment record (SSOT for 'which clip got which face treatment'). See the ADR.
     manifest = json.loads(MANIFEST.read_text()) if MANIFEST.exists() else {"clips": {}}
     manifest.setdefault("clips", {})
+    def flush_manifest():
+        MANIFEST.write_text(json.dumps(manifest, indent=1))
+
+    if adopt:
+        n = 0
+        for name, rec in manifest["clips"].items():
+            if not rec.get("sha256") and (CLIPS_OUT / name).exists():
+                rec["sha256"] = _sha256(CLIPS_OUT / name)
+                n += 1
+        flush_manifest()
+        print(f"adopted {n} unhashed manifest entries", flush=True)
+        return
 
     # build the work list (throw, video, rep) with the SAME names as the live clips
     work, already = [], 0
@@ -320,11 +355,15 @@ def main():
             src_file, _ = vindex[vid]
             for i, (start, dur) in enumerate(reps, 1):
                 name = f"{vid}.mp4" if i == 1 else f"{vid}_{i}.mp4"
-                if restyle or name not in manifest["clips"]:  # manifest = already stylized
+                if restyle or not _is_stylized(manifest, name):
                     work.append((key, src_file, start, dur, STAGE_DIR / name, m))
                 else:
                     already += 1
 
+    if check:
+        bad = [w[4].name for w in work]
+        print(f"{already} clips verifiably stylized, {len(bad)} NOT: {bad[:20]}", flush=True)
+        sys.exit(1 if bad else 0)
     if limit:
         work = work[:limit]
     total = len(work)
@@ -336,9 +375,8 @@ def main():
 
     def record(name, key, m):
         manifest["clips"][name] = {"throw": key, "mode": m,
-                                   "blur_anime": bool(BLUR_ANIME_FACES and m == "animegan")}
-    def flush_manifest():
-        MANIFEST.write_text(json.dumps(manifest, indent=1))
+                                   "blur_anime": bool(BLUR_ANIME_FACES and m == "animegan"),
+                                   "sha256": _sha256(CLIPS_OUT / name)}
 
     done = fail = 0
     skip = already
