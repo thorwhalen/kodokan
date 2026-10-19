@@ -12,9 +12,10 @@ Per-source burned-in name locations (fractions of frame), found by inspecting fr
 
 Clip files are named by segment identity (``kodokan.clip_filename``: video + start + duration,
 #45), so an existing name always shows the same cut. Idempotent: skips clips already generated
-unless --force. ``--migrate-names`` is the one-time rename from the old positional names
-(``{vid}.mp4``, ``{vid}_2.mp4``…), carrying the face-privacy manifest entries along. Usage::
-    PYTHONPATH=<repo> python examples/generate_webapp_clips.py [--force | --migrate-names]
+unless --force. (The one-time rename from the old positional names, ``{vid}_2.mp4``…, ran on
+2026-10-19 and was then removed: being positional, a later re-run could attach stale cuts to
+new identities. It is in git history if a host with old names ever needs it.) Usage::
+    PYTHONPATH=<repo> python examples/generate_webapp_clips.py [--force]
 
 Two outputs, two very different lifecycles — do not merge them:
 
@@ -125,32 +126,6 @@ def _make_clip(src_file, source, start, dur, out_file):
     return r.returncode == 0
 
 
-def _migrate_positional_names(catalog, vindex):
-    """Rename ``{vid}.mp4`` / ``{vid}_{i}.mp4`` to identity names, rekeying the manifest.
-
-    Positional name i is the i-th rep of the CURRENT segments — valid only while the segments
-    store has not changed since those clips were cut (true when this migration shipped; the
-    manifest's sha256 travels with the bytes, so stylized status survives the rename).
-    """
-    manifest = json.loads(MANIFEST.read_text()) if MANIFEST.exists() else {"clips": {}}
-    renamed = 0
-    for entry in catalog.values():
-        for c in entry["clips"]:
-            vid = c["video_id"]
-            if vid not in vindex:
-                continue
-            for i, (start, dur) in enumerate(_rep_segments(c.get("demos", [])), 1):
-                old = f"{vid}.mp4" if i == 1 else f"{vid}_{i}.mp4"
-                new = fc.clip_filename(vid, start, dur)
-                if (CLIPS_OUT / old).exists() and not (CLIPS_OUT / new).exists():
-                    os.rename(CLIPS_OUT / old, CLIPS_OUT / new)
-                    renamed += 1
-                if old in manifest["clips"] and new not in manifest["clips"]:
-                    manifest["clips"][new] = manifest["clips"].pop(old)
-    MANIFEST.write_text(json.dumps(manifest, indent=1))
-    print(f"renamed {renamed} clips to identity names; manifest rekeyed", flush=True)
-
-
 def main():
     force = "--force" in sys.argv
     CLIPS_OUT.mkdir(parents=True, exist_ok=True)
@@ -158,8 +133,6 @@ def main():
     catalog = fc.build_catalog()
     print(f"catalog: {len(catalog)} techniques; {len(vindex)} downloaded videos indexed; "
           f"computing confusability...", flush=True)
-    if "--migrate-names" in sys.argv:
-        _migrate_positional_names(catalog, vindex)
     sim = fc.build_confusability(catalog)
 
     techniques, made, skipped, failed = {}, 0, 0, 0
