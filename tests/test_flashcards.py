@@ -90,3 +90,10 @@ def test_build_catalog_keeps_every_gated_demo_by_default():
 def test_build_catalog_max_demos_caps_per_video():
     (entry,) = fc.build_catalog(segments=_segments(8), max_demos=3).values()
     assert [d["start_s"] for d in entry["clips"][0]["demos"]] == [0.0, 3.0, 6.0]
+
+
+def test_clip_filename_is_segment_identity():
+    assert fc.clip_filename("ab-c_D", 4.24, 3.0) == "ab-c_D_4240_3000.mp4"
+    # a changed segment gets a different name; the same segment always the same one (#45)
+    assert fc.clip_filename("v", 4.24, 3.0) != fc.clip_filename("v", 4.24, 2.9)
+    assert fc.clip_filename("v", 4.2400001, 3.0) == fc.clip_filename("v", 4.24, 3.0)

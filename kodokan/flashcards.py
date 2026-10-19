@@ -287,6 +287,16 @@ def build_catalog(
     return catalog
 
 
+def clip_filename(video_id: str, start_s: float, dur_s: float) -> str:
+    """The web-app clip file for one demo segment, named by the segment's IDENTITY.
+
+    ``{video_id}_{start_ms}_{dur_ms}.mp4``: the name says which time span of which source it
+    shows, so re-segmenting can never make an existing name show a different cut (#45) — a
+    changed segment simply gets a new name. Positional names (``{vid}_3.mp4``) could.
+    """
+    return f"{video_id}_{round(start_s * 1000)}_{round(dur_s * 1000)}.mp4"
+
+
 def build_confusability(
     catalog: dict | None = None, *, feature: str = "tori_angles_pos"
 ) -> dict:

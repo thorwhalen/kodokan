@@ -29,6 +29,7 @@ from kodokan.store import pose_store, segments_store, load_all_tidy
 from kodokan.flashcards import (
     make_problem,
     build_catalog,
+    clip_filename,
     build_confusability,
     score_response,
     next_target,
@@ -58,6 +59,7 @@ __all__ = [
     "demo_features",
     "make_problem",
     "build_catalog",
+    "clip_filename",
     "build_confusability",
     "score_response",
     "next_target",

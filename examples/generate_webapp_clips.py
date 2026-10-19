@@ -10,8 +10,11 @@ Per-source burned-in name locations (fractions of frame), found by inspecting fr
   - efficient_judo : top-right   (brand watermark is top-left, left alone)
   - kodokan_ijf    : bottom-left white box (Kodokan / IJF logos left alone)
 
-Idempotent: skips clips already generated unless --force. Usage::
-    PYTHONPATH=<repo> python examples/generate_webapp_clips.py [--force]
+Clip files are named by segment identity (``kodokan.clip_filename``: video + start + duration,
+#45), so an existing name always shows the same cut. Idempotent: skips clips already generated
+unless --force. ``--migrate-names`` is the one-time rename from the old positional names
+(``{vid}.mp4``, ``{vid}_2.mp4``…), carrying the face-privacy manifest entries along. Usage::
+    PYTHONPATH=<repo> python examples/generate_webapp_clips.py [--force | --migrate-names]
 
 Two outputs, two very different lifecycles — do not merge them:
 
@@ -52,6 +55,8 @@ _APP_DATA_DIR = Path(
 CLIPS_OUT = _APP_DATA_DIR / "clips"
 
 CATALOG_OUT = APP_DIR / "data" / "catalog.json"
+#: Per-clip face-privacy record (keyed by clip filename); written by generate_stylized_clips.py.
+MANIFEST = Path(__file__).resolve().parents[1] / "misc" / "docs" / "face_privacy_manifest.json"
 LOOP_MAX_S, LOOP_MIN_S, N_CONFUSABLE, HEIGHT = 7.0, 1.5, 8, 480
 #: Cap on demo repetitions exported per source video; ``None`` exports every rep that
 #: clears ``LOOP_MIN_S`` (#37: show all segments so badly-cut ones can be flagged + fixed).
@@ -120,6 +125,32 @@ def _make_clip(src_file, source, start, dur, out_file):
     return r.returncode == 0
 
 
+def _migrate_positional_names(catalog, vindex):
+    """Rename ``{vid}.mp4`` / ``{vid}_{i}.mp4`` to identity names, rekeying the manifest.
+
+    Positional name i is the i-th rep of the CURRENT segments — valid only while the segments
+    store has not changed since those clips were cut (true when this migration shipped; the
+    manifest's sha256 travels with the bytes, so stylized status survives the rename).
+    """
+    manifest = json.loads(MANIFEST.read_text()) if MANIFEST.exists() else {"clips": {}}
+    renamed = 0
+    for entry in catalog.values():
+        for c in entry["clips"]:
+            vid = c["video_id"]
+            if vid not in vindex:
+                continue
+            for i, (start, dur) in enumerate(_rep_segments(c.get("demos", [])), 1):
+                old = f"{vid}.mp4" if i == 1 else f"{vid}_{i}.mp4"
+                new = fc.clip_filename(vid, start, dur)
+                if (CLIPS_OUT / old).exists() and not (CLIPS_OUT / new).exists():
+                    os.rename(CLIPS_OUT / old, CLIPS_OUT / new)
+                    renamed += 1
+                if old in manifest["clips"] and new not in manifest["clips"]:
+                    manifest["clips"][new] = manifest["clips"].pop(old)
+    MANIFEST.write_text(json.dumps(manifest, indent=1))
+    print(f"renamed {renamed} clips to identity names; manifest rekeyed", flush=True)
+
+
 def main():
     force = "--force" in sys.argv
     CLIPS_OUT.mkdir(parents=True, exist_ok=True)
@@ -127,6 +158,8 @@ def main():
     catalog = fc.build_catalog()
     print(f"catalog: {len(catalog)} techniques; {len(vindex)} downloaded videos indexed; "
           f"computing confusability...", flush=True)
+    if "--migrate-names" in sys.argv:
+        _migrate_positional_names(catalog, vindex)
     sim = fc.build_confusability(catalog)
 
     techniques, made, skipped, failed = {}, 0, 0, 0
@@ -140,9 +173,7 @@ def main():
             src_file, source = vindex[vid]
             base_url = c.get("source_url") or f"https://www.youtube.com/watch?v={vid}"
             for i, (start, dur) in enumerate(reps, 1):
-                # rep 1 keeps the historical {vid}.mp4 name (reuses already-cut clips);
-                # extra reps are {vid}_2.mp4, {vid}_3.mp4, …
-                name = f"{vid}.mp4" if i == 1 else f"{vid}_{i}.mp4"
+                name = fc.clip_filename(vid, start, dur)  # identity, not position (#45)
                 out_file = CLIPS_OUT / name
                 if force or not out_file.exists():
                     if _make_clip(src_file, source, start, dur, out_file):
