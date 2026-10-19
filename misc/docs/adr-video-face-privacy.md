@@ -39,6 +39,8 @@ Being evaluated. There are now **two throw variants live** so we can compare:
 
 Pins are `blur` in both variants. After review we'll pick one and make it uniform.
 
+**Update 2026-10-19 (#37):** the manifest is now uniform — every throw clip is `anime_plus_blur` — so the generator's `BLUR_ANIME_FACES` default is now `1`, and new clips (the extra demo repetitions #37 exposed) get the same treatment as the live ones.
+
 ## How to change later
 
 The per-clip record is **`misc/docs/face_privacy_manifest.json`** (keyed by clip filename →

@@ -9,14 +9,27 @@ Pipeline per clip (one demo repetition of one throw):
                                short hold; AnimeGANv2 face_paint on a context-padded crop,
                                composited into a feathered ellipse) — a cartoon face, not a blur
 
-Output goes to ``frontend/clips_styl/`` (skip-existing → resumable); after the batch, swap it
-into ``frontend/clips/`` and redeploy. Filenames match the existing clips, so throws.json /
-catalog.json are unchanged.
+Run it AFTER ``generate_webapp_clips.py``: that cutter writes the catalog and plain clips; this
+pass replaces every live clip not yet recorded in the face-privacy manifest with its stylized
+version. Each clip is rendered into a staging dir beside the live clips (the app's DATA root,
+never the app directory) and moved over its plain twin as soon as it is done, so the run is
+resumable and the live dir never holds a half-written file. Filenames match, so throws.json /
+catalog.json are unchanged. ``--restyle`` re-renders clips the manifest already covers.
+
+A clip counts as stylized only when the manifest records it AND the live file's sha256 matches
+the hash recorded when it was stylized — so a clip the cutter re-cut plain (``--force``, or a
+deleted-and-regenerated file) is detected and re-stylized, never shipped with real faces.
+
+  --check          exit 1 (listing them) if any catalog clip is not verifiably stylized —
+                   run it before pushing clips to the server
+  --adopt-unhashed one-time migration: record the hash of live files for manifest entries
+                   that predate hashing (only valid while those files are known stylized)
 
 Usage::
-  KODOKAN_DATA_DIR=~/kodokan_data PYTHONPATH=<repo> python examples/generate_stylized_clips.py [--limit N] [--only KEY]
+  KODOKAN_DATA_DIR=~/kodokan_data PYTHONPATH=<repo> python examples/generate_stylized_clips.py [--limit N] [--only KEY] [--restyle] [--check] [--adopt-unhashed]
 """
 
+import hashlib
 import os
 import subprocess
 import sys
@@ -30,20 +43,22 @@ import numpy as np
 
 sys.path.insert(0, str(Path(__file__).parent))  # sibling example modules
 # reuse the catalog iteration + source indexing + rep segmentation from the cutter
-from generate_webapp_clips import _index_videos, _rep_segments, HEIGHT  # noqa: E402
+from generate_webapp_clips import (  # noqa: E402
+    _APP_DATA_DIR, _index_videos, _rep_segments, APP_DIR, CLIPS_OUT, HEIGHT,
+)
 from kodokan import flashcards as fc  # noqa: E402
 
-APP_DIR = Path("/Users/thorwhalen/Dropbox/py/proj/tt/papp/migrated_apps/kodokan")
-OUT_DIR = APP_DIR / "frontend" / "clips_new"  # batch here; swap into clips/ after the run
+#: Rendered here, then moved over the live clip (same filesystem → atomic ``os.replace``).
+STAGE_DIR = _APP_DATA_DIR / "clips_stylizing"
 ANIMEGAN = Path.home() / "kodokan_data" / "style_models" / "face_paint_512_v2_0.onnx"
 FF = "/opt/homebrew/bin/ffmpeg"
 DEVICE = "mps"
 ORT_PROVIDERS = ["CoreMLExecutionProvider", "CPUExecutionProvider"]
 # Whether to add a soft blur ON TOP of the AnimeGAN cartoon face (throws only; pins always blur).
-# Off by default (initial rollout was anime-only); set BLUR_ANIME_FACES=1 to add the blur. The
-# per-clip record of which treatment each clip got lives in the manifest below. See ADR
-# misc/docs/adr-video-face-privacy.md.
-BLUR_ANIME_FACES = os.environ.get("BLUR_ANIME_FACES", "0") == "1"
+# On by default: every live throw clip in the manifest is anime+blur, so new clips must match;
+# set BLUR_ANIME_FACES=0 for anime-only. The per-clip record of which treatment each clip got
+# lives in the manifest below. See ADR misc/docs/adr-video-face-privacy.md.
+BLUR_ANIME_FACES = os.environ.get("BLUR_ANIME_FACES", "1") == "1"
 MANIFEST = Path(__file__).resolve().parents[1] / "misc" / "docs" / "face_privacy_manifest.json"
 
 
@@ -280,6 +295,17 @@ def process_clip(models, src_video, start, dur, out_path, mode="animegan"):
 # batch
 # --------------------------------------------------------------------------- #
 
+def _sha256(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+
+
+def _is_stylized(manifest, name):
+    """Recorded as stylized AND the live bytes are the ones that were stylized."""
+    rec = manifest["clips"].get(name)
+    live = CLIPS_OUT / name
+    return bool(rec and rec.get("sha256") and live.exists() and _sha256(live) == rec["sha256"])
+
+
 def main():
     only = None
     limit = None
@@ -287,8 +313,11 @@ def main():
         only = sys.argv[sys.argv.index("--only") + 1]
     if "--limit" in sys.argv:
         limit = int(sys.argv[sys.argv.index("--limit") + 1])
+    restyle = "--restyle" in sys.argv
+    check = "--check" in sys.argv
+    adopt = "--adopt-unhashed" in sys.argv
     import json
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    STAGE_DIR.mkdir(parents=True, exist_ok=True)
     vindex = _index_videos()
     catalog = fc.build_catalog()
     # Category decides the face treatment: nage-waza (has a category) → AnimeGAN cartoon face;
@@ -296,10 +325,24 @@ def main():
     throws = json.loads((APP_DIR / "data" / "throws.json").read_text())["throws"]
     def mode_for(key):
         return "animegan" if (throws.get(key, {}).get("category") or "").strip() else "blur"
-    models = _load_models()
+    # Per-clip treatment record (SSOT for 'which clip got which face treatment'). See the ADR.
+    manifest = json.loads(MANIFEST.read_text()) if MANIFEST.exists() else {"clips": {}}
+    manifest.setdefault("clips", {})
+    def flush_manifest():
+        MANIFEST.write_text(json.dumps(manifest, indent=1))
+
+    if adopt:
+        n = 0
+        for name, rec in manifest["clips"].items():
+            if not rec.get("sha256") and (CLIPS_OUT / name).exists():
+                rec["sha256"] = _sha256(CLIPS_OUT / name)
+                n += 1
+        flush_manifest()
+        print(f"adopted {n} unhashed manifest entries", flush=True)
+        return
 
     # build the work list (throw, video, rep) with the SAME names as the live clips
-    work = []
+    work, already = [], 0
     for key, entry in catalog.items():
         if only and key != only:
             continue
@@ -312,33 +355,39 @@ def main():
             src_file, _ = vindex[vid]
             for i, (start, dur) in enumerate(reps, 1):
                 name = f"{vid}.mp4" if i == 1 else f"{vid}_{i}.mp4"
-                work.append((key, src_file, start, dur, OUT_DIR / name, m))
+                if restyle or not _is_stylized(manifest, name):
+                    work.append((key, src_file, start, dur, STAGE_DIR / name, m))
+                else:
+                    already += 1
 
+    if check:
+        bad = [w[4].name for w in work]
+        print(f"{already} clips verifiably stylized, {len(bad)} NOT: {bad[:20]}", flush=True)
+        sys.exit(1 if bad else 0)
     if limit:
         work = work[:limit]
     total = len(work)
-    print(f"{total} clips to stylize → {OUT_DIR} (blur_anime={BLUR_ANIME_FACES})", flush=True)
+    print(f"{total} clips to stylize → {CLIPS_OUT}, {already} already stylized "
+          f"(blur_anime={BLUR_ANIME_FACES})", flush=True)
+    if not work:
+        return
+    models = _load_models()
 
-    # Per-clip treatment record (SSOT for 'which clip got which face treatment'). See the ADR.
-    manifest = json.loads(MANIFEST.read_text()) if MANIFEST.exists() else {"clips": {}}
-    manifest.setdefault("clips", {})
     def record(name, key, m):
         manifest["clips"][name] = {"throw": key, "mode": m,
-                                   "blur_anime": bool(BLUR_ANIME_FACES and m == "animegan")}
-    def flush_manifest():
-        MANIFEST.write_text(json.dumps(manifest, indent=1))
+                                   "blur_anime": bool(BLUR_ANIME_FACES and m == "animegan"),
+                                   "sha256": _sha256(CLIPS_OUT / name)}
 
-    done = fail = skip = 0
+    done = fail = 0
+    skip = already
     t0 = time.time()
     for n, (key, src, start, dur, out, m) in enumerate(work, 1):
-        if out.exists():
-            skip += 1
-            continue
         try:
             ok = process_clip(models, src, start, dur, out, m)
             done += ok
             fail += (not ok)
             if ok:
+                os.replace(out, CLIPS_OUT / out.name)  # the plain cut becomes the stylized one
                 record(out.name, key, m)
         except Exception as e:  # noqa: BLE001 — keep the batch going; one bad clip shouldn't stop it
             fail += 1

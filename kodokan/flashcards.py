@@ -228,11 +228,22 @@ def log_response(
     return rec
 
 
-def build_catalog(*, min_two_person_frac: float | None = None, min_demo_s: float = 1.0):
+def build_catalog(
+    *,
+    min_two_person_frac: float | None = None,
+    min_demo_s: float = 1.0,
+    max_demos: int | None = None,
+    segments=None,
+):
     """Build ``{technique_key: {"name", "clips":[...]}}`` from the pose/segments stores.
 
     Aggregates all sources: each clip contributes its demo intervals (for looping media),
     so a technique present in several sources offers varied multiple-choice media.
+
+    ``max_demos`` caps the demos kept per source video (``None``, the default, keeps every
+    demo that passes the quality gate — #37: the store has 6–8 reps per video and all of
+    them are worth showing). ``segments`` is the ``{video_id: record}`` mapping to read
+    (default: :func:`kodokan.store.segments_store`).
     """
     from kodokan import store
     from kodokan.acquire import canonical_technique_key
@@ -240,7 +251,7 @@ def build_catalog(*, min_two_person_frac: float | None = None, min_demo_s: float
 
     if min_two_person_frac is None:
         min_two_person_frac = EVAL_MIN_TWO_PERSON_FRAC
-    ss = store.segments_store()
+    ss = segments if segments is not None else store.segments_store()
     catalog: dict[str, dict] = {}
     for vid in ss:
         rec = ss[vid]
@@ -268,7 +279,8 @@ def build_catalog(*, min_two_person_frac: float | None = None, min_demo_s: float
                 "source": rec.get("source", "unknown"),
                 "source_url": rec.get("source_url"),
                 "demos": [
-                    {"start_s": d["start_s"], "end_s": d["end_s"]} for d in demos[:3]
+                    {"start_s": d["start_s"], "end_s": d["end_s"]}
+                    for d in demos[:max_demos]
                 ],
             }
         )

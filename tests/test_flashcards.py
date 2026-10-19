@@ -70,3 +70,23 @@ def test_log_response_roundtrip(tmp_path):
     assert rec["correct"] and rec["score"] == 1.0
     assert rec["target_key"] == "t0" and rec["chosen_key"] == "t0"
     assert any(k.endswith(".json") for k in store)
+
+
+def _segments(n_demos=8):
+    demos = [
+        {"start_s": 3.0 * i, "end_s": 3.0 * i + 2.5, "two_person_frac": 0.9}
+        for i in range(n_demos)
+    ]
+    demos.append({"start_s": 99.0, "end_s": 101.0, "two_person_frac": 0.1})  # gated out
+    return {"vid1": {"technique": "Seoi-nage", "source": "s", "demos": demos}}
+
+
+def test_build_catalog_keeps_every_gated_demo_by_default():
+    (entry,) = fc.build_catalog(segments=_segments(8)).values()
+    (clip,) = entry["clips"]
+    assert len(clip["demos"]) == 8  # #37: no hidden cap; the low-visibility demo is dropped
+
+
+def test_build_catalog_max_demos_caps_per_video():
+    (entry,) = fc.build_catalog(segments=_segments(8), max_demos=3).values()
+    assert [d["start_s"] for d in entry["clips"][0]["demos"]] == [0.0, 3.0, 6.0]
