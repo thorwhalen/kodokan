@@ -44,7 +44,7 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).parent))  # sibling example modules
 # reuse the catalog iteration + source indexing + rep segmentation from the cutter
 from generate_webapp_clips import (  # noqa: E402
-    _APP_DATA_DIR, _index_videos, _rep_segments, APP_DIR, CLIPS_OUT, HEIGHT,
+    _APP_DATA_DIR, _index_videos, _rep_segments, APP_DIR, CLIPS_OUT, HEIGHT, MANIFEST,
 )
 from kodokan import flashcards as fc  # noqa: E402
 
@@ -59,7 +59,6 @@ ORT_PROVIDERS = ["CoreMLExecutionProvider", "CPUExecutionProvider"]
 # set BLUR_ANIME_FACES=0 for anime-only. The per-clip record of which treatment each clip got
 # lives in the manifest below. See ADR misc/docs/adr-video-face-privacy.md.
 BLUR_ANIME_FACES = os.environ.get("BLUR_ANIME_FACES", "1") == "1"
-MANIFEST = Path(__file__).resolve().parents[1] / "misc" / "docs" / "face_privacy_manifest.json"
 
 
 # --------------------------------------------------------------------------- #
@@ -354,7 +353,7 @@ def main():
                 continue
             src_file, _ = vindex[vid]
             for i, (start, dur) in enumerate(reps, 1):
-                name = f"{vid}.mp4" if i == 1 else f"{vid}_{i}.mp4"
+                name = fc.clip_filename(vid, start, dur)
                 if restyle or not _is_stylized(manifest, name):
                     work.append((key, src_file, start, dur, STAGE_DIR / name, m))
                 else:

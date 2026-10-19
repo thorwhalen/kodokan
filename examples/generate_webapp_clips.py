@@ -10,7 +10,11 @@ Per-source burned-in name locations (fractions of frame), found by inspecting fr
   - efficient_judo : top-right   (brand watermark is top-left, left alone)
   - kodokan_ijf    : bottom-left white box (Kodokan / IJF logos left alone)
 
-Idempotent: skips clips already generated unless --force. Usage::
+Clip files are named by segment identity (``kodokan.clip_filename``: video + start + duration,
+#45), so an existing name always shows the same cut. Idempotent: skips clips already generated
+unless --force. (The one-time rename from the old positional names, ``{vid}_2.mp4``…, ran on
+2026-10-19 and was then removed: being positional, a later re-run could attach stale cuts to
+new identities. It is in git history if a host with old names ever needs it.) Usage::
     PYTHONPATH=<repo> python examples/generate_webapp_clips.py [--force]
 
 Two outputs, two very different lifecycles — do not merge them:
@@ -52,6 +56,8 @@ _APP_DATA_DIR = Path(
 CLIPS_OUT = _APP_DATA_DIR / "clips"
 
 CATALOG_OUT = APP_DIR / "data" / "catalog.json"
+#: Per-clip face-privacy record (keyed by clip filename); written by generate_stylized_clips.py.
+MANIFEST = Path(__file__).resolve().parents[1] / "misc" / "docs" / "face_privacy_manifest.json"
 LOOP_MAX_S, LOOP_MIN_S, N_CONFUSABLE, HEIGHT = 7.0, 1.5, 8, 480
 #: Cap on demo repetitions exported per source video; ``None`` exports every rep that
 #: clears ``LOOP_MIN_S`` (#37: show all segments so badly-cut ones can be flagged + fixed).
@@ -140,9 +146,7 @@ def main():
             src_file, source = vindex[vid]
             base_url = c.get("source_url") or f"https://www.youtube.com/watch?v={vid}"
             for i, (start, dur) in enumerate(reps, 1):
-                # rep 1 keeps the historical {vid}.mp4 name (reuses already-cut clips);
-                # extra reps are {vid}_2.mp4, {vid}_3.mp4, …
-                name = f"{vid}.mp4" if i == 1 else f"{vid}_{i}.mp4"
+                name = fc.clip_filename(vid, start, dur)  # identity, not position (#45)
                 out_file = CLIPS_OUT / name
                 if force or not out_file.exists():
                     if _make_clip(src_file, source, start, dur, out_file):
