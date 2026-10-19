@@ -53,7 +53,9 @@ CLIPS_OUT = _APP_DATA_DIR / "clips"
 
 CATALOG_OUT = APP_DIR / "data" / "catalog.json"
 LOOP_MAX_S, LOOP_MIN_S, N_CONFUSABLE, HEIGHT = 7.0, 1.5, 8, 480
-MAX_REPS_PER_SOURCE = 4  # export up to this many demo repetitions per source video (#34)
+#: Cap on demo repetitions exported per source video; ``None`` exports every rep that
+#: clears ``LOOP_MIN_S`` (#37: show all segments so badly-cut ones can be flagged + fixed).
+MAX_REPS_PER_SOURCE = None
 
 # (x, y, w, h) as fractions of the frame — region to blur per source
 SOURCE_BLUR = {
@@ -68,7 +70,7 @@ _VID_RE = re.compile(r"\(([A-Za-z0-9_-]{6,})\)\.mp4$")
 
 
 def _rep_segments(demos, max_reps=MAX_REPS_PER_SOURCE):
-    """All demo repetitions worth showing (≥LOOP_MIN_S), capped at ``max_reps`` (#34).
+    """All demo repetitions worth showing (≥LOOP_MIN_S), capped at ``max_reps`` if given.
 
     Returns a list of (start_s, duration) tuples — one per repetition — so the app can offer
     several example clips per throw instead of just one. Falls back to the first demo (even if
@@ -79,7 +81,7 @@ def _rep_segments(demos, max_reps=MAX_REPS_PER_SOURCE):
         dur = d["end_s"] - d["start_s"]
         if dur >= LOOP_MIN_S:
             reps.append((float(d["start_s"]), min(dur, LOOP_MAX_S)))
-        if len(reps) >= max_reps:
+        if max_reps is not None and len(reps) >= max_reps:
             break
     if not reps and demos:
         reps.append((float(demos[0]["start_s"]), LOOP_MAX_S))
@@ -156,6 +158,11 @@ def main():
                     "source": source,
                     # deep-link the "watch original" to this repetition's timestamp
                     "url": f"{base_url}&t={int(start)}s",
+                    # which cut of the source this is — makes an owner's QA note about a
+                    # badly-cut segment self-describing and traceable to the segments store (#37)
+                    "rep": i,
+                    "start_s": round(start, 2),
+                    "dur_s": round(dur, 2),
                 })
         if not clips:
             continue
