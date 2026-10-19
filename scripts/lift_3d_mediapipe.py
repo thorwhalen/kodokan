@@ -8,8 +8,13 @@ landmarks (33 joints). 3D joint *angles* computed from these are viewpoint-invar
 Output: ``{video_id}_3d.npz`` with ``world`` (F, P, 33, 4)=(x,y,z,visibility),
 ``frame_indices``, ``fps``.
 
+``--letterbox`` (#10) pads each person's crop to a SQUARE around the bbox centre (black
+beyond the frame edge) instead of feeding the raw, non-square bbox. MediaPipe resizes its
+input to a square, so a tall/narrow bbox is stretched anisotropically — a distortion
+pelvis-frame canonicalization cannot undo. Letterboxed lifts go to ``{video_id}_3d_sq.npz``.
+
 Usage (venv python):
-    ~/.kodokan_mp/bin/python scripts/lift_3d_mediapipe.py [--stride 2]
+    ~/.kodokan_mp/bin/python scripts/lift_3d_mediapipe.py [--stride 2] [--letterbox]
 """
 
 import argparse
@@ -36,7 +41,22 @@ def _bbox(kp17, W, H, margin=0.25, conf_thresh=0.3):
     return (x0, y0, x1, y1) if (x1 - x0 > 10 and y1 - y0 > 10) else None
 
 
-def lift_one(npz_path, poser, stride):
+def square_crop(frame, bb):
+    """The bbox's content centred in a square canvas (side = the bbox's longer side), zero-
+    padded wherever the square leaves the frame — no stretch, no re-centring bias."""
+    x0, y0, x1, y1 = bb
+    H, W = frame.shape[:2]
+    side = max(x1 - x0, y1 - y0)
+    cx, cy = (x0 + x1) // 2, (y0 + y1) // 2
+    sx0, sy0 = cx - side // 2, cy - side // 2
+    out = np.zeros((side, side, 3), dtype=frame.dtype)
+    fx0, fy0 = max(0, sx0), max(0, sy0)
+    fx1, fy1 = min(W, sx0 + side), min(H, sy0 + side)
+    out[fy0 - sy0 : fy1 - sy0, fx0 - sx0 : fx1 - sx0] = frame[fy0:fy1, fx0:fx1]
+    return out
+
+
+def lift_one(npz_path, poser, stride, *, letterbox=False):
     d = np.load(npz_path, allow_pickle=False)
     kps, fi = d["keypoints"], d["frame_indices"]
     W, H, vp = int(d["width"]), int(d["height"]), str(d["video_path"])
@@ -63,7 +83,7 @@ def lift_one(npz_path, poser, stride):
             if bb is None:
                 continue
             x0, y0, x1, y1 = bb
-            crop = frame[y0:y1, x0:x1]
+            crop = square_crop(frame, bb) if letterbox else frame[y0:y1, x0:x1]
             if crop.size == 0:
                 continue
             res = poser.process(cv2.cvtColor(crop, cv2.COLOR_BGR2RGB))
@@ -75,7 +95,7 @@ def lift_one(npz_path, poser, stride):
                 dtype=np.float32,
             )
     cap.release()
-    out_path = str(npz_path).replace(".npz", "_3d.npz")
+    out_path = str(npz_path).replace(".npz", "_3d_sq.npz" if letterbox else "_3d.npz")
     np.savez(out_path, world=out, frame_indices=fi_sub, fps=float(d["fps"]))
     present = ~np.all(np.isnan(out[..., 0]), axis=2)
     print(
@@ -87,16 +107,17 @@ def lift_one(npz_path, poser, stride):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--stride", type=int, default=2)
+    ap.add_argument("--letterbox", action="store_true", help="square-pad crops (no stretch)")
     args = ap.parse_args()
     poser = mp_pose.Pose(
         static_image_mode=True, model_complexity=1, min_detection_confidence=0.3
     )
     files = [
-        f for f in sorted(glob.glob(str(BRIDGE / "*.npz"))) if not f.endswith("_3d.npz")
+        f for f in sorted(glob.glob(str(BRIDGE / "*.npz"))) if "_3d" not in Path(f).stem
     ]
-    print(f"lifting {len(files)} clips (stride {args.stride})", flush=True)
+    print(f"lifting {len(files)} clips (stride {args.stride}, letterbox={args.letterbox})", flush=True)
     for npz in files:
-        lift_one(npz, poser, args.stride)
+        lift_one(npz, poser, args.stride, letterbox=args.letterbox)
     poser.close()
     print("done", flush=True)
 

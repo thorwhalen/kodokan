@@ -59,18 +59,17 @@ comparison. Tracked as a research task.
    reports them). Over 804 demos: **fell-back 0.0%, abstained 16.8%, median margin 0.96
    torso-lengths** — confident on ~83% of demos. **Still open:** the heuristic is
    *instrumented*, not *validated* — there is no hand-labeled tori ground truth to check it
-   against.
-3. **3D pelvis-frame canonicalization** + fair 2D-vs-3D re-run — ⚠️ **PARTIAL**.
-   `kodokan.canon3d` (`pelvis_frame` / `canonicalize_pose`) lands the Procrustes
-   canonicalization, unit-tested for invariance to camera rotation + translation + scale.
-   Canonical 3D **positions** are meaningfully more separable than raw camera-frame ones
-   (**0.232 acc / AUC 0.564** vs **0.049 / AUC 0.451**, 10 techniques). But joint **angles**
-   are *already* invariant to rigid + isotropic-scale transforms, so canonicalization is a
-   mathematical **no-op for angle features** (verified: identical numbers) — the earlier
-   angle-based 3D conclusion is unaffected by it. **Still open:** canonicalization cannot
-   undo the *anisotropic* bbox-crop distortion this review named, so a complete viewpoint
-   re-test still needs **square/letterboxed re-lifting** plus a **stride- & person-matched**
-   2D-vs-3D comparison.
+   against. Producing it needs the owner's labels: tracked as a manual-task in #49.
+3. **3D pelvis-frame canonicalization** + fair 2D-vs-3D re-run — ✅ **DONE** (2026-10-19). `kodokan.canon3d` does the Procrustes canonicalization (rotation + translation + isotropic scale; a no-op for angle features, which are already invariant). The two missing pieces are now in: `scripts/lift_3d_mediapipe.py --letterbox` re-lifts every person crop **square-padded** (MediaPipe squashes its input to a square, so the raw tall bbox stretched the landmarks anisotropically — the distortion canon cannot undo), and `examples/eval_features_3d.py --matched-2d` compares 2D and 3D joint angles on the **same clips, same stride-subsampled frames, same demos and same person slot**, with a **paired bootstrap** over demos (`recognize.paired_bootstrap_separability`). Same 10 techniques / 82 demos, LOO-medoid harness:
+
+   | Lift | 2D angles acc / AUC | 3D angles acc / AUC | 3D AUC 95% CI | Δ AUC (2D−3D) 95% CI |
+   |---|---|---|---|---|
+   | raw bbox crop | 0.183 / 0.575 | 0.098 / 0.504 | [0.455, 0.555] | [−0.002, 0.141] |
+   | letterboxed | 0.207 / 0.582 | 0.171 / 0.562 | [0.518, 0.608] | [−0.050, 0.085] |
+
+   Unmatched 3D on the letterboxed lift: angles 0.183 / AUC 0.572 (bbox: 0.085 / 0.487); canonical positions 0.244 / 0.586 (bbox 0.232 / 0.564; raw camera-frame 0.122 / 0.417). Both-people-present frames rise from 44.5% to 49.0% of lifted frames.
+
+   **Reading.** The old "3D angles at chance" result was largely an **artifact of the crop stretch**: letterboxing lifts 3D angles from chance to above chance. But on a fair, matched test **3D is not better than 2D** (the difference CI straddles 0). So 3D lifting does not buy separability here, and the weak separability cannot be attributed to camera viewpoint on this evidence — nor can viewpoint be ruled out at n = 82, and all of this is within-clip (the cross-source result in item 1 is the binding one).
 4. **`feature-bakeoff` rigor** — ✅ **DONE (code)**. `recognize.loo_medoid_separability` does
    a true **leave-one-demo-out medoid** (a held-out demo never influences its own technique's
    reference, so there are no self-zeros to filter), and `recognize.roc_auc_distances` is a
@@ -101,7 +100,7 @@ and item 1 shows it collapses to chance across independent clips.
   0.059 majority), but it is **not yet validated as clip-independent technique recognition**.
 - The **"2D/3D descriptors are at chance for separability"** null result is robust (the
   biases were optimistic, yet the result was still null); the **"3D refutes viewpoint"**
-  causal claim is withdrawn pending a canonicalized test.
+  causal claim stays withdrawn: the fair, letterboxed, matched re-test (item 3) finds 3D no better than 2D, so lifting to 3D does not help, but viewpoint is neither shown nor ruled out as the limit.
 - **Role-consistency** and **learned-classifier** levers appear to hold after the leak fix
   (re-measured), but differences should be reported with CIs and, ultimately, under
   leave-one-clip-out.

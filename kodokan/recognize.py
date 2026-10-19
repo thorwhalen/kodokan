@@ -362,7 +362,9 @@ def _pairwise(feats: list, distance) -> np.ndarray:
     return D
 
 
-def loo_medoid_separability(feats_by_tech: list, *, distance) -> dict:
+def loo_medoid_separability(
+    feats_by_tech: list, *, distance, per_demo: bool = False
+) -> dict:
     """Leak-free (leave-one-demo-out medoid) technique-separability report.
 
     The earlier feature bake-off built each technique's medoid reference from
@@ -376,6 +378,9 @@ def loo_medoid_separability(feats_by_tech: list, *, distance) -> dict:
     Args:
         feats_by_tech: per technique, a list of per-demo feature arrays.
         distance: ``(feat_a, feat_b) -> float`` (e.g. normalized DTW).
+        per_demo: also return ``per_demo`` — one ``{tech, genuine, impostor, correct}``
+            per held-out demo, in input order — so callers can bootstrap without
+            recomputing distances (see :func:`paired_bootstrap_separability`).
     """
     techs = [t for t in feats_by_tech if len(t) >= 2]
     n = len(techs)
@@ -384,6 +389,7 @@ def loo_medoid_separability(feats_by_tech: list, *, distance) -> dict:
     genuine: list[float] = []
     impostor: list[float] = []
     correct = total = 0
+    rows: list[dict] = []
     for i, t in enumerate(techs):
         for d in range(len(t)):
             others = [j for j in range(len(t)) if j != d]
@@ -398,7 +404,12 @@ def loo_medoid_separability(feats_by_tech: list, *, distance) -> dict:
             if imp_here:
                 total += 1
                 correct += int(g < min(imp_here))
+            rows.append(
+                {"tech": i, "genuine": g, "impostor": imp_here,
+                 "correct": bool(imp_here) and g < min(imp_here)}
+            )
     auc = roc_auc_distances(genuine, impostor)
+    extra = {"per_demo": rows} if per_demo else {}
     return {
         "n_tech": n,
         "n_demos": len(genuine),
@@ -407,7 +418,47 @@ def loo_medoid_separability(feats_by_tech: list, *, distance) -> dict:
         "genuine_median": round(float(np.median(genuine)), 4) if genuine else None,
         "impostor_median": round(float(np.median(impostor)), 4) if impostor else None,
         "auc": round(auc, 3) if np.isfinite(auc) else None,
+        **extra,
     }
+
+
+def _rows_metrics(rows: list[dict]) -> tuple[float, float]:
+    """(accuracy, ROC-AUC) of a list of ``per_demo`` rows."""
+    acc = float(np.mean([r["correct"] for r in rows])) if rows else float("nan")
+    gen = [r["genuine"] for r in rows]
+    imp = [d for r in rows for d in r["impostor"]]
+    return acc, roc_auc_distances(gen, imp)
+
+
+def paired_bootstrap_separability(
+    rows_a: list[dict], rows_b: list[dict], *, n_boot: int = 2000, seed: int = 0
+) -> dict:
+    """95% percentile-bootstrap CIs for A, B and the PAIRED difference A−B.
+
+    ``rows_a``/``rows_b`` are ``per_demo`` outputs of :func:`loo_medoid_separability`
+    over the SAME demos in the same order (e.g. two modalities on identical frames), so
+    each resample draws the same demos for both — the difference CI then reflects only
+    the modality, not which demos happened to be drawn. Distances are reused, not
+    recomputed. A difference CI that straddles 0 means "not distinguishable at this n".
+    """
+    if len(rows_a) != len(rows_b):
+        raise ValueError(f"paired rows differ in length: {len(rows_a)} vs {len(rows_b)}")
+    rng = np.random.default_rng(seed)
+    n = len(rows_a)
+    stats = {k: [] for k in ("acc_a", "acc_b", "auc_a", "auc_b", "acc_diff", "auc_diff")}
+    for _ in range(n_boot):
+        idx = rng.integers(0, n, n)
+        acc_a, auc_a = _rows_metrics([rows_a[i] for i in idx])
+        acc_b, auc_b = _rows_metrics([rows_b[i] for i in idx])
+        for k, v in zip(stats, (acc_a, acc_b, auc_a, auc_b, acc_a - acc_b, auc_a - auc_b)):
+            stats[k].append(v)
+
+    def ci(v):
+        v = np.asarray(v, dtype=float)
+        v = v[np.isfinite(v)]
+        return [round(float(np.percentile(v, 2.5)), 3), round(float(np.percentile(v, 97.5)), 3)]
+
+    return {"n_demos": n, "n_boot": n_boot, **{k: ci(v) for k, v in stats.items()}}
 
 
 def confusion_pairs(y_true, y_pred, *, top: int | None = None) -> list[dict]:
