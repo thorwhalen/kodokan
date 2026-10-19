@@ -1,0 +1,25 @@
+kodokan.pose
+============
+
+.. automodule:: kodokan.pose
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      COCO17_KEYPOINTS
+      COCO17_SKELETON
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      estimate_poses
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      PoseSequence
+   

@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "built_at": "2026-10-19T13:07:06Z",
+  "package": {
+    "name": "kodokan",
+    "version": "0.0.19",
+    "display_name": "kodokan",
+    "source": "pyproject.toml"
+  },
+  "git": {
+    "available": true,
+    "commit": "378289d2114d0ce3a53cf1e47bc5d18e6ca84c9a",
+    "short_commit": "378289d",
+    "branch": "main",
+    "tags": [],
+    "dirty": false,
+    "remote_url": "https://github.com/thorwhalen/kodokan",
+    "commit_url": "https://github.com/thorwhalen/kodokan/commit/378289d2114d0ce3a53cf1e47bc5d18e6ca84c9a",
+    "error": null
+  },
+  "ci": {
+    "provider": "github",
+    "repository": "thorwhalen/kodokan",
+    "sha": "378289d2114d0ce3a53cf1e47bc5d18e6ca84c9a",
+    "sha_in_history": true,
+    "ref": "refs/heads/main",
+    "ref_name": "main",
+    "run_id": "39257229453",
+    "run_url": "https://github.com/thorwhalen/kodokan/actions/runs/39257229453",
+    "server_url": "https://github.com"
+  },
+  "tools": {
+    "epythet": "0.2.18",
+    "sphinx": "9.1.0",
+    "docutils": "0.22.4",
+    "python": "3.12.15"
+  },
+  "config": {
+    "theme": "auto",
+    "html_theme": "pydata_sphinx_theme",
+    "accent": "#005b9c",
+    "mode": "auto",
+    "api_generator": "autosummary",
+    "ignore": [
+      "tests/",
+      "scrap/",
+      "examples/"
+    ],
+    "agent_outputs": true,
+    "aggregates": [
+      "md"
+    ],
+    "ai_artifacts": true,
+    "provenance": true,
+    "docs_dir": "docsrc"
+  },
+  "site": {
+    "modules_documented": 13,
+    "objects_documented": 125
+  },
+  "pypi": {
+    "checked": true,
+    "latest": "0.0.20",
+    "relation": "behind",
+    "error": null
+  },
+  "reproduce": "git clone https://github.com/thorwhalen/kodokan && cd kodokan\ngit checkout 378289d2114d0ce3a53cf1e47bc5d18e6ca84c9a\npip install \"epythet==0.2.18\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "warnings": [],
+  "alignment": {
+    "aligned": false,
+    "notes": [
+      "The documented version (0.0.19) is behind the latest release on PyPI (0.0.20): `pip install kodokan` gives newer code than these docs describe."
+    ]
+  }
+}

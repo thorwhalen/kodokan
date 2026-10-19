@@ -1,0 +1,29 @@
+kodokan.learning
+================
+
+.. automodule:: kodokan.learning
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      empirical_confusion
+      item_accuracy
+      list_strategies
+      make_strategy
+      merge_similarity
+      pick_distractors
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ConfusionWeighted
+      FSRSLite
+      Leitner
+      SM2
+      Selection
+      Strategy
+      UniformRandom
+   

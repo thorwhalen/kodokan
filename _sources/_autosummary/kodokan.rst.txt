@@ -1,0 +1,57 @@
+﻿kodokan
+=======
+
+.. automodule:: kodokan
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      estimate_poses
+      estimate_poses_tracked
+      render_skeleton_video
+      log_to_rerun
+      segment_demonstrations
+      compare
+      angle_features
+      distance_matrix
+      pose_store
+      segments_store
+      load_all_tidy
+      build_reference
+      score
+      feedback
+      demo_features
+      make_problem
+      build_catalog
+      build_confusability
+      score_response
+      next_target
+      log_response
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      PoseSequence
+      Segment
+   
+.. rubric:: Modules
+
+.. autosummary::
+   :toctree:
+   :recursive:
+
+   acquire
+   canon3d
+   config
+   descriptors
+   flashcards
+   learning
+   pose
+   recognize
+   segment
+   store
+   track
+   viz

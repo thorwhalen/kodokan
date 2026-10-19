@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="alternate" type="text/markdown" href="kodokan.recognize.html.md">
+<link rel="describedby" href="../llms.txt" type="text/markdown">
+<link rel="alternate" type="text/markdown" href="kodokan.recognize.html.md">
+<link rel="describedby" href="llms.txt">
+    <title>kodokan.recognize &#8212; kodokan</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_autodoc_typehints.css?v=057ac668" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/epythet.css?v=11616352" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
+
+    <script src="../_static/documentation_options.js?v=2fd7553c"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=fd10adb8"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_autosummary/kodokan.recognize';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="kodokan.segment" href="kodokan.segment.html" />
+    <link rel="prev" title="kodokan.pose" href="kodokan.pose.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.0.19" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">kodokan</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/thorwhalen/kodokan" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/thorwhalen/kodokan" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="kodokan.html">kodokan</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kodokan.acquire.html">kodokan.acquire</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.canon3d.html">kodokan.canon3d</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.config.html">kodokan.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.descriptors.html">kodokan.descriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.flashcards.html">kodokan.flashcards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.learning.html">kodokan.learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.pose.html">kodokan.pose</a></li>
+<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">kodokan.recognize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.segment.html">kodokan.segment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.store.html">kodokan.store</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.track.html">kodokan.track</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.viz.html">kodokan.viz</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../api.html" class="nav-link">API reference</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="kodokan.html" class="nav-link">kodokan</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">kodokan.recognize</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-kodokan.recognize">
+<span id="kodokan-recognize"></span><h1>kodokan.recognize<a class="headerlink" href="#module-kodokan.recognize" title="Link to this heading">#</a></h1>
+<p>Learned-vs-DTW technique recognition experiments (data-appropriate, no GPU).</p>
+<p>The feature bake-off showed DTW on hand-crafted angles can’t tell techniques apart.
+This module tests whether the bottleneck is the <em>classifier</em>, the <em>features</em>, or
+tori/uke <em>role inconsistency</em>, with leave-one-out CV on the small dataset:</p>
+<ul class="simple">
+<li><p>feature modes: <code class="docutils literal notranslate"><span class="pre">primary_angles</span></code> (baseline), <code class="docutils literal notranslate"><span class="pre">tori_angles</span></code> (role-consistent —
+tori picked as the person left standing), <code class="docutils literal notranslate"><span class="pre">tori_angles_pos</span></code>.</p></li>
+<li><p>methods: <code class="docutils literal notranslate"><span class="pre">dtw_1nn</span></code> (DTW nearest-neighbour), <code class="docutils literal notranslate"><span class="pre">pool_centroid</span></code> / <code class="docutils literal notranslate"><span class="pre">pool_knn</span></code>
+(temporal-pyramid pooled descriptor + nearest-centroid / kNN), and <code class="docutils literal notranslate"><span class="pre">pool_lda_knn</span></code>
+(LDA-reduced + kNN, if scikit-learn is available).</p></li>
+</ul>
+<p>Everything is numpy (sklearn optional), appropriate for ~80 samples where deep nets
+would overfit; the same harness scales to more techniques once more data is collected.</p>
+<p class="rubric">Functions</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.recognize.classification_metrics" title="kodokan.recognize.classification_metrics"><code class="xref py py-obj docutils literal notranslate"><span class="pre">classification_metrics</span></code></a>(y_true, y_pred, *[, ...])</p></td>
+<td><p>Top-1, balanced (macro-recall), majority-class baseline, n_classes, n.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.recognize.confusion_pairs" title="kodokan.recognize.confusion_pairs"><code class="xref py py-obj docutils literal notranslate"><span class="pre">confusion_pairs</span></code></a>(y_true, y_pred, *[, top])</p></td>
+<td><p>Most-frequent misclassifications as <code class="docutils literal notranslate"><span class="pre">{true,</span> <span class="pre">pred,</span> <span class="pre">count}</span></code> (off-diagonal).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.recognize.demo_feature" title="kodokan.recognize.demo_feature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">demo_feature</span></code></a>(pose_seq, start_s, end_s, *, mode)</p></td>
+<td><p>Per-frame features for one demo under a role/feature mode.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtw_1nn_accuracy</span></code>(feature_seqs, labels)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.recognize.dtw_1nn_predict" title="kodokan.recognize.dtw_1nn_predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">dtw_1nn_predict</span></code></a>(feature_seqs, labels)</p></td>
+<td><p>Leave-one-out 1-NN by DTW distance; returns predicted label per item.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.recognize.loo_medoid_separability" title="kodokan.recognize.loo_medoid_separability"><code class="xref py py-obj docutils literal notranslate"><span class="pre">loo_medoid_separability</span></code></a>(feats_by_tech, *, ...)</p></td>
+<td><p>Leak-free (leave-one-demo-out medoid) technique-separability report.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.recognize.loo_pooled_predict" title="kodokan.recognize.loo_pooled_predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">loo_pooled_predict</span></code></a>(X, y, *[, method, k, groups])</p></td>
+<td><p>Leave-one-out (or leave-one-GROUP-out) predictions; preprocessing fit on train only.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pool_centroid_accuracy</span></code>(X, y)</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pool_knn_accuracy</span></code>(X, y[, k])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pool_lda_knn_accuracy</span></code>(X, y[, k])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.recognize.pooled_descriptor" title="kodokan.recognize.pooled_descriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pooled_descriptor</span></code></a>(feat, *[, levels])</p></td>
+<td><p>Temporal-pyramid pooled fixed-length descriptor (mean+std per segment).</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.recognize.roc_auc_distances" title="kodokan.recognize.roc_auc_distances"><code class="xref py py-obj docutils literal notranslate"><span class="pre">roc_auc_distances</span></code></a>(genuine, impostor)</p></td>
+<td><p>Standard ROC-AUC for a <em>distance</em> score: <code class="docutils literal notranslate"><span class="pre">P(impostor</span> <span class="pre">&gt;</span> <span class="pre">genuine)</span></code> (ties=0.5).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.recognize.tori_decision" title="kodokan.recognize.tori_decision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tori_decision</span></code></a>(pose_seq, start_s, end_s, *[, ...])</p></td>
+<td><p>Tori (thrower) heuristic with a confidence margin and an abstain flag.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.recognize.tori_decision_stats" title="kodokan.recognize.tori_decision_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tori_decision_stats</span></code></a>(decisions)</p></td>
+<td><p>Aggregate fall-back / abstain rates and median margin over decisions.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.recognize.tori_index" title="kodokan.recognize.tori_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tori_index</span></code></a>(pose_seq, start_s, end_s)</p></td>
+<td><p>Heuristic tori slot (thin wrapper over <a class="reference internal" href="#kodokan.recognize.tori_decision" title="kodokan.recognize.tori_decision"><code class="xref py py-func docutils literal notranslate"><span class="pre">tori_decision()</span></code></a>).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Classes</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.recognize.ToriDecision" title="kodokan.recognize.ToriDecision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ToriDecision</span></code></a>(index, margin, fell_back, abstained)</p></td>
+<td><p>Outcome of the tori/uke role heuristic, with a confidence margin.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py class">
+<dt class="sig sig-object py" id="kodokan.recognize.ToriDecision">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kodokan.recognize.</span></span><span class="sig-name descname"><span class="pre">ToriDecision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fell_back</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abstained</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/recognize.html#ToriDecision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.recognize.ToriDecision" title="Link to this definition">#</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Outcome of the tori/uke role heuristic, with a confidence margin.</p>
+<p>The “role-consistency is the dominant recognition lever” claim rests on this
+heuristic, so — per the adversarial review — every call is now instrumented.</p>
+<dl class="field-list simple">
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kodokan.recognize.ToriDecision.index">
+<span class="sig-name descname"><span class="pre">index</span></span><a class="headerlink" href="#kodokan.recognize.ToriDecision.index" title="Link to this definition">#</a></dt>
+<dd><p>Chosen tori slot (always a usable slot, even when abstaining).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kodokan.recognize.ToriDecision.margin">
+<span class="sig-name descname"><span class="pre">margin</span></span><a class="headerlink" href="#kodokan.recognize.ToriDecision.margin" title="Link to this definition">#</a></dt>
+<dd><p>Finish-frame hip-y separation between the two judoka in
+<em>torso-length</em> units (how much lower uke’s hips sit than tori’s).
+Larger = more confident; <code class="docutils literal notranslate"><span class="pre">nan</span></code> when the cue was unusable.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kodokan.recognize.ToriDecision.fell_back">
+<span class="sig-name descname"><span class="pre">fell_back</span></span><a class="headerlink" href="#kodokan.recognize.ToriDecision.fell_back" title="Link to this definition">#</a></dt>
+<dd><p>The hip-y cue was unusable, so the most-present slot was used.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kodokan.recognize.ToriDecision.abstained">
+<span class="sig-name descname"><span class="pre">abstained</span></span><a class="headerlink" href="#kodokan.recognize.ToriDecision.abstained" title="Link to this definition">#</a></dt>
+<dd><p>Low-confidence decision (<code class="docutils literal notranslate"><span class="pre">margin</span></code> below the abstain
+threshold, or a fall-back) — the role label should not be trusted.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bool</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.recognize.classification_metrics">
+<span class="sig-prename descclassname"><span class="pre">kodokan.recognize.</span></span><span class="sig-name descname"><span class="pre">classification_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_boot</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/recognize.html#classification_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.recognize.classification_metrics" title="Link to this definition">#</a></dt>
+<dd><p>Top-1, balanced (macro-recall), majority-class baseline, n_classes, n.</p>
+<p>Pass <code class="docutils literal notranslate"><span class="pre">n_boot</span> <span class="pre">&gt;</span> <span class="pre">0</span></code> to add 95% percentile-bootstrap confidence intervals
+(<code class="docutils literal notranslate"><span class="pre">top1_ci</span></code>/<code class="docutils literal notranslate"><span class="pre">balanced_ci</span></code>) — the rigor the review asked for, so small-n
+accuracy differences aren’t over-read. Default <code class="docutils literal notranslate"><span class="pre">n_boot=0</span></code> is unchanged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.recognize.confusion_pairs">
+<span class="sig-prename descclassname"><span class="pre">kodokan.recognize.</span></span><span class="sig-name descname"><span class="pre">confusion_pairs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">top</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/recognize.html#confusion_pairs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.recognize.confusion_pairs" title="Link to this definition">#</a></dt>
+<dd><p>Most-frequent misclassifications as <code class="docutils literal notranslate"><span class="pre">{true,</span> <span class="pre">pred,</span> <span class="pre">count}</span></code> (off-diagonal).</p>
+<p>Per-class confusion that stays readable at many classes: instead of a dense
+N×N matrix it returns only the non-zero true→pred error cells, sorted by
+count. A <code class="docutils literal notranslate"><span class="pre">pred</span></code> of <code class="docutils literal notranslate"><span class="pre">-1</span></code> means an abstain/no-prediction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.recognize.demo_feature">
+<span class="sig-prename descclassname"><span class="pre">kodokan.recognize.</span></span><span class="sig-name descname"><span class="pre">demo_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose_seq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_s</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/recognize.html#demo_feature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.recognize.demo_feature" title="Link to this definition">#</a></dt>
+<dd><p>Per-frame features for one demo under a role/feature mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.recognize.dtw_1nn_predict">
+<span class="sig-prename descclassname"><span class="pre">kodokan.recognize.</span></span><span class="sig-name descname"><span class="pre">dtw_1nn_predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_seqs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/recognize.html#dtw_1nn_predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.recognize.dtw_1nn_predict" title="Link to this definition">#</a></dt>
+<dd><p>Leave-one-out 1-NN by DTW distance; returns predicted label per item.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.recognize.loo_medoid_separability">
+<span class="sig-prename descclassname"><span class="pre">kodokan.recognize.</span></span><span class="sig-name descname"><span class="pre">loo_medoid_separability</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feats_by_tech</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">distance</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/recognize.html#loo_medoid_separability"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.recognize.loo_medoid_separability" title="Link to this definition">#</a></dt>
+<dd><p>Leak-free (leave-one-demo-out medoid) technique-separability report.</p>
+<p>The earlier feature bake-off built each technique’s medoid reference from
+<em>all</em> its demos, including the one being tested — so genuine distances were
+optimistically low and needed an ad-hoc self-zero filter. Here a held-out
+demo’s GENUINE distance is measured to the medoid of its technique’s <em>other</em>
+demos (true leave-one-out, no self-zero), and its IMPOSTOR distances to every
+other technique’s medoid. Reports leave-one-out nearest-medoid accuracy and
+the standard ROC-AUC (<a class="reference internal" href="#kodokan.recognize.roc_auc_distances" title="kodokan.recognize.roc_auc_distances"><code class="xref py py-func docutils literal notranslate"><span class="pre">roc_auc_distances()</span></code></a>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>feats_by_tech</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a></span>) – per technique, a list of per-demo feature arrays.</p></li>
+<li><p><strong>distance</strong> – <code class="docutils literal notranslate"><span class="pre">(feat_a,</span> <span class="pre">feat_b)</span> <span class="pre">-&gt;</span> <span class="pre">float</span></code> (e.g. normalized DTW).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.recognize.loo_pooled_predict">
+<span class="sig-prename descclassname"><span class="pre">kodokan.recognize.</span></span><span class="sig-name descname"><span class="pre">loo_pooled_predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lda_knn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/recognize.html#loo_pooled_predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.recognize.loo_pooled_predict" title="Link to this definition">#</a></dt>
+<dd><p>Leave-one-out (or leave-one-GROUP-out) predictions; preprocessing fit on train only.</p>
+<p>If <code class="docutils literal notranslate"><span class="pre">groups</span></code> is given (e.g. source <code class="docutils literal notranslate"><span class="pre">video_id</span></code> per sample), each fold excludes ALL
+samples sharing the held-out sample’s group — i.e. <strong>leave-one-clip-out</strong>, which removes
+within-clip leakage. Otherwise it is plain leave-one-sample-out.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.recognize.pooled_descriptor">
+<span class="sig-prename descclassname"><span class="pre">kodokan.recognize.</span></span><span class="sig-name descname"><span class="pre">pooled_descriptor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feat</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">levels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">(1,</span> <span class="pre">2,</span> <span class="pre">4)</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/recognize.html#pooled_descriptor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.recognize.pooled_descriptor" title="Link to this definition">#</a></dt>
+<dd><p>Temporal-pyramid pooled fixed-length descriptor (mean+std per segment).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.recognize.roc_auc_distances">
+<span class="sig-prename descclassname"><span class="pre">kodokan.recognize.</span></span><span class="sig-name descname"><span class="pre">roc_auc_distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">genuine</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">impostor</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/recognize.html#roc_auc_distances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.recognize.roc_auc_distances" title="Link to this definition">#</a></dt>
+<dd><p>Standard ROC-AUC for a <em>distance</em> score: <code class="docutils literal notranslate"><span class="pre">P(impostor</span> <span class="pre">&gt;</span> <span class="pre">genuine)</span></code> (ties=0.5).</p>
+<p>Equals the Mann–Whitney U statistic divided by <code class="docutils literal notranslate"><span class="pre">|genuine|·|impostor|</span></code> — the
+“standard ROC-AUC” the review asked for (replacing the ad-hoc self-zero-dropping
+estimate). Larger = better separation (impostor demos sit farther than genuine
+ones). NaNs are dropped; returns <code class="docutils literal notranslate"><span class="pre">nan</span></code> if either side is empty.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.recognize.tori_decision">
+<span class="sig-prename descclassname"><span class="pre">kodokan.recognize.</span></span><span class="sig-name descname"><span class="pre">tori_decision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose_seq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_s</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">abstain_margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/recognize.html#tori_decision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.recognize.tori_decision" title="Link to this definition">#</a></dt>
+<dd><p>Tori (thrower) heuristic with a confidence margin and an abstain flag.</p>
+<p>Tori is the judoka whose hips stay highest (smallest image-y) over the last
+third of the demo — uke has been thrown to the ground. The margin is the two
+judoka’s finish hip-y separation in torso-length units; below
+<code class="docutils literal notranslate"><span class="pre">abstain_margin</span></code> (or when the cue is unusable and we fall back to presence)
+the role assignment is unreliable and <code class="docutils literal notranslate"><span class="pre">abstained</span></code> is set. See
+<a class="reference internal" href="#kodokan.recognize.tori_decision_stats" title="kodokan.recognize.tori_decision_stats"><code class="xref py py-func docutils literal notranslate"><span class="pre">tori_decision_stats()</span></code></a> for aggregate fall-back/abstain rates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#kodokan.recognize.ToriDecision" title="kodokan.recognize.ToriDecision"><code class="xref py py-class docutils literal notranslate"><span class="pre">ToriDecision</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.recognize.tori_decision_stats">
+<span class="sig-prename descclassname"><span class="pre">kodokan.recognize.</span></span><span class="sig-name descname"><span class="pre">tori_decision_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">decisions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/recognize.html#tori_decision_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.recognize.tori_decision_stats" title="Link to this definition">#</a></dt>
+<dd><p>Aggregate fall-back / abstain rates and median margin over decisions.</p>
+<p>The instrumentation the review asked for: run this over every demo’s
+<a class="reference internal" href="#kodokan.recognize.tori_decision" title="kodokan.recognize.tori_decision"><code class="xref py py-func docutils literal notranslate"><span class="pre">tori_decision()</span></code></a> to see how often the “dominant lever” heuristic is
+actually confident vs. abstaining.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.recognize.tori_index">
+<span class="sig-prename descclassname"><span class="pre">kodokan.recognize.</span></span><span class="sig-name descname"><span class="pre">tori_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose_seq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/recognize.html#tori_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.recognize.tori_index" title="Link to this definition">#</a></dt>
+<dd><p>Heuristic tori slot (thin wrapper over <a class="reference internal" href="#kodokan.recognize.tori_decision" title="kodokan.recognize.tori_decision"><code class="xref py py-func docutils literal notranslate"><span class="pre">tori_decision()</span></code></a>).</p>
+<p>Backward-compatible: returns just the chosen slot. Use <a class="reference internal" href="#kodokan.recognize.tori_decision" title="kodokan.recognize.tori_decision"><code class="xref py py-func docutils literal notranslate"><span class="pre">tori_decision()</span></code></a>
+when you need the confidence margin / abstain flag.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="kodokan.pose.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">kodokan.pose</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="kodokan.segment.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">kodokan.segment</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.ToriDecision"><code class="docutils literal notranslate"><span class="pre">ToriDecision</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.ToriDecision.index"><code class="docutils literal notranslate"><span class="pre">ToriDecision.index</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.ToriDecision.margin"><code class="docutils literal notranslate"><span class="pre">ToriDecision.margin</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.ToriDecision.fell_back"><code class="docutils literal notranslate"><span class="pre">ToriDecision.fell_back</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.ToriDecision.abstained"><code class="docutils literal notranslate"><span class="pre">ToriDecision.abstained</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.classification_metrics"><code class="docutils literal notranslate"><span class="pre">classification_metrics()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.confusion_pairs"><code class="docutils literal notranslate"><span class="pre">confusion_pairs()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.demo_feature"><code class="docutils literal notranslate"><span class="pre">demo_feature()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.dtw_1nn_predict"><code class="docutils literal notranslate"><span class="pre">dtw_1nn_predict()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.loo_medoid_separability"><code class="docutils literal notranslate"><span class="pre">loo_medoid_separability()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.loo_pooled_predict"><code class="docutils literal notranslate"><span class="pre">loo_pooled_predict()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.pooled_descriptor"><code class="docutils literal notranslate"><span class="pre">pooled_descriptor()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.roc_auc_distances"><code class="docutils literal notranslate"><span class="pre">roc_auc_distances()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.tori_decision"><code class="docutils literal notranslate"><span class="pre">tori_decision()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.tori_decision_stats"><code class="docutils literal notranslate"><span class="pre">tori_decision_stats()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.tori_index"><code class="docutils literal notranslate"><span class="pre">tori_index()</span></code></a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/_autosummary/kodokan.recognize.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

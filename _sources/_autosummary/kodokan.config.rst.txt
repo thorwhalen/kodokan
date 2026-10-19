@@ -1,0 +1,24 @@
+kodokan.config
+==============
+
+.. automodule:: kodokan.config
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      KODOKAN_DATA_ENV
+      SEGMENT_MIN_TWO_PERSON_FRAC
+      EVAL_MIN_TWO_PERSON_FRAC
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      clips_dir
+      data_dir
+      models_dir
+      pose_dir
+      viz_dir
+   

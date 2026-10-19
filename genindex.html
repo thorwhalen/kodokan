@@ -1,91 +1,675 @@
-
-
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" data-content_root="./">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Index &mdash; kodokan 0.0.18 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
-      <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
-      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="alternate" type="text/markdown" href="genindex.html.md">
+<link rel="describedby" href="llms.txt" type="text/markdown">
+    <title>Index &#8212; kodokan</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx_autodoc_typehints.css?v=057ac668" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/epythet.css?v=11616352" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
+
+    <script src="_static/documentation_options.js?v=2fd7553c"></script>
+    <script src="_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=fd10adb8"></script>
+    <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: 500px;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'genindex';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="#" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.0.19" />
+  
+    
+    <script src="_static/searchtools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script src="searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
 
   
-      <script src="_static/jquery.js?v=5d32c60e"></script>
-      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=8bafd125"></script>
-      <script src="_static/doctools.js?v=fd6eb6e6"></script>
-      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
-      <script src="_static/toggleprompt.js?v=d7ede5d2"></script>
-      <script src="_static/clipboard.min.js?v=a7894cd8"></script>
-      <script src="_static/copybutton.js?v=f281be69"></script>
-    <script src="_static/js/theme.js"></script>
-    <link rel="index" title="Index" href="#" />
-    <link rel="search" title="Search" href="search.html" /> 
-</head>
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
 
-<body class="wy-body-for-nav"> 
-  <div class="wy-grid-for-nav">
-    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
-      <div class="wy-side-scroll">
-        <div class="wy-side-nav-search" >
-
-          
-          
-          <a href="index.html" class="icon icon-home">
-            kodokan
-          </a>
-<div role="search">
-  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
-    <input type="hidden" name="check_keywords" value="yes" />
-    <input type="hidden" name="area" value="default" />
-  </form>
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
 </div>
-        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
-              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan.html">kodokan</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/acquire.html">kodokan.acquire</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/canon3d.html">kodokan.canon3d</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/compare.html">kodokan.compare</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/config.html">kodokan.config</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/descriptors.html">kodokan.descriptors</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/flashcards.html">kodokan.flashcards</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/learning.html">kodokan.learning</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/pose.html">kodokan.pose</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/recognize.html">kodokan.recognize</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/score.html">kodokan.score</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/segment.html">kodokan.segment</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/store.html">kodokan.store</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/track.html">kodokan.track</a></li>
-<li class="toctree-l1"><a class="reference internal" href="module_docs/kodokan/viz.html">kodokan.viz</a></li>
-</ul>
 
-        </div>
-      </div>
-    </nav>
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
 
-    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
-          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">kodokan</a>
-      </nav>
+  
+    
+  
 
-      <div class="wy-nav-content">
-        <div class="rst-content">
-          <div role="navigation" aria-label="Page navigation">
-  <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Index</li>
-      <li class="wy-breadcrumbs-aside">
-      </li>
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">kodokan</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api.html">
+    API reference
+  </a>
+</li>
+
   </ul>
-  <hr/>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/thorwhalen/kodokan" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api.html">
+    API reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/thorwhalen/kodokan" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
 
 <h1 id="index">Index</h1>
 
@@ -97,7 +681,6 @@
  | <a href="#E"><strong>E</strong></a>
  | <a href="#F"><strong>F</strong></a>
  | <a href="#I"><strong>I</strong></a>
- | <a href="#J"><strong>J</strong></a>
  | <a href="#K"><strong>K</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
@@ -114,93 +697,79 @@
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.ToriDecision.abstained">abstained (kodokan.recognize.ToriDecision attribute)</a>
-</li>
-      <li><a href="module_docs/kodokan/compare.html#kodokan.compare.ANGLE_DEFS">ANGLE_DEFS (in module kodokan.compare)</a>
+      <li><a href="_autosummary/kodokan.recognize.html#kodokan.recognize.ToriDecision.abstained">abstained (kodokan.recognize.ToriDecision attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan.html#kodokan.angle_features">angle_features() (in module kodokan)</a>
-
-      <ul>
-        <li><a href="module_docs/kodokan/compare.html#kodokan.compare.angle_features">(in module kodokan.compare)</a>
+      <li><a href="_autosummary/kodokan.html#kodokan.angle_features">angle_features() (in module kodokan)</a>
 </li>
-      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/pose.html#kodokan.pose.PoseSequence.backend">backend (kodokan.pose.PoseSequence attribute)</a>
+      <li><a href="_autosummary/kodokan.pose.html#kodokan.pose.PoseSequence.backend">backend (kodokan.pose.PoseSequence attribute)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan.html#kodokan.PoseSequence.backend">(kodokan.PoseSequence attribute)</a>
+        <li><a href="_autosummary/kodokan.html#kodokan.PoseSequence.backend">(kodokan.PoseSequence attribute)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/kodokan/canon3d.html#kodokan.canon3d.BLAZEPOSE33">BLAZEPOSE33 (in module kodokan.canon3d)</a>
+      <li><a href="_autosummary/kodokan.canon3d.html#kodokan.canon3d.BLAZEPOSE33">BLAZEPOSE33 (in module kodokan.canon3d)</a>
 </li>
-      <li><a href="module_docs/kodokan/canon3d.html#kodokan.canon3d.BodyJoints">BodyJoints (class in kodokan.canon3d)</a>
+      <li><a href="_autosummary/kodokan.canon3d.html#kodokan.canon3d.BodyJoints">BodyJoints (class in kodokan.canon3d)</a>
 </li>
-      <li><a href="module_docs/kodokan.html#kodokan.build_catalog">build_catalog() (in module kodokan)</a>
-
-      <ul>
-        <li><a href="module_docs/kodokan/flashcards.html#kodokan.flashcards.build_catalog">(in module kodokan.flashcards)</a>
-</li>
-      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan.html#kodokan.build_confusability">build_confusability() (in module kodokan)</a>
+      <li><a href="_autosummary/kodokan.html#kodokan.build_catalog">build_catalog() (in module kodokan)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan/flashcards.html#kodokan.flashcards.build_confusability">(in module kodokan.flashcards)</a>
+        <li><a href="_autosummary/kodokan.flashcards.html#kodokan.flashcards.build_catalog">(in module kodokan.flashcards)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/kodokan.html#kodokan.build_reference">build_reference() (in module kodokan)</a>
+      <li><a href="_autosummary/kodokan.html#kodokan.build_confusability">build_confusability() (in module kodokan)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan/score.html#kodokan.score.build_reference">(in module kodokan.score)</a>
+        <li><a href="_autosummary/kodokan.flashcards.html#kodokan.flashcards.build_confusability">(in module kodokan.flashcards)</a>
 </li>
       </ul></li>
+      <li><a href="_autosummary/kodokan.html#kodokan.build_reference">build_reference() (in module kodokan)</a>
+</li>
   </ul></td>
 </tr></table>
 
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/acquire.html#kodokan.acquire.canonical_technique_key">canonical_technique_key() (in module kodokan.acquire)</a>
+      <li><a href="_autosummary/kodokan.acquire.html#kodokan.acquire.canonical_technique_key">canonical_technique_key() (in module kodokan.acquire)</a>
 </li>
-      <li><a href="module_docs/kodokan/canon3d.html#kodokan.canon3d.canonicalize_pose">canonicalize_pose() (in module kodokan.canon3d)</a>
+      <li><a href="_autosummary/kodokan.canon3d.html#kodokan.canon3d.canonicalize_pose">canonicalize_pose() (in module kodokan.canon3d)</a>
 </li>
-      <li><a href="module_docs/kodokan/canon3d.html#kodokan.canon3d.canonicalize_sequence">canonicalize_sequence() (in module kodokan.canon3d)</a>
+      <li><a href="_autosummary/kodokan.canon3d.html#kodokan.canon3d.canonicalize_sequence">canonicalize_sequence() (in module kodokan.canon3d)</a>
 </li>
-      <li><a href="module_docs/kodokan/store.html#kodokan.store.check_sequence_integrity">check_sequence_integrity() (in module kodokan.store)</a>
+      <li><a href="_autosummary/kodokan.store.html#kodokan.store.check_sequence_integrity">check_sequence_integrity() (in module kodokan.store)</a>
 </li>
-      <li><a href="module_docs/kodokan/store.html#kodokan.store.check_tidy_integrity">check_tidy_integrity() (in module kodokan.store)</a>
+      <li><a href="_autosummary/kodokan.store.html#kodokan.store.check_tidy_integrity">check_tidy_integrity() (in module kodokan.store)</a>
 </li>
-      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.classification_metrics">classification_metrics() (in module kodokan.recognize)</a>
+      <li><a href="_autosummary/kodokan.recognize.html#kodokan.recognize.classification_metrics">classification_metrics() (in module kodokan.recognize)</a>
 </li>
-      <li><a href="module_docs/kodokan/config.html#kodokan.config.clips_dir">clips_dir() (in module kodokan.config)</a>
+      <li><a href="_autosummary/kodokan.config.html#kodokan.config.clips_dir">clips_dir() (in module kodokan.config)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/canon3d.html#kodokan.canon3d.COCO17">COCO17 (in module kodokan.canon3d)</a>
+      <li><a href="_autosummary/kodokan.canon3d.html#kodokan.canon3d.COCO17">COCO17 (in module kodokan.canon3d)</a>
 </li>
-      <li><a href="module_docs/kodokan/pose.html#kodokan.pose.COCO17_KEYPOINTS">COCO17_KEYPOINTS (in module kodokan.pose)</a>
+      <li><a href="_autosummary/kodokan.pose.html#kodokan.pose.COCO17_KEYPOINTS">COCO17_KEYPOINTS (in module kodokan.pose)</a>
 </li>
-      <li><a href="module_docs/kodokan/pose.html#kodokan.pose.COCO17_SKELETON">COCO17_SKELETON (in module kodokan.pose)</a>
+      <li><a href="_autosummary/kodokan.pose.html#kodokan.pose.COCO17_SKELETON">COCO17_SKELETON (in module kodokan.pose)</a>
 </li>
-      <li><a href="module_docs/kodokan.html#kodokan.compare">compare() (in module kodokan)</a>
-
-      <ul>
-        <li><a href="module_docs/kodokan/compare.html#kodokan.compare.compare">(in module kodokan.compare)</a>
+      <li><a href="_autosummary/kodokan.html#kodokan.compare">compare() (in module kodokan)</a>
 </li>
-      </ul></li>
-      <li><a href="module_docs/kodokan/flashcards.html#kodokan.flashcards.confusable_distractors">confusable_distractors() (in module kodokan.flashcards)</a>
+      <li><a href="_autosummary/kodokan.flashcards.html#kodokan.flashcards.confusable_distractors">confusable_distractors() (in module kodokan.flashcards)</a>
 </li>
-      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.confusion_pairs">confusion_pairs() (in module kodokan.recognize)</a>
+      <li><a href="_autosummary/kodokan.recognize.html#kodokan.recognize.confusion_pairs">confusion_pairs() (in module kodokan.recognize)</a>
 </li>
-      <li><a href="module_docs/kodokan/learning.html#kodokan.learning.ConfusionWeighted">ConfusionWeighted (class in kodokan.learning)</a>
+      <li><a href="_autosummary/kodokan.learning.html#kodokan.learning.ConfusionWeighted">ConfusionWeighted (class in kodokan.learning)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -208,33 +777,25 @@
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/config.html#kodokan.config.data_dir">data_dir() (in module kodokan.config)</a>
+      <li><a href="_autosummary/kodokan.config.html#kodokan.config.data_dir">data_dir() (in module kodokan.config)</a>
 </li>
-      <li><a href="module_docs/kodokan/viz.html#kodokan.viz.DEFAULT_PERSON_COLORS">DEFAULT_PERSON_COLORS (in module kodokan.viz)</a>
+      <li><a href="_autosummary/kodokan.viz.html#kodokan.viz.DEFAULT_PERSON_COLORS">DEFAULT_PERSON_COLORS (in module kodokan.viz)</a>
 </li>
-      <li><a href="module_docs/kodokan/descriptors.html#kodokan.descriptors.demo_descriptor">demo_descriptor() (in module kodokan.descriptors)</a>
+      <li><a href="_autosummary/kodokan.descriptors.html#kodokan.descriptors.demo_descriptor">demo_descriptor() (in module kodokan.descriptors)</a>
 </li>
-      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.demo_feature">demo_feature() (in module kodokan.recognize)</a>
+      <li><a href="_autosummary/kodokan.recognize.html#kodokan.recognize.demo_feature">demo_feature() (in module kodokan.recognize)</a>
 </li>
-      <li><a href="module_docs/kodokan.html#kodokan.demo_features">demo_features() (in module kodokan)</a>
-
-      <ul>
-        <li><a href="module_docs/kodokan/score.html#kodokan.score.demo_features">(in module kodokan.score)</a>
-</li>
-      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan.html#kodokan.distance_matrix">distance_matrix() (in module kodokan)</a>
-
-      <ul>
-        <li><a href="module_docs/kodokan/compare.html#kodokan.compare.distance_matrix">(in module kodokan.compare)</a>
+      <li><a href="_autosummary/kodokan.html#kodokan.demo_features">demo_features() (in module kodokan)</a>
 </li>
-      </ul></li>
-      <li><a href="module_docs/kodokan/acquire.html#kodokan.acquire.download_source">download_source() (in module kodokan.acquire)</a>
+      <li><a href="_autosummary/kodokan.html#kodokan.distance_matrix">distance_matrix() (in module kodokan)</a>
 </li>
-      <li><a href="module_docs/kodokan/acquire.html#kodokan.acquire.download_techniques">download_techniques() (in module kodokan.acquire)</a>
+      <li><a href="_autosummary/kodokan.acquire.html#kodokan.acquire.download_source">download_source() (in module kodokan.acquire)</a>
 </li>
-      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.dtw_1nn_predict">dtw_1nn_predict() (in module kodokan.recognize)</a>
+      <li><a href="_autosummary/kodokan.acquire.html#kodokan.acquire.download_techniques">download_techniques() (in module kodokan.acquire)</a>
+</li>
+      <li><a href="_autosummary/kodokan.recognize.html#kodokan.recognize.dtw_1nn_predict">dtw_1nn_predict() (in module kodokan.recognize)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -242,25 +803,25 @@
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/learning.html#kodokan.learning.empirical_confusion">empirical_confusion() (in module kodokan.learning)</a>
+      <li><a href="_autosummary/kodokan.learning.html#kodokan.learning.empirical_confusion">empirical_confusion() (in module kodokan.learning)</a>
 </li>
-      <li><a href="module_docs/kodokan/segment.html#kodokan.segment.estimate_period">estimate_period() (in module kodokan.segment)</a>
+      <li><a href="_autosummary/kodokan.segment.html#kodokan.segment.estimate_period">estimate_period() (in module kodokan.segment)</a>
 </li>
-      <li><a href="module_docs/kodokan.html#kodokan.estimate_poses">estimate_poses() (in module kodokan)</a>
+      <li><a href="_autosummary/kodokan.html#kodokan.estimate_poses">estimate_poses() (in module kodokan)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan/pose.html#kodokan.pose.estimate_poses">(in module kodokan.pose)</a>
+        <li><a href="_autosummary/kodokan.pose.html#kodokan.pose.estimate_poses">(in module kodokan.pose)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan.html#kodokan.estimate_poses_tracked">estimate_poses_tracked() (in module kodokan)</a>
+      <li><a href="_autosummary/kodokan.html#kodokan.estimate_poses_tracked">estimate_poses_tracked() (in module kodokan)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan/track.html#kodokan.track.estimate_poses_tracked">(in module kodokan.track)</a>
+        <li><a href="_autosummary/kodokan.track.html#kodokan.track.estimate_poses_tracked">(in module kodokan.track)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/kodokan/config.html#kodokan.config.EVAL_MIN_TWO_PERSON_FRAC">EVAL_MIN_TWO_PERSON_FRAC (in module kodokan.config)</a>
+      <li><a href="_autosummary/kodokan.config.html#kodokan.config.EVAL_MIN_TWO_PERSON_FRAC">EVAL_MIN_TWO_PERSON_FRAC (in module kodokan.config)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -268,31 +829,27 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan.html#kodokan.feedback">feedback() (in module kodokan)</a>
+      <li><a href="_autosummary/kodokan.html#kodokan.feedback">feedback() (in module kodokan)</a>
+</li>
+      <li><a href="_autosummary/kodokan.recognize.html#kodokan.recognize.ToriDecision.fell_back">fell_back (kodokan.recognize.ToriDecision attribute)</a>
+</li>
+      <li><a href="_autosummary/kodokan.segment.html#kodokan.segment.find_segments">find_segments() (in module kodokan.segment)</a>
+</li>
+      <li><a href="_autosummary/kodokan.pose.html#kodokan.pose.PoseSequence.fps">fps (kodokan.pose.PoseSequence attribute)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan/score.html#kodokan.score.feedback">(in module kodokan.score)</a>
+        <li><a href="_autosummary/kodokan.html#kodokan.PoseSequence.fps">(kodokan.PoseSequence attribute)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.ToriDecision.fell_back">fell_back (kodokan.recognize.ToriDecision attribute)</a>
-</li>
-      <li><a href="module_docs/kodokan/segment.html#kodokan.segment.find_segments">find_segments() (in module kodokan.segment)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/pose.html#kodokan.pose.PoseSequence.fps">fps (kodokan.pose.PoseSequence attribute)</a>
+      <li><a href="_autosummary/kodokan.pose.html#kodokan.pose.PoseSequence.frame_indices">frame_indices (kodokan.pose.PoseSequence attribute)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan.html#kodokan.PoseSequence.fps">(kodokan.PoseSequence attribute)</a>
+        <li><a href="_autosummary/kodokan.html#kodokan.PoseSequence.frame_indices">(kodokan.PoseSequence attribute)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/kodokan/pose.html#kodokan.pose.PoseSequence.frame_indices">frame_indices (kodokan.pose.PoseSequence attribute)</a>
-
-      <ul>
-        <li><a href="module_docs/kodokan.html#kodokan.PoseSequence.frame_indices">(kodokan.PoseSequence attribute)</a>
-</li>
-      </ul></li>
-      <li><a href="module_docs/kodokan/learning.html#kodokan.learning.FSRSLite">FSRSLite (class in kodokan.learning)</a>
+      <li><a href="_autosummary/kodokan.learning.html#kodokan.learning.FSRSLite">FSRSLite (class in kodokan.learning)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -300,21 +857,13 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/track.html#kodokan.track.identity_swap_rate">identity_swap_rate() (in module kodokan.track)</a>
+      <li><a href="_autosummary/kodokan.track.html#kodokan.track.identity_swap_rate">identity_swap_rate() (in module kodokan.track)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.ToriDecision.index">index (kodokan.recognize.ToriDecision attribute)</a>
+      <li><a href="_autosummary/kodokan.recognize.html#kodokan.recognize.ToriDecision.index">index (kodokan.recognize.ToriDecision attribute)</a>
 </li>
-      <li><a href="module_docs/kodokan/learning.html#kodokan.learning.item_accuracy">item_accuracy() (in module kodokan.learning)</a>
-</li>
-  </ul></td>
-</tr></table>
-
-<h2 id="J">J</h2>
-<table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/compare.html#kodokan.compare.joint_angles">joint_angles() (in module kodokan.compare)</a>
+      <li><a href="_autosummary/kodokan.learning.html#kodokan.learning.item_accuracy">item_accuracy() (in module kodokan.learning)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -322,66 +871,59 @@
 <h2 id="K">K</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/pose.html#kodokan.pose.PoseSequence.keypoints">keypoints (kodokan.pose.PoseSequence attribute)</a>
+      <li><a href="_autosummary/kodokan.pose.html#kodokan.pose.PoseSequence.keypoints">keypoints (kodokan.pose.PoseSequence attribute)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan.html#kodokan.PoseSequence.keypoints">(kodokan.PoseSequence attribute)</a>
+        <li><a href="_autosummary/kodokan.html#kodokan.PoseSequence.keypoints">(kodokan.PoseSequence attribute)</a>
 </li>
       </ul></li>
       <li>
     kodokan
 
       <ul>
-        <li><a href="module_docs/kodokan.html#module-kodokan">module</a>
+        <li><a href="_autosummary/kodokan.html#module-kodokan">module</a>
 </li>
       </ul></li>
       <li>
     kodokan.acquire
 
       <ul>
-        <li><a href="module_docs/kodokan/acquire.html#module-kodokan.acquire">module</a>
+        <li><a href="_autosummary/kodokan.acquire.html#module-kodokan.acquire">module</a>
 </li>
       </ul></li>
       <li>
     kodokan.canon3d
 
       <ul>
-        <li><a href="module_docs/kodokan/canon3d.html#module-kodokan.canon3d">module</a>
-</li>
-      </ul></li>
-      <li>
-    kodokan.compare
-
-      <ul>
-        <li><a href="module_docs/kodokan/compare.html#module-kodokan.compare">module</a>
+        <li><a href="_autosummary/kodokan.canon3d.html#module-kodokan.canon3d">module</a>
 </li>
       </ul></li>
       <li>
     kodokan.config
 
       <ul>
-        <li><a href="module_docs/kodokan/config.html#module-kodokan.config">module</a>
+        <li><a href="_autosummary/kodokan.config.html#module-kodokan.config">module</a>
 </li>
       </ul></li>
       <li>
     kodokan.descriptors
 
       <ul>
-        <li><a href="module_docs/kodokan/descriptors.html#module-kodokan.descriptors">module</a>
+        <li><a href="_autosummary/kodokan.descriptors.html#module-kodokan.descriptors">module</a>
 </li>
       </ul></li>
       <li>
     kodokan.flashcards
 
       <ul>
-        <li><a href="module_docs/kodokan/flashcards.html#module-kodokan.flashcards">module</a>
+        <li><a href="_autosummary/kodokan.flashcards.html#module-kodokan.flashcards">module</a>
 </li>
       </ul></li>
       <li>
     kodokan.learning
 
       <ul>
-        <li><a href="module_docs/kodokan/learning.html#module-kodokan.learning">module</a>
+        <li><a href="_autosummary/kodokan.learning.html#module-kodokan.learning">module</a>
 </li>
       </ul></li>
   </ul></td>
@@ -390,54 +932,47 @@
     kodokan.pose
 
       <ul>
-        <li><a href="module_docs/kodokan/pose.html#module-kodokan.pose">module</a>
+        <li><a href="_autosummary/kodokan.pose.html#module-kodokan.pose">module</a>
 </li>
       </ul></li>
       <li>
     kodokan.recognize
 
       <ul>
-        <li><a href="module_docs/kodokan/recognize.html#module-kodokan.recognize">module</a>
-</li>
-      </ul></li>
-      <li>
-    kodokan.score
-
-      <ul>
-        <li><a href="module_docs/kodokan/score.html#module-kodokan.score">module</a>
+        <li><a href="_autosummary/kodokan.recognize.html#module-kodokan.recognize">module</a>
 </li>
       </ul></li>
       <li>
     kodokan.segment
 
       <ul>
-        <li><a href="module_docs/kodokan/segment.html#module-kodokan.segment">module</a>
+        <li><a href="_autosummary/kodokan.segment.html#module-kodokan.segment">module</a>
 </li>
       </ul></li>
       <li>
     kodokan.store
 
       <ul>
-        <li><a href="module_docs/kodokan/store.html#module-kodokan.store">module</a>
+        <li><a href="_autosummary/kodokan.store.html#module-kodokan.store">module</a>
 </li>
       </ul></li>
       <li>
     kodokan.track
 
       <ul>
-        <li><a href="module_docs/kodokan/track.html#module-kodokan.track">module</a>
+        <li><a href="_autosummary/kodokan.track.html#module-kodokan.track">module</a>
 </li>
       </ul></li>
       <li>
     kodokan.viz
 
       <ul>
-        <li><a href="module_docs/kodokan/viz.html#module-kodokan.viz">module</a>
+        <li><a href="_autosummary/kodokan.viz.html#module-kodokan.viz">module</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/kodokan/config.html#kodokan.config.KODOKAN_DATA_ENV">KODOKAN_DATA_ENV (in module kodokan.config)</a>
+      <li><a href="_autosummary/kodokan.config.html#kodokan.config.KODOKAN_DATA_ENV">KODOKAN_DATA_ENV (in module kodokan.config)</a>
 </li>
-      <li><a href="module_docs/kodokan/acquire.html#kodokan.acquire.KODOKAN_PLAYLIST_URL">KODOKAN_PLAYLIST_URL (in module kodokan.acquire)</a>
+      <li><a href="_autosummary/kodokan.acquire.html#kodokan.acquire.KODOKAN_PLAYLIST_URL">KODOKAN_PLAYLIST_URL (in module kodokan.acquire)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -445,37 +980,37 @@
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/learning.html#kodokan.learning.Leitner">Leitner (class in kodokan.learning)</a>
+      <li><a href="_autosummary/kodokan.learning.html#kodokan.learning.Leitner">Leitner (class in kodokan.learning)</a>
 </li>
-      <li><a href="module_docs/kodokan/learning.html#kodokan.learning.list_strategies">list_strategies() (in module kodokan.learning)</a>
+      <li><a href="_autosummary/kodokan.learning.html#kodokan.learning.list_strategies">list_strategies() (in module kodokan.learning)</a>
 </li>
-      <li><a href="module_docs/kodokan/acquire.html#kodokan.acquire.list_techniques">list_techniques() (in module kodokan.acquire)</a>
+      <li><a href="_autosummary/kodokan.acquire.html#kodokan.acquire.list_techniques">list_techniques() (in module kodokan.acquire)</a>
 </li>
-      <li><a href="module_docs/kodokan.html#kodokan.load_all_tidy">load_all_tidy() (in module kodokan)</a>
+      <li><a href="_autosummary/kodokan.html#kodokan.load_all_tidy">load_all_tidy() (in module kodokan)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan/store.html#kodokan.store.load_all_tidy">(in module kodokan.store)</a>
+        <li><a href="_autosummary/kodokan.store.html#kodokan.store.load_all_tidy">(in module kodokan.store)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/kodokan/acquire.html#kodokan.acquire.local_clips">local_clips() (in module kodokan.acquire)</a>
+      <li><a href="_autosummary/kodokan.acquire.html#kodokan.acquire.local_clips">local_clips() (in module kodokan.acquire)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan.html#kodokan.log_response">log_response() (in module kodokan)</a>
+      <li><a href="_autosummary/kodokan.html#kodokan.log_response">log_response() (in module kodokan)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan/flashcards.html#kodokan.flashcards.log_response">(in module kodokan.flashcards)</a>
+        <li><a href="_autosummary/kodokan.flashcards.html#kodokan.flashcards.log_response">(in module kodokan.flashcards)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/kodokan.html#kodokan.log_to_rerun">log_to_rerun() (in module kodokan)</a>
+      <li><a href="_autosummary/kodokan.html#kodokan.log_to_rerun">log_to_rerun() (in module kodokan)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan/viz.html#kodokan.viz.log_to_rerun">(in module kodokan.viz)</a>
+        <li><a href="_autosummary/kodokan.viz.html#kodokan.viz.log_to_rerun">(in module kodokan.viz)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.loo_medoid_separability">loo_medoid_separability() (in module kodokan.recognize)</a>
+      <li><a href="_autosummary/kodokan.recognize.html#kodokan.recognize.loo_medoid_separability">loo_medoid_separability() (in module kodokan.recognize)</a>
 </li>
-      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.loo_pooled_predict">loo_pooled_predict() (in module kodokan.recognize)</a>
+      <li><a href="_autosummary/kodokan.recognize.html#kodokan.recognize.loo_pooled_predict">loo_pooled_predict() (in module kodokan.recognize)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -483,53 +1018,49 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan.html#kodokan.make_problem">make_problem() (in module kodokan)</a>
+      <li><a href="_autosummary/kodokan.html#kodokan.make_problem">make_problem() (in module kodokan)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan/flashcards.html#kodokan.flashcards.make_problem">(in module kodokan.flashcards)</a>
+        <li><a href="_autosummary/kodokan.flashcards.html#kodokan.flashcards.make_problem">(in module kodokan.flashcards)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/kodokan/learning.html#kodokan.learning.make_strategy">make_strategy() (in module kodokan.learning)</a>
+      <li><a href="_autosummary/kodokan.learning.html#kodokan.learning.make_strategy">make_strategy() (in module kodokan.learning)</a>
 </li>
-      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.ToriDecision.margin">margin (kodokan.recognize.ToriDecision attribute)</a>
+      <li><a href="_autosummary/kodokan.recognize.html#kodokan.recognize.ToriDecision.margin">margin (kodokan.recognize.ToriDecision attribute)</a>
 </li>
-      <li><a href="module_docs/kodokan/learning.html#kodokan.learning.merge_similarity">merge_similarity() (in module kodokan.learning)</a>
+      <li><a href="_autosummary/kodokan.learning.html#kodokan.learning.merge_similarity">merge_similarity() (in module kodokan.learning)</a>
 </li>
-      <li><a href="module_docs/kodokan/config.html#kodokan.config.models_dir">models_dir() (in module kodokan.config)</a>
+      <li><a href="_autosummary/kodokan.config.html#kodokan.config.models_dir">models_dir() (in module kodokan.config)</a>
 </li>
       <li>
     module
 
       <ul>
-        <li><a href="module_docs/kodokan.html#module-kodokan">kodokan</a>
+        <li><a href="_autosummary/kodokan.html#module-kodokan">kodokan</a>
 </li>
-        <li><a href="module_docs/kodokan/acquire.html#module-kodokan.acquire">kodokan.acquire</a>
+        <li><a href="_autosummary/kodokan.acquire.html#module-kodokan.acquire">kodokan.acquire</a>
 </li>
-        <li><a href="module_docs/kodokan/canon3d.html#module-kodokan.canon3d">kodokan.canon3d</a>
+        <li><a href="_autosummary/kodokan.canon3d.html#module-kodokan.canon3d">kodokan.canon3d</a>
 </li>
-        <li><a href="module_docs/kodokan/compare.html#module-kodokan.compare">kodokan.compare</a>
+        <li><a href="_autosummary/kodokan.config.html#module-kodokan.config">kodokan.config</a>
 </li>
-        <li><a href="module_docs/kodokan/config.html#module-kodokan.config">kodokan.config</a>
+        <li><a href="_autosummary/kodokan.descriptors.html#module-kodokan.descriptors">kodokan.descriptors</a>
 </li>
-        <li><a href="module_docs/kodokan/descriptors.html#module-kodokan.descriptors">kodokan.descriptors</a>
+        <li><a href="_autosummary/kodokan.flashcards.html#module-kodokan.flashcards">kodokan.flashcards</a>
 </li>
-        <li><a href="module_docs/kodokan/flashcards.html#module-kodokan.flashcards">kodokan.flashcards</a>
+        <li><a href="_autosummary/kodokan.learning.html#module-kodokan.learning">kodokan.learning</a>
 </li>
-        <li><a href="module_docs/kodokan/learning.html#module-kodokan.learning">kodokan.learning</a>
+        <li><a href="_autosummary/kodokan.pose.html#module-kodokan.pose">kodokan.pose</a>
 </li>
-        <li><a href="module_docs/kodokan/pose.html#module-kodokan.pose">kodokan.pose</a>
+        <li><a href="_autosummary/kodokan.recognize.html#module-kodokan.recognize">kodokan.recognize</a>
 </li>
-        <li><a href="module_docs/kodokan/recognize.html#module-kodokan.recognize">kodokan.recognize</a>
+        <li><a href="_autosummary/kodokan.segment.html#module-kodokan.segment">kodokan.segment</a>
 </li>
-        <li><a href="module_docs/kodokan/score.html#module-kodokan.score">kodokan.score</a>
+        <li><a href="_autosummary/kodokan.store.html#module-kodokan.store">kodokan.store</a>
 </li>
-        <li><a href="module_docs/kodokan/segment.html#module-kodokan.segment">kodokan.segment</a>
+        <li><a href="_autosummary/kodokan.track.html#module-kodokan.track">kodokan.track</a>
 </li>
-        <li><a href="module_docs/kodokan/store.html#module-kodokan.store">kodokan.store</a>
-</li>
-        <li><a href="module_docs/kodokan/track.html#module-kodokan.track">kodokan.track</a>
-</li>
-        <li><a href="module_docs/kodokan/viz.html#module-kodokan.viz">kodokan.viz</a>
+        <li><a href="_autosummary/kodokan.viz.html#module-kodokan.viz">kodokan.viz</a>
 </li>
       </ul></li>
   </ul></td>
@@ -538,10 +1069,10 @@
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan.html#kodokan.next_target">next_target() (in module kodokan)</a>
+      <li><a href="_autosummary/kodokan.html#kodokan.next_target">next_target() (in module kodokan)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan/flashcards.html#kodokan.flashcards.next_target">(in module kodokan.flashcards)</a>
+        <li><a href="_autosummary/kodokan.flashcards.html#kodokan.flashcards.next_target">(in module kodokan.flashcards)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -550,7 +1081,7 @@
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/segment.html#kodokan.segment.optical_flow_energy">optical_flow_energy() (in module kodokan.segment)</a>
+      <li><a href="_autosummary/kodokan.segment.html#kodokan.segment.optical_flow_energy">optical_flow_energy() (in module kodokan.segment)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -558,37 +1089,33 @@
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/store.html#kodokan.store.parquet_bytes_to_sequence">parquet_bytes_to_sequence() (in module kodokan.store)</a>
+      <li><a href="_autosummary/kodokan.store.html#kodokan.store.parquet_bytes_to_sequence">parquet_bytes_to_sequence() (in module kodokan.store)</a>
 </li>
-      <li><a href="module_docs/kodokan/canon3d.html#kodokan.canon3d.pelvis_frame">pelvis_frame() (in module kodokan.canon3d)</a>
+      <li><a href="_autosummary/kodokan.canon3d.html#kodokan.canon3d.pelvis_frame">pelvis_frame() (in module kodokan.canon3d)</a>
 </li>
-      <li><a href="module_docs/kodokan/compare.html#kodokan.compare.per_angle_deviation">per_angle_deviation() (in module kodokan.compare)</a>
+      <li><a href="_autosummary/kodokan.learning.html#kodokan.learning.pick_distractors">pick_distractors() (in module kodokan.learning)</a>
 </li>
-      <li><a href="module_docs/kodokan/learning.html#kodokan.learning.pick_distractors">pick_distractors() (in module kodokan.learning)</a>
+      <li><a href="_autosummary/kodokan.recognize.html#kodokan.recognize.pooled_descriptor">pooled_descriptor() (in module kodokan.recognize)</a>
 </li>
-      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.pooled_descriptor">pooled_descriptor() (in module kodokan.recognize)</a>
-</li>
-      <li><a href="module_docs/kodokan/config.html#kodokan.config.pose_dir">pose_dir() (in module kodokan.config)</a>
+      <li><a href="_autosummary/kodokan.config.html#kodokan.config.pose_dir">pose_dir() (in module kodokan.config)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/segment.html#kodokan.segment.pose_motion_energy">pose_motion_energy() (in module kodokan.segment)</a>
+      <li><a href="_autosummary/kodokan.segment.html#kodokan.segment.pose_motion_energy">pose_motion_energy() (in module kodokan.segment)</a>
 </li>
-      <li><a href="module_docs/kodokan.html#kodokan.pose_store">pose_store() (in module kodokan)</a>
+      <li><a href="_autosummary/kodokan.html#kodokan.pose_store">pose_store() (in module kodokan)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan/store.html#kodokan.store.pose_store">(in module kodokan.store)</a>
+        <li><a href="_autosummary/kodokan.store.html#kodokan.store.pose_store">(in module kodokan.store)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/kodokan.html#kodokan.PoseSequence">PoseSequence (class in kodokan)</a>
+      <li><a href="_autosummary/kodokan.html#kodokan.PoseSequence">PoseSequence (class in kodokan)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan/pose.html#kodokan.pose.PoseSequence">(class in kodokan.pose)</a>
+        <li><a href="_autosummary/kodokan.pose.html#kodokan.pose.PoseSequence">(class in kodokan.pose)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/kodokan/compare.html#kodokan.compare.primary_person">primary_person() (in module kodokan.compare)</a>
-</li>
-      <li><a href="module_docs/kodokan/flashcards.html#kodokan.flashcards.Problem">Problem (class in kodokan.flashcards)</a>
+      <li><a href="_autosummary/kodokan.flashcards.html#kodokan.flashcards.Problem">Problem (class in kodokan.flashcards)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -596,17 +1123,17 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan.html#kodokan.render_skeleton_video">render_skeleton_video() (in module kodokan)</a>
+      <li><a href="_autosummary/kodokan.html#kodokan.render_skeleton_video">render_skeleton_video() (in module kodokan)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan/viz.html#kodokan.viz.render_skeleton_video">(in module kodokan.viz)</a>
+        <li><a href="_autosummary/kodokan.viz.html#kodokan.viz.render_skeleton_video">(in module kodokan.viz)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/flashcards.html#kodokan.flashcards.responses_store">responses_store() (in module kodokan.flashcards)</a>
+      <li><a href="_autosummary/kodokan.flashcards.html#kodokan.flashcards.responses_store">responses_store() (in module kodokan.flashcards)</a>
 </li>
-      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.roc_auc_distances">roc_auc_distances() (in module kodokan.recognize)</a>
+      <li><a href="_autosummary/kodokan.recognize.html#kodokan.recognize.roc_auc_distances">roc_auc_distances() (in module kodokan.recognize)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -614,69 +1141,65 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/pose.html#kodokan.pose.PoseSequence.save_npz">save_npz() (kodokan.pose.PoseSequence method)</a>
+      <li><a href="_autosummary/kodokan.pose.html#kodokan.pose.PoseSequence.save_npz">save_npz() (kodokan.pose.PoseSequence method)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan.html#kodokan.PoseSequence.save_npz">(kodokan.PoseSequence method)</a>
+        <li><a href="_autosummary/kodokan.html#kodokan.PoseSequence.save_npz">(kodokan.PoseSequence method)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/kodokan.html#kodokan.score">score() (in module kodokan)</a>
+      <li><a href="_autosummary/kodokan.html#kodokan.score">score() (in module kodokan)</a>
+</li>
+      <li><a href="_autosummary/kodokan.html#kodokan.score_response">score_response() (in module kodokan)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan/score.html#kodokan.score.score">(in module kodokan.score)</a>
+        <li><a href="_autosummary/kodokan.flashcards.html#kodokan.flashcards.score_response">(in module kodokan.flashcards)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/kodokan.html#kodokan.score_response">score_response() (in module kodokan)</a>
+      <li><a href="_autosummary/kodokan.html#kodokan.Segment">Segment (class in kodokan)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan/flashcards.html#kodokan.flashcards.score_response">(in module kodokan.flashcards)</a>
+        <li><a href="_autosummary/kodokan.segment.html#kodokan.segment.Segment">(class in kodokan.segment)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/kodokan.html#kodokan.Segment">Segment (class in kodokan)</a>
+      <li><a href="_autosummary/kodokan.html#kodokan.segment_demonstrations">segment_demonstrations() (in module kodokan)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan/segment.html#kodokan.segment.Segment">(class in kodokan.segment)</a>
+        <li><a href="_autosummary/kodokan.segment.html#kodokan.segment.segment_demonstrations">(in module kodokan.segment)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/kodokan.html#kodokan.segment_demonstrations">segment_demonstrations() (in module kodokan)</a>
+      <li><a href="_autosummary/kodokan.config.html#kodokan.config.SEGMENT_MIN_TWO_PERSON_FRAC">SEGMENT_MIN_TWO_PERSON_FRAC (in module kodokan.config)</a>
+</li>
+      <li><a href="_autosummary/kodokan.html#kodokan.segments_store">segments_store() (in module kodokan)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan/segment.html#kodokan.segment.segment_demonstrations">(in module kodokan.segment)</a>
-</li>
-      </ul></li>
-      <li><a href="module_docs/kodokan/config.html#kodokan.config.SEGMENT_MIN_TWO_PERSON_FRAC">SEGMENT_MIN_TWO_PERSON_FRAC (in module kodokan.config)</a>
-</li>
-      <li><a href="module_docs/kodokan.html#kodokan.segments_store">segments_store() (in module kodokan)</a>
-
-      <ul>
-        <li><a href="module_docs/kodokan/store.html#kodokan.store.segments_store">(in module kodokan.store)</a>
+        <li><a href="_autosummary/kodokan.store.html#kodokan.store.segments_store">(in module kodokan.store)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/learning.html#kodokan.learning.Selection">Selection (class in kodokan.learning)</a>
+      <li><a href="_autosummary/kodokan.learning.html#kodokan.learning.Selection">Selection (class in kodokan.learning)</a>
 </li>
-      <li><a href="module_docs/kodokan/segment.html#kodokan.segment.self_similarity_matrix">self_similarity_matrix() (in module kodokan.segment)</a>
+      <li><a href="_autosummary/kodokan.segment.html#kodokan.segment.self_similarity_matrix">self_similarity_matrix() (in module kodokan.segment)</a>
 </li>
-      <li><a href="module_docs/kodokan/store.html#kodokan.store.sequence_to_parquet_bytes">sequence_to_parquet_bytes() (in module kodokan.store)</a>
+      <li><a href="_autosummary/kodokan.store.html#kodokan.store.sequence_to_parquet_bytes">sequence_to_parquet_bytes() (in module kodokan.store)</a>
 </li>
-      <li><a href="module_docs/kodokan/store.html#kodokan.store.sequence_to_tidy_df">sequence_to_tidy_df() (in module kodokan.store)</a>
+      <li><a href="_autosummary/kodokan.store.html#kodokan.store.sequence_to_tidy_df">sequence_to_tidy_df() (in module kodokan.store)</a>
 </li>
-      <li><a href="module_docs/kodokan/learning.html#kodokan.learning.SM2">SM2 (class in kodokan.learning)</a>
+      <li><a href="_autosummary/kodokan.learning.html#kodokan.learning.SM2">SM2 (class in kodokan.learning)</a>
 </li>
-      <li><a href="module_docs/kodokan/acquire.html#kodokan.acquire.source_clips_dir">source_clips_dir() (in module kodokan.acquire)</a>
+      <li><a href="_autosummary/kodokan.acquire.html#kodokan.acquire.source_clips_dir">source_clips_dir() (in module kodokan.acquire)</a>
 </li>
-      <li><a href="module_docs/kodokan/pose.html#kodokan.pose.PoseSequence.source_url">source_url (kodokan.pose.PoseSequence attribute)</a>
+      <li><a href="_autosummary/kodokan.pose.html#kodokan.pose.PoseSequence.source_url">source_url (kodokan.pose.PoseSequence attribute)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan.html#kodokan.PoseSequence.source_url">(kodokan.PoseSequence attribute)</a>
+        <li><a href="_autosummary/kodokan.html#kodokan.PoseSequence.source_url">(kodokan.PoseSequence attribute)</a>
 </li>
       </ul></li>
-      <li><a href="module_docs/kodokan/acquire.html#kodokan.acquire.SOURCES">SOURCES (in module kodokan.acquire)</a>
+      <li><a href="_autosummary/kodokan.acquire.html#kodokan.acquire.SOURCES">SOURCES (in module kodokan.acquire)</a>
 </li>
-      <li><a href="module_docs/kodokan/store.html#kodokan.store.store_integrity_report">store_integrity_report() (in module kodokan.store)</a>
+      <li><a href="_autosummary/kodokan.store.html#kodokan.store.store_integrity_report">store_integrity_report() (in module kodokan.store)</a>
 </li>
-      <li><a href="module_docs/kodokan/learning.html#kodokan.learning.Strategy">Strategy (class in kodokan.learning)</a>
+      <li><a href="_autosummary/kodokan.learning.html#kodokan.learning.Strategy">Strategy (class in kodokan.learning)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -684,23 +1207,21 @@
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/compare.html#kodokan.compare.time_stretch">time_stretch() (in module kodokan.compare)</a>
-</li>
-      <li><a href="module_docs/kodokan/pose.html#kodokan.pose.PoseSequence.times">times() (kodokan.pose.PoseSequence method)</a>
+      <li><a href="_autosummary/kodokan.pose.html#kodokan.pose.PoseSequence.times">times() (kodokan.pose.PoseSequence method)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan.html#kodokan.PoseSequence.times">(kodokan.PoseSequence method)</a>
+        <li><a href="_autosummary/kodokan.html#kodokan.PoseSequence.times">(kodokan.PoseSequence method)</a>
 </li>
       </ul></li>
+      <li><a href="_autosummary/kodokan.recognize.html#kodokan.recognize.tori_decision">tori_decision() (in module kodokan.recognize)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.tori_decision">tori_decision() (in module kodokan.recognize)</a>
+      <li><a href="_autosummary/kodokan.recognize.html#kodokan.recognize.tori_decision_stats">tori_decision_stats() (in module kodokan.recognize)</a>
 </li>
-      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.tori_decision_stats">tori_decision_stats() (in module kodokan.recognize)</a>
+      <li><a href="_autosummary/kodokan.recognize.html#kodokan.recognize.tori_index">tori_index() (in module kodokan.recognize)</a>
 </li>
-      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.tori_index">tori_index() (in module kodokan.recognize)</a>
-</li>
-      <li><a href="module_docs/kodokan/recognize.html#kodokan.recognize.ToriDecision">ToriDecision (class in kodokan.recognize)</a>
+      <li><a href="_autosummary/kodokan.recognize.html#kodokan.recognize.ToriDecision">ToriDecision (class in kodokan.recognize)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -708,7 +1229,7 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/learning.html#kodokan.learning.UniformRandom">UniformRandom (class in kodokan.learning)</a>
+      <li><a href="_autosummary/kodokan.learning.html#kodokan.learning.UniformRandom">UniformRandom (class in kodokan.learning)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -716,46 +1237,68 @@
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/pose.html#kodokan.pose.PoseSequence.video_path">video_path (kodokan.pose.PoseSequence attribute)</a>
+      <li><a href="_autosummary/kodokan.pose.html#kodokan.pose.PoseSequence.video_path">video_path (kodokan.pose.PoseSequence attribute)</a>
 
       <ul>
-        <li><a href="module_docs/kodokan.html#kodokan.PoseSequence.video_path">(kodokan.PoseSequence attribute)</a>
+        <li><a href="_autosummary/kodokan.html#kodokan.PoseSequence.video_path">(kodokan.PoseSequence attribute)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="module_docs/kodokan/config.html#kodokan.config.viz_dir">viz_dir() (in module kodokan.config)</a>
+      <li><a href="_autosummary/kodokan.config.html#kodokan.config.viz_dir">viz_dir() (in module kodokan.config)</a>
 </li>
   </ul></td>
 </tr></table>
 
 
 
-           </div>
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
           </div>
-          <footer>
-
-  <hr/>
-
-  <div role="contentinfo">
-    <p></p>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
   </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
 
-  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
-    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
-    provided by <a href="https://readthedocs.org">Read the Docs</a>.
-   
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
+</p></div>
+      
+    </div>
+  
+</div>
 
-</footer>
-        </div>
-      </div>
-    </section>
-  </div>
-  <script>
-      jQuery(function () {
-          SphinxRtdTheme.Navigation.enable(true);
-      });
-  </script> 
-
-</body>
+  </footer>
+  </body>
 </html>

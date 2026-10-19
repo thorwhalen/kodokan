@@ -1,0 +1,24 @@
+kodokan.acquire
+===============
+
+.. automodule:: kodokan.acquire
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      KODOKAN_PLAYLIST_URL
+      SOURCES
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      canonical_technique_key
+      download_source
+      download_techniques
+      list_techniques
+      local_clips
+      source_clips_dir
+   

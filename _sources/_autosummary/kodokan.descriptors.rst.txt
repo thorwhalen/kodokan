@@ -1,0 +1,12 @@
+kodokan.descriptors
+===================
+
+.. automodule:: kodokan.descriptors
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      demo_descriptor
+   

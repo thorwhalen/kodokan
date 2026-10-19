@@ -1,0 +1,23 @@
+kodokan.segment
+===============
+
+.. automodule:: kodokan.segment
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      estimate_period
+      find_segments
+      optical_flow_energy
+      pose_motion_energy
+      segment_demonstrations
+      self_similarity_matrix
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Segment
+   

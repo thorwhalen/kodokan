@@ -1,0 +1,24 @@
+# kodokan
+
+> Study Kodokan Judo throws from video via body-pose analysis
+
+
+## Pages in this subsection
+
+- [kodokan](kodokan.html.md): kodokan — study Kodokan Judo throws from video via body-pose analysis.
+- [kodokan.acquire](kodokan.acquire.html.md): Acquire Kodokan technique clips from YouTube (thin wrapper over &#96;yb.download&#96;).
+- [kodokan.canon3d](kodokan.canon3d.html.md): Pelvis-frame (Procrustes) canonicalization of 3D world landmarks.
+- [kodokan.config](kodokan.config.html.md): Where kodokan keeps its data (downloaded clips + derived artifacts).
+- [kodokan.descriptors](kodokan.descriptors.html.md): Experimental per-demo feature descriptors (to test what makes throws separable).
+- [kodokan.flashcards](kodokan.flashcards.html.md): Technique-recognition learning game (app #6) — logic layer.
+- [kodokan.learning](kodokan.learning.html.md): Adaptive learning engine for the flashcard quiz — selectable strategies.
+- [kodokan.pose](kodokan.pose.html.md): Body-pose estimation: a video → a sequence of per-person skeletal keypoints.
+- [kodokan.recognize](kodokan.recognize.html.md): Learned-vs-DTW technique recognition experiments (data-appropriate, no GPU).
+- [kodokan.segment](kodokan.segment.html.md): Segment a clip into its repeated demonstrations of one throw.
+- [kodokan.store](kodokan.store.html.md): dol-backed stores for the pipeline’s artifacts (the analysis SSOT).
+- [kodokan.track](kodokan.track.html.md): Stable tori/uke identity tracking (BoT-SORT / ByteTrack).
+- [kodokan.viz](kodokan.viz.html.md): Visualize a &#96;PoseSequence&#96;.
+
+## Optional
+
+- [Top-level llms.txt](../llms.txt): Complete documentation index.

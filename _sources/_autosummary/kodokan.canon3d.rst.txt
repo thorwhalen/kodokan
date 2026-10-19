@@ -1,0 +1,27 @@
+kodokan.canon3d
+===============
+
+.. automodule:: kodokan.canon3d
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      BLAZEPOSE33
+      COCO17
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      canonicalize_pose
+      canonicalize_sequence
+      pelvis_frame
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      BodyJoints
+   

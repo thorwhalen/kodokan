@@ -1,4 +1,0 @@
-kodokan.score
-=============
-.. automodule:: kodokan.score
-   :members:

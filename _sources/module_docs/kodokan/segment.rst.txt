@@ -1,4 +1,0 @@
-kodokan.segment
-===============
-.. automodule:: kodokan.segment
-   :members:

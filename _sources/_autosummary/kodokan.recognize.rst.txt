@@ -1,0 +1,32 @@
+kodokan.recognize
+=================
+
+.. automodule:: kodokan.recognize
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      classification_metrics
+      confusion_pairs
+      demo_feature
+      dtw_1nn_accuracy
+      dtw_1nn_predict
+      loo_medoid_separability
+      loo_pooled_predict
+      pool_centroid_accuracy
+      pool_knn_accuracy
+      pool_lda_knn_accuracy
+      pooled_descriptor
+      roc_auc_distances
+      tori_decision
+      tori_decision_stats
+      tori_index
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      ToriDecision
+   

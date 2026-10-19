@@ -1,0 +1,13 @@
+kodokan.track
+=============
+
+.. automodule:: kodokan.track
+
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      estimate_poses_tracked
+      identity_swap_rate
+   

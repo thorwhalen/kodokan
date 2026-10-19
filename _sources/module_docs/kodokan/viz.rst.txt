@@ -1,4 +1,0 @@
-kodokan.viz
-===========
-.. automodule:: kodokan.viz
-   :members:

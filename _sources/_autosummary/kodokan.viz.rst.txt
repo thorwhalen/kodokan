@@ -1,0 +1,19 @@
+kodokan.viz
+===========
+
+.. automodule:: kodokan.viz
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      DEFAULT_PERSON_COLORS
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      log_to_rerun
+      render_skeleton_video
+   

@@ -1,0 +1,31 @@
+# kodokan
+
+> Study Kodokan Judo throws from video via body-pose analysis
+
+
+## Pages
+
+- [kodokan](index.html.md): Study Kodokan Judo throws from video via body-pose analysis: download technique
+- [API reference](api.html.md): | &#96;kodokan&#96;   | kodokan — study Kodokan Judo throws from video via body-pose analysis.   |
+- [kodokan](_autosummary/kodokan.html.md): kodokan — study Kodokan Judo throws from video via body-pose analysis.
+- [kodokan.acquire](_autosummary/kodokan.acquire.html.md): Acquire Kodokan technique clips from YouTube (thin wrapper over &#96;yb.download&#96;).
+- [kodokan.canon3d](_autosummary/kodokan.canon3d.html.md): Pelvis-frame (Procrustes) canonicalization of 3D world landmarks.
+- [kodokan.config](_autosummary/kodokan.config.html.md): Where kodokan keeps its data (downloaded clips + derived artifacts).
+- [kodokan.descriptors](_autosummary/kodokan.descriptors.html.md): Experimental per-demo feature descriptors (to test what makes throws separable).
+- [kodokan.flashcards](_autosummary/kodokan.flashcards.html.md): Technique-recognition learning game (app #6) — logic layer.
+- [kodokan.learning](_autosummary/kodokan.learning.html.md): Adaptive learning engine for the flashcard quiz — selectable strategies.
+- [kodokan.pose](_autosummary/kodokan.pose.html.md): Body-pose estimation: a video → a sequence of per-person skeletal keypoints.
+- [kodokan.recognize](_autosummary/kodokan.recognize.html.md): Learned-vs-DTW technique recognition experiments (data-appropriate, no GPU).
+- [kodokan.segment](_autosummary/kodokan.segment.html.md): Segment a clip into its repeated demonstrations of one throw.
+- [kodokan.store](_autosummary/kodokan.store.html.md): dol-backed stores for the pipeline’s artifacts (the analysis SSOT).
+- [kodokan.track](_autosummary/kodokan.track.html.md): Stable tori/uke identity tracking (BoT-SORT / ByteTrack).
+- [kodokan.viz](_autosummary/kodokan.viz.html.md): Visualize a &#96;PoseSequence&#96;.
+- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-10-19 13:07 UTC&#42;&#42; from commit &lt;a href="https://github.com/tho...
+
+## Optional
+
+- [kodokan.md](kodokan.md): Complete documentation in a single file.
+
+## Build
+
+- [build_info.json](build_info.json): build provenance (commit, version, tool versions, whether the docs match the package)

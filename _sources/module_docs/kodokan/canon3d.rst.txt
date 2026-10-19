@@ -1,4 +1,0 @@
-kodokan.canon3d
-===============
-.. automodule:: kodokan.canon3d
-   :members:

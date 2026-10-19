@@ -1,4 +1,0 @@
-kodokan.pose
-============
-.. automodule:: kodokan.pose
-   :members:
