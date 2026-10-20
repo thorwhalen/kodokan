@@ -26,6 +26,13 @@ from kodokan.segment import segment_demonstrations, Segment
 from kodokan.compare import compare, angle_features, distance_matrix, ANGLE_NAMES
 from kodokan.score import build_reference, score, feedback, demo_features
 from kodokan.store import pose_store, segments_store, load_all_tidy
+from kodokan.recognizer import (
+    TechniqueRecognizer,
+    Recognition,
+    Guess,
+    recognize_segments,
+    LiveRecognizer,
+)
 from kodokan.flashcards import (
     make_problem,
     build_catalog,
@@ -57,6 +64,11 @@ __all__ = [
     "score",
     "feedback",
     "demo_features",
+    "TechniqueRecognizer",
+    "Recognition",
+    "Guess",
+    "recognize_segments",
+    "LiveRecognizer",
     "make_problem",
     "build_catalog",
     "clip_filename",
