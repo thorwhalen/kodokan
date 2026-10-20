@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../_static/documentation_options.js?v=a11416ff"></script>
+    <script src="../_static/documentation_options.js?v=96ec9c95"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -58,7 +58,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.21" />
+  <meta name="docsearch:version" content="0.0.22" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -438,13 +438,16 @@ would overfit; the same harness scales to more techniques once more data is coll
 <tr class="row-even"><td><p><a class="reference internal" href="#kodokan.recognize.roc_auc_distances" title="kodokan.recognize.roc_auc_distances"><code class="xref py py-obj docutils literal notranslate"><span class="pre">roc_auc_distances</span></code></a>(genuine, impostor)</p></td>
 <td><p>Standard ROC-AUC for a <em>distance</em> score: <code class="docutils literal notranslate"><span class="pre">P(impostor</span> <span class="pre">&gt;</span> <span class="pre">genuine)</span></code> (ties=0.5).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.recognize.tori_decision" title="kodokan.recognize.tori_decision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tori_decision</span></code></a>(pose_seq, start_s, end_s, *[, ...])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.recognize.similarity_from_confusion" title="kodokan.recognize.similarity_from_confusion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">similarity_from_confusion</span></code></a>(y_true, y_pred, *)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">target</span> <span class="pre">-&gt;</span> <span class="pre">{other:</span> <span class="pre">weight}</span></code> (0..1) from a recognizer's confusions.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.recognize.tori_decision" title="kodokan.recognize.tori_decision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tori_decision</span></code></a>(pose_seq, start_s, end_s, *[, ...])</p></td>
 <td><p>Tori (thrower) heuristic with a confidence margin and an abstain flag.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.recognize.tori_decision_stats" title="kodokan.recognize.tori_decision_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tori_decision_stats</span></code></a>(decisions)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.recognize.tori_decision_stats" title="kodokan.recognize.tori_decision_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tori_decision_stats</span></code></a>(decisions)</p></td>
 <td><p>Aggregate fall-back / abstain rates and median margin over decisions.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.recognize.tori_index" title="kodokan.recognize.tori_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tori_index</span></code></a>(pose_seq, start_s, end_s)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.recognize.tori_index" title="kodokan.recognize.tori_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tori_index</span></code></a>(pose_seq, start_s, end_s)</p></td>
 <td><p>Heuristic tori slot (thin wrapper over <a class="reference internal" href="#kodokan.recognize.tori_decision" title="kodokan.recognize.tori_decision"><code class="xref py py-func docutils literal notranslate"><span class="pre">tori_decision()</span></code></a>).</p></td>
 </tr>
 </tbody>
@@ -632,6 +635,22 @@ ones). NaNs are dropped; returns <code class="docutils literal notranslate"><spa
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="kodokan.recognize.similarity_from_confusion">
+<span class="sig-prename descclassname"><span class="pre">kodokan.recognize.</span></span><span class="sig-name descname"><span class="pre">similarity_from_confusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y_true</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pred</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">symmetric</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/recognize.html#similarity_from_confusion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.recognize.similarity_from_confusion" title="Link to this definition">#</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">target</span> <span class="pre">-&gt;</span> <span class="pre">{other:</span> <span class="pre">weight}</span></code> (0..1) from a recognizer’s confusions.</p>
+<p><code class="docutils literal notranslate"><span class="pre">weight</span></code> is the share of <code class="docutils literal notranslate"><span class="pre">target</span></code>’s samples predicted as <code class="docutils literal notranslate"><span class="pre">other</span></code> (off-diagonal
+only; abstains and self-predictions are ignored). With <code class="docutils literal notranslate"><span class="pre">symmetric</span></code> (default) the
+weight is the mean of both directions, so “a looks like b” implies “b looks like a”,
+which suits distractor choice. Same shape as <code class="docutils literal notranslate"><span class="pre">flashcards.build_confusability</span></code>, so it
+plugs into <code class="docutils literal notranslate"><span class="pre">Quiz(similarity=...)</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="kodokan.recognize.tori_decision">
 <span class="sig-prename descclassname"><span class="pre">kodokan.recognize.</span></span><span class="sig-name descname"><span class="pre">tori_decision</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose_seq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_s</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">abstain_margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/recognize.html#tori_decision"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.recognize.tori_decision" title="Link to this definition">#</a></dt>
 <dd><p>Tori (thrower) heuristic with a confidence margin and an abstain flag.</p>
@@ -739,6 +758,7 @@ when you need the confidence margin / abstain flag.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.loo_pooled_predict"><code class="docutils literal notranslate"><span class="pre">loo_pooled_predict()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.pooled_descriptor"><code class="docutils literal notranslate"><span class="pre">pooled_descriptor()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.roc_auc_distances"><code class="docutils literal notranslate"><span class="pre">roc_auc_distances()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.similarity_from_confusion"><code class="docutils literal notranslate"><span class="pre">similarity_from_confusion()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.tori_decision"><code class="docutils literal notranslate"><span class="pre">tori_decision()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.tori_decision_stats"><code class="docutils literal notranslate"><span class="pre">tori_decision_stats()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.tori_index"><code class="docutils literal notranslate"><span class="pre">tori_index()</span></code></a></li>

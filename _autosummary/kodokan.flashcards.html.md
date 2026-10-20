@@ -20,6 +20,7 @@ This module is the (UI-agnostic) logic + storage; a web UI plugs into it later.
 | [`build_catalog`](#kodokan.flashcards.build_catalog)(\*[, min_two_person_frac, ...])      | Build `{technique_key: {"name", "clips":[...]}}` from the pose/segments stores.                                 |
 |-----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
 | [`build_confusability`](#kodokan.flashcards.build_confusability)([catalog, feature])            | Technique×technique similarity (0..1) from mean pooled pose descriptors.                                        |
+| [`build_model_confusability`](#kodokan.flashcards.build_model_confusability)([catalog, ...])          | Technique×technique confusability from the recognizer's own leave-one-out confusions.                           |
 | [`clip_filename`](#kodokan.flashcards.clip_filename)(video_id, start_s, dur_s)            | The web-app clip file for one demo segment, named by the segment's IDENTITY.                                    |
 | [`confusable_distractors`](#kodokan.flashcards.confusable_distractors)(target_key, keys, \*, n)    | Pick `n` distractor keys, preferring those most confusable with the target.                                     |
 | [`log_response`](#kodokan.flashcards.log_response)(problem, chosen_index, \*[, ...])     | Record a response (datetime + exact problem + choice + correctness + score).                                    |
@@ -59,6 +60,17 @@ Technique×technique similarity (0..1) from mean pooled pose descriptors.
 `similarity[a][b]` high ⇒ techniques a, b look alike in pose-space (likely
 confusable for a learner). An honest, recognizer-free proxy; swap for the model’s
 confusion matrix once cross-source recognition works.
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
+
+### kodokan.flashcards.build_model_confusability(catalog=None, , feature='tori_angles_pos', method='lda_knn', cross_source=True)
+
+Technique×technique confusability from the recognizer’s own leave-one-out confusions.
+
+Same shape as [`build_confusability()`](#kodokan.flashcards.build_confusability). Predictions are leave-one-clip-out
+(`cross_source`) or leave-one-sample-out. Techniques the model never confuses get
+no row entries; `learning.merge_similarity` / the strategies fall back as usual.
 
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)

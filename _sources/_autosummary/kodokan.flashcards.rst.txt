@@ -10,6 +10,7 @@ kodokan.flashcards
    
       build_catalog
       build_confusability
+      build_model_confusability
       clip_filename
       confusable_distractors
       log_response

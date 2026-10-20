@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../../_static/documentation_options.js?v=a11416ff"></script>
+    <script src="../../_static/documentation_options.js?v=96ec9c95"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -411,7 +411,7 @@ window.runMermaid = runMermaid;</script>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.21" />
+  <meta name="docsearch:version" content="0.0.22" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -754,7 +754,9 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="quiz_stores">
 <a class="viewcode-back" href="../../_autosummary/kodokan.quiz.html#kodokan.quiz.quiz_stores">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">quiz_stores</span><span class="p">(</span><span class="n">directory</span><span class="p">:</span> <span class="n">PathLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">MutableMapping</span><span class="p">,</span> <span class="n">MutableMapping</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">quiz_stores</span><span class="p">(</span>
+    <span class="n">directory</span><span class="p">:</span> <span class="n">PathLike</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">MutableMapping</span><span class="p">,</span> <span class="n">MutableMapping</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""``(responses, problems)`` as ``dol`` JSON-file stores under the data root."""</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">dol</span><span class="w"> </span><span class="kn">import</span> <span class="n">JsonFiles</span>
 
@@ -800,11 +802,25 @@ window.runMermaid = runMermaid;</script>
 <a class="viewcode-back" href="../../_autosummary/kodokan.quiz.html#kodokan.quiz.Quiz.from_library">[docs]</a>
     <span class="nd">@classmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">from_library</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">"Quiz"</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">"""A quiz over the clip library on disk, with pose-shape confusability (needs ``kodokan[analysis]``)."""</span>
-        <span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.flashcards</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_catalog</span><span class="p">,</span> <span class="n">build_confusability</span>
+<span class="w">        </span><span class="sd">"""A quiz over the clip library on disk (needs ``kodokan[analysis]``).</span>
 
+<span class="sd">        ``confusability``: ``"pose"`` (default, pose-shape proxy) or ``"model"`` (the</span>
+<span class="sd">        recognizer's leave-one-clip-out confusions; weak until cross-source recognition</span>
+<span class="sd">        beats chance, #7). An explicit ``similarity=`` mapping wins over both.</span>
+<span class="sd">        """</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.flashcards</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+            <span class="n">build_catalog</span><span class="p">,</span>
+            <span class="n">build_confusability</span><span class="p">,</span>
+            <span class="n">build_model_confusability</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="n">builders</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"pose"</span><span class="p">:</span> <span class="n">build_confusability</span><span class="p">,</span> <span class="s2">"model"</span><span class="p">:</span> <span class="n">build_model_confusability</span><span class="p">}</span>
+        <span class="n">kind</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"confusability"</span><span class="p">,</span> <span class="s2">"pose"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">kind</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">builders</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"confusability must be one of </span><span class="si">{</span><span class="nb">sorted</span><span class="p">(</span><span class="n">builders</span><span class="p">)</span><span class="si">}</span><span class="s2">, got </span><span class="si">{</span><span class="n">kind</span><span class="si">!r}</span><span class="s2">"</span><span class="p">)</span>
         <span class="n">catalog</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">"catalog"</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">or</span> <span class="n">build_catalog</span><span class="p">()</span>
-        <span class="n">kwargs</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="s2">"similarity"</span><span class="p">,</span> <span class="n">build_confusability</span><span class="p">(</span><span class="n">catalog</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"similarity"</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s2">"similarity"</span><span class="p">]</span> <span class="o">=</span> <span class="n">builders</span><span class="p">[</span><span class="n">kind</span><span class="p">](</span><span class="n">catalog</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="n">catalog</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
@@ -823,7 +839,9 @@ window.runMermaid = runMermaid;</script>
     <span class="k">def</span><span class="w"> </span><span class="nf">history</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">"""The user's answered-problem records, oldest first."""</span>
         <span class="n">prefix</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">_check_user</span><span class="p">(</span><span class="n">user</span><span class="p">)</span><span class="si">}</span><span class="s2">__"</span>
-        <span class="n">records</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">responses</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">responses</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)]</span>
+        <span class="n">records</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">responses</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">responses</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+        <span class="p">]</span>
         <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">r</span><span class="p">:</span> <span class="n">r</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"ts_answered"</span><span class="p">)</span> <span class="ow">or</span> <span class="s2">""</span><span class="p">)</span></div>
 
 
@@ -858,7 +876,12 @@ window.runMermaid = runMermaid;</script>
         <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">k</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="n">study_set</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">catalog</span><span class="p">)</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">catalog</span><span class="p">]</span>
         <span class="n">chosen</span> <span class="o">=</span> <span class="n">learning</span><span class="o">.</span><span class="n">make_strategy</span><span class="p">(</span><span class="n">strategy</span><span class="p">)</span>
         <span class="n">selection</span> <span class="o">=</span> <span class="n">chosen</span><span class="o">.</span><span class="n">next_selection</span><span class="p">(</span>
-            <span class="n">history</span><span class="p">,</span> <span class="n">keys</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span> <span class="n">similarity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">similarity</span><span class="p">,</span> <span class="n">now</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span>
+            <span class="n">history</span><span class="p">,</span>
+            <span class="n">keys</span><span class="p">,</span>
+            <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span>
+            <span class="n">similarity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">similarity</span><span class="p">,</span>
+            <span class="n">now</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span>
+            <span class="n">rng</span><span class="o">=</span><span class="n">rng</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="n">problem</span> <span class="o">=</span> <span class="n">problem_from_keys</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">catalog</span><span class="p">,</span>
@@ -899,12 +922,18 @@ window.runMermaid = runMermaid;</script>
 
         <span class="n">key</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">problem_id</span><span class="si">}</span><span class="s2">.json"</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">problems</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"no open problem </span><span class="si">{</span><span class="n">problem_id</span><span class="si">!r}</span><span class="s2">: never issued, or already answered"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"no open problem </span><span class="si">{</span><span class="n">problem_id</span><span class="si">!r}</span><span class="s2">: never issued, or already answered"</span>
+            <span class="p">)</span>
         <span class="n">issued</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">problems</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
         <span class="n">problem</span> <span class="o">=</span> <span class="n">Problem</span><span class="p">(</span><span class="o">**</span><span class="n">issued</span><span class="p">[</span><span class="s2">"problem"</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">chosen_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">chosen_index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">choices</span><span class="p">):</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"chosen_index must be in 0..</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">choices</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">, not </span><span class="si">{</span><span class="n">chosen_index</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-        <span class="n">chosen_key</span> <span class="o">=</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">chosen_index</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">problem</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="n">chosen_index</span><span class="p">][</span><span class="s2">"key"</span><span class="p">]</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">"chosen_index must be in 0..</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">choices</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">, not </span><span class="si">{</span><span class="n">chosen_index</span><span class="si">}</span><span class="s2">"</span>
+            <span class="p">)</span>
+        <span class="n">chosen_key</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="kc">None</span> <span class="k">if</span> <span class="n">chosen_index</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">problem</span><span class="o">.</span><span class="n">choices</span><span class="p">[</span><span class="n">chosen_index</span><span class="p">][</span><span class="s2">"key"</span><span class="p">]</span>
+        <span class="p">)</span>
         <span class="n">ts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span>
         <span class="n">record</span> <span class="o">=</span> <span class="p">{</span>
             <span class="s2">"response_id"</span><span class="p">:</span> <span class="n">uuid</span><span class="o">.</span><span class="n">uuid4</span><span class="p">()</span><span class="o">.</span><span class="n">hex</span><span class="p">,</span>
@@ -919,13 +948,19 @@ window.runMermaid = runMermaid;</script>
             <span class="s2">"choice_keys"</span><span class="p">:</span> <span class="p">[</span><span class="n">c</span><span class="p">[</span><span class="s2">"key"</span><span class="p">]</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">problem</span><span class="o">.</span><span class="n">choices</span><span class="p">],</span>
             <span class="s2">"chosen_key"</span><span class="p">:</span> <span class="n">chosen_key</span><span class="p">,</span>
             <span class="s2">"correct"</span><span class="p">:</span> <span class="n">chosen_key</span> <span class="o">==</span> <span class="n">problem</span><span class="o">.</span><span class="n">target_key</span><span class="p">,</span>
-            <span class="s2">"score"</span><span class="p">:</span> <span class="mf">0.0</span> <span class="k">if</span> <span class="n">chosen_key</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">score_response</span><span class="p">(</span><span class="n">problem</span><span class="o">.</span><span class="n">target_key</span><span class="p">,</span> <span class="n">chosen_key</span><span class="p">,</span> <span class="n">similarity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">similarity</span><span class="p">),</span>
+            <span class="s2">"score"</span><span class="p">:</span> <span class="mf">0.0</span>
+            <span class="k">if</span> <span class="n">chosen_key</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="n">score_response</span><span class="p">(</span>
+                <span class="n">problem</span><span class="o">.</span><span class="n">target_key</span><span class="p">,</span> <span class="n">chosen_key</span><span class="p">,</span> <span class="n">similarity</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">similarity</span>
+            <span class="p">),</span>
             <span class="s2">"timed_out"</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">timed_out</span> <span class="ow">or</span> <span class="n">chosen_index</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">),</span>
             <span class="s2">"response_time_ms"</span><span class="p">:</span> <span class="n">response_time_ms</span><span class="p">,</span>
             <span class="s2">"ts_presented"</span><span class="p">:</span> <span class="n">issued</span><span class="p">[</span><span class="s2">"ts_presented"</span><span class="p">],</span>
             <span class="s2">"ts_answered"</span><span class="p">:</span> <span class="n">ts</span><span class="p">,</span>
         <span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">responses</span><span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">issued</span><span class="p">[</span><span class="s1">'user'</span><span class="p">]</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">ts</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">record</span><span class="p">[</span><span class="s1">'response_id'</span><span class="p">]</span><span class="si">}</span><span class="s2">.json"</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">":"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">)]</span> <span class="o">=</span> <span class="n">record</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">responses</span><span class="p">[</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">issued</span><span class="p">[</span><span class="s1">'user'</span><span class="p">]</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">ts</span><span class="si">}</span><span class="s2">__</span><span class="si">{</span><span class="n">record</span><span class="p">[</span><span class="s1">'response_id'</span><span class="p">]</span><span class="si">}</span><span class="s2">.json"</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">":"</span><span class="p">,</span> <span class="s2">"-"</span><span class="p">)</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="n">record</span>
         <span class="k">del</span> <span class="bp">self</span><span class="o">.</span><span class="n">problems</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">record</span></div>
 </div>

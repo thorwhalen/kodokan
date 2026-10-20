@@ -20,6 +20,7 @@ kodokan.recognize
       pool_lda_knn_accuracy
       pooled_descriptor
       roc_auc_distances
+      similarity_from_confusion
       tori_decision
       tori_decision_stats
       tori_index

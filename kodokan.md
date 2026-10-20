@@ -1,4 +1,4 @@
-> built 2026-10-20 04:47 UTC from dc7baf9 (main) · kodokan 0.0.21. Details: build_info.json
+> built 2026-10-20 10:09 UTC from cc2fd64 (main) · kodokan 0.0.22. Details: build_info.json
 
 # index.html.md
 
@@ -530,6 +530,7 @@ This module is the (UI-agnostic) logic + storage; a web UI plugs into it later.
 | [`build_catalog`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.build_catalog)(\*[, min_two_person_frac, ...])      | Build `{technique_key: {"name", "clips":[...]}}` from the pose/segments stores.                                 |
 |-----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
 | [`build_confusability`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.build_confusability)([catalog, feature])            | Technique×technique similarity (0..1) from mean pooled pose descriptors.                                        |
+| [`build_model_confusability`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.build_model_confusability)([catalog, ...])          | Technique×technique confusability from the recognizer's own leave-one-out confusions.                           |
 | [`clip_filename`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.clip_filename)(video_id, start_s, dur_s)            | The web-app clip file for one demo segment, named by the segment's IDENTITY.                                    |
 | [`confusable_distractors`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.confusable_distractors)(target_key, keys, \*, n)    | Pick `n` distractor keys, preferring those most confusable with the target.                                     |
 | [`log_response`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.log_response)(problem, chosen_index, \*[, ...])     | Record a response (datetime + exact problem + choice + correctness + score).                                    |
@@ -569,6 +570,17 @@ Technique×technique similarity (0..1) from mean pooled pose descriptors.
 `similarity[a][b]` high ⇒ techniques a, b look alike in pose-space (likely
 confusable for a learner). An honest, recognizer-free proxy; swap for the model’s
 confusion matrix once cross-source recognition works.
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
+
+### kodokan.flashcards.build_model_confusability(catalog=None, , feature='tori_angles_pos', method='lda_knn', cross_source=True)
+
+Technique×technique confusability from the recognizer’s own leave-one-out confusions.
+
+Same shape as [`build_confusability()`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.build_confusability). Predictions are leave-one-clip-out
+(`cross_source`) or leave-one-sample-out. Techniques the model never confuses get
+no row entries; `learning.merge_similarity` / the strategies fall back as usual.
 
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
@@ -1376,7 +1388,11 @@ The game for one `catalog` (`technique_key -> {"name", "clips"}`).
 
 #### *classmethod* from_library(\*\*kwargs)
 
-A quiz over the clip library on disk, with pose-shape confusability (needs `kodokan[analysis]`).
+A quiz over the clip library on disk (needs `kodokan[analysis]`).
+
+`confusability`: `"pose"` (default, pose-shape proxy) or `"model"` (the
+recognizer’s leave-one-clip-out confusions; weak until cross-source recognition
+beats chance, #7). An explicit `similarity=` mapping wins over both.
 
 * **Return type:**
   [`Quiz`](_autosummary/kodokan.quiz.html.md#kodokan.quiz.Quiz)
@@ -1472,6 +1488,7 @@ would overfit; the same harness scales to more techniques once more data is coll
 | `pool_lda_knn_accuracy`(X, y[, k])                                                                   |                                                                                                           |
 | [`pooled_descriptor`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.pooled_descriptor)(feat, \*[, levels])               | Temporal-pyramid pooled fixed-length descriptor (mean+std per segment).                                   |
 | [`roc_auc_distances`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.roc_auc_distances)(genuine, impostor)                | Standard ROC-AUC for a *distance* score: `P(impostor > genuine)` (ties=0.5).                              |
+| [`similarity_from_confusion`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.similarity_from_confusion)(y_true, y_pred, \*)       | `target -> {other: weight}` (0..1) from a recognizer's confusions.                                        |
 | [`tori_decision`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.tori_decision)(pose_seq, start_s, end_s, \*[, ...])  | Tori (thrower) heuristic with a confidence margin and an abstain flag.                                    |
 | [`tori_decision_stats`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.tori_decision_stats)(decisions)                      | Aggregate fall-back / abstain rates and median margin over decisions.                                     |
 | [`tori_index`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.tori_index)(pose_seq, start_s, end_s)                | Heuristic tori slot (thin wrapper over [`tori_decision()`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.tori_decision)). |
@@ -1604,6 +1621,19 @@ ones). NaNs are dropped; returns `nan` if either side is empty.
 
 * **Return type:**
   [`float`](https://docs.python.org/3/builtins/functions.html#float)
+
+### kodokan.recognize.similarity_from_confusion(y_true, y_pred, , symmetric=True)
+
+`target -> {other: weight}` (0..1) from a recognizer’s confusions.
+
+`weight` is the share of `target`’s samples predicted as `other` (off-diagonal
+only; abstains and self-predictions are ignored). With `symmetric` (default) the
+weight is the mean of both directions, so “a looks like b” implies “b looks like a”,
+which suits distractor choice. Same shape as `flashcards.build_confusability`, so it
+plugs into `Quiz(similarity=...)`.
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
 ### kodokan.recognize.tori_decision(pose_seq, start_s, end_s, , abstain_margin=0.15)
 
@@ -1991,7 +2021,7 @@ Render skeletons to an MP4.
 
 # About this build
 
-This documentation was built on **2026-10-20 04:47 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/dc7baf981f792042aea2614ce06d14ae7f4f1d35"><code>dc7baf9</code></a> on branch <code>main</code>, for **kodokan 0.0.21** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-10-20 10:09 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/cc2fd64588c6f6f349a7ccbc078414b7b73ebccf"><code>cc2fd64</code></a> on branch <code>main</code>, for **kodokan 0.0.22** (from <code>pyproject.toml</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -2000,7 +2030,7 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                           |
 |---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/thorwhalen/kodokan/commit/dc7baf981f792042aea2614ce06d14ae7f4f1d35"><code>dc7baf981f792042aea2614ce06d14ae7f4f1d35</code></a> |
+| Commit              | <a href="https://github.com/thorwhalen/kodokan/commit/cc2fd64588c6f6f349a7ccbc078414b7b73ebccf"><code>cc2fd64588c6f6f349a7ccbc078414b7b73ebccf</code></a> |
 | Branch              | <code>main</code>                                                                                                                                         |
 | Tags at this commit | none                                                                                                                                                      |
 | Working tree        | clean                                                                                                                                                     |
@@ -2011,9 +2041,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>thorwhalen/kodokan</code>                                                            |
-| Run          | <a href="https://github.com/thorwhalen/kodokan/actions/runs/39371272092">39371272092</a>   |
+| Run          | <a href="https://github.com/thorwhalen/kodokan/actions/runs/39405729586">39405729586</a>   |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>dc7baf981f792042aea2614ce06d14ae7f4f1d35</code> (in the history of the built commit) |
+| Event commit | <code>cc2fd64588c6f6f349a7ccbc078414b7b73ebccf</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -2038,13 +2068,13 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/kodokan/0.0.21/">0.0.21</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/kodokan/0.0.22/">0.0.22</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/thorwhalen/kodokan && cd kodokan
-git checkout dc7baf981f792042aea2614ce06d14ae7f4f1d35
+git checkout cc2fd64588c6f6f349a7ccbc078414b7b73ebccf
 pip install "epythet==0.2.18"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

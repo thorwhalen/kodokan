@@ -58,7 +58,11 @@ The game for one `catalog` (`technique_key -> {"name", "clips"}`).
 
 #### *classmethod* from_library(\*\*kwargs)
 
-A quiz over the clip library on disk, with pose-shape confusability (needs `kodokan[analysis]`).
+A quiz over the clip library on disk (needs `kodokan[analysis]`).
+
+`confusability`: `"pose"` (default, pose-shape proxy) or `"model"` (the
+recognizer’s leave-one-clip-out confusions; weak until cross-source recognition
+beats chance, #7). An explicit `similarity=` mapping wins over both.
 
 * **Return type:**
   [`Quiz`](#kodokan.quiz.Quiz)

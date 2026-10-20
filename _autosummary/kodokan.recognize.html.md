@@ -30,6 +30,7 @@ would overfit; the same harness scales to more techniques once more data is coll
 | `pool_lda_knn_accuracy`(X, y[, k])                                                                   |                                                                                                           |
 | [`pooled_descriptor`](#kodokan.recognize.pooled_descriptor)(feat, \*[, levels])               | Temporal-pyramid pooled fixed-length descriptor (mean+std per segment).                                   |
 | [`roc_auc_distances`](#kodokan.recognize.roc_auc_distances)(genuine, impostor)                | Standard ROC-AUC for a *distance* score: `P(impostor > genuine)` (ties=0.5).                              |
+| [`similarity_from_confusion`](#kodokan.recognize.similarity_from_confusion)(y_true, y_pred, \*)       | `target -> {other: weight}` (0..1) from a recognizer's confusions.                                        |
 | [`tori_decision`](#kodokan.recognize.tori_decision)(pose_seq, start_s, end_s, \*[, ...])  | Tori (thrower) heuristic with a confidence margin and an abstain flag.                                    |
 | [`tori_decision_stats`](#kodokan.recognize.tori_decision_stats)(decisions)                      | Aggregate fall-back / abstain rates and median margin over decisions.                                     |
 | [`tori_index`](#kodokan.recognize.tori_index)(pose_seq, start_s, end_s)                | Heuristic tori slot (thin wrapper over [`tori_decision()`](#kodokan.recognize.tori_decision)). |
@@ -162,6 +163,19 @@ ones). NaNs are dropped; returns `nan` if either side is empty.
 
 * **Return type:**
   [`float`](https://docs.python.org/3/builtins/functions.html#float)
+
+### kodokan.recognize.similarity_from_confusion(y_true, y_pred, , symmetric=True)
+
+`target -> {other: weight}` (0..1) from a recognizer’s confusions.
+
+`weight` is the share of `target`’s samples predicted as `other` (off-diagonal
+only; abstains and self-predictions are ignored). With `symmetric` (default) the
+weight is the mean of both directions, so “a looks like b” implies “b looks like a”,
+which suits distractor choice. Same shape as `flashcards.build_confusability`, so it
+plugs into `Quiz(similarity=...)`.
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
 ### kodokan.recognize.tori_decision(pose_seq, start_s, end_s, , abstain_margin=0.15)
 
