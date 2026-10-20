@@ -177,6 +177,47 @@ def pooled_descriptor(feat: np.ndarray, *, levels=(1, 2, 4)) -> np.ndarray:
     return np.concatenate(parts)
 
 
+# ---- horizontal-mirror augmentation (#7, lever 4) ----
+#
+# Mirroring a frame negates x and swaps every left/right keypoint label, so a
+# left-handed demo becomes a right-handed one. Interior angles are reflection
+# invariant, so a mirrored angle vector is the original with its l_/r_ entries swapped;
+# hip-centered positions swap their L/R keypoints and negate x (the torso scale and the
+# clip are reflection invariant). Exact at the feature level: no pose re-run needed.
+
+# COCO-17: 0 nose, then (left, right) pairs 1/2 eyes ... 15/16 ankles
+COCO_MIRROR = np.array([0, 2, 1, 4, 3, 6, 5, 8, 7, 10, 9, 12, 11, 14, 13, 16, 15])
+
+
+def _angle_mirror() -> np.ndarray:
+    from kodokan.compare import ANGLE_NAMES
+
+    swap = {"l_": "r_", "r_": "l_"}
+    return np.array(
+        [ANGLE_NAMES.index(swap[n[:2]] + n[2:]) for n in ANGLE_NAMES]
+    )
+
+
+def mirror_feature(feat: np.ndarray, *, mode: str) -> np.ndarray:
+    """Per-frame features of the horizontally mirrored demo, from :func:`demo_feature`'s.
+
+    ``mirror_feature(demo_feature(seq, ...), mode=m)`` equals ``demo_feature`` of the
+    mirrored ``seq`` (tested), so mirrored training copies cost no pose estimation.
+    """
+    if len(feat) == 0:
+        return feat
+    perm = _angle_mirror()
+    n_ang = len(perm)
+    angles = feat[:, perm]
+    if mode in ("primary_angles", "tori_angles"):
+        return angles
+    if mode != "tori_angles_pos":
+        raise ValueError(f"unknown mode {mode!r}")
+    pos = feat[:, n_ang:].reshape(len(feat), 17, 2)[:, COCO_MIRROR].copy()
+    pos[..., 0] *= -1
+    return np.concatenate([angles, pos.reshape(len(feat), -1)], axis=1)
+
+
 # ---- leave-one-out evaluation (LEAKAGE-FREE: all preprocessing fit on train fold) ----
 #
 # NOTE on a deeper confound: in the Kodokan dataset each technique class == one source
@@ -204,13 +245,23 @@ def dtw_1nn_predict(feature_seqs: list[np.ndarray], labels) -> list:
 
 
 def loo_pooled_predict(
-    X: np.ndarray, y: np.ndarray, *, method: str = "lda_knn", k: int = 3, groups=None
+    X: np.ndarray,
+    y: np.ndarray,
+    *,
+    method: str = "lda_knn",
+    k: int = 3,
+    groups=None,
+    X_aug: np.ndarray | None = None,
 ) -> np.ndarray:
     """Leave-one-out (or leave-one-GROUP-out) predictions; preprocessing fit on train only.
 
     If ``groups`` is given (e.g. source ``video_id`` per sample), each fold excludes ALL
     samples sharing the held-out sample's group — i.e. **leave-one-clip-out**, which removes
     within-clip leakage. Otherwise it is plain leave-one-sample-out.
+
+    ``X_aug`` (same shape as ``X``, row ``j`` an augmented copy of sample ``j``, e.g. the
+    pooled :func:`mirror_feature`) adds the copies of the TRAIN-fold samples to each
+    fold's training set; a held-out sample's own copy (and its group's) never trains.
     """
     lda_cls = None
     if method == "lda_knn":
@@ -226,8 +277,11 @@ def loo_pooled_predict(
     preds = np.empty(n, dtype=y.dtype)
     for i in range(n):
         tr = (groups != groups[i]) if groups is not None else (idx != i)
-        mu, sd = X[tr].mean(0), X[tr].std(0) + 1e-9  # fit on train fold only
-        Xtr, xi, ytr = (X[tr] - mu) / sd, (X[i] - mu) / sd, y[tr]
+        Xtr, ytr = X[tr], y[tr]
+        if X_aug is not None:
+            Xtr, ytr = np.vstack([Xtr, X_aug[tr]]), np.concatenate([ytr, ytr])
+        mu, sd = Xtr.mean(0), Xtr.std(0) + 1e-9  # fit on train fold only
+        Xtr, xi = (Xtr - mu) / sd, (X[i] - mu) / sd
         if method == "centroid":
             classes = np.unique(ytr)
             cents = np.stack([Xtr[ytr == c].mean(0) for c in classes])

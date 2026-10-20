@@ -20,6 +20,7 @@ from kodokan.recognize import (
     demo_feature,
     dtw_1nn_predict,
     loo_pooled_predict,
+    mirror_feature,
     pooled_descriptor,
     tori_decision,
     tori_decision_stats,
@@ -43,6 +44,11 @@ def main():
         type=int,
         default=1000,
         help="bootstrap resamples for accuracy CIs (0 to skip)",
+    )
+    ap.add_argument(
+        "--mirror",
+        action="store_true",
+        help="add horizontally mirrored copies of the train-fold demos (pool_* only)",
     )
     args = ap.parse_args()
 
@@ -79,12 +85,22 @@ def main():
         preds = dtw_1nn_predict(feats, labels)
     else:
         X = np.stack([pooled_descriptor(f) for f in feats])
-        preds = loo_pooled_predict(X, y, method=args.method.replace("pool_", ""))
+        X_aug = (
+            np.stack(
+                [pooled_descriptor(mirror_feature(f, mode=args.feature)) for f in feats]
+            )
+            if args.mirror
+            else None
+        )
+        preds = loo_pooled_predict(
+            X, y, method=args.method.replace("pool_", ""), X_aug=X_aug
+        )
 
     m = classification_metrics(y, preds, n_boot=args.n_boot)
     out = {
         "feature": args.feature,
         "method": args.method,
+        "mirror": args.mirror,
         "n_samples": m["n"],
         "n_classes": m["n_classes"],
         "accuracy": m["top1"],  # leakage-free LOO top-1 (within-clip: upper bound)
