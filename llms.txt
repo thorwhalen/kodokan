@@ -15,12 +15,13 @@
 - [kodokan.flashcards](_autosummary/kodokan.flashcards.html.md): Technique-recognition learning game (app #6) — logic layer.
 - [kodokan.learning](_autosummary/kodokan.learning.html.md): Adaptive learning engine for the flashcard quiz — selectable strategies.
 - [kodokan.pose](_autosummary/kodokan.pose.html.md): Body-pose estimation: a video → a sequence of per-person skeletal keypoints.
+- [kodokan.quiz](_autosummary/kodokan.quiz.html.md): Quiz service: the UI-agnostic orchestrator of the technique-recognition game (app #6).
 - [kodokan.recognize](_autosummary/kodokan.recognize.html.md): Learned-vs-DTW technique recognition experiments (data-appropriate, no GPU).
 - [kodokan.segment](_autosummary/kodokan.segment.html.md): Segment a clip into its repeated demonstrations of one throw.
 - [kodokan.store](_autosummary/kodokan.store.html.md): dol-backed stores for the pipeline’s artifacts (the analysis SSOT).
 - [kodokan.track](_autosummary/kodokan.track.html.md): Stable tori/uke identity tracking (BoT-SORT / ByteTrack).
 - [kodokan.viz](_autosummary/kodokan.viz.html.md): Visualize a &#96;PoseSequence&#96;.
-- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-10-19 13:17 UTC&#42;&#42; from commit &lt;a href="https://github.com/tho...
+- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-10-20 04:47 UTC&#42;&#42; from commit &lt;a href="https://github.com/tho...
 
 ## Optional
 

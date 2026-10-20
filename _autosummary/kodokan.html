@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../_static/documentation_options.js?v=056c92e6"></script>
+    <script src="../_static/documentation_options.js?v=a11416ff"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -58,7 +58,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.20" />
+  <meta name="docsearch:version" content="0.0.21" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -313,6 +313,7 @@
 <li class="toctree-l2"><a class="reference internal" href="kodokan.flashcards.html">kodokan.flashcards</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kodokan.learning.html">kodokan.learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kodokan.pose.html">kodokan.pose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.quiz.html">kodokan.quiz</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kodokan.recognize.html">kodokan.recognize</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kodokan.segment.html">kodokan.segment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kodokan.store.html">kodokan.store</a></li>
@@ -950,19 +951,22 @@ Segments whose two-person coverage is below <code class="docutils literal notran
 <tr class="row-odd"><td><p><a class="reference internal" href="kodokan.pose.html#module-kodokan.pose" title="kodokan.pose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pose</span></code></a></p></td>
 <td><p>Body-pose estimation: a video → a sequence of per-person skeletal keypoints.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="kodokan.recognize.html#module-kodokan.recognize" title="kodokan.recognize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">recognize</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="kodokan.quiz.html#module-kodokan.quiz" title="kodokan.quiz"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quiz</span></code></a></p></td>
+<td><p>Quiz service: the UI-agnostic orchestrator of the technique-recognition game (app #6).</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="kodokan.recognize.html#module-kodokan.recognize" title="kodokan.recognize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">recognize</span></code></a></p></td>
 <td><p>Learned-vs-DTW technique recognition experiments (data-appropriate, no GPU).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="kodokan.segment.html#module-kodokan.segment" title="kodokan.segment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">segment</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="kodokan.segment.html#module-kodokan.segment" title="kodokan.segment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">segment</span></code></a></p></td>
 <td><p>Segment a clip into its repeated demonstrations of one throw.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="kodokan.store.html#module-kodokan.store" title="kodokan.store"><code class="xref py py-obj docutils literal notranslate"><span class="pre">store</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="kodokan.store.html#module-kodokan.store" title="kodokan.store"><code class="xref py py-obj docutils literal notranslate"><span class="pre">store</span></code></a></p></td>
 <td><p>dol-backed stores for the pipeline's artifacts (the analysis SSOT).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="kodokan.track.html#module-kodokan.track" title="kodokan.track"><code class="xref py py-obj docutils literal notranslate"><span class="pre">track</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="kodokan.track.html#module-kodokan.track" title="kodokan.track"><code class="xref py py-obj docutils literal notranslate"><span class="pre">track</span></code></a></p></td>
 <td><p>Stable tori/uke identity tracking (BoT-SORT / ByteTrack).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="kodokan.viz.html#module-kodokan.viz" title="kodokan.viz"><code class="xref py py-obj docutils literal notranslate"><span class="pre">viz</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="kodokan.viz.html#module-kodokan.viz" title="kodokan.viz"><code class="xref py py-obj docutils literal notranslate"><span class="pre">viz</span></code></a></p></td>
 <td><p>Visualize a <a class="reference internal" href="kodokan.pose.html#kodokan.pose.PoseSequence" title="kodokan.pose.PoseSequence"><code class="xref py py-class docutils literal notranslate"><span class="pre">PoseSequence</span></code></a>.</p></td>
 </tr>
 </tbody>

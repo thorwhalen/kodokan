@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../_static/documentation_options.js?v=056c92e6"></script>
+    <script src="../_static/documentation_options.js?v=a11416ff"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -58,7 +58,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.20" />
+  <meta name="docsearch:version" content="0.0.21" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -313,6 +313,7 @@
 <li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">kodokan.flashcards</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kodokan.learning.html">kodokan.learning</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kodokan.pose.html">kodokan.pose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.quiz.html">kodokan.quiz</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kodokan.recognize.html">kodokan.recognize</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kodokan.segment.html">kodokan.segment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kodokan.store.html">kodokan.store</a></li>
@@ -420,10 +421,13 @@ can be swapped for the model’s confusion matrix once recognition generalizes.<
 <tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.flashcards.next_target" title="kodokan.flashcards.next_target"><code class="xref py py-obj docutils literal notranslate"><span class="pre">next_target</span></code></a>(keys, history, *[, focus, rng])</p></td>
 <td><p>Pick the next technique to quiz: unseen and often-missed (within <code class="docutils literal notranslate"><span class="pre">focus</span></code>) first.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.flashcards.responses_store" title="kodokan.flashcards.responses_store"><code class="xref py py-obj docutils literal notranslate"><span class="pre">responses_store</span></code></a>([directory])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.flashcards.problem_from_keys" title="kodokan.flashcards.problem_from_keys"><code class="xref py py-obj docutils literal notranslate"><span class="pre">problem_from_keys</span></code></a>(catalog, target_key, ...)</p></td>
+<td><p>Assemble a <a class="reference internal" href="#kodokan.flashcards.Problem" title="kodokan.flashcards.Problem"><code class="xref py py-class docutils literal notranslate"><span class="pre">Problem</span></code></a> from an already-chosen, ordered option set.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.flashcards.responses_store" title="kodokan.flashcards.responses_store"><code class="xref py py-obj docutils literal notranslate"><span class="pre">responses_store</span></code></a>([directory])</p></td>
 <td><p>A dict-like JSON store of logged responses (per-user, timestamped).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.flashcards.score_response" title="kodokan.flashcards.score_response"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score_response</span></code></a>(correct_key, chosen_key, *[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.flashcards.score_response" title="kodokan.flashcards.score_response"><code class="xref py py-obj docutils literal notranslate"><span class="pre">score_response</span></code></a>(correct_key, chosen_key, *[, ...])</p></td>
 <td><p>Confusion-weighted credit in [0, 1].</p></td>
 </tr>
 </tbody>
@@ -539,6 +543,19 @@ wrong -&gt; high, mastered -&gt; low. <code class="docutils literal notranslate"
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="kodokan.flashcards.problem_from_keys">
+<span class="sig-prename descclassname"><span class="pre">kodokan.flashcards.</span></span><span class="sig-name descname"><span class="pre">problem_from_keys</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">catalog</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">option_keys</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'video_to_name'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_for</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">problem_id</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/flashcards.html#problem_from_keys"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.flashcards.problem_from_keys" title="Link to this definition">#</a></dt>
+<dd><p>Assemble a <a class="reference internal" href="#kodokan.flashcards.Problem" title="kodokan.flashcards.Problem"><code class="xref py py-class docutils literal notranslate"><span class="pre">Problem</span></code></a> from an already-chosen, ordered option set.</p>
+<p>The seam between <em>choosing</em> (<code class="docutils literal notranslate"><span class="pre">make_problem</span></code>, or a <code class="docutils literal notranslate"><span class="pre">learning.Strategy</span></code>) and
+<em>presenting</em>: whoever picks the options, the problem looks the same.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference internal" href="#kodokan.flashcards.Problem" title="kodokan.flashcards.Problem"><code class="xref py py-class docutils literal notranslate"><span class="pre">Problem</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="kodokan.flashcards.responses_store">
 <span class="sig-prename descclassname"><span class="pre">kodokan.flashcards.</span></span><span class="sig-name descname"><span class="pre">responses_store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/flashcards.html#responses_store"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.flashcards.responses_store" title="Link to this definition">#</a></dt>
 <dd><p>A dict-like JSON store of logged responses (per-user, timestamped).</p>
@@ -617,6 +634,7 @@ throws is penalized less than confusing two obviously different throws).</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.flashcards.log_response"><code class="docutils literal notranslate"><span class="pre">log_response()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.flashcards.make_problem"><code class="docutils literal notranslate"><span class="pre">make_problem()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.flashcards.next_target"><code class="docutils literal notranslate"><span class="pre">next_target()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.flashcards.problem_from_keys"><code class="docutils literal notranslate"><span class="pre">problem_from_keys()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.flashcards.responses_store"><code class="docutils literal notranslate"><span class="pre">responses_store()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.flashcards.score_response"><code class="docutils literal notranslate"><span class="pre">score_response()</span></code></a></li>
 </ul>

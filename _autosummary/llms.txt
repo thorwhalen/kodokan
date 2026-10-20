@@ -13,6 +13,7 @@
 - [kodokan.flashcards](kodokan.flashcards.html.md): Technique-recognition learning game (app #6) — logic layer.
 - [kodokan.learning](kodokan.learning.html.md): Adaptive learning engine for the flashcard quiz — selectable strategies.
 - [kodokan.pose](kodokan.pose.html.md): Body-pose estimation: a video → a sequence of per-person skeletal keypoints.
+- [kodokan.quiz](kodokan.quiz.html.md): Quiz service: the UI-agnostic orchestrator of the technique-recognition game (app #6).
 - [kodokan.recognize](kodokan.recognize.html.md): Learned-vs-DTW technique recognition experiments (data-appropriate, no GPU).
 - [kodokan.segment](kodokan.segment.html.md): Segment a clip into its repeated demonstrations of one throw.
 - [kodokan.store](kodokan.store.html.md): dol-backed stores for the pipeline’s artifacts (the analysis SSOT).

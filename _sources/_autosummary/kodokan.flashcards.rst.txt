@@ -15,6 +15,7 @@ kodokan.flashcards
       log_response
       make_problem
       next_target
+      problem_from_keys
       responses_store
       score_response
    

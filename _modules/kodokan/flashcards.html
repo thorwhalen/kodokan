@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../../_static/documentation_options.js?v=056c92e6"></script>
+    <script src="../../_static/documentation_options.js?v=a11416ff"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -411,7 +411,7 @@ window.runMermaid = runMermaid;</script>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.20" />
+  <meta name="docsearch:version" content="0.0.21" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -823,15 +823,42 @@ window.runMermaid = runMermaid;</script>
     <span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">MODES</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"mode must be one of </span><span class="si">{</span><span class="n">MODES</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">rng</span> <span class="ow">or</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">()</span>
-    <span class="n">clip_for</span> <span class="o">=</span> <span class="n">clip_for</span> <span class="ow">or</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"clips"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[</span><span class="kc">None</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
 
     <span class="n">distractors</span> <span class="o">=</span> <span class="n">confusable_distractors</span><span class="p">(</span>
         <span class="n">target_key</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">catalog</span><span class="p">),</span> <span class="n">n</span><span class="o">=</span><span class="n">n_choices</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="n">similarity</span><span class="o">=</span><span class="n">similarity</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">rng</span>
     <span class="p">)</span>
     <span class="n">option_keys</span> <span class="o">=</span> <span class="n">distractors</span> <span class="o">+</span> <span class="p">[</span><span class="n">target_key</span><span class="p">]</span>
     <span class="n">rng</span><span class="o">.</span><span class="n">shuffle</span><span class="p">(</span><span class="n">option_keys</span><span class="p">)</span>
-    <span class="n">correct_index</span> <span class="o">=</span> <span class="n">option_keys</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">target_key</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">problem_from_keys</span><span class="p">(</span>
+        <span class="n">catalog</span><span class="p">,</span>
+        <span class="n">target_key</span><span class="p">,</span>
+        <span class="n">option_keys</span><span class="p">,</span>
+        <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span>
+        <span class="n">clip_for</span><span class="o">=</span><span class="n">clip_for</span><span class="p">,</span>
+        <span class="n">problem_id</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">target_key</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">rng</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+    <span class="p">)</span></div>
 
+
+
+<div class="viewcode-block" id="problem_from_keys">
+<a class="viewcode-back" href="../../_autosummary/kodokan.flashcards.html#kodokan.problem_from_keys">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">problem_from_keys</span><span class="p">(</span>
+    <span class="n">catalog</span><span class="p">:</span> <span class="nb">dict</span><span class="p">,</span>
+    <span class="n">target_key</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">option_keys</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"video_to_name"</span><span class="p">,</span>
+    <span class="n">clip_for</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">problem_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Problem</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Assemble a :class:`Problem` from an already-chosen, ordered option set.</span>
+
+<span class="sd">    The seam between *choosing* (``make_problem``, or a ``learning.Strategy``) and</span>
+<span class="sd">    *presenting*: whoever picks the options, the problem looks the same.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">MODES</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"mode must be one of </span><span class="si">{</span><span class="n">MODES</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">clip_for</span> <span class="o">=</span> <span class="n">clip_for</span> <span class="ow">or</span> <span class="p">(</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="p">(</span><span class="n">catalog</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"clips"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">[</span><span class="kc">None</span><span class="p">])[</span><span class="mi">0</span><span class="p">])</span>
     <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"video_to_name"</span><span class="p">:</span>
         <span class="n">prompt</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"clip"</span><span class="p">:</span> <span class="n">clip_for</span><span class="p">(</span><span class="n">target_key</span><span class="p">)}</span>
         <span class="n">choices</span> <span class="o">=</span> <span class="p">[{</span><span class="s2">"key"</span><span class="p">:</span> <span class="n">k</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">:</span> <span class="n">catalog</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">"name"</span><span class="p">]}</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">option_keys</span><span class="p">]</span>
@@ -841,14 +868,13 @@ window.runMermaid = runMermaid;</script>
             <span class="p">{</span><span class="s2">"key"</span><span class="p">:</span> <span class="n">k</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">:</span> <span class="n">catalog</span><span class="p">[</span><span class="n">k</span><span class="p">][</span><span class="s2">"name"</span><span class="p">],</span> <span class="s2">"clip"</span><span class="p">:</span> <span class="n">clip_for</span><span class="p">(</span><span class="n">k</span><span class="p">)}</span>
             <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">option_keys</span>
         <span class="p">]</span>
-
     <span class="k">return</span> <span class="n">Problem</span><span class="p">(</span>
-        <span class="n">problem_id</span><span class="o">=</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">target_key</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">rng</span><span class="o">.</span><span class="n">randrange</span><span class="p">(</span><span class="mi">10</span><span class="o">**</span><span class="mi">9</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="n">problem_id</span><span class="o">=</span><span class="n">problem_id</span><span class="p">,</span>
         <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">,</span>
         <span class="n">target_key</span><span class="o">=</span><span class="n">target_key</span><span class="p">,</span>
         <span class="n">prompt</span><span class="o">=</span><span class="n">prompt</span><span class="p">,</span>
         <span class="n">choices</span><span class="o">=</span><span class="n">choices</span><span class="p">,</span>
-        <span class="n">correct_index</span><span class="o">=</span><span class="n">correct_index</span><span class="p">,</span>
+        <span class="n">correct_index</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="n">option_keys</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">target_key</span><span class="p">),</span>
     <span class="p">)</span></div>
 
 

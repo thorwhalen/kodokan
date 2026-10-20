@@ -1,0 +1,24 @@
+kodokan.quiz
+============
+
+.. automodule:: kodokan.quiz
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      USER_RE
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      quiz_stores
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Quiz
+   

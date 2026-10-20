@@ -1,4 +1,4 @@
-> built 2026-10-19 13:17 UTC from 7c17e90 (main) · kodokan 0.0.20. Details: build_info.json
+> built 2026-10-20 04:47 UTC from dc7baf9 (main) · kodokan 0.0.21. Details: build_info.json
 
 # index.html.md
 
@@ -527,16 +527,17 @@ This module is the (UI-agnostic) logic + storage; a web UI plugs into it later.
 
 ### Functions
 
-| [`build_catalog`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.build_catalog)(\*[, min_two_person_frac, ...])      | Build `{technique_key: {"name", "clips":[...]}}` from the pose/segments stores.   |
-|-----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
-| [`build_confusability`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.build_confusability)([catalog, feature])            | Technique×technique similarity (0..1) from mean pooled pose descriptors.          |
-| [`clip_filename`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.clip_filename)(video_id, start_s, dur_s)            | The web-app clip file for one demo segment, named by the segment's IDENTITY.      |
-| [`confusable_distractors`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.confusable_distractors)(target_key, keys, \*, n)    | Pick `n` distractor keys, preferring those most confusable with the target.       |
-| [`log_response`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.log_response)(problem, chosen_index, \*[, ...])     | Record a response (datetime + exact problem + choice + correctness + score).      |
-| [`make_problem`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.make_problem)(catalog, target_key, \*[, mode, ...]) | Build a multiple-choice problem for `target_key` from a technique `catalog`.      |
-| [`next_target`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.next_target)(keys, history, \*[, focus, rng])       | Pick the next technique to quiz: unseen and often-missed (within `focus`) first.  |
-| [`responses_store`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.responses_store)([directory])                       | A dict-like JSON store of logged responses (per-user, timestamped).               |
-| [`score_response`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.score_response)(correct_key, chosen_key, \*[, ...]) | Confusion-weighted credit in [0, 1].                                              |
+| [`build_catalog`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.build_catalog)(\*[, min_two_person_frac, ...])      | Build `{technique_key: {"name", "clips":[...]}}` from the pose/segments stores.                                 |
+|-----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------|
+| [`build_confusability`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.build_confusability)([catalog, feature])            | Technique×technique similarity (0..1) from mean pooled pose descriptors.                                        |
+| [`clip_filename`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.clip_filename)(video_id, start_s, dur_s)            | The web-app clip file for one demo segment, named by the segment's IDENTITY.                                    |
+| [`confusable_distractors`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.confusable_distractors)(target_key, keys, \*, n)    | Pick `n` distractor keys, preferring those most confusable with the target.                                     |
+| [`log_response`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.log_response)(problem, chosen_index, \*[, ...])     | Record a response (datetime + exact problem + choice + correctness + score).                                    |
+| [`make_problem`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.make_problem)(catalog, target_key, \*[, mode, ...]) | Build a multiple-choice problem for `target_key` from a technique `catalog`.                                    |
+| [`next_target`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.next_target)(keys, history, \*[, focus, rng])       | Pick the next technique to quiz: unseen and often-missed (within `focus`) first.                                |
+| [`problem_from_keys`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.problem_from_keys)(catalog, target_key, ...)        | Assemble a [`Problem`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.Problem) from an already-chosen, ordered option set. |
+| [`responses_store`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.responses_store)([directory])                       | A dict-like JSON store of logged responses (per-user, timestamped).                                             |
+| [`score_response`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.score_response)(correct_key, chosen_key, \*[, ...]) | Confusion-weighted credit in [0, 1].                                                                            |
 
 ### Classes
 
@@ -617,6 +618,16 @@ wrong -> high, mastered -> low. `history` is a list of response dicts.
 
 * **Return type:**
   [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
+
+### kodokan.flashcards.problem_from_keys(catalog, target_key, option_keys, , mode='video_to_name', clip_for=None, problem_id)
+
+Assemble a [`Problem`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.Problem) from an already-chosen, ordered option set.
+
+The seam between *choosing* (`make_problem`, or a `learning.Strategy`) and
+*presenting*: whoever picks the options, the problem looks the same.
+
+* **Return type:**
+  [`Problem`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.Problem)
 
 ### kodokan.flashcards.responses_store(directory=None)
 
@@ -1018,6 +1029,7 @@ A dict-like `{video_id: <json>}` store for demo segments (and metadata).
 | [`flashcards`](_autosummary/kodokan.flashcards.html.md#module-kodokan.flashcards)   | Technique-recognition learning game (app #6) — logic layer.                                          |
 | [`learning`](_autosummary/kodokan.learning.html.md#module-kodokan.learning)       | Adaptive learning engine for the flashcard quiz — selectable strategies.                             |
 | [`pose`](_autosummary/kodokan.pose.html.md#module-kodokan.pose)               | Body-pose estimation: a video → a sequence of per-person skeletal keypoints.                         |
+| [`quiz`](_autosummary/kodokan.quiz.html.md#module-kodokan.quiz)               | Quiz service: the UI-agnostic orchestrator of the technique-recognition game (app #6).               |
 | [`recognize`](_autosummary/kodokan.recognize.html.md#module-kodokan.recognize)     | Learned-vs-DTW technique recognition experiments (data-appropriate, no GPU).                         |
 | [`segment`](_autosummary/kodokan.segment.html.md#module-kodokan.segment)         | Segment a clip into its repeated demonstrations of one throw.                                        |
 | [`store`](_autosummary/kodokan.store.html.md#module-kodokan.store)             | dol-backed stores for the pipeline's artifacts (the analysis SSOT).                                  |
@@ -1300,6 +1312,130 @@ two highest-confidence people per frame (left→right ordered) via RTMPose.
   [`PoseSequence`](_autosummary/kodokan.pose.html.md#kodokan.pose.PoseSequence)
 * **Returns:**
   A [`PoseSequence`](_autosummary/kodokan.pose.html.md#kodokan.pose.PoseSequence) of shape `(F, n_persons, 17, 3)`.
+
+
+# _autosummary/kodokan.quiz.html.md
+
+# kodokan.quiz
+
+Quiz service: the UI-agnostic orchestrator of the technique-recognition game (app #6).
+
+`flashcards` makes and scores one problem, `learning` chooses the next one from a
+learner’s history. This module wires them to storage so that any surface (a web app, a
+CLI, a test) needs only three calls, all taking and returning plain data:
+
+```default
+quiz = Quiz(catalog, similarity=similarity)          # or Quiz.from_library()
+problem = quiz.next_problem("ana", strategy="sm2")   # issued problems are remembered
+record = quiz.submit(problem.problem_id, chosen_index=2, response_time_ms=3100)
+quiz.stats("ana")                                    # per-technique {n, wrong, ...}
+```
+
+State lives in two dict-like stores (seams; default: `dol` JSON files under the data
+root, one per user prefix): the **issued problems** not yet answered, and the **responses**
+(one record per answered problem, the `learning.RECORD_FIELDS` schema). A surface can
+therefore be stateless between “give me a problem” and “here is the answer”.
+
+```pycon
+>>> catalog = {k: {"name": k.title(), "clips": []} for k in ("seoinage", "ogoshi", "tomoenage", "uchimata")}
+>>> quiz = Quiz(catalog, responses={}, problems={})
+>>> problem = quiz.next_problem("ana", rng=__import__("random").Random(0))
+>>> record = quiz.submit(problem.problem_id, problem.correct_index)
+>>> record["correct"], record["user"], quiz.stats("ana")[problem.target_key]["n"]
+(True, 'ana', 1)
+```
+
+### Module Attributes
+
+| [`USER_RE`](_autosummary/kodokan.quiz.html.md#kodokan.quiz.USER_RE)   | A user id is a filesystem-safe token; `__` is the separator of the stored keys.   |
+|------------------------------------------------------------|-----------------------------------------------------------------------------------|
+
+### Functions
+
+| [`quiz_stores`](_autosummary/kodokan.quiz.html.md#kodokan.quiz.quiz_stores)([directory])   | `(responses, problems)` as `dol` JSON-file stores under the data root.   |
+|-----------------------------------------------------------------------------|--------------------------------------------------------------------------|
+
+### Classes
+
+| [`Quiz`](_autosummary/kodokan.quiz.html.md#kodokan.quiz.Quiz)(catalog[, similarity, responses, ...])   | The game for one `catalog` (`technique_key -> {"name", "clips"}`).   |
+|------------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
+
+### *class* kodokan.quiz.Quiz(catalog, similarity=None, responses=None, problems=None, clip_for=None, now=<function \_now>)
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+The game for one `catalog` (`technique_key -> {"name", "clips"}`).
+
+* **Parameters:**
+  * **similarity** ([`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict) | [`None`](https://docs.python.org/3/builtins/constants.html#None)) – `target -> {key: weight}`, e.g. `flashcards.build_confusability()`;
+    the learner’s own confusion is merged on top by the strategy.
+  * **responses** ([`MutableMapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.MutableMapping)) – answered-problem records, keyed `<user>__<ts>__<response_id>.json`.
+  * **problems** ([`MutableMapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.MutableMapping)) – issued, unanswered problems, keyed `<problem_id>.json`.
+    Both default to [`quiz_stores()`](_autosummary/kodokan.quiz.html.md#kodokan.quiz.quiz_stores).
+  * **clip_for** ([`object`](https://docs.python.org/3/builtins/functions.html#object)) – `key -> clip` for the media of a technique (default: its first clip).
+
+#### *classmethod* from_library(\*\*kwargs)
+
+A quiz over the clip library on disk, with pose-shape confusability (needs `kodokan[analysis]`).
+
+* **Return type:**
+  [`Quiz`](_autosummary/kodokan.quiz.html.md#kodokan.quiz.Quiz)
+
+#### history(user)
+
+The user’s answered-problem records, oldest first.
+
+* **Return type:**
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)]
+
+#### next_problem(user, , strategy=None, mode='video_to_name', study_set=None, session_id=None, rng=None)
+
+Choose the next problem for `user` from their history, and remember it as issued.
+
+* **Parameters:**
+  * **strategy** ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str) | [`None`](https://docs.python.org/3/builtins/constants.html#None)) – a key of [`strategies()`](_autosummary/kodokan.quiz.html.md#kodokan.quiz.Quiz.strategies) (default: confusion-weighted).
+  * **study_set** – the technique keys to draw from (default: the whole catalog).
+* **Raises:**
+  [**ValueError**](https://docs.python.org/3/builtins/exceptions.html#ValueError) – for an unknown user format, mode, or an empty study set.
+* **Return type:**
+  [`Problem`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.Problem)
+
+#### stats(user)
+
+Per-technique `{n, wrong, last_ts, last_correct}` for the user.
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)]
+
+#### *static* strategies()
+
+The selectable strategies (for a settings screen).
+
+* **Return type:**
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)]
+
+#### submit(problem_id, chosen_index, , timed_out=False, response_time_ms=None)
+
+Score an issued problem, store the record, and return it.
+
+`chosen_index` is None for a timeout. A problem is answered once.
+
+* **Raises:**
+  * [**KeyError**](https://docs.python.org/3/builtins/exceptions.html#KeyError) – if `problem_id` was never issued, or was already answered.
+  * [**ValueError**](https://docs.python.org/3/builtins/exceptions.html#ValueError) – if `chosen_index` is not one of the choices.
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
+
+### kodokan.quiz.USER_RE *= re.compile('^(?!.\*_\_)[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$')*
+
+A user id is a filesystem-safe token; `__` is the separator of the stored keys.
+
+### kodokan.quiz.quiz_stores(directory=None)
+
+`(responses, problems)` as `dol` JSON-file stores under the data root.
+
+* **Return type:**
+  [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`MutableMapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.MutableMapping), [`MutableMapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.MutableMapping)]
 
 
 # _autosummary/kodokan.recognize.html.md
@@ -1855,7 +1991,7 @@ Render skeletons to an MP4.
 
 # About this build
 
-This documentation was built on **2026-10-19 13:17 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/7c17e902ed0d24849de4f5f9088e9da8549dd6ec"><code>7c17e90</code></a> on branch <code>main</code>, for **kodokan 0.0.20** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-10-20 04:47 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/dc7baf981f792042aea2614ce06d14ae7f4f1d35"><code>dc7baf9</code></a> on branch <code>main</code>, for **kodokan 0.0.21** (from <code>pyproject.toml</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -1864,7 +2000,7 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                           |
 |---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/thorwhalen/kodokan/commit/7c17e902ed0d24849de4f5f9088e9da8549dd6ec"><code>7c17e902ed0d24849de4f5f9088e9da8549dd6ec</code></a> |
+| Commit              | <a href="https://github.com/thorwhalen/kodokan/commit/dc7baf981f792042aea2614ce06d14ae7f4f1d35"><code>dc7baf981f792042aea2614ce06d14ae7f4f1d35</code></a> |
 | Branch              | <code>main</code>                                                                                                                                         |
 | Tags at this commit | none                                                                                                                                                      |
 | Working tree        | clean                                                                                                                                                     |
@@ -1875,16 +2011,16 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>thorwhalen/kodokan</code>                                                            |
-| Run          | <a href="https://github.com/thorwhalen/kodokan/actions/runs/39258703848">39258703848</a>   |
+| Run          | <a href="https://github.com/thorwhalen/kodokan/actions/runs/39371272092">39371272092</a>   |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>7c17e902ed0d24849de4f5f9088e9da8549dd6ec</code> (in the history of the built commit) |
+| Event commit | <code>dc7baf981f792042aea2614ce06d14ae7f4f1d35</code> (in the history of the built commit) |
 
 ## Tools
 
 |          |         |
 |----------|---------|
 | epythet  | 0.2.18  |
-| Sphinx   | 9.1.0   |
+| Sphinx   | 9.1.1   |
 | docutils | 0.22.4  |
 | Python   | 3.12.15 |
 
@@ -1902,13 +2038,13 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/kodokan/0.0.20/">0.0.20</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/kodokan/0.0.21/">0.0.21</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/thorwhalen/kodokan && cd kodokan
-git checkout 7c17e902ed0d24849de4f5f9088e9da8549dd6ec
+git checkout dc7baf981f792042aea2614ce06d14ae7f4f1d35
 pip install "epythet==0.2.18"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

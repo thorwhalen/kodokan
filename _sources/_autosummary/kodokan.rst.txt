@@ -51,6 +51,7 @@
    flashcards
    learning
    pose
+   quiz
    recognize
    segment
    store
