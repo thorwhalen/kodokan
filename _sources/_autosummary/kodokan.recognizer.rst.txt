@@ -1,0 +1,30 @@
+kodokan.recognizer
+==================
+
+.. automodule:: kodokan.recognizer
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      Featurizer
+      DFLT_MIN_PEAK_ACTIVITY
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      motion_segments
+      pooled_demo_descriptor
+      recognize_segments
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      Guess
+      LiveRecognizer
+      Recognition
+      TechniqueRecognizer
+   

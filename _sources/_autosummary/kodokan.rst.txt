@@ -23,6 +23,7 @@
       score
       feedback
       demo_features
+      recognize_segments
       make_problem
       build_catalog
       clip_filename
@@ -37,6 +38,10 @@
    
       PoseSequence
       Segment
+      TechniqueRecognizer
+      Recognition
+      Guess
+      LiveRecognizer
    
 .. rubric:: Modules
 
@@ -53,6 +58,7 @@
    pose
    quiz
    recognize
+   recognizer
    segment
    store
    track

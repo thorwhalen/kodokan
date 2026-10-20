@@ -40,6 +40,7 @@ See `misc/docs/research-architecture.md` for the tool/architecture rationale.
 | [`score`](#kodokan.score)(query_features, reference)                   | Score a query against a reference, calibrated to the genuine-demo spread.          |
 | [`feedback`](#kodokan.feedback)(query_features, reference, \*[, ...])     | Interpretable difference: per joint-angle and per phase (degrees).                 |
 | [`demo_features`](#kodokan.demo_features)(pose_seq, start_s, end_s, \*[, ...]) | Cleaned joint-angle features for one demo window (primary person by default).      |
+| [`recognize_segments`](#kodokan.recognize_segments)(pose_seq, recognizer, \*)       | Offline video mode: every detected throw in `pose_seq`, recognized.                |
 | [`make_problem`](#kodokan.make_problem)(catalog, target_key, \*[, mode, ...]) | Build a multiple-choice problem for `target_key` from a technique `catalog`.       |
 | [`build_catalog`](#kodokan.build_catalog)(\*[, min_two_person_frac, ...])      | Build `{technique_key: {"name", "clips":[...]}}` from the pose/segments stores.    |
 | [`clip_filename`](#kodokan.clip_filename)(video_id, start_s, dur_s)            | The web-app clip file for one demo segment, named by the segment's IDENTITY.       |
@@ -50,9 +51,46 @@ See `misc/docs/research-architecture.md` for the tool/architecture rationale.
 
 ### Classes
 
-| [`PoseSequence`](#kodokan.PoseSequence)(keypoints, frame_indices, fps, ...)   | A per-frame, per-person sequence of COCO-17 keypoints for one clip.   |
-|-----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------|
-| [`Segment`](#kodokan.Segment)(index, start_s, end_s, start_frame, ...)   | One detected demonstration interval.                                  |
+| [`PoseSequence`](#kodokan.PoseSequence)(keypoints, frame_indices, fps, ...)   | A per-frame, per-person sequence of COCO-17 keypoints for one clip.                 |
+|-----------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
+| [`Segment`](#kodokan.Segment)(index, start_s, end_s, start_frame, ...)   | One detected demonstration interval.                                                |
+| [`TechniqueRecognizer`](#kodokan.TechniqueRecognizer)(\*[, method, temperature])     | Fit on pooled descriptors; recognize with top-k guesses and the full score vector.  |
+| [`Recognition`](#kodokan.Recognition)(guesses[, scores])                     | The top-k guesses, best first, and every technique's score.                         |
+| [`Guess`](#kodokan.Guess)(technique, score)                            | One candidate technique and its score (higher is more likely).                      |
+| [`LiveRecognizer`](#kodokan.LiveRecognizer)(recognizer, \*, fps[, width, ...])  | Live mode: a rolling pose buffer; each throw is recognized once its segment closes. |
+
+### *class* kodokan.Guess(technique, score)
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+One candidate technique and its score (higher is more likely).
+
+### *class* kodokan.LiveRecognizer(recognizer, \*, fps, width=0, height=0, k=3, buffer_s=20.0, close_after_s=1.0, featurize=<function pooled_demo_descriptor>, segmenter=<function motion_segments>)
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+Live mode: a rolling pose buffer; each throw is recognized once its segment closes.
+
+Push one frame at a time (`(P, 17, 3)` keypoints, as in [`PoseSequence`](#kodokan.PoseSequence)).
+[`push()`](#kodokan.LiveRecognizer.push) returns the throws that closed with that frame, each recognized once.
+A segment counts as closed when it ends at least `close_after_s` before the newest
+frame; the buffer keeps the last `buffer_s` seconds of pushed frames (at `fps`
+frames a second: push every analysed frame, or pass the analysed rate as `fps`).
+A segment that mostly overlaps a throw already recognized is that throw.
+
+#### buffer()
+
+The buffered frames as a [`PoseSequence`](#kodokan.PoseSequence) (people padded with NaN).
+
+* **Return type:**
+  [`PoseSequence`](kodokan.pose.html.md#kodokan.pose.PoseSequence)
+
+#### push(keypoints, frame_index=None)
+
+Add one frame; return the throws that closed with it, recognized.
+
+* **Return type:**
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`Segment`](kodokan.segment.html.md#kodokan.segment.Segment), [`Recognition`](kodokan.recognizer.html.md#kodokan.recognizer.Recognition)]]
 
 ### *class* kodokan.PoseSequence(keypoints, frame_indices, fps, width, height, backend, video_path, source_url=None, keypoint_names=('nose', 'left_eye', 'right_eye', 'left_ear', 'right_ear', 'left_shoulder', 'right_shoulder', 'left_elbow', 'right_elbow', 'left_wrist', 'right_wrist', 'left_hip', 'right_hip', 'left_knee', 'right_knee', 'left_ankle', 'right_ankle'), skeleton=((5, 7), (7, 9), (6, 8), (8, 10), (5, 6), (5, 11), (6, 12), (11, 12), (11, 13), (13, 15), (12, 14), (14, 16), (0, 1), (0, 2), (1, 3), (2, 4), (0, 5), (0, 6)))
 
@@ -121,11 +159,70 @@ Timestamp (seconds) of each analyzed frame.
 * **Return type:**
   `ndarray`
 
+### *class* kodokan.Recognition(guesses, scores=dict())
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+The top-k guesses, best first, and every technique’s score.
+
+#### score_of(technique)
+
+The score of `technique` (0 for a technique the recognizer never saw).
+
+* **Return type:**
+  [`float`](https://docs.python.org/3/builtins/functions.html#float)
+
 ### *class* kodokan.Segment(index, start_s, end_s, start_frame, end_frame, peak_activity, two_person_frac=None)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 One detected demonstration interval.
+
+### *class* kodokan.TechniqueRecognizer(, method='lda', temperature=1.0)
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+Fit on pooled descriptors; recognize with top-k guesses and the full score vector.
+
+* **Parameters:**
+  * **method** ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str)) – `"lda"` (LDA projection when scikit-learn is installed, else plain
+    standardized space) or `"centroid"` (standardized space only).
+  * **temperature** ([`float`](https://docs.python.org/3/builtins/functions.html#float)) – softmax temperature; higher spreads the scores out.
+
+#### fit(X, y)
+
+Fit on pooled descriptors `X` (one row per demo) and technique labels `y`.
+
+* **Return type:**
+  [`TechniqueRecognizer`](kodokan.recognizer.html.md#kodokan.recognizer.TechniqueRecognizer)
+
+#### fit_demos(feature_seqs, labels, , levels=(1, 2, 4))
+
+Fit on per-frame feature sequences (e.g. [`kodokan.recognize.demo_feature()`](kodokan.recognize.html.md#kodokan.recognize.demo_feature)).
+
+* **Return type:**
+  [`TechniqueRecognizer`](kodokan.recognizer.html.md#kodokan.recognizer.TechniqueRecognizer)
+
+#### recognize(x, , k=3)
+
+Top-`k` guesses (best first) and the full score vector for one descriptor.
+
+* **Return type:**
+  [`Recognition`](kodokan.recognizer.html.md#kodokan.recognizer.Recognition)
+
+#### recognize_clip(pose_seq, start_s, end_s, \*, k=3, featurize=<function pooled_demo_descriptor>)
+
+Recognize the throw in `pose_seq` between `start_s` and `end_s`.
+
+* **Return type:**
+  [`Recognition`](kodokan.recognizer.html.md#kodokan.recognizer.Recognition)
+
+#### scores(x)
+
+Every technique’s score for one pooled descriptor (they sum to 1).
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`float`](https://docs.python.org/3/builtins/functions.html#float)]
 
 ### kodokan.angle_features(pose_seq, , person=0, frame_range=None)
 
@@ -312,6 +409,13 @@ wrong -> high, mastered -> low. `history` is a list of response dicts.
 
 A dict-like `{video_id: PoseSequence}` store backed by per-clip Parquet.
 
+### kodokan.recognize_segments(pose_seq, recognizer, \*, k=3, featurize=<function pooled_demo_descriptor>, segmenter=<function motion_segments>)
+
+Offline video mode: every detected throw in `pose_seq`, recognized.
+
+* **Return type:**
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`Segment`](kodokan.segment.html.md#kodokan.segment.Segment), [`Recognition`](kodokan.recognizer.html.md#kodokan.recognizer.Recognition)]]
+
 ### kodokan.render_skeleton_video(pose_seq, , out_path, source_video=None, blank_canvas=False, conf_thresh=0.3, fps=None, person_colors=((0, 255, 0), (255, 0, 255), (255, 255, 0), (0, 165, 255)), background=(0, 0, 0), thickness=2, radius=4)
 
 Render skeletons to an MP4.
@@ -382,6 +486,7 @@ A dict-like `{video_id: <json>}` store for demo segments (and metadata).
 | [`pose`](kodokan.pose.html.md#module-kodokan.pose)               | Body-pose estimation: a video → a sequence of per-person skeletal keypoints.                         |
 | [`quiz`](kodokan.quiz.html.md#module-kodokan.quiz)               | Quiz service: the UI-agnostic orchestrator of the technique-recognition game (app #6).               |
 | [`recognize`](kodokan.recognize.html.md#module-kodokan.recognize)     | Learned-vs-DTW technique recognition experiments (data-appropriate, no GPU).                         |
+| [`recognizer`](kodokan.recognizer.html.md#module-kodokan.recognizer)   | Technique recognition for applications: top-k guesses with inspectable scores (#3).                  |
 | [`segment`](kodokan.segment.html.md#module-kodokan.segment)         | Segment a clip into its repeated demonstrations of one throw.                                        |
 | [`store`](kodokan.store.html.md#module-kodokan.store)             | dol-backed stores for the pipeline's artifacts (the analysis SSOT).                                  |
 | [`track`](kodokan.track.html.md#module-kodokan.track)             | Stable tori/uke identity tracking (BoT-SORT / ByteTrack).                                            |

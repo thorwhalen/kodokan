@@ -15,6 +15,7 @@
 - [kodokan.pose](kodokan.pose.html.md): Body-pose estimation: a video → a sequence of per-person skeletal keypoints.
 - [kodokan.quiz](kodokan.quiz.html.md): Quiz service: the UI-agnostic orchestrator of the technique-recognition game (app #6).
 - [kodokan.recognize](kodokan.recognize.html.md): Learned-vs-DTW technique recognition experiments (data-appropriate, no GPU).
+- [kodokan.recognizer](kodokan.recognizer.html.md): Technique recognition for applications: top-k guesses with inspectable scores (#3).
 - [kodokan.segment](kodokan.segment.html.md): Segment a clip into its repeated demonstrations of one throw.
 - [kodokan.store](kodokan.store.html.md): dol-backed stores for the pipeline’s artifacts (the analysis SSOT).
 - [kodokan.track](kodokan.track.html.md): Stable tori/uke identity tracking (BoT-SORT / ByteTrack).

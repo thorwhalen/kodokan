@@ -132,17 +132,18 @@ are recorded in `[tool.wads.licence]` in `pyproject.toml`.
 
 ## The pipeline
 
-| module                | purpose                                                                             |
-|-----------------------|-------------------------------------------------------------------------------------|
-| `kodokan.acquire`     | download techniques (wraps `yb`), skip the PV, keep source URLs                     |
-| `kodokan.pose`        | `estimate_poses` facade (rtmlib / ultralytics backends), COCO-17, `PoseSequence`    |
-| `kodokan.track`       | `estimate_poses_tracked` — stable tori/uke identity (BoT-SORT + spatial continuity) |
-| `kodokan.segment`     | hysteresis motion-energy segmentation + two-person gate + self-similarity           |
-| `kodokan.store`       | `pose_store` (tidy Parquet) / `segments_store` (JSON), the analysis SSOT            |
-| `kodokan.viz`         | overlay / blank-canvas MP4 + Rerun logging                                          |
-| `kodokan.compare`     | joint-angle (soft-)DTW comparison of two demonstrations                             |
-| `kodokan.score`       | reference-based 0–100 scoring + per-joint/per-phase feedback                        |
-| `kodokan.descriptors` | experimental feature descriptors (for the eval harness)                             |
+| module                | purpose                                                                                                                                                                   |
+|-----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `kodokan.acquire`     | download techniques (wraps `yb`), skip the PV, keep source URLs                                                                                                           |
+| `kodokan.pose`        | `estimate_poses` facade (rtmlib / ultralytics backends), COCO-17, `PoseSequence`                                                                                          |
+| `kodokan.track`       | `estimate_poses_tracked` — stable tori/uke identity (BoT-SORT + spatial continuity)                                                                                       |
+| `kodokan.segment`     | hysteresis motion-energy segmentation + two-person gate + self-similarity                                                                                                 |
+| `kodokan.store`       | `pose_store` (tidy Parquet) / `segments_store` (JSON), the analysis SSOT                                                                                                  |
+| `kodokan.viz`         | overlay / blank-canvas MP4 + Rerun logging                                                                                                                                |
+| `kodokan.compare`     | joint-angle (soft-)DTW comparison of two demonstrations                                                                                                                   |
+| `kodokan.score`       | reference-based 0–100 scoring + per-joint/per-phase feedback                                                                                                              |
+| `kodokan.descriptors` | experimental feature descriptors (for the eval harness)                                                                                                                   |
+| `kodokan.recognizer`  | `TechniqueRecognizer` (top-k guesses + every technique’s score), `recognize_segments` (a whole video), `LiveRecognizer` (rolling pose buffer, one guess per closed throw) |
 
 Runnable end-to-end examples live in `examples/` (`warmup_seoinage.py`,
 `batch_pipeline.py`, `segment_review.py`, `compare_demos.py`, `score_demos.py`,
