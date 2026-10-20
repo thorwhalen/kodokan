@@ -48,3 +48,21 @@ def test_pose_motion_energy_static_vs_moving(synth_seq):
 
     e0 = pose_motion_energy(replace(synth_seq, keypoints=static))
     assert e0[1:].max() < 1e-6
+
+
+def test_smoothing_without_scipy_keeps_the_length(monkeypatch):
+    """A signal shorter than the box kernel kept the kernel's length (CI has no scipy)."""
+    import builtins
+
+    from kodokan.segment import _smooth
+
+    real_import = builtins.__import__
+
+    def no_scipy(name, *args, **kwargs):
+        if name.startswith("scipy"):
+            raise ImportError(name)
+        return real_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", no_scipy)
+    for n in (1, 2, 5, 40):
+        assert len(_smooth(np.arange(n, dtype=float), 4.0)) == n

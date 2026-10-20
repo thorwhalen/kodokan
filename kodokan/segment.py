@@ -125,9 +125,10 @@ def _smooth(x: np.ndarray, sigma: float) -> np.ndarray:
         from scipy.ndimage import gaussian_filter1d
 
         return gaussian_filter1d(x, sigma)
-    except Exception:  # pragma: no cover
+    except Exception:  # scipy absent: a box filter, edge-padded to keep the length
         k = max(1, int(sigma))
-        return np.convolve(x, np.ones(2 * k + 1) / (2 * k + 1), mode="same")
+        padded = np.pad(np.asarray(x, dtype=float), k, mode="edge")
+        return np.convolve(padded, np.ones(2 * k + 1) / (2 * k + 1), mode="valid")
 
 
 def find_segments(
