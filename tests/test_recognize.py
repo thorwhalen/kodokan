@@ -216,3 +216,15 @@ def test_loo_medoid_separability_separable():
     assert rep["n_tech"] == 3 and rep["n_demos"] == 12
     assert rep["accuracy"] == 1.0
     assert rep["auc"] == 1.0
+
+
+def test_similarity_from_confusion():
+    from kodokan.recognize import similarity_from_confusion
+
+    y_true = ["a", "a", "a", "a", "b", "b", "c"]
+    y_pred = ["a", "b", "b", None, "b", "a", "c"]
+    sym = similarity_from_confusion(y_true, y_pred)
+    assert sym["a"]["b"] == sym["b"]["a"] == (0.5 + 0.5) / 2
+    assert "c" not in sym["a"] and sym["c"] == {}
+    directed = similarity_from_confusion(y_true, y_pred, symmetric=False)
+    assert directed["a"] == {"b": 0.5} and directed["b"] == {"a": 0.5}

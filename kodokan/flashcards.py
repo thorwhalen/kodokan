@@ -320,6 +320,52 @@ def clip_filename(video_id: str, start_s: float, dur_s: float) -> str:
     return f"{video_id}_{round(start_s * 1000)}_{round(dur_s * 1000)}.mp4"
 
 
+def build_model_confusability(
+    catalog: dict | None = None,
+    *,
+    feature: str = "tori_angles_pos",
+    method: str = "lda_knn",
+    cross_source: bool = True,
+) -> dict:
+    """Technique×technique confusability from the recognizer's own leave-one-out confusions.
+
+    Same shape as :func:`build_confusability`. Predictions are leave-one-clip-out
+    (``cross_source``) or leave-one-sample-out. Techniques the model never confuses get
+    no row entries; ``learning.merge_similarity`` / the strategies fall back as usual.
+    """
+    import numpy as np
+
+    from kodokan import store
+    from kodokan.recognize import (
+        demo_feature,
+        loo_pooled_predict,
+        pooled_descriptor,
+        similarity_from_confusion,
+    )
+
+    catalog = catalog or build_catalog()
+    ps = store.pose_store()
+    X, y, groups = [], [], []
+    for key, entry in catalog.items():
+        for clip in entry["clips"]:
+            if clip["video_id"] not in ps:
+                continue
+            seq = ps[clip["video_id"]]
+            for d in clip["demos"]:
+                f = demo_feature(seq, d["start_s"], d["end_s"], mode=feature)
+                if len(f) >= 4:
+                    X.append(pooled_descriptor(f))
+                    y.append(key)
+                    groups.append(clip["video_id"])
+    if len(set(y)) < 2:
+        return {}
+    y = np.array(y)
+    preds = loo_pooled_predict(
+        np.stack(X), y, method=method, groups=groups if cross_source else None
+    )
+    return similarity_from_confusion(y, preds)
+
+
 def build_confusability(
     catalog: dict | None = None, *, feature: str = "tori_angles_pos"
 ) -> dict:
