@@ -101,3 +101,36 @@ def test_live_buffer_is_bounded_and_frames_are_checked():
     assert live.buffer().n_frames == 10
     with pytest.raises(ValueError, match="17, 3"):
         live.push(np.zeros((17, 3)))
+
+
+def test_a_constant_feature_does_not_flatten_the_scores():
+    """Review of #56: a near-zero std must not blow a tiny query deviation up."""
+    rng = np.random.default_rng(3)
+    X = np.vstack([rng.normal(c, 0.3, size=(5, 3)) for c in (0.0, 4.0)])
+    X[:, 2] = 1.0  # constant across every demo
+    rec = TechniqueRecognizer(method="centroid").fit(X, np.repeat(TECHNIQUES[:2], 5))
+    x = np.array([4.0, 4.0, 1.0 + 1e-6])
+    assert rec.recognize(x).best.score > 0.9
+
+
+def test_one_demo_per_technique_still_gives_graded_scores():
+    X = np.array([[0.0, 0.0], [3.0, 0.0], [0.0, 3.0]])
+    rec = TechniqueRecognizer(method="centroid").fit(X, TECHNIQUES)
+    assert 0.4 < rec.recognize(np.array([1.0, 0.0])).best.score < 0.95
+
+
+def test_a_descriptor_of_the_wrong_length_is_refused():
+    with pytest.raises(ValueError, match="shape"):
+        _fitted().recognize(np.zeros(1))
+
+
+def test_live_idle_jitter_is_not_a_throw():
+    """Review of #56: the default segmenter's quantile thresholds need an absolute floor."""
+    rng = np.random.default_rng(4)
+    base = rng.uniform(100, 300, size=(17, 2))
+    live = LiveRecognizer(_fitted(), fps=30, featurize=lambda ps, a, b: np.zeros(5))
+    found = []
+    for f in range(900):
+        kp = np.concatenate([base + rng.normal(0, 0.5, (17, 2)), np.ones((17, 1))], axis=1)
+        found += live.push(kp[None], f)
+    assert found == []
