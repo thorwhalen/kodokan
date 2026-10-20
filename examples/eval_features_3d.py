@@ -12,10 +12,10 @@ Scope note (honest — this is only a *partial* answer to the review's 3D item):
   gives identical angle numbers). It changes results **only** for ``--feat pos``/
   ``both`` (position features genuinely depend on the frame) — that is where the
   canon/raw contrast is meaningful.
-- Canonicalization does **not** undo the *anisotropic* bbox-crop distortion the
-  review named (a non-square crop stretches the world landmarks). ``--lift square``
-  reads the letterboxed lifts (``scripts/lift_3d_mediapipe.py --letterbox``) that
-  remove it at the source.
+- ``--lift square`` reads the letterboxed lifts (``scripts/lift_3d_mediapipe.py
+  --letterbox``): square crops with real frame context around the person. (MediaPipe
+  letterboxes internally, so the raw bbox crop is not stretched; what differs is how much
+  real context the model sees — see that script's docstring.)
 - ``--matched-2d`` is the fair 2D-vs-3D comparison (#10): the SAME clips, the SAME
   stride-subsampled frames (the 3D lift's ``frame_indices``), the SAME demos (kept only
   if both modalities have ≥4 clean frames) and the SAME person slot (2D

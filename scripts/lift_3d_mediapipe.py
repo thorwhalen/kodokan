@@ -9,9 +9,12 @@ Output: ``{video_id}_3d.npz`` with ``world`` (F, P, 33, 4)=(x,y,z,visibility),
 ``frame_indices``, ``fps``.
 
 ``--letterbox`` (#10) pads each person's crop to a SQUARE around the bbox centre (black
-beyond the frame edge) instead of feeding the raw, non-square bbox. MediaPipe resizes its
-input to a square, so a tall/narrow bbox is stretched anisotropically — a distortion
-pelvis-frame canonicalization cannot undo. Letterboxed lifts go to ``{video_id}_3d_sq.npz``.
+beyond the frame edge) instead of feeding the raw, non-square bbox. MediaPipe Pose does
+NOT stretch a non-square input (its detection and landmark stages letterbox internally,
+``keep_aspect_ratio``, around a square ROI), so the difference is context, not aspect: with a
+tight crop the square ROI MediaPipe builds around the person runs past the crop edge and is
+zero-filled, while the square crop fills it with real frame pixels. Letterboxed lifts go to
+``{video_id}_3d_sq.npz``.
 
 Usage (venv python):
     ~/.kodokan_mp/bin/python scripts/lift_3d_mediapipe.py [--stride 2] [--letterbox]
@@ -42,8 +45,8 @@ def _bbox(kp17, W, H, margin=0.25, conf_thresh=0.3):
 
 
 def square_crop(frame, bb):
-    """The bbox's content centred in a square canvas (side = the bbox's longer side), zero-
-    padded wherever the square leaves the frame — no stretch, no re-centring bias."""
+    """The frame region in a square around the bbox centre (side = the bbox's longer side),
+    zero-padded only where the square leaves the frame — real context, no re-centring bias."""
     x0, y0, x1, y1 = bb
     H, W = frame.shape[:2]
     side = max(x1 - x0, y1 - y0)
@@ -107,7 +110,7 @@ def lift_one(npz_path, poser, stride, *, letterbox=False):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--stride", type=int, default=2)
-    ap.add_argument("--letterbox", action="store_true", help="square-pad crops (no stretch)")
+    ap.add_argument("--letterbox", action="store_true", help="square crops around the bbox (more real context)")
     args = ap.parse_args()
     poser = mp_pose.Pose(
         static_image_mode=True, model_complexity=1, min_detection_confidence=0.3

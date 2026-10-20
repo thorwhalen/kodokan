@@ -234,4 +234,6 @@ def test_paired_bootstrap_separability_brackets_and_pairs():
     assert same["acc_a"] == [1.0, 1.0]
     with pytest.raises(ValueError):
         paired_bootstrap_separability(rows, rows[:-1])
+    with pytest.raises(ValueError, match="technique order"):
+        paired_bootstrap_separability(rows, rows[::-1])
     assert "per_demo" not in loo_medoid_separability(techs, distance=dist)  # opt-in

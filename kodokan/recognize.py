@@ -443,6 +443,8 @@ def paired_bootstrap_separability(
     """
     if len(rows_a) != len(rows_b):
         raise ValueError(f"paired rows differ in length: {len(rows_a)} vs {len(rows_b)}")
+    if any(a["tech"] != b["tech"] for a, b in zip(rows_a, rows_b)):
+        raise ValueError("paired rows are not in the same technique order")
     rng = np.random.default_rng(seed)
     n = len(rows_a)
     stats = {k: [] for k in ("acc_a", "acc_b", "auc_a", "auc_b", "acc_diff", "auc_diff")}
