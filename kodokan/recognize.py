@@ -430,6 +430,34 @@ def confusion_pairs(y_true, y_pred, *, top: int | None = None) -> list[dict]:
     return pairs[:top] if top is not None else pairs
 
 
+def similarity_from_confusion(y_true, y_pred, *, symmetric: bool = True) -> dict:
+    """``target -> {other: weight}`` (0..1) from a recognizer's confusions.
+
+    ``weight`` is the share of ``target``'s samples predicted as ``other`` (off-diagonal
+    only; abstains and self-predictions are ignored). With ``symmetric`` (default) the
+    weight is the mean of both directions, so "a looks like b" implies "b looks like a",
+    which suits distractor choice. Same shape as ``flashcards.build_confusability``, so it
+    plugs into ``Quiz(similarity=...)``.
+    """
+    totals: dict = {}
+    for t in np.asarray(y_true).tolist():
+        totals[t] = totals.get(t, 0) + 1
+    out: dict = {t: {} for t in totals}
+    for row in confusion_pairs(y_true, y_pred):
+        t, p, c = row["true"], row["pred"], row["count"]
+        if p == -1 or p not in totals:
+            continue
+        out[t][p] = c / totals[t]
+    if symmetric:
+        sym: dict = {t: {} for t in out}
+        for a, row in out.items():
+            for b, w in row.items():
+                sym[a][b] = sym[a].get(b, 0.0) + w / 2
+                sym[b][a] = sym[b].get(a, 0.0) + w / 2
+        out = sym
+    return out
+
+
 # Thin backward-compatible accuracy wrappers (top-1).
 def dtw_1nn_accuracy(feature_seqs, labels) -> float:
     return classification_metrics(labels, dtw_1nn_predict(feature_seqs, labels))["top1"]

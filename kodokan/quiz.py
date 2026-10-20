@@ -95,11 +95,25 @@ class Quiz:
 
     @classmethod
     def from_library(cls, **kwargs) -> "Quiz":
-        """A quiz over the clip library on disk, with pose-shape confusability (needs ``kodokan[analysis]``)."""
-        from kodokan.flashcards import build_catalog, build_confusability
+        """A quiz over the clip library on disk (needs ``kodokan[analysis]``).
 
+        ``confusability``: ``"pose"`` (default, pose-shape proxy) or ``"model"`` (the
+        recognizer's leave-one-clip-out confusions; weak until cross-source recognition
+        beats chance, #7). An explicit ``similarity=`` mapping wins over both.
+        """
+        from kodokan.flashcards import (
+            build_catalog,
+            build_confusability,
+            build_model_confusability,
+        )
+
+        builders = {"pose": build_confusability, "model": build_model_confusability}
+        kind = kwargs.pop("confusability", "pose")
+        if kind not in builders:
+            raise ValueError(f"confusability must be one of {sorted(builders)}, got {kind!r}")
         catalog = kwargs.pop("catalog", None) or build_catalog()
-        kwargs.setdefault("similarity", build_confusability(catalog))
+        if kwargs.get("similarity") is None:
+            kwargs["similarity"] = builders[kind](catalog)
         return cls(catalog, **kwargs)
 
     # ------------------------------------------------------------------ reading
