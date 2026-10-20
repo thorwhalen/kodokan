@@ -25,6 +25,7 @@ would overfit; the same harness scales to more techniques once more data is coll
 | [`dtw_1nn_predict`](#kodokan.recognize.dtw_1nn_predict)(feature_seqs, labels)               | Leave-one-out 1-NN by DTW distance; returns predicted label per item.                                     |
 | [`loo_medoid_separability`](#kodokan.recognize.loo_medoid_separability)(feats_by_tech, \*, ...)     | Leak-free (leave-one-demo-out medoid) technique-separability report.                                      |
 | [`loo_pooled_predict`](#kodokan.recognize.loo_pooled_predict)(X, y, \*[, method, k, groups])   | Leave-one-out (or leave-one-GROUP-out) predictions; preprocessing fit on train only.                      |
+| [`paired_bootstrap_separability`](#kodokan.recognize.paired_bootstrap_separability)(rows_a, rows_b, \*)   | 95% percentile-bootstrap CIs for A, B and the PAIRED difference A−B.                                      |
 | `pool_centroid_accuracy`(X, y)                                                                       |                                                                                                           |
 | `pool_knn_accuracy`(X, y[, k])                                                                       |                                                                                                           |
 | `pool_lda_knn_accuracy`(X, y[, k])                                                                   |                                                                                                           |
@@ -116,7 +117,7 @@ Leave-one-out 1-NN by DTW distance; returns predicted label per item.
 * **Return type:**
   [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)
 
-### kodokan.recognize.loo_medoid_separability(feats_by_tech, , distance)
+### kodokan.recognize.loo_medoid_separability(feats_by_tech, , distance, per_demo=False)
 
 Leak-free (leave-one-demo-out medoid) technique-separability report.
 
@@ -131,6 +132,9 @@ the standard ROC-AUC ([`roc_auc_distances()`](#kodokan.recognize.roc_auc_distanc
 * **Parameters:**
   * **feats_by_tech** ([`list`](https://docs.python.org/3/builtins/stdtypes.html#list)) – per technique, a list of per-demo feature arrays.
   * **distance** – `(feat_a, feat_b) -> float` (e.g. normalized DTW).
+  * **per_demo** ([`bool`](https://docs.python.org/3/builtins/functions.html#bool)) – also return `per_demo` — one `{tech, genuine, impostor, correct}`
+    per held-out demo, in input order — so callers can bootstrap without
+    recomputing distances (see [`paired_bootstrap_separability()`](#kodokan.recognize.paired_bootstrap_separability)).
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
@@ -144,6 +148,19 @@ within-clip leakage. Otherwise it is plain leave-one-sample-out.
 
 * **Return type:**
   `ndarray`
+
+### kodokan.recognize.paired_bootstrap_separability(rows_a, rows_b, , n_boot=2000, seed=0)
+
+95% percentile-bootstrap CIs for A, B and the PAIRED difference A−B.
+
+`rows_a`/`rows_b` are `per_demo` outputs of [`loo_medoid_separability()`](#kodokan.recognize.loo_medoid_separability)
+over the SAME demos in the same order (e.g. two modalities on identical frames), so
+each resample draws the same demos for both — the difference CI then reflects only
+the modality, not which demos happened to be drawn. Distances are reused, not
+recomputed. A difference CI that straddles 0 means “not distinguishable at this n”.
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
 ### kodokan.recognize.pooled_descriptor(feat, , levels=(1, 2, 4))
 

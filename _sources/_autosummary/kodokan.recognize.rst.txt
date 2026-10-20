@@ -15,6 +15,7 @@ kodokan.recognize
       dtw_1nn_predict
       loo_medoid_separability
       loo_pooled_predict
+      paired_bootstrap_separability
       pool_centroid_accuracy
       pool_knn_accuracy
       pool_lda_knn_accuracy

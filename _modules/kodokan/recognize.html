@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../../_static/documentation_options.js?v=96ec9c95"></script>
+    <script src="../../_static/documentation_options.js?v=3294188c"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -411,7 +411,7 @@ window.runMermaid = runMermaid;</script>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.22" />
+  <meta name="docsearch:version" content="0.0.23" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -1094,7 +1094,9 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="loo_medoid_separability">
 <a class="viewcode-back" href="../../_autosummary/kodokan.recognize.html#kodokan.recognize.loo_medoid_separability">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">loo_medoid_separability</span><span class="p">(</span><span class="n">feats_by_tech</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">distance</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">loo_medoid_separability</span><span class="p">(</span>
+    <span class="n">feats_by_tech</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">distance</span><span class="p">,</span> <span class="n">per_demo</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Leak-free (leave-one-demo-out medoid) technique-separability report.</span>
 
 <span class="sd">    The earlier feature bake-off built each technique's medoid reference from</span>
@@ -1108,6 +1110,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    Args:</span>
 <span class="sd">        feats_by_tech: per technique, a list of per-demo feature arrays.</span>
 <span class="sd">        distance: ``(feat_a, feat_b) -&gt; float`` (e.g. normalized DTW).</span>
+<span class="sd">        per_demo: also return ``per_demo`` — one ``{tech, genuine, impostor, correct}``</span>
+<span class="sd">            per held-out demo, in input order — so callers can bootstrap without</span>
+<span class="sd">            recomputing distances (see :func:`paired_bootstrap_separability`).</span>
 <span class="sd">    """</span>
     <span class="n">techs</span> <span class="o">=</span> <span class="p">[</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">feats_by_tech</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">2</span><span class="p">]</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">techs</span><span class="p">)</span>
@@ -1116,6 +1121,7 @@ window.runMermaid = runMermaid;</script>
     <span class="n">genuine</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">impostor</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">correct</span> <span class="o">=</span> <span class="n">total</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">rows</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">techs</span><span class="p">):</span>
         <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">)):</span>
             <span class="n">others</span> <span class="o">=</span> <span class="p">[</span><span class="n">j</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">t</span><span class="p">))</span> <span class="k">if</span> <span class="n">j</span> <span class="o">!=</span> <span class="n">d</span><span class="p">]</span>
@@ -1130,7 +1136,12 @@ window.runMermaid = runMermaid;</script>
             <span class="k">if</span> <span class="n">imp_here</span><span class="p">:</span>
                 <span class="n">total</span> <span class="o">+=</span> <span class="mi">1</span>
                 <span class="n">correct</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">g</span> <span class="o">&lt;</span> <span class="nb">min</span><span class="p">(</span><span class="n">imp_here</span><span class="p">))</span>
+            <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="p">{</span><span class="s2">"tech"</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s2">"genuine"</span><span class="p">:</span> <span class="n">g</span><span class="p">,</span> <span class="s2">"impostor"</span><span class="p">:</span> <span class="n">imp_here</span><span class="p">,</span>
+                 <span class="s2">"correct"</span><span class="p">:</span> <span class="nb">bool</span><span class="p">(</span><span class="n">imp_here</span><span class="p">)</span> <span class="ow">and</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="nb">min</span><span class="p">(</span><span class="n">imp_here</span><span class="p">)}</span>
+            <span class="p">)</span>
     <span class="n">auc</span> <span class="o">=</span> <span class="n">roc_auc_distances</span><span class="p">(</span><span class="n">genuine</span><span class="p">,</span> <span class="n">impostor</span><span class="p">)</span>
+    <span class="n">extra</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"per_demo"</span><span class="p">:</span> <span class="n">rows</span><span class="p">}</span> <span class="k">if</span> <span class="n">per_demo</span> <span class="k">else</span> <span class="p">{}</span>
     <span class="k">return</span> <span class="p">{</span>
         <span class="s2">"n_tech"</span><span class="p">:</span> <span class="n">n</span><span class="p">,</span>
         <span class="s2">"n_demos"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">genuine</span><span class="p">),</span>
@@ -1139,7 +1150,52 @@ window.runMermaid = runMermaid;</script>
         <span class="s2">"genuine_median"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">genuine</span><span class="p">)),</span> <span class="mi">4</span><span class="p">)</span> <span class="k">if</span> <span class="n">genuine</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
         <span class="s2">"impostor_median"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">impostor</span><span class="p">)),</span> <span class="mi">4</span><span class="p">)</span> <span class="k">if</span> <span class="n">impostor</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
         <span class="s2">"auc"</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">auc</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">auc</span><span class="p">)</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">extra</span><span class="p">,</span>
     <span class="p">}</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_rows_metrics</span><span class="p">(</span><span class="n">rows</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""(accuracy, ROC-AUC) of a list of ``per_demo`` rows."""</span>
+    <span class="n">acc</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="n">r</span><span class="p">[</span><span class="s2">"correct"</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">]))</span> <span class="k">if</span> <span class="n">rows</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="s2">"nan"</span><span class="p">)</span>
+    <span class="n">gen</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span><span class="p">[</span><span class="s2">"genuine"</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span><span class="p">]</span>
+    <span class="n">imp</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rows</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">r</span><span class="p">[</span><span class="s2">"impostor"</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="n">acc</span><span class="p">,</span> <span class="n">roc_auc_distances</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="n">imp</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="paired_bootstrap_separability">
+<a class="viewcode-back" href="../../_autosummary/kodokan.recognize.html#kodokan.recognize.paired_bootstrap_separability">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">paired_bootstrap_separability</span><span class="p">(</span>
+    <span class="n">rows_a</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">rows_b</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span> <span class="n">n_boot</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2000</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""95% percentile-bootstrap CIs for A, B and the PAIRED difference A−B.</span>
+
+<span class="sd">    ``rows_a``/``rows_b`` are ``per_demo`` outputs of :func:`loo_medoid_separability`</span>
+<span class="sd">    over the SAME demos in the same order (e.g. two modalities on identical frames), so</span>
+<span class="sd">    each resample draws the same demos for both — the difference CI then reflects only</span>
+<span class="sd">    the modality, not which demos happened to be drawn. Distances are reused, not</span>
+<span class="sd">    recomputed. A difference CI that straddles 0 means "not distinguishable at this n".</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows_a</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows_b</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"paired rows differ in length: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">rows_a</span><span class="p">)</span><span class="si">}</span><span class="s2"> vs </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">rows_b</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">a</span><span class="p">[</span><span class="s2">"tech"</span><span class="p">]</span> <span class="o">!=</span> <span class="n">b</span><span class="p">[</span><span class="s2">"tech"</span><span class="p">]</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">rows_a</span><span class="p">,</span> <span class="n">rows_b</span><span class="p">)):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"paired rows are not in the same technique order"</span><span class="p">)</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">rows_a</span><span class="p">)</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="p">[]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"acc_a"</span><span class="p">,</span> <span class="s2">"acc_b"</span><span class="p">,</span> <span class="s2">"auc_a"</span><span class="p">,</span> <span class="s2">"auc_b"</span><span class="p">,</span> <span class="s2">"acc_diff"</span><span class="p">,</span> <span class="s2">"auc_diff"</span><span class="p">)}</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_boot</span><span class="p">):</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+        <span class="n">acc_a</span><span class="p">,</span> <span class="n">auc_a</span> <span class="o">=</span> <span class="n">_rows_metrics</span><span class="p">([</span><span class="n">rows_a</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">])</span>
+        <span class="n">acc_b</span><span class="p">,</span> <span class="n">auc_b</span> <span class="o">=</span> <span class="n">_rows_metrics</span><span class="p">([</span><span class="n">rows_b</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idx</span><span class="p">])</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="p">(</span><span class="n">acc_a</span><span class="p">,</span> <span class="n">acc_b</span><span class="p">,</span> <span class="n">auc_a</span><span class="p">,</span> <span class="n">auc_b</span><span class="p">,</span> <span class="n">acc_a</span> <span class="o">-</span> <span class="n">acc_b</span><span class="p">,</span> <span class="n">auc_a</span> <span class="o">-</span> <span class="n">auc_b</span><span class="p">)):</span>
+            <span class="n">stats</span><span class="p">[</span><span class="n">k</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">ci</span><span class="p">(</span><span class="n">v</span><span class="p">):</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">v</span><span class="p">)]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)),</span> <span class="mi">3</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">percentile</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mf">97.5</span><span class="p">)),</span> <span class="mi">3</span><span class="p">)]</span>
+
+    <span class="k">return</span> <span class="p">{</span><span class="s2">"n_demos"</span><span class="p">:</span> <span class="n">n</span><span class="p">,</span> <span class="s2">"n_boot"</span><span class="p">:</span> <span class="n">n_boot</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">ci</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">stats</span><span class="o">.</span><span class="n">items</span><span class="p">()}}</span></div>
 
 
 

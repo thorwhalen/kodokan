@@ -21,7 +21,7 @@
 - [kodokan.store](_autosummary/kodokan.store.html.md): dol-backed stores for the pipeline’s artifacts (the analysis SSOT).
 - [kodokan.track](_autosummary/kodokan.track.html.md): Stable tori/uke identity tracking (BoT-SORT / ByteTrack).
 - [kodokan.viz](_autosummary/kodokan.viz.html.md): Visualize a &#96;PoseSequence&#96;.
-- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-10-20 10:09 UTC&#42;&#42; from commit &lt;a href="https://github.com/tho...
+- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-10-20 10:38 UTC&#42;&#42; from commit &lt;a href="https://github.com/tho...
 
 ## Optional
 
