@@ -17,24 +17,25 @@ would overfit; the same harness scales to more techniques once more data is coll
 
 ### Functions
 
-| [`classification_metrics`](#kodokan.recognize.classification_metrics)(y_true, y_pred, \*[, ...])   | Top-1, balanced (macro-recall), majority-class baseline, n_classes, n.                                    |
-|------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|
-| [`confusion_pairs`](#kodokan.recognize.confusion_pairs)(y_true, y_pred, \*[, top])          | Most-frequent misclassifications as `{true, pred, count}` (off-diagonal).                                 |
-| [`demo_feature`](#kodokan.recognize.demo_feature)(pose_seq, start_s, end_s, \*, mode)    | Per-frame features for one demo under a role/feature mode.                                                |
-| `dtw_1nn_accuracy`(feature_seqs, labels)                                                             |                                                                                                           |
-| [`dtw_1nn_predict`](#kodokan.recognize.dtw_1nn_predict)(feature_seqs, labels)               | Leave-one-out 1-NN by DTW distance; returns predicted label per item.                                     |
-| [`loo_medoid_separability`](#kodokan.recognize.loo_medoid_separability)(feats_by_tech, \*, ...)     | Leak-free (leave-one-demo-out medoid) technique-separability report.                                      |
-| [`loo_pooled_predict`](#kodokan.recognize.loo_pooled_predict)(X, y, \*[, method, k, groups])   | Leave-one-out (or leave-one-GROUP-out) predictions; preprocessing fit on train only.                      |
-| [`paired_bootstrap_separability`](#kodokan.recognize.paired_bootstrap_separability)(rows_a, rows_b, \*)   | 95% percentile-bootstrap CIs for A, B and the PAIRED difference A−B.                                      |
-| `pool_centroid_accuracy`(X, y)                                                                       |                                                                                                           |
-| `pool_knn_accuracy`(X, y[, k])                                                                       |                                                                                                           |
-| `pool_lda_knn_accuracy`(X, y[, k])                                                                   |                                                                                                           |
-| [`pooled_descriptor`](#kodokan.recognize.pooled_descriptor)(feat, \*[, levels])               | Temporal-pyramid pooled fixed-length descriptor (mean+std per segment).                                   |
-| [`roc_auc_distances`](#kodokan.recognize.roc_auc_distances)(genuine, impostor)                | Standard ROC-AUC for a *distance* score: `P(impostor > genuine)` (ties=0.5).                              |
-| [`similarity_from_confusion`](#kodokan.recognize.similarity_from_confusion)(y_true, y_pred, \*)       | `target -> {other: weight}` (0..1) from a recognizer's confusions.                                        |
-| [`tori_decision`](#kodokan.recognize.tori_decision)(pose_seq, start_s, end_s, \*[, ...])  | Tori (thrower) heuristic with a confidence margin and an abstain flag.                                    |
-| [`tori_decision_stats`](#kodokan.recognize.tori_decision_stats)(decisions)                      | Aggregate fall-back / abstain rates and median margin over decisions.                                     |
-| [`tori_index`](#kodokan.recognize.tori_index)(pose_seq, start_s, end_s)                | Heuristic tori slot (thin wrapper over [`tori_decision()`](#kodokan.recognize.tori_decision)). |
+| [`classification_metrics`](#kodokan.recognize.classification_metrics)(y_true, y_pred, \*[, ...])   | Top-1, balanced (macro-recall), majority-class baseline, n_classes, n.                                                        |
+|------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
+| [`confusion_pairs`](#kodokan.recognize.confusion_pairs)(y_true, y_pred, \*[, top])          | Most-frequent misclassifications as `{true, pred, count}` (off-diagonal).                                                     |
+| [`demo_feature`](#kodokan.recognize.demo_feature)(pose_seq, start_s, end_s, \*, mode)    | Per-frame features for one demo under a role/feature mode.                                                                    |
+| `dtw_1nn_accuracy`(feature_seqs, labels)                                                             |                                                                                                                               |
+| [`dtw_1nn_predict`](#kodokan.recognize.dtw_1nn_predict)(feature_seqs, labels)               | Leave-one-out 1-NN by DTW distance; returns predicted label per item.                                                         |
+| [`loo_medoid_separability`](#kodokan.recognize.loo_medoid_separability)(feats_by_tech, \*, ...)     | Leak-free (leave-one-demo-out medoid) technique-separability report.                                                          |
+| [`loo_pooled_predict`](#kodokan.recognize.loo_pooled_predict)(X, y, \*[, method, k, ...])      | Leave-one-out (or leave-one-GROUP-out) predictions; preprocessing fit on train only.                                          |
+| [`mirror_feature`](#kodokan.recognize.mirror_feature)(feat, \*, mode)                      | Per-frame features of the horizontally mirrored demo, from [`demo_feature()`](#kodokan.recognize.demo_feature)'s. |
+| [`paired_bootstrap_separability`](#kodokan.recognize.paired_bootstrap_separability)(rows_a, rows_b, \*)   | 95% percentile-bootstrap CIs for A, B and the PAIRED difference A−B.                                                          |
+| `pool_centroid_accuracy`(X, y)                                                                       |                                                                                                                               |
+| `pool_knn_accuracy`(X, y[, k])                                                                       |                                                                                                                               |
+| `pool_lda_knn_accuracy`(X, y[, k])                                                                   |                                                                                                                               |
+| [`pooled_descriptor`](#kodokan.recognize.pooled_descriptor)(feat, \*[, levels])               | Temporal-pyramid pooled fixed-length descriptor (mean+std per segment).                                                       |
+| [`roc_auc_distances`](#kodokan.recognize.roc_auc_distances)(genuine, impostor)                | Standard ROC-AUC for a *distance* score: `P(impostor > genuine)` (ties=0.5).                                                  |
+| [`similarity_from_confusion`](#kodokan.recognize.similarity_from_confusion)(y_true, y_pred, \*)       | `target -> {other: weight}` (0..1) from a recognizer's confusions.                                                            |
+| [`tori_decision`](#kodokan.recognize.tori_decision)(pose_seq, start_s, end_s, \*[, ...])  | Tori (thrower) heuristic with a confidence margin and an abstain flag.                                                        |
+| [`tori_decision_stats`](#kodokan.recognize.tori_decision_stats)(decisions)                      | Aggregate fall-back / abstain rates and median margin over decisions.                                                         |
+| [`tori_index`](#kodokan.recognize.tori_index)(pose_seq, start_s, end_s)                | Heuristic tori slot (thin wrapper over [`tori_decision()`](#kodokan.recognize.tori_decision)).                     |
 
 ### Classes
 
@@ -138,13 +139,27 @@ the standard ROC-AUC ([`roc_auc_distances()`](#kodokan.recognize.roc_auc_distanc
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
-### kodokan.recognize.loo_pooled_predict(X, y, , method='lda_knn', k=3, groups=None)
+### kodokan.recognize.loo_pooled_predict(X, y, , method='lda_knn', k=3, groups=None, X_aug=None)
 
 Leave-one-out (or leave-one-GROUP-out) predictions; preprocessing fit on train only.
 
 If `groups` is given (e.g. source `video_id` per sample), each fold excludes ALL
 samples sharing the held-out sample’s group — i.e. **leave-one-clip-out**, which removes
 within-clip leakage. Otherwise it is plain leave-one-sample-out.
+
+`X_aug` (same shape as `X`, row `j` an augmented copy of sample `j`, e.g. the
+pooled [`mirror_feature()`](#kodokan.recognize.mirror_feature)) adds the copies of the TRAIN-fold samples to each
+fold’s training set; a held-out sample’s own copy (and its group’s) never trains.
+
+* **Return type:**
+  `ndarray`
+
+### kodokan.recognize.mirror_feature(feat, , mode)
+
+Per-frame features of the horizontally mirrored demo, from [`demo_feature()`](#kodokan.recognize.demo_feature)’s.
+
+`mirror_feature(demo_feature(seq, ...), mode=m)` equals `demo_feature` of the
+mirrored `seq` (tested), so mirrored training copies cost no pose estimation.
 
 * **Return type:**
   `ndarray`

@@ -1,4 +1,4 @@
-> built 2026-10-20 10:38 UTC from 7c8856d (main) · kodokan 0.0.23. Details: build_info.json
+> built 2026-10-20 12:28 UTC from bb8a03c (main) · kodokan 0.0.24. Details: build_info.json
 
 # index.html.md
 
@@ -1475,24 +1475,25 @@ would overfit; the same harness scales to more techniques once more data is coll
 
 ### Functions
 
-| [`classification_metrics`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.classification_metrics)(y_true, y_pred, \*[, ...])   | Top-1, balanced (macro-recall), majority-class baseline, n_classes, n.                                    |
-|------------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|
-| [`confusion_pairs`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.confusion_pairs)(y_true, y_pred, \*[, top])          | Most-frequent misclassifications as `{true, pred, count}` (off-diagonal).                                 |
-| [`demo_feature`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.demo_feature)(pose_seq, start_s, end_s, \*, mode)    | Per-frame features for one demo under a role/feature mode.                                                |
-| `dtw_1nn_accuracy`(feature_seqs, labels)                                                             |                                                                                                           |
-| [`dtw_1nn_predict`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.dtw_1nn_predict)(feature_seqs, labels)               | Leave-one-out 1-NN by DTW distance; returns predicted label per item.                                     |
-| [`loo_medoid_separability`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.loo_medoid_separability)(feats_by_tech, \*, ...)     | Leak-free (leave-one-demo-out medoid) technique-separability report.                                      |
-| [`loo_pooled_predict`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.loo_pooled_predict)(X, y, \*[, method, k, groups])   | Leave-one-out (or leave-one-GROUP-out) predictions; preprocessing fit on train only.                      |
-| [`paired_bootstrap_separability`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.paired_bootstrap_separability)(rows_a, rows_b, \*)   | 95% percentile-bootstrap CIs for A, B and the PAIRED difference A−B.                                      |
-| `pool_centroid_accuracy`(X, y)                                                                       |                                                                                                           |
-| `pool_knn_accuracy`(X, y[, k])                                                                       |                                                                                                           |
-| `pool_lda_knn_accuracy`(X, y[, k])                                                                   |                                                                                                           |
-| [`pooled_descriptor`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.pooled_descriptor)(feat, \*[, levels])               | Temporal-pyramid pooled fixed-length descriptor (mean+std per segment).                                   |
-| [`roc_auc_distances`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.roc_auc_distances)(genuine, impostor)                | Standard ROC-AUC for a *distance* score: `P(impostor > genuine)` (ties=0.5).                              |
-| [`similarity_from_confusion`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.similarity_from_confusion)(y_true, y_pred, \*)       | `target -> {other: weight}` (0..1) from a recognizer's confusions.                                        |
-| [`tori_decision`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.tori_decision)(pose_seq, start_s, end_s, \*[, ...])  | Tori (thrower) heuristic with a confidence margin and an abstain flag.                                    |
-| [`tori_decision_stats`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.tori_decision_stats)(decisions)                      | Aggregate fall-back / abstain rates and median margin over decisions.                                     |
-| [`tori_index`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.tori_index)(pose_seq, start_s, end_s)                | Heuristic tori slot (thin wrapper over [`tori_decision()`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.tori_decision)). |
+| [`classification_metrics`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.classification_metrics)(y_true, y_pred, \*[, ...])   | Top-1, balanced (macro-recall), majority-class baseline, n_classes, n.                                                        |
+|------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|
+| [`confusion_pairs`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.confusion_pairs)(y_true, y_pred, \*[, top])          | Most-frequent misclassifications as `{true, pred, count}` (off-diagonal).                                                     |
+| [`demo_feature`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.demo_feature)(pose_seq, start_s, end_s, \*, mode)    | Per-frame features for one demo under a role/feature mode.                                                                    |
+| `dtw_1nn_accuracy`(feature_seqs, labels)                                                             |                                                                                                                               |
+| [`dtw_1nn_predict`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.dtw_1nn_predict)(feature_seqs, labels)               | Leave-one-out 1-NN by DTW distance; returns predicted label per item.                                                         |
+| [`loo_medoid_separability`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.loo_medoid_separability)(feats_by_tech, \*, ...)     | Leak-free (leave-one-demo-out medoid) technique-separability report.                                                          |
+| [`loo_pooled_predict`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.loo_pooled_predict)(X, y, \*[, method, k, ...])      | Leave-one-out (or leave-one-GROUP-out) predictions; preprocessing fit on train only.                                          |
+| [`mirror_feature`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.mirror_feature)(feat, \*, mode)                      | Per-frame features of the horizontally mirrored demo, from [`demo_feature()`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.demo_feature)'s. |
+| [`paired_bootstrap_separability`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.paired_bootstrap_separability)(rows_a, rows_b, \*)   | 95% percentile-bootstrap CIs for A, B and the PAIRED difference A−B.                                                          |
+| `pool_centroid_accuracy`(X, y)                                                                       |                                                                                                                               |
+| `pool_knn_accuracy`(X, y[, k])                                                                       |                                                                                                                               |
+| `pool_lda_knn_accuracy`(X, y[, k])                                                                   |                                                                                                                               |
+| [`pooled_descriptor`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.pooled_descriptor)(feat, \*[, levels])               | Temporal-pyramid pooled fixed-length descriptor (mean+std per segment).                                                       |
+| [`roc_auc_distances`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.roc_auc_distances)(genuine, impostor)                | Standard ROC-AUC for a *distance* score: `P(impostor > genuine)` (ties=0.5).                                                  |
+| [`similarity_from_confusion`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.similarity_from_confusion)(y_true, y_pred, \*)       | `target -> {other: weight}` (0..1) from a recognizer's confusions.                                                            |
+| [`tori_decision`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.tori_decision)(pose_seq, start_s, end_s, \*[, ...])  | Tori (thrower) heuristic with a confidence margin and an abstain flag.                                                        |
+| [`tori_decision_stats`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.tori_decision_stats)(decisions)                      | Aggregate fall-back / abstain rates and median margin over decisions.                                                         |
+| [`tori_index`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.tori_index)(pose_seq, start_s, end_s)                | Heuristic tori slot (thin wrapper over [`tori_decision()`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.tori_decision)).                     |
 
 ### Classes
 
@@ -1596,13 +1597,27 @@ the standard ROC-AUC ([`roc_auc_distances()`](_autosummary/kodokan.recognize.htm
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
-### kodokan.recognize.loo_pooled_predict(X, y, , method='lda_knn', k=3, groups=None)
+### kodokan.recognize.loo_pooled_predict(X, y, , method='lda_knn', k=3, groups=None, X_aug=None)
 
 Leave-one-out (or leave-one-GROUP-out) predictions; preprocessing fit on train only.
 
 If `groups` is given (e.g. source `video_id` per sample), each fold excludes ALL
 samples sharing the held-out sample’s group — i.e. **leave-one-clip-out**, which removes
 within-clip leakage. Otherwise it is plain leave-one-sample-out.
+
+`X_aug` (same shape as `X`, row `j` an augmented copy of sample `j`, e.g. the
+pooled [`mirror_feature()`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.mirror_feature)) adds the copies of the TRAIN-fold samples to each
+fold’s training set; a held-out sample’s own copy (and its group’s) never trains.
+
+* **Return type:**
+  `ndarray`
+
+### kodokan.recognize.mirror_feature(feat, , mode)
+
+Per-frame features of the horizontally mirrored demo, from [`demo_feature()`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.demo_feature)’s.
+
+`mirror_feature(demo_feature(seq, ...), mode=m)` equals `demo_feature` of the
+mirrored `seq` (tested), so mirrored training copies cost no pose estimation.
 
 * **Return type:**
   `ndarray`
@@ -2038,16 +2053,18 @@ Render skeletons to an MP4.
 
 # About this build
 
-This documentation was built on **2026-10-20 10:38 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/7c8856ddc02158e410598dfed4814aad32f7141e"><code>7c8856d</code></a> on branch <code>main</code>, for **kodokan 0.0.23** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-10-20 12:28 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/bb8a03ccb31138addbdf06d334dede53d49ca6a4"><code>bb8a03c</code></a> on branch <code>main</code>, for **kodokan 0.0.24** (from <code>pyproject.toml</code>).
 
-#### NOTE
-Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
+#### WARNING
+The documentation and the package may be misaligned:
+
+- The documented version (0.0.24) is behind the latest release on PyPI (0.0.25): `pip install kodokan` gives newer code than these docs describe.
 
 ## Source
 
 |                     |                                                                                                                                                           |
 |---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/thorwhalen/kodokan/commit/7c8856ddc02158e410598dfed4814aad32f7141e"><code>7c8856ddc02158e410598dfed4814aad32f7141e</code></a> |
+| Commit              | <a href="https://github.com/thorwhalen/kodokan/commit/bb8a03ccb31138addbdf06d334dede53d49ca6a4"><code>bb8a03ccb31138addbdf06d334dede53d49ca6a4</code></a> |
 | Branch              | <code>main</code>                                                                                                                                         |
 | Tags at this commit | none                                                                                                                                                      |
 | Working tree        | clean                                                                                                                                                     |
@@ -2058,15 +2075,15 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>thorwhalen/kodokan</code>                                                            |
-| Run          | <a href="https://github.com/thorwhalen/kodokan/actions/runs/39409119919">39409119919</a>   |
+| Run          | <a href="https://github.com/thorwhalen/kodokan/actions/runs/39422358447">39422358447</a>   |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>7c8856ddc02158e410598dfed4814aad32f7141e</code> (in the history of the built commit) |
+| Event commit | <code>bb8a03ccb31138addbdf06d334dede53d49ca6a4</code> (in the history of the built commit) |
 
 ## Tools
 
 |          |         |
 |----------|---------|
-| epythet  | 0.2.18  |
+| epythet  | 0.2.20  |
 | Sphinx   | 9.1.1   |
 | docutils | 0.22.4  |
 | Python   | 3.12.15 |
@@ -2085,14 +2102,14 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/kodokan/0.0.23/">0.0.23</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/kodokan/0.0.25/">0.0.25</a>, newer than the documented version (0.0.24).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/thorwhalen/kodokan && cd kodokan
-git checkout 7c8856ddc02158e410598dfed4814aad32f7141e
-pip install "epythet==0.2.18"
+git checkout bb8a03ccb31138addbdf06d334dede53d49ca6a4
+pip install "epythet==0.2.20"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```
 

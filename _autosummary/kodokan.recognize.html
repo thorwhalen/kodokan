@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../_static/documentation_options.js?v=3294188c"></script>
+    <script src="../_static/documentation_options.js?v=f91d8841"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -58,7 +58,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.23" />
+  <meta name="docsearch:version" content="0.0.24" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -420,37 +420,40 @@ would overfit; the same harness scales to more techniques once more data is coll
 <tr class="row-even"><td><p><a class="reference internal" href="#kodokan.recognize.loo_medoid_separability" title="kodokan.recognize.loo_medoid_separability"><code class="xref py py-obj docutils literal notranslate"><span class="pre">loo_medoid_separability</span></code></a>(feats_by_tech, *, ...)</p></td>
 <td><p>Leak-free (leave-one-demo-out medoid) technique-separability report.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.recognize.loo_pooled_predict" title="kodokan.recognize.loo_pooled_predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">loo_pooled_predict</span></code></a>(X, y, *[, method, k, groups])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.recognize.loo_pooled_predict" title="kodokan.recognize.loo_pooled_predict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">loo_pooled_predict</span></code></a>(X, y, *[, method, k, ...])</p></td>
 <td><p>Leave-one-out (or leave-one-GROUP-out) predictions; preprocessing fit on train only.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.recognize.paired_bootstrap_separability" title="kodokan.recognize.paired_bootstrap_separability"><code class="xref py py-obj docutils literal notranslate"><span class="pre">paired_bootstrap_separability</span></code></a>(rows_a, rows_b, *)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.recognize.mirror_feature" title="kodokan.recognize.mirror_feature"><code class="xref py py-obj docutils literal notranslate"><span class="pre">mirror_feature</span></code></a>(feat, *, mode)</p></td>
+<td><p>Per-frame features of the horizontally mirrored demo, from <a class="reference internal" href="#kodokan.recognize.demo_feature" title="kodokan.recognize.demo_feature"><code class="xref py py-func docutils literal notranslate"><span class="pre">demo_feature()</span></code></a>'s.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.recognize.paired_bootstrap_separability" title="kodokan.recognize.paired_bootstrap_separability"><code class="xref py py-obj docutils literal notranslate"><span class="pre">paired_bootstrap_separability</span></code></a>(rows_a, rows_b, *)</p></td>
 <td><p>95% percentile-bootstrap CIs for A, B and the PAIRED difference A−B.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pool_centroid_accuracy</span></code>(X, y)</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pool_centroid_accuracy</span></code>(X, y)</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pool_knn_accuracy</span></code>(X, y[, k])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pool_knn_accuracy</span></code>(X, y[, k])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pool_lda_knn_accuracy</span></code>(X, y[, k])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">pool_lda_knn_accuracy</span></code>(X, y[, k])</p></td>
 <td><p></p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.recognize.pooled_descriptor" title="kodokan.recognize.pooled_descriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pooled_descriptor</span></code></a>(feat, *[, levels])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.recognize.pooled_descriptor" title="kodokan.recognize.pooled_descriptor"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pooled_descriptor</span></code></a>(feat, *[, levels])</p></td>
 <td><p>Temporal-pyramid pooled fixed-length descriptor (mean+std per segment).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.recognize.roc_auc_distances" title="kodokan.recognize.roc_auc_distances"><code class="xref py py-obj docutils literal notranslate"><span class="pre">roc_auc_distances</span></code></a>(genuine, impostor)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.recognize.roc_auc_distances" title="kodokan.recognize.roc_auc_distances"><code class="xref py py-obj docutils literal notranslate"><span class="pre">roc_auc_distances</span></code></a>(genuine, impostor)</p></td>
 <td><p>Standard ROC-AUC for a <em>distance</em> score: <code class="docutils literal notranslate"><span class="pre">P(impostor</span> <span class="pre">&gt;</span> <span class="pre">genuine)</span></code> (ties=0.5).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.recognize.similarity_from_confusion" title="kodokan.recognize.similarity_from_confusion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">similarity_from_confusion</span></code></a>(y_true, y_pred, *)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.recognize.similarity_from_confusion" title="kodokan.recognize.similarity_from_confusion"><code class="xref py py-obj docutils literal notranslate"><span class="pre">similarity_from_confusion</span></code></a>(y_true, y_pred, *)</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">target</span> <span class="pre">-&gt;</span> <span class="pre">{other:</span> <span class="pre">weight}</span></code> (0..1) from a recognizer's confusions.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.recognize.tori_decision" title="kodokan.recognize.tori_decision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tori_decision</span></code></a>(pose_seq, start_s, end_s, *[, ...])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.recognize.tori_decision" title="kodokan.recognize.tori_decision"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tori_decision</span></code></a>(pose_seq, start_s, end_s, *[, ...])</p></td>
 <td><p>Tori (thrower) heuristic with a confidence margin and an abstain flag.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.recognize.tori_decision_stats" title="kodokan.recognize.tori_decision_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tori_decision_stats</span></code></a>(decisions)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.recognize.tori_decision_stats" title="kodokan.recognize.tori_decision_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tori_decision_stats</span></code></a>(decisions)</p></td>
 <td><p>Aggregate fall-back / abstain rates and median margin over decisions.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.recognize.tori_index" title="kodokan.recognize.tori_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tori_index</span></code></a>(pose_seq, start_s, end_s)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.recognize.tori_index" title="kodokan.recognize.tori_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tori_index</span></code></a>(pose_seq, start_s, end_s)</p></td>
 <td><p>Heuristic tori slot (thin wrapper over <a class="reference internal" href="#kodokan.recognize.tori_decision" title="kodokan.recognize.tori_decision"><code class="xref py py-func docutils literal notranslate"><span class="pre">tori_decision()</span></code></a>).</p></td>
 </tr>
 </tbody>
@@ -602,11 +605,27 @@ recomputing distances (see <a class="reference internal" href="#kodokan.recogniz
 
 <dl class="py function">
 <dt class="sig sig-object py" id="kodokan.recognize.loo_pooled_predict">
-<span class="sig-prename descclassname"><span class="pre">kodokan.recognize.</span></span><span class="sig-name descname"><span class="pre">loo_pooled_predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lda_knn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/recognize.html#loo_pooled_predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.recognize.loo_pooled_predict" title="Link to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">kodokan.recognize.</span></span><span class="sig-name descname"><span class="pre">loo_pooled_predict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'lda_knn'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">groups</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X_aug</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/recognize.html#loo_pooled_predict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.recognize.loo_pooled_predict" title="Link to this definition">#</a></dt>
 <dd><p>Leave-one-out (or leave-one-GROUP-out) predictions; preprocessing fit on train only.</p>
 <p>If <code class="docutils literal notranslate"><span class="pre">groups</span></code> is given (e.g. source <code class="docutils literal notranslate"><span class="pre">video_id</span></code> per sample), each fold excludes ALL
 samples sharing the held-out sample’s group — i.e. <strong>leave-one-clip-out</strong>, which removes
 within-clip leakage. Otherwise it is plain leave-one-sample-out.</p>
+<p><code class="docutils literal notranslate"><span class="pre">X_aug</span></code> (same shape as <code class="docutils literal notranslate"><span class="pre">X</span></code>, row <code class="docutils literal notranslate"><span class="pre">j</span></code> an augmented copy of sample <code class="docutils literal notranslate"><span class="pre">j</span></code>, e.g. the
+pooled <a class="reference internal" href="#kodokan.recognize.mirror_feature" title="kodokan.recognize.mirror_feature"><code class="xref py py-func docutils literal notranslate"><span class="pre">mirror_feature()</span></code></a>) adds the copies of the TRAIN-fold samples to each
+fold’s training set; a held-out sample’s own copy (and its group’s) never trains.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.recognize.mirror_feature">
+<span class="sig-prename descclassname"><span class="pre">kodokan.recognize.</span></span><span class="sig-name descname"><span class="pre">mirror_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feat</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/recognize.html#mirror_feature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.recognize.mirror_feature" title="Link to this definition">#</a></dt>
+<dd><p>Per-frame features of the horizontally mirrored demo, from <a class="reference internal" href="#kodokan.recognize.demo_feature" title="kodokan.recognize.demo_feature"><code class="xref py py-func docutils literal notranslate"><span class="pre">demo_feature()</span></code></a>’s.</p>
+<p><code class="docutils literal notranslate"><span class="pre">mirror_feature(demo_feature(seq,</span> <span class="pre">...),</span> <span class="pre">mode=m)</span></code> equals <code class="docutils literal notranslate"><span class="pre">demo_feature</span></code> of the
+mirrored <code class="docutils literal notranslate"><span class="pre">seq</span></code> (tested), so mirrored training copies cost no pose estimation.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>
@@ -778,6 +797,7 @@ when you need the confidence margin / abstain flag.</p>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.dtw_1nn_predict"><code class="docutils literal notranslate"><span class="pre">dtw_1nn_predict()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.loo_medoid_separability"><code class="docutils literal notranslate"><span class="pre">loo_medoid_separability()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.loo_pooled_predict"><code class="docutils literal notranslate"><span class="pre">loo_pooled_predict()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.mirror_feature"><code class="docutils literal notranslate"><span class="pre">mirror_feature()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.paired_bootstrap_separability"><code class="docutils literal notranslate"><span class="pre">paired_bootstrap_separability()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.pooled_descriptor"><code class="docutils literal notranslate"><span class="pre">pooled_descriptor()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.recognize.roc_auc_distances"><code class="docutils literal notranslate"><span class="pre">roc_auc_distances()</span></code></a></li>
