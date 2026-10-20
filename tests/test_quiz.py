@@ -87,6 +87,7 @@ def test_a_bad_choice_index_is_refused_and_leaves_the_problem_open():
 
 
 def test_state_survives_a_new_quiz_over_the_same_directory(tmp_path):
+    pytest.importorskip("dol")
     responses, problems = quiz_stores(tmp_path)
     first = Quiz(_catalog(), responses=responses, problems=problems)
     open_problem = first.next_problem("ana")
