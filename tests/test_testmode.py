@@ -82,3 +82,18 @@ def test_live_loop_grades_each_throw_and_prompts_again():
         results += live.push(kp[None], f)
     assert len(results) == 2 and all(r.passed for _, r in results)
     assert len(prompts) == 3 and [r.target for _, r in results] == prompts[:2]
+
+
+def test_review_edge_cases_are_refused_or_deduplicated():
+    from kodokan.score import build_reference
+
+    rec = _recognizer()
+    assert TechniqueTest(rec, pool=["o-goshi", "o-goshi", "uchi-mata"]).pool == [
+        "o-goshi",
+        "uchi-mata",
+    ]
+    with pytest.raises(ValueError, match="no demonstration"):
+        TechniqueTest(rec, references={"o-goshi": build_reference([])})
+    one = TechniqueRecognizer(method="centroid").fit(np.zeros((2, 3)), ["o-goshi"] * 2)
+    with pytest.raises(ValueError, match="at least 2"):
+        TechniqueTest(one)

@@ -43,6 +43,8 @@ from kodokan.segment import Segment
 class TestResult:
     """The grade of one performance of the prompted technique."""
 
+    __test__ = False  # not a pytest test class, despite the name
+
     target: str
     recognition: Recognition
     target_confidence: float  # the recognizer's score for the target, 0-1
@@ -83,7 +85,11 @@ class TechniqueTest:
         if recognizer.classes_ is None:
             raise ValueError("fit the recognizer before testing with it")
         known = [str(c) for c in recognizer.classes_]
-        self.pool = list(pool) if pool is not None else known
+        if len(known) < 2:
+            raise ValueError(
+                "a test needs a recognizer that knows at least 2 techniques"
+            )
+        self.pool = list(dict.fromkeys(pool)) if pool is not None else known
         unknown = sorted(set(self.pool) - set(known))
         if not self.pool or unknown:
             raise ValueError(
@@ -95,6 +101,13 @@ class TechniqueTest:
         if not 0 <= confidence_weight <= 1:
             raise ValueError(
                 f"confidence_weight must be in [0, 1], got {confidence_weight}"
+            )
+        empty = sorted(
+            t for t, r in (references or {}).items() if r.get("reference") is None
+        )
+        if empty:
+            raise ValueError(
+                f"references with no demonstration to compare with: {empty}"
             )
         self.recognizer, self.references = recognizer, dict(references or {})
         self.lang, self.advice, self.confidence_weight = lang, advice, confidence_weight
@@ -158,6 +171,10 @@ class LiveTechniqueTest:
     :meth:`push` takes one frame and returns ``(segment, result)`` for each throw that
     closed with it; after each graded throw the next technique is drawn
     (:attr:`prompt`). Detector options pass through.
+
+    A throw is graded once it has *closed* (``close_after_s`` after it ends), so the
+    performer should wait for the next prompt before the next throw; any motion the
+    detector takes for a throw also uses up a prompt.
     """
 
     def __init__(
