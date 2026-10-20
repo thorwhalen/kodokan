@@ -405,8 +405,12 @@ def loo_medoid_separability(
                 total += 1
                 correct += int(g < min(imp_here))
             rows.append(
-                {"tech": i, "genuine": g, "impostor": imp_here,
-                 "correct": bool(imp_here) and g < min(imp_here)}
+                {
+                    "tech": i,
+                    "genuine": g,
+                    "impostor": imp_here,
+                    "correct": bool(imp_here) and g < min(imp_here),
+                }
             )
     auc = roc_auc_distances(genuine, impostor)
     extra = {"per_demo": rows} if per_demo else {}
@@ -442,23 +446,32 @@ def paired_bootstrap_separability(
     recomputed. A difference CI that straddles 0 means "not distinguishable at this n".
     """
     if len(rows_a) != len(rows_b):
-        raise ValueError(f"paired rows differ in length: {len(rows_a)} vs {len(rows_b)}")
+        raise ValueError(
+            f"paired rows differ in length: {len(rows_a)} vs {len(rows_b)}"
+        )
     if any(a["tech"] != b["tech"] for a, b in zip(rows_a, rows_b)):
         raise ValueError("paired rows are not in the same technique order")
     rng = np.random.default_rng(seed)
     n = len(rows_a)
-    stats = {k: [] for k in ("acc_a", "acc_b", "auc_a", "auc_b", "acc_diff", "auc_diff")}
+    stats = {
+        k: [] for k in ("acc_a", "acc_b", "auc_a", "auc_b", "acc_diff", "auc_diff")
+    }
     for _ in range(n_boot):
         idx = rng.integers(0, n, n)
         acc_a, auc_a = _rows_metrics([rows_a[i] for i in idx])
         acc_b, auc_b = _rows_metrics([rows_b[i] for i in idx])
-        for k, v in zip(stats, (acc_a, acc_b, auc_a, auc_b, acc_a - acc_b, auc_a - auc_b)):
+        for k, v in zip(
+            stats, (acc_a, acc_b, auc_a, auc_b, acc_a - acc_b, auc_a - auc_b)
+        ):
             stats[k].append(v)
 
     def ci(v):
         v = np.asarray(v, dtype=float)
         v = v[np.isfinite(v)]
-        return [round(float(np.percentile(v, 2.5)), 3), round(float(np.percentile(v, 97.5)), 3)]
+        return [
+            round(float(np.percentile(v, 2.5)), 3),
+            round(float(np.percentile(v, 97.5)), 3),
+        ]
 
     return {"n_demos": n, "n_boot": n_boot, **{k: ci(v) for k, v in stats.items()}}
 

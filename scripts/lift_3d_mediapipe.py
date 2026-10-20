@@ -110,7 +110,11 @@ def lift_one(npz_path, poser, stride, *, letterbox=False):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--stride", type=int, default=2)
-    ap.add_argument("--letterbox", action="store_true", help="square crops around the bbox (more real context)")
+    ap.add_argument(
+        "--letterbox",
+        action="store_true",
+        help="square crops around the bbox (more real context)",
+    )
     args = ap.parse_args()
     poser = mp_pose.Pose(
         static_image_mode=True, model_complexity=1, min_detection_confidence=0.3
@@ -118,7 +122,10 @@ def main():
     files = [
         f for f in sorted(glob.glob(str(BRIDGE / "*.npz"))) if "_3d" not in Path(f).stem
     ]
-    print(f"lifting {len(files)} clips (stride {args.stride}, letterbox={args.letterbox})", flush=True)
+    print(
+        f"lifting {len(files)} clips (stride {args.stride}, letterbox={args.letterbox})",
+        flush=True,
+    )
     for npz in files:
         lift_one(npz, poser, args.stride, letterbox=args.letterbox)
     poser.close()
