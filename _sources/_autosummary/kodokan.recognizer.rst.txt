@@ -15,6 +15,7 @@ kodokan.recognizer
 
    .. autosummary::
    
+      loo_top_k_accuracy
       motion_segments
       pooled_demo_descriptor
       recognize_segments

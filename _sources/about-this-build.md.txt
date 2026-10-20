@@ -5,19 +5,19 @@ orphan: true
 
 # About this build
 
-This documentation was built on **2026-10-20 14:26 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/54e14695cbde67447aac3293ec35f2045541412c"><code>54e1469</code></a> on branch <code>main</code>, for **kodokan 0.0.27** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-10-20 14:32 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/b77a97d9ee603cb09adaa496ffb28589d794198c"><code>b77a97d</code></a> on branch <code>main</code>, for **kodokan 0.0.28** (from <code>pyproject.toml</code>).
 
 :::{warning}
 The documentation and the package may be misaligned:
 
-- The documented version (0.0.27) is behind the latest release on PyPI (0.0.28): `pip install kodokan` gives newer code than these docs describe.
+- The documented version (0.0.28) is behind the latest release on PyPI (0.0.29): `pip install kodokan` gives newer code than these docs describe.
 :::
 
 ## Source
 
 | | |
 |---|---|
-| Commit | <a href="https://github.com/thorwhalen/kodokan/commit/54e14695cbde67447aac3293ec35f2045541412c"><code>54e14695cbde67447aac3293ec35f2045541412c</code></a> |
+| Commit | <a href="https://github.com/thorwhalen/kodokan/commit/b77a97d9ee603cb09adaa496ffb28589d794198c"><code>b77a97d9ee603cb09adaa496ffb28589d794198c</code></a> |
 | Branch | <code>main</code> |
 | Tags at this commit | none |
 | Working tree | clean |
@@ -28,9 +28,9 @@ The documentation and the package may be misaligned:
 | | |
 |---|---|
 | Repository | <code>thorwhalen/kodokan</code> |
-| Run | <a href="https://github.com/thorwhalen/kodokan/actions/runs/39438987114">39438987114</a> |
+| Run | <a href="https://github.com/thorwhalen/kodokan/actions/runs/39439916064">39439916064</a> |
 | Ref | <code>refs/heads/main</code> |
-| Event commit | <code>54e14695cbde67447aac3293ec35f2045541412c</code> (in the history of the built commit) |
+| Event commit | <code>b77a97d9ee603cb09adaa496ffb28589d794198c</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -55,13 +55,13 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/kodokan/0.0.28/">0.0.28</a>, newer than the documented version (0.0.27).
+Latest release: <a href="https://pypi.org/project/kodokan/0.0.29/">0.0.29</a>, newer than the documented version (0.0.28).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/thorwhalen/kodokan && cd kodokan
-git checkout 54e14695cbde67447aac3293ec35f2045541412c
+git checkout b77a97d9ee603cb09adaa496ffb28589d794198c
 pip install "epythet==0.2.21"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

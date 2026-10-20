@@ -39,10 +39,11 @@ training demo, so with few demos per technique the spread stays optimistic.
 
 ### Functions
 
-| [`motion_segments`](#kodokan.recognizer.motion_segments)(pose_seq, \*[, min_peak_activity])   | Throw windows by motion energy ([`kodokan.segment.find_segments()`](kodokan.segment.html.md#kodokan.segment.find_segments)), keeping only those whose peak energy reaches `min_peak_activity` (an absolute floor: the hysteresis thresholds are quantiles, so an idle buffer still has "segments").   |
-|-------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`pooled_demo_descriptor`](#kodokan.recognizer.pooled_demo_descriptor)(pose_seq, start_s, ...)       | The default [`Featurizer`](#kodokan.recognizer.Featurizer): per-frame demo features, temporal-pyramid pooled.                                                                                                                                                                                                |
-| [`recognize_segments`](#kodokan.recognizer.recognize_segments)(pose_seq, recognizer, \*)         | Offline video mode: every detected throw in `pose_seq`, recognized.                                                                                                                                                                                                                                                       |
+| [`loo_top_k_accuracy`](#kodokan.recognizer.loo_top_k_accuracy)(X, y, \*[, ks, groups, method])   | Leave-one-out (or leave-one-group-out) top-k accuracy of [`TechniqueRecognizer`](#kodokan.recognizer.TechniqueRecognizer).                                                                                                                                                                                          |
+|-------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`motion_segments`](#kodokan.recognizer.motion_segments)(pose_seq, \*[, min_peak_activity])   | Throw windows by motion energy ([`kodokan.segment.find_segments()`](kodokan.segment.html.md#kodokan.segment.find_segments)), keeping only those whose peak energy reaches `min_peak_activity` (an absolute floor: the hysteresis thresholds are quantiles, so an idle buffer still has "segments"). |
+| [`pooled_demo_descriptor`](#kodokan.recognizer.pooled_demo_descriptor)(pose_seq, start_s, ...)       | The default [`Featurizer`](#kodokan.recognizer.Featurizer): per-frame demo features, temporal-pyramid pooled.                                                                                                                                                                                              |
+| [`recognize_segments`](#kodokan.recognizer.recognize_segments)(pose_seq, recognizer, \*)         | Offline video mode: every detected throw in `pose_seq`, recognized.                                                                                                                                                                                                                                                     |
 
 ### Classes
 
@@ -172,6 +173,28 @@ Add one frame; return `(buffer, segment)` for each throw it closed.
 
 * **Return type:**
   [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`PoseSequence`](kodokan.pose.html.md#kodokan.pose.PoseSequence), [`Segment`](kodokan.segment.html.md#kodokan.segment.Segment)]]
+
+### kodokan.recognizer.loo_top_k_accuracy(X, y, , ks=(1, 3, 5), groups=None, method='lda')
+
+Leave-one-out (or leave-one-group-out) top-k accuracy of [`TechniqueRecognizer`](#kodokan.recognizer.TechniqueRecognizer).
+
+The share of held-out demos whose true technique is among the recognizer’s `k`
+best guesses, for each `k` in `ks`: the number the top-k app (#3) shows, next
+to top-1 from [`kodokan.recognize.loo_pooled_predict()`](kodokan.recognize.html.md#kodokan.recognize.loo_pooled_predict). Pass `groups` (e.g.
+the source clip of each demo) to hold out whole groups. A held-out demo whose
+technique is absent from its training fold counts as a miss.
+
+```pycon
+>>> rng = np.random.default_rng(0)
+>>> X = np.vstack([rng.normal(c, 1.0, size=(4, 3)) for c in (0.0, 1.0, 2.0)])
+>>> y = np.repeat(["a", "b", "c"], 4)
+>>> acc = loo_top_k_accuracy(X, y, ks=(1, 3), method="centroid")
+>>> acc[3]
+1.0
+```
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`int`](https://docs.python.org/3/builtins/functions.html#int), [`float`](https://docs.python.org/3/builtins/functions.html#float)]
 
 ### kodokan.recognizer.motion_segments(pose_seq, , min_peak_activity=3.0, \*\*segment_kwargs)
 

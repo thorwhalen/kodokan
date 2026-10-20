@@ -1,4 +1,4 @@
-> built 2026-10-20 14:26 UTC from 54e1469 (main) · kodokan 0.0.27. Details: build_info.json
+> built 2026-10-20 14:32 UTC from b77a97d (main) · kodokan 0.0.28. Details: build_info.json
 
 # index.html.md
 
@@ -2002,10 +2002,11 @@ training demo, so with few demos per technique the spread stays optimistic.
 
 ### Functions
 
-| [`motion_segments`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.motion_segments)(pose_seq, \*[, min_peak_activity])   | Throw windows by motion energy ([`kodokan.segment.find_segments()`](_autosummary/kodokan.segment.html.md#kodokan.segment.find_segments)), keeping only those whose peak energy reaches `min_peak_activity` (an absolute floor: the hysteresis thresholds are quantiles, so an idle buffer still has "segments").   |
-|-------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`pooled_demo_descriptor`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.pooled_demo_descriptor)(pose_seq, start_s, ...)       | The default [`Featurizer`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.Featurizer): per-frame demo features, temporal-pyramid pooled.                                                                                                                                                                                                |
-| [`recognize_segments`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.recognize_segments)(pose_seq, recognizer, \*)         | Offline video mode: every detected throw in `pose_seq`, recognized.                                                                                                                                                                                                                                                       |
+| [`loo_top_k_accuracy`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.loo_top_k_accuracy)(X, y, \*[, ks, groups, method])   | Leave-one-out (or leave-one-group-out) top-k accuracy of [`TechniqueRecognizer`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.TechniqueRecognizer).                                                                                                                                                                                          |
+|-------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`motion_segments`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.motion_segments)(pose_seq, \*[, min_peak_activity])   | Throw windows by motion energy ([`kodokan.segment.find_segments()`](_autosummary/kodokan.segment.html.md#kodokan.segment.find_segments)), keeping only those whose peak energy reaches `min_peak_activity` (an absolute floor: the hysteresis thresholds are quantiles, so an idle buffer still has "segments"). |
+| [`pooled_demo_descriptor`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.pooled_demo_descriptor)(pose_seq, start_s, ...)       | The default [`Featurizer`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.Featurizer): per-frame demo features, temporal-pyramid pooled.                                                                                                                                                                                              |
+| [`recognize_segments`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.recognize_segments)(pose_seq, recognizer, \*)         | Offline video mode: every detected throw in `pose_seq`, recognized.                                                                                                                                                                                                                                                     |
 
 ### Classes
 
@@ -2135,6 +2136,28 @@ Add one frame; return `(buffer, segment)` for each throw it closed.
 
 * **Return type:**
   [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`PoseSequence`](_autosummary/kodokan.pose.html.md#kodokan.pose.PoseSequence), [`Segment`](_autosummary/kodokan.segment.html.md#kodokan.segment.Segment)]]
+
+### kodokan.recognizer.loo_top_k_accuracy(X, y, , ks=(1, 3, 5), groups=None, method='lda')
+
+Leave-one-out (or leave-one-group-out) top-k accuracy of [`TechniqueRecognizer`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.TechniqueRecognizer).
+
+The share of held-out demos whose true technique is among the recognizer’s `k`
+best guesses, for each `k` in `ks`: the number the top-k app (#3) shows, next
+to top-1 from [`kodokan.recognize.loo_pooled_predict()`](_autosummary/kodokan.recognize.html.md#kodokan.recognize.loo_pooled_predict). Pass `groups` (e.g.
+the source clip of each demo) to hold out whole groups. A held-out demo whose
+technique is absent from its training fold counts as a miss.
+
+```pycon
+>>> rng = np.random.default_rng(0)
+>>> X = np.vstack([rng.normal(c, 1.0, size=(4, 3)) for c in (0.0, 1.0, 2.0)])
+>>> y = np.repeat(["a", "b", "c"], 4)
+>>> acc = loo_top_k_accuracy(X, y, ks=(1, 3), method="centroid")
+>>> acc[3]
+1.0
+```
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`int`](https://docs.python.org/3/builtins/functions.html#int), [`float`](https://docs.python.org/3/builtins/functions.html#float)]
 
 ### kodokan.recognizer.motion_segments(pose_seq, , min_peak_activity=3.0, \*\*segment_kwargs)
 
@@ -2611,18 +2634,18 @@ Render skeletons to an MP4.
 
 # About this build
 
-This documentation was built on **2026-10-20 14:26 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/54e14695cbde67447aac3293ec35f2045541412c"><code>54e1469</code></a> on branch <code>main</code>, for **kodokan 0.0.27** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-10-20 14:32 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/b77a97d9ee603cb09adaa496ffb28589d794198c"><code>b77a97d</code></a> on branch <code>main</code>, for **kodokan 0.0.28** (from <code>pyproject.toml</code>).
 
 #### WARNING
 The documentation and the package may be misaligned:
 
-- The documented version (0.0.27) is behind the latest release on PyPI (0.0.28): `pip install kodokan` gives newer code than these docs describe.
+- The documented version (0.0.28) is behind the latest release on PyPI (0.0.29): `pip install kodokan` gives newer code than these docs describe.
 
 ## Source
 
 |                     |                                                                                                                                                           |
 |---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/thorwhalen/kodokan/commit/54e14695cbde67447aac3293ec35f2045541412c"><code>54e14695cbde67447aac3293ec35f2045541412c</code></a> |
+| Commit              | <a href="https://github.com/thorwhalen/kodokan/commit/b77a97d9ee603cb09adaa496ffb28589d794198c"><code>b77a97d9ee603cb09adaa496ffb28589d794198c</code></a> |
 | Branch              | <code>main</code>                                                                                                                                         |
 | Tags at this commit | none                                                                                                                                                      |
 | Working tree        | clean                                                                                                                                                     |
@@ -2633,9 +2656,9 @@ The documentation and the package may be misaligned:
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>thorwhalen/kodokan</code>                                                            |
-| Run          | <a href="https://github.com/thorwhalen/kodokan/actions/runs/39438987114">39438987114</a>   |
+| Run          | <a href="https://github.com/thorwhalen/kodokan/actions/runs/39439916064">39439916064</a>   |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>54e14695cbde67447aac3293ec35f2045541412c</code> (in the history of the built commit) |
+| Event commit | <code>b77a97d9ee603cb09adaa496ffb28589d794198c</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -2660,13 +2683,13 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/kodokan/0.0.28/">0.0.28</a>, newer than the documented version (0.0.27).
+Latest release: <a href="https://pypi.org/project/kodokan/0.0.29/">0.0.29</a>, newer than the documented version (0.0.28).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/thorwhalen/kodokan && cd kodokan
-git checkout 54e14695cbde67447aac3293ec35f2045541412c
+git checkout b77a97d9ee603cb09adaa496ffb28589d794198c
 pip install "epythet==0.2.21"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```
