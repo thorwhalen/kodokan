@@ -26,8 +26,12 @@ def test_top_k_is_ranked_and_every_score_is_exposed(method):
     rec = _fitted(method)
     r = rec.recognize(np.full(5, 6.1), k=2)
     assert isinstance(r, Recognition) and r.best.technique == "uchi-mata"
-    assert [g.score for g in r.guesses] == sorted((g.score for g in r.guesses), reverse=True)
-    assert set(r.scores) == set(TECHNIQUES) and sum(r.scores.values()) == pytest.approx(1)
+    assert [g.score for g in r.guesses] == sorted(
+        (g.score for g in r.guesses), reverse=True
+    )
+    assert set(r.scores) == set(TECHNIQUES) and sum(r.scores.values()) == pytest.approx(
+        1
+    )
     assert r.score_of("uchi-mata") == r.best.score and r.score_of("tomoe-nage") == 0.0
 
 
@@ -38,7 +42,9 @@ def test_temperature_spreads_the_scores():
     X = np.vstack([rng.normal(c, 0.3, size=(4, 3)) for c in (0.0, 3.0)])
     y = np.repeat(TECHNIQUES[:2], 4)
     x = np.full(3, 0.5)
-    assert sharp.fit(X, y).recognize(x).best.score > soft.fit(X, y).recognize(x).best.score
+    assert (
+        sharp.fit(X, y).recognize(x).best.score > soft.fit(X, y).recognize(x).best.score
+    )
 
 
 def test_bad_use_is_refused():
@@ -51,7 +57,14 @@ def test_bad_use_is_refused():
 
 
 def _seg(i, a, b, fps=30):
-    return Segment(index=i, start_s=a / fps, end_s=b / fps, start_frame=a, end_frame=b, peak_activity=1.0)
+    return Segment(
+        index=i,
+        start_s=a / fps,
+        end_s=b / fps,
+        start_frame=a,
+        end_frame=b,
+        peak_activity=1.0,
+    )
 
 
 def test_offline_segments_are_each_recognized():
@@ -75,7 +88,9 @@ def _frames(fps=30, bursts=((60, 120), (200, 260)), n=340):
     for f in range(n):
         moving = any(a <= f < b for a, b in bursts)
         offset = 40 * np.sin(f / 2.0) if moving else 0.0
-        kp = np.concatenate([base + offset + rng.normal(0, 0.2, (17, 2)), np.ones((17, 1))], axis=1)
+        kp = np.concatenate(
+            [base + offset + rng.normal(0, 0.2, (17, 2)), np.ones((17, 1))], axis=1
+        )
         yield f, kp[None]
 
 
@@ -83,7 +98,11 @@ def test_live_recognizes_each_throw_once_after_it_closes():
     rec = _fitted()
     which = iter([0.0, 6.0])
     live = LiveRecognizer(
-        rec, fps=30, k=2, close_after_s=0.5, featurize=lambda ps, a, b: np.full(5, next(which))
+        rec,
+        fps=30,
+        k=2,
+        close_after_s=0.5,
+        featurize=lambda ps, a, b: np.full(5, next(which)),
     )
     found = []
     for f, kp in _frames():
@@ -131,6 +150,8 @@ def test_live_idle_jitter_is_not_a_throw():
     live = LiveRecognizer(_fitted(), fps=30, featurize=lambda ps, a, b: np.zeros(5))
     found = []
     for f in range(900):
-        kp = np.concatenate([base + rng.normal(0, 0.5, (17, 2)), np.ones((17, 1))], axis=1)
+        kp = np.concatenate(
+            [base + rng.normal(0, 0.5, (17, 2)), np.ones((17, 1))], axis=1
+        )
         found += live.push(kp[None], f)
     assert found == []

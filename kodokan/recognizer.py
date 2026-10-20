@@ -9,8 +9,8 @@ This module is the application facade over them:
   can show).
 - :func:`recognize_segments` — offline video: detect the throws in a whole pose
   sequence and recognize each.
-- :class:`LiveRecognizer` — live stream: push pose frames into a rolling buffer; each
-  throw is recognized once its segment has closed.
+- :class:`ThrowDetector` — a rolling pose buffer that reports each throw once its
+  segment has closed; :class:`LiveRecognizer` recognizes them (live stream mode).
 
 Scores are a softmax over negative distances to each technique's centroid, in the
 train-standardized (and, when scikit-learn is installed, LDA-projected) descriptor
@@ -244,40 +244,36 @@ def recognize_segments(
     ]
 
 
-class LiveRecognizer:
-    """Live mode: a rolling pose buffer; each throw is recognized once its segment closes.
+class ThrowDetector:
+    """A rolling pose buffer that reports each throw once, after its segment closes.
 
     Push one frame at a time (``(P, 17, 3)`` keypoints, as in :class:`PoseSequence`).
-    :meth:`push` returns the throws that closed with that frame, each recognized once.
-    A segment counts as closed when it ends at least ``close_after_s`` before the newest
-    frame; the buffer keeps the last ``buffer_s`` seconds of pushed frames (at ``fps``
-    frames a second: push every analysed frame, or pass the analysed rate as ``fps``).
-    A segment that mostly overlaps a throw already recognized is that throw.
+    :meth:`push` returns ``(buffer, segment)`` for the throws that closed with that
+    frame. A segment counts as closed when it ends at least ``close_after_s`` before
+    the newest frame; the buffer keeps the last ``buffer_s`` seconds of pushed frames
+    (at ``fps`` frames a second: push every analysed frame, or pass the analysed rate
+    as ``fps``). A segment that mostly overlaps a throw already reported is that throw.
     """
 
     def __init__(
         self,
-        recognizer: TechniqueRecognizer,
         *,
         fps: float,
         width: int = 0,
         height: int = 0,
-        k: int = 3,
         buffer_s: float = 20.0,
         close_after_s: float = 1.0,
-        featurize: Featurizer = pooled_demo_descriptor,
         segmenter: Callable[[PoseSequence], list[Segment]] = motion_segments,
     ):
         if fps <= 0:
             raise ValueError(f"fps must be positive, got {fps}")
-        self.recognizer, self.fps, self.k = recognizer, fps, k
-        self.size = (width, height)
+        self.fps, self.size = fps, (width, height)
         self.max_frames = max(int(buffer_s * fps), 2)
         self.close_after_s = close_after_s
-        self.featurize, self.segmenter = featurize, segmenter
+        self.segmenter = segmenter
         self._frames: list[np.ndarray] = []
         self._indices: list[int] = []
-        self._emitted: list[tuple[float, float]] = []  # throws already recognized
+        self._reported: list[tuple[float, float]] = []
 
     def buffer(self) -> PoseSequence:
         """The buffered frames as a :class:`PoseSequence` (people padded with NaN)."""
@@ -298,8 +294,8 @@ class LiveRecognizer:
 
     def push(
         self, keypoints, frame_index: int | None = None
-    ) -> list[tuple[Segment, Recognition]]:
-        """Add one frame; return the throws that closed with it, recognized."""
+    ) -> list[tuple[PoseSequence, Segment]]:
+        """Add one frame; return ``(buffer, segment)`` for each throw it closed."""
         kp = np.asarray(keypoints, dtype=float)
         if kp.ndim != 3 or kp.shape[1:] != (17, 3):
             raise ValueError(f"a frame is (persons, 17, 3) keypoints, got {kp.shape}")
@@ -317,22 +313,57 @@ class LiveRecognizer:
         pose_seq = self.buffer()
         newest_s = self._indices[-1] / self.fps
         oldest_s = self._indices[0] / self.fps
-        self._emitted = [(s, e) for s, e in self._emitted if e >= oldest_s]
+        self._reported = [(s, e) for s, e in self._reported if e >= oldest_s]
         closed = []
         for seg in self.segmenter(pose_seq):
             if seg.end_s > newest_s - self.close_after_s:
                 continue  # still open: the throw may go on
             # Re-segmenting a sliding buffer can move a throw's edges a little: one
-            # that mostly overlaps a throw already recognized is that throw.
+            # that mostly overlaps a throw already reported is that throw.
             length = max(seg.end_s - seg.start_s, 1e-9)
             if any(
                 (min(seg.end_s, e) - max(seg.start_s, s)) / length > 0.5
-                for s, e in self._emitted
+                for s, e in self._reported
             ):
                 continue
-            self._emitted.append((seg.start_s, seg.end_s))
-            rec = self.recognizer.recognize_clip(
-                pose_seq, seg.start_s, seg.end_s, k=self.k, featurize=self.featurize
-            )
-            closed.append((seg, rec))
+            self._reported.append((seg.start_s, seg.end_s))
+            closed.append((pose_seq, seg))
         return closed
+
+
+class LiveRecognizer:
+    """Live mode: each throw a :class:`ThrowDetector` reports, recognized once.
+
+    :meth:`push` takes one frame (``(P, 17, 3)`` keypoints) and returns
+    ``(segment, recognition)`` for the throws that closed with it. Detector options
+    (``buffer_s``, ``close_after_s``, ``segmenter``, ``width``, ``height``) pass through.
+    """
+
+    def __init__(
+        self,
+        recognizer: TechniqueRecognizer,
+        *,
+        fps: float,
+        k: int = 3,
+        featurize: Featurizer = pooled_demo_descriptor,
+        **detector_kwargs,
+    ):
+        self.recognizer, self.k, self.featurize = recognizer, k, featurize
+        self.detector = ThrowDetector(fps=fps, **detector_kwargs)
+
+    def buffer(self) -> PoseSequence:
+        return self.detector.buffer()
+
+    def push(
+        self, keypoints, frame_index: int | None = None
+    ) -> list[tuple[Segment, Recognition]]:
+        """Add one frame; return the throws that closed with it, recognized."""
+        return [
+            (
+                seg,
+                self.recognizer.recognize_clip(
+                    pose_seq, seg.start_s, seg.end_s, k=self.k, featurize=self.featurize
+                ),
+            )
+            for pose_seq, seg in self.detector.push(keypoints, frame_index)
+        ]

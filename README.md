@@ -141,7 +141,8 @@ are recorded in `[tool.wads.licence]` in `pyproject.toml`.
 | `kodokan.compare` | joint-angle (soft-)DTW comparison of two demonstrations |
 | `kodokan.score` | reference-based 0–100 scoring + per-joint/per-phase feedback |
 | `kodokan.descriptors` | experimental feature descriptors (for the eval harness) |
-| `kodokan.recognizer` | `TechniqueRecognizer` (top-k guesses + every technique's score), `recognize_segments` (a whole video), `LiveRecognizer` (rolling pose buffer, one guess per closed throw) |
+| `kodokan.recognizer` | `TechniqueRecognizer` (top-k guesses + every technique's score), `recognize_segments` (a whole video), `ThrowDetector` / `LiveRecognizer` (rolling pose buffer, one guess per closed throw) |
+| `kodokan.coach` | `coach` (0–100 + per-joint / per-phase deviation + EN/FR advice on the worst dimensions), `LiveCoach` (the same per detected throw on a live stream) |
 
 Runnable end-to-end examples live in `examples/` (`warmup_seoinage.py`,
 `batch_pipeline.py`, `segment_review.py`, `compare_demos.py`, `score_demos.py`,
