@@ -218,6 +218,26 @@ def test_loo_medoid_separability_separable():
     assert rep["auc"] == 1.0
 
 
+def test_paired_bootstrap_separability_brackets_and_pairs():
+    import numpy as np
+    from kodokan.recognize import loo_medoid_separability, paired_bootstrap_separability
+
+    rng = np.random.default_rng(0)
+    # two well-separated "techniques" of 1-D sequences, 6 demos each
+    techs = [[rng.normal(m, 0.1, (5, 1)) for _ in range(6)] for m in (0.0, 3.0)]
+    dist = lambda a, b: float(abs(a.mean() - b.mean()))  # noqa: E731
+    rep = loo_medoid_separability(techs, distance=dist, per_demo=True)
+    rows = rep["per_demo"]
+    assert len(rows) == rep["n_demos"] == 12 and all(r["correct"] for r in rows)
+    same = paired_bootstrap_separability(rows, rows, n_boot=200)
+    assert same["acc_diff"] == [0.0, 0.0] and same["auc_diff"] == [0.0, 0.0]  # paired
+    assert same["acc_a"] == [1.0, 1.0]
+    with pytest.raises(ValueError):
+        paired_bootstrap_separability(rows, rows[:-1])
+    with pytest.raises(ValueError, match="technique order"):
+        paired_bootstrap_separability(rows, rows[::-1])
+    assert "per_demo" not in loo_medoid_separability(techs, distance=dist)  # opt-in
+
 def test_similarity_from_confusion():
     from kodokan.recognize import similarity_from_confusion
 
