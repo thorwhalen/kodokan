@@ -367,3 +367,41 @@ class LiveRecognizer:
             )
             for pose_seq, seg in self.detector.push(keypoints, frame_index)
         ]
+
+
+def loo_top_k_accuracy(
+    X,
+    y,
+    *,
+    ks: Sequence[int] = (1, 3, 5),
+    groups=None,
+    method: str = "lda",
+) -> dict[int, float]:
+    """Leave-one-out (or leave-one-group-out) top-k accuracy of :class:`TechniqueRecognizer`.
+
+    The share of held-out demos whose true technique is among the recognizer's ``k``
+    best guesses, for each ``k`` in ``ks``: the number the top-k app (#3) shows, next
+    to top-1 from :func:`kodokan.recognize.loo_pooled_predict`. Pass ``groups`` (e.g.
+    the source clip of each demo) to hold out whole groups. A held-out demo whose
+    technique is absent from its training fold counts as a miss.
+
+    >>> rng = np.random.default_rng(0)
+    >>> X = np.vstack([rng.normal(c, 1.0, size=(4, 3)) for c in (0.0, 1.0, 2.0)])
+    >>> y = np.repeat(["a", "b", "c"], 4)
+    >>> acc = loo_top_k_accuracy(X, y, ks=(1, 3), method="centroid")
+    >>> acc[3]
+    1.0
+    """
+    X, y = np.asarray(X, dtype=float), np.asarray(y)
+    groups = np.asarray(groups) if groups is not None else None
+    hits = {k: 0 for k in ks}
+    idx = np.arange(len(X))
+    for i in idx:
+        train = (groups != groups[i]) if groups is not None else (idx != i)
+        if len(np.unique(y[train])) < 2:
+            continue  # nothing to rank against: a miss
+        rec = TechniqueRecognizer(method=method).fit(X[train], y[train])
+        ranked = [g.technique for g in rec.recognize(X[i], k=max(ks)).guesses]
+        for k in ks:
+            hits[k] += str(y[i]) in ranked[:k]
+    return {k: round(hits[k] / len(X), 3) for k in ks}

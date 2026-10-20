@@ -155,3 +155,15 @@ def test_live_idle_jitter_is_not_a_throw():
         )
         found += live.push(kp[None], f)
     assert found == []
+
+
+def test_loo_top_k_accuracy_grows_with_k_and_respects_groups():
+    from kodokan.recognizer import loo_top_k_accuracy
+
+    rng = np.random.default_rng(7)
+    X = np.vstack([rng.normal(c, 1.2, size=(5, 4)) for c in (0.0, 1.0, 2.0, 3.0)])
+    y = np.repeat(["a", "b", "c", "d"], 5)
+    acc = loo_top_k_accuracy(X, y, ks=(1, 2, 4), method="centroid")
+    assert acc[1] <= acc[2] <= acc[4] == 1.0
+    # one group per technique: its technique is never in the training fold
+    assert loo_top_k_accuracy(X, y, ks=(4,), groups=y, method="centroid") == {4: 0.0}
