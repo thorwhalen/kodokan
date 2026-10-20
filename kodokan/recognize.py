@@ -193,9 +193,7 @@ def _angle_mirror() -> np.ndarray:
     from kodokan.compare import ANGLE_NAMES
 
     swap = {"l_": "r_", "r_": "l_"}
-    return np.array(
-        [ANGLE_NAMES.index(swap[n[:2]] + n[2:]) for n in ANGLE_NAMES]
-    )
+    return np.array([ANGLE_NAMES.index(swap[n[:2]] + n[2:]) for n in ANGLE_NAMES])
 
 
 def mirror_feature(feat: np.ndarray, *, mode: str) -> np.ndarray:
