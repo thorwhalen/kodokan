@@ -32,7 +32,9 @@ from kodokan.recognizer import (
     Guess,
     recognize_segments,
     LiveRecognizer,
+    ThrowDetector,
 )
+from kodokan.coach import coach, Coaching, LiveCoach
 from kodokan.flashcards import (
     make_problem,
     build_catalog,
@@ -69,6 +71,10 @@ __all__ = [
     "Guess",
     "recognize_segments",
     "LiveRecognizer",
+    "ThrowDetector",
+    "coach",
+    "Coaching",
+    "LiveCoach",
     "make_problem",
     "build_catalog",
     "clip_filename",
