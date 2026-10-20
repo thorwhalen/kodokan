@@ -52,7 +52,9 @@ def _check_user(user: str) -> str:
     return user
 
 
-def quiz_stores(directory: PathLike | None = None) -> tuple[MutableMapping, MutableMapping]:
+def quiz_stores(
+    directory: PathLike | None = None,
+) -> tuple[MutableMapping, MutableMapping]:
     """``(responses, problems)`` as ``dol`` JSON-file stores under the data root."""
     from dol import JsonFiles
 
@@ -110,7 +112,9 @@ class Quiz:
     def history(self, user: str) -> list[dict]:
         """The user's answered-problem records, oldest first."""
         prefix = f"{_check_user(user)}__"
-        records = [self.responses[k] for k in list(self.responses) if k.startswith(prefix)]
+        records = [
+            self.responses[k] for k in list(self.responses) if k.startswith(prefix)
+        ]
         return sorted(records, key=lambda r: r.get("ts_answered") or "")
 
     def stats(self, user: str) -> dict[str, dict]:
@@ -139,7 +143,12 @@ class Quiz:
         keys = [k for k in (study_set or self.catalog) if k in self.catalog]
         chosen = learning.make_strategy(strategy)
         selection = chosen.next_selection(
-            history, keys, mode=mode, similarity=self.similarity, now=self.now(), rng=rng
+            history,
+            keys,
+            mode=mode,
+            similarity=self.similarity,
+            now=self.now(),
+            rng=rng,
         )
         problem = problem_from_keys(
             self.catalog,
@@ -177,12 +186,18 @@ class Quiz:
 
         key = f"{problem_id}.json"
         if key not in self.problems:
-            raise KeyError(f"no open problem {problem_id!r}: never issued, or already answered")
+            raise KeyError(
+                f"no open problem {problem_id!r}: never issued, or already answered"
+            )
         issued = self.problems[key]
         problem = Problem(**issued["problem"])
         if chosen_index is not None and not 0 <= chosen_index < len(problem.choices):
-            raise ValueError(f"chosen_index must be in 0..{len(problem.choices) - 1}, not {chosen_index}")
-        chosen_key = None if chosen_index is None else problem.choices[chosen_index]["key"]
+            raise ValueError(
+                f"chosen_index must be in 0..{len(problem.choices) - 1}, not {chosen_index}"
+            )
+        chosen_key = (
+            None if chosen_index is None else problem.choices[chosen_index]["key"]
+        )
         ts = self.now().isoformat()
         record = {
             "response_id": uuid.uuid4().hex,
@@ -197,12 +212,18 @@ class Quiz:
             "choice_keys": [c["key"] for c in problem.choices],
             "chosen_key": chosen_key,
             "correct": chosen_key == problem.target_key,
-            "score": 0.0 if chosen_key is None else score_response(problem.target_key, chosen_key, similarity=self.similarity),
+            "score": 0.0
+            if chosen_key is None
+            else score_response(
+                problem.target_key, chosen_key, similarity=self.similarity
+            ),
             "timed_out": bool(timed_out or chosen_index is None),
             "response_time_ms": response_time_ms,
             "ts_presented": issued["ts_presented"],
             "ts_answered": ts,
         }
-        self.responses[f"{issued['user']}__{ts}__{record['response_id']}.json".replace(":", "-")] = record
+        self.responses[
+            f"{issued['user']}__{ts}__{record['response_id']}.json".replace(":", "-")
+        ] = record
         del self.problems[key]
         return record
