@@ -50,6 +50,13 @@ def main():
         action="store_true",
         help="add horizontally mirrored copies of the train-fold demos (pool_* only)",
     )
+    ap.add_argument(
+        "--topk",
+        type=int,
+        nargs="*",
+        default=[],
+        help="also report LOO top-k accuracy of the app recognizer (pool_* only), e.g. 1 3 5",
+    )
     args = ap.parse_args()
 
     ps, ss = store.pose_store(), store.segments_store()
@@ -112,6 +119,13 @@ def main():
         "top_confusions": confusion_pairs(y, preds, top=5),
         "caveat": "within-clip LOO (class==1 video); upper bound, not clip-independent",
     }
+    if args.topk and args.method.startswith("pool_"):
+        from kodokan.recognizer import loo_top_k_accuracy
+
+        rec_method = "lda" if args.method == "pool_lda_knn" else "centroid"
+        out["top_k_accuracy"] = loo_top_k_accuracy(
+            X, y, ks=args.topk, method=rec_method
+        )
     if tori_decisions:
         out["tori_heuristic"] = tori_decision_stats(tori_decisions)
     print(json.dumps(out))
