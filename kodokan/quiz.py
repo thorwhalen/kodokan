@@ -110,7 +110,9 @@ class Quiz:
         builders = {"pose": build_confusability, "model": build_model_confusability}
         kind = kwargs.pop("confusability", "pose")
         if kind not in builders:
-            raise ValueError(f"confusability must be one of {sorted(builders)}, got {kind!r}")
+            raise ValueError(
+                f"confusability must be one of {sorted(builders)}, got {kind!r}"
+            )
         catalog = kwargs.pop("catalog", None) or build_catalog()
         if kwargs.get("similarity") is None:
             kwargs["similarity"] = builders[kind](catalog)
