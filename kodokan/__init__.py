@@ -35,6 +35,7 @@ from kodokan.recognizer import (
     ThrowDetector,
 )
 from kodokan.coach import coach, Coaching, LiveCoach
+from kodokan.testmode import TechniqueTest, LiveTechniqueTest, TestResult
 from kodokan.flashcards import (
     make_problem,
     build_catalog,
@@ -75,6 +76,9 @@ __all__ = [
     "coach",
     "Coaching",
     "LiveCoach",
+    "TechniqueTest",
+    "LiveTechniqueTest",
+    "TestResult",
     "make_problem",
     "build_catalog",
     "clip_filename",
