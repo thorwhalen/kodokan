@@ -80,3 +80,29 @@ def test_live_coach_coaches_each_detected_throw():
     assert len(found) == 2
     assert all(c.technique == "seoi-nage" and c.lang == "fr" for _, c in found)
     assert any("genou gauche" in t for t in found[0][1].tips)
+
+
+@pytest.mark.parametrize(
+    "frames", [np.empty((0, 8)), np.zeros((1, 8)), np.full((5, 8), np.nan)]
+)
+def test_a_window_too_short_to_compare_is_reported_not_raised(frames):
+    c = coach(frames, _reference(), technique="o-goshi")
+    assert c.score is None and c.reason == "too_short" and c.tips == ()
+
+
+def test_a_close_performance_gets_no_correction():
+    t = np.linspace(0, 1, 30)[:, None]
+    c = coach(np.hstack([np.sin(t * 3)] * 8), _reference(), lang="fr")
+    assert c.tips == (ADVICE["fr"]["close"],)
+
+
+def test_a_custom_language_brings_its_own_side_words():
+    de = {
+        **ADVICE["en"],
+        "sides": {"l": ("linke", "linke"), "r": ("rechte", "rechte")},
+        "knee": "Dein {side} Knie weicht um {deg:.0f}° ab.",
+    }
+    c = coach(_off("l_knee"), _reference(), lang="de", advice={**ADVICE, "de": de})
+    assert any("linke Knie" in t for t in c.tips)
+    with pytest.raises(ValueError, match="sides"):
+        coach(_off("l_knee"), _reference(), lang="xx", advice={"xx": ADVICE["en"]})

@@ -26,6 +26,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
+from typing import Any
 
 import numpy as np
 
@@ -48,7 +49,9 @@ _SIDES = {
 }
 
 #: Advice templates per language: one per joint kind (``{side}`` or ``{side_f}``,
-#: ``{deg}``) and per
+#: ``{deg}``), one per phase, ``headline`` and ``close`` (nothing worth a tip). A table
+#: for another language may carry its own side words as ``"sides"``:
+#: ``{"l": (masculine, feminine), "r": (...)}``. One per
 #: phase, plus the headline. Keys must cover every joint kind and every phase.
 ADVICE: dict[str, dict[str, str]] = {
     "en": {
@@ -65,6 +68,7 @@ ADVICE: dict[str, dict[str, str]] = {
         "balance before you turn in.",
         "tsukuri": "Most of the difference is in tsukuri: step in faster and closer.",
         "kake": "Most of the difference is in kake: commit through the finish.",
+        "close": "Close to the reference: keep it up.",
     },
     "fr": {
         "headline": "{technique} : {score}/100.",
@@ -82,6 +86,7 @@ ADVICE: dict[str, dict[str, str]] = {
         "plus près.",
         "kake": "L'essentiel de l'écart est dans le kake : allez au bout de la "
         "projection.",
+        "close": "Proche de la référence : continuez ainsi.",
     },
 }
 
@@ -99,6 +104,9 @@ class Coaching:
     worst_joint: str | None = None
     worst_phase: str | None = None
     tips: tuple[str, ...] = ()
+    #: Why there is no score or tip: ``"too_short"`` when the throw window had fewer
+    #: than two usable frames to compare.
+    reason: str | None = None
 
     @property
     def text(self) -> str:
@@ -106,9 +114,26 @@ class Coaching:
         return " ".join(self.tips)
 
 
-def _joint_tip(joint: str, deg: float, table: Mapping[str, str], lang: str) -> str:
+def _sides(lang: str, table: Mapping[str, Any]) -> Mapping[str, tuple[str, str]]:
+    sides = table.get("sides") or _SIDES.get(lang)
+    if sides is None:
+        raise ValueError(
+            f"no joint-side words for {lang!r}: give its advice table a "
+            '"sides" entry, {"l": (masculine, feminine), "r": (masculine, feminine)}'
+        )
+    return sides
+
+
+def _check_lang(lang: str, advice: Mapping[str, Mapping[str, Any]]) -> None:
+    """Fail at once, not at the first throw, on a language that cannot be advised in."""
+    if lang not in advice:
+        raise ValueError(f"no advice in {lang!r}; available: {sorted(advice)}")
+    _sides(lang, advice[lang])
+
+
+def _joint_tip(joint: str, deg: float, table: Mapping[str, Any], lang: str) -> str:
     side, kind = joint.split("_", 1)
-    masculine, feminine = _SIDES[lang][side]
+    masculine, feminine = _sides(lang, table)[side]
     return table[kind].format(side=masculine, side_f=feminine, deg=deg)
 
 
@@ -119,7 +144,8 @@ def coach(
     technique: str | None = None,
     lang: str = "en",
     n_tips: int = 2,
-    advice: Mapping[str, Mapping[str, str]] = ADVICE,
+    min_deviation_deg: float = 10.0,
+    advice: Mapping[str, Mapping[str, Any]] = ADVICE,
 ) -> Coaching:
     """Score ``query_features`` against ``reference`` and advise on the worst dimensions.
 
@@ -128,16 +154,26 @@ def coach(
     :param reference: the target technique's :func:`~kodokan.score.build_reference`.
     :param lang: a key of ``advice`` (``"en"`` or ``"fr"`` built in).
     :param n_tips: joint tips to give, worst first, after the phase tip.
+    :param min_deviation_deg: a phase or joint closer than this gets no tip; with
+        none left, the advice says the performance is close to the reference.
+
+    A window with fewer than two usable frames cannot be compared: it gets a
+    :class:`Coaching` with no score and ``reason="too_short"`` rather than an error,
+    so a live loop goes on.
     """
-    if lang not in advice:
-        raise ValueError(f"no advice in {lang!r}; available: {sorted(advice)}")
-    if lang not in _SIDES:
-        raise ValueError(f"no joint-side words for {lang!r}; add them to _SIDES")
+    _check_lang(lang, advice)
     if reference.get("reference") is None:
         raise ValueError("the reference has no demonstration to compare with")
     table = advice[lang]
+    if len(query_features) < 2 or not np.isfinite(query_features).any():
+        return Coaching(technique, lang, None, None, reason="too_short")
     graded = score(query_features, reference)
-    fb = feedback(query_features, reference, n_phases=len(PHASES))
+    if graded["score"] is not None and not np.isfinite(graded["score"]):
+        graded = {**graded, "score": None}
+    try:
+        fb = feedback(query_features, reference, n_phases=len(PHASES))
+    except ValueError:  # nothing aligned (an all-NaN comparison)
+        return Coaching(technique, lang, None, None, reason="too_short")
     per_joint = {k: v for k, v in fb["per_angle_deg"].items() if np.isfinite(v)}
     per_phase = {p: v for p, v in zip(PHASES, fb["per_phase_deg"]) if np.isfinite(v)}
     worst_phase = max(per_phase, key=per_phase.get) if per_phase else None
@@ -147,9 +183,13 @@ def coach(
         tips.append(
             table["headline"].format(technique=technique, score=round(graded["score"]))
         )
-    if worst_phase is not None:
-        tips.append(table[worst_phase])
-    tips += [_joint_tip(j, per_joint[j], table, lang) for j in ranked[:n_tips]]
+    off = [j for j in ranked if per_joint[j] >= min_deviation_deg][:n_tips]
+    corrections = [_joint_tip(j, per_joint[j], table, lang) for j in off]
+    # A phase averages every joint, so it is named when some joint is off, or when the
+    # whole phase is.
+    if worst_phase is not None and (off or per_phase[worst_phase] >= min_deviation_deg):
+        corrections.insert(0, table[worst_phase])
+    tips += corrections or [table["close"]]
     return Coaching(
         technique=technique,
         lang=lang,
@@ -180,12 +220,13 @@ class LiveCoach:
         fps: float,
         lang: str = "en",
         n_tips: int = 2,
-        advice: Mapping[str, Mapping[str, str]] = ADVICE,
+        advice: Mapping[str, Mapping[str, Any]] = ADVICE,
         featurize: AngleFeaturizer = demo_features,
         **detector_kwargs,
     ):
-        if lang not in advice:
-            raise ValueError(f"no advice in {lang!r}; available: {sorted(advice)}")
+        _check_lang(lang, advice)
+        if reference.get("reference") is None:
+            raise ValueError("the reference has no demonstration to compare with")
         self.target, self.reference = target, reference
         self.lang, self.n_tips, self.advice, self.featurize = (
             lang,
@@ -218,7 +259,7 @@ class LiveCoach:
 def _check_advice_tables() -> None:
     kinds = {name.split("_", 1)[1] for name in ANGLE_NAMES}
     for lang, table in ADVICE.items():
-        missing = (kinds | set(PHASES) | {"headline"}) - set(table)
+        missing = (kinds | set(PHASES) | {"headline", "close"}) - set(table)
         assert not missing, f"ADVICE[{lang!r}] lacks {sorted(missing)}"
 
 
