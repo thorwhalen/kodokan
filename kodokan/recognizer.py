@@ -60,7 +60,9 @@ def pooled_demo_descriptor(
     levels: Sequence[int] = DFLT_LEVELS,
 ) -> np.ndarray:
     """The default :data:`Featurizer`: per-frame demo features, temporal-pyramid pooled."""
-    return pooled_descriptor(demo_feature(pose_seq, start_s, end_s, mode=mode), levels=levels)
+    return pooled_descriptor(
+        demo_feature(pose_seq, start_s, end_s, mode=mode), levels=levels
+    )
 
 
 @dataclass(frozen=True)
@@ -110,7 +112,9 @@ class TechniqueRecognizer:
         """Fit on pooled descriptors ``X`` (one row per demo) and technique labels ``y``."""
         X, y = np.asarray(X, dtype=float), np.asarray(y)
         if X.ndim != 2 or len(X) != len(y) or len(X) == 0:
-            raise ValueError("X must be a non-empty (n_demos, n_features) array matching y")
+            raise ValueError(
+                "X must be a non-empty (n_demos, n_features) array matching y"
+            )
         self.classes_ = np.unique(y)
         sd = X.std(0)
         self._mu, self._sd = X.mean(0), np.where(sd > _MIN_SD, sd, 1.0)
@@ -148,13 +152,17 @@ class TechniqueRecognizer:
         if spread and np.median(np.concatenate(spread)) > 0:
             return float(np.median(np.concatenate(spread)))
         if len(self._centroids) > 1:
-            gaps = np.linalg.norm(self._centroids[:, None] - self._centroids[None], axis=-1)
+            gaps = np.linalg.norm(
+                self._centroids[:, None] - self._centroids[None], axis=-1
+            )
             between = gaps[np.triu_indices(len(gaps), 1)]
             if np.median(between) > 0:
                 return float(np.median(between)) / 2
         return 1.0
 
-    def fit_demos(self, feature_seqs, labels, *, levels=DFLT_LEVELS) -> TechniqueRecognizer:
+    def fit_demos(
+        self, feature_seqs, labels, *, levels=DFLT_LEVELS
+    ) -> TechniqueRecognizer:
         """Fit on per-frame feature sequences (e.g. :func:`kodokan.recognize.demo_feature`)."""
         X = np.stack([pooled_descriptor(f, levels=levels) for f in feature_seqs])
         return self.fit(X, labels)
@@ -210,7 +218,9 @@ def motion_segments(
     only those whose peak energy reaches ``min_peak_activity`` (an absolute floor:
     the hysteresis thresholds are quantiles, so an idle buffer still has "segments")."""
     energy = pose_motion_energy(pose_seq)
-    found = find_segments(energy, pose_seq.frame_indices, pose_seq.fps, **segment_kwargs)
+    found = find_segments(
+        energy, pose_seq.frame_indices, pose_seq.fps, **segment_kwargs
+    )
     return [s for s in found if s.peak_activity >= min_peak_activity]
 
 
@@ -224,7 +234,12 @@ def recognize_segments(
 ) -> list[tuple[Segment, Recognition]]:
     """Offline video mode: every detected throw in ``pose_seq``, recognized."""
     return [
-        (seg, recognizer.recognize_clip(pose_seq, seg.start_s, seg.end_s, k=k, featurize=featurize))
+        (
+            seg,
+            recognizer.recognize_clip(
+                pose_seq, seg.start_s, seg.end_s, k=k, featurize=featurize
+            ),
+        )
         for seg in segmenter(pose_seq)
     ]
 
@@ -281,12 +296,18 @@ class LiveRecognizer:
             video_path="",
         )
 
-    def push(self, keypoints, frame_index: int | None = None) -> list[tuple[Segment, Recognition]]:
+    def push(
+        self, keypoints, frame_index: int | None = None
+    ) -> list[tuple[Segment, Recognition]]:
         """Add one frame; return the throws that closed with it, recognized."""
         kp = np.asarray(keypoints, dtype=float)
         if kp.ndim != 3 or kp.shape[1:] != (17, 3):
             raise ValueError(f"a frame is (persons, 17, 3) keypoints, got {kp.shape}")
-        index = frame_index if frame_index is not None else (self._indices[-1] + 1 if self._indices else 0)
+        index = (
+            frame_index
+            if frame_index is not None
+            else (self._indices[-1] + 1 if self._indices else 0)
+        )
         self._frames.append(kp)
         self._indices.append(int(index))
         if len(self._frames) > self.max_frames:
