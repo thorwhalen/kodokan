@@ -248,3 +248,67 @@ def test_similarity_from_confusion():
     assert "c" not in sym["a"] and sym["c"] == {}
     directed = similarity_from_confusion(y_true, y_pred, symmetric=False)
     assert directed["a"] == {"b": 0.5} and directed["b"] == {"a": 0.5}
+
+
+def _mirrored_seq(seq):
+    from kodokan.pose import PoseSequence
+    from kodokan.recognize import COCO_MIRROR
+
+    kp = seq.keypoints[:, :, COCO_MIRROR].copy()
+    kp[..., 0] = seq.width - kp[..., 0]
+    return PoseSequence(
+        kp, seq.frame_indices, seq.fps, seq.width, seq.height,
+        seq.backend, seq.video_path, seq.source_url,
+    )
+
+
+@pytest.mark.parametrize("mode", ["primary_angles", "tori_angles", "tori_angles_pos"])
+def test_mirror_feature_equals_features_of_the_mirrored_clip(synth_seq, mode):
+    """#7 lever 4: mirroring at the feature level is exact (no pose re-run)."""
+    from kodokan.recognize import demo_feature, mirror_feature
+
+    f = demo_feature(synth_seq, 0.0, 2.0, mode=mode)
+    g = demo_feature(_mirrored_seq(synth_seq), 0.0, 2.0, mode=mode)
+    np.testing.assert_allclose(mirror_feature(f, mode=mode), g, rtol=1e-5, atol=1e-5)  # float32 keypoints
+    np.testing.assert_allclose(mirror_feature(mirror_feature(f, mode=mode), mode=mode), f)
+
+
+def _handedness_set(n_classes=12, per_class=2, noise=0.6, seed=0):
+    """Synthetic pooled demos: each class a template, each demo left- or right-handed."""
+    from kodokan.recognize import mirror_feature, pooled_descriptor
+
+    rng = np.random.RandomState(seed)
+    feats, labels = [], []
+    for c in range(n_classes):
+        template = rng.randn(20, 42)
+        for j in range(per_class):
+            f = template + noise * rng.randn(*template.shape)
+            if j % 2:  # half the demos are the other hand
+                f = mirror_feature(f, mode="tori_angles_pos")
+            feats.append(f)
+            labels.append(c)
+    X = np.stack([pooled_descriptor(f) for f in feats])
+    X_aug = np.stack(
+        [pooled_descriptor(mirror_feature(f, mode="tori_angles_pos")) for f in feats]
+    )
+    return X, X_aug, np.array(labels)
+
+
+def test_mirror_augmentation_recovers_the_other_hand():
+    from kodokan.recognize import loo_pooled_predict
+
+    X, X_aug, y = _handedness_set()
+    plain = (loo_pooled_predict(X, y, method="knn", k=1) == y).mean()
+    mirrored = (loo_pooled_predict(X, y, method="knn", k=1, X_aug=X_aug) == y).mean()
+    assert mirrored > plain
+
+
+def test_mirror_augmentation_never_trains_on_the_held_out_copy():
+    from kodokan.recognize import loo_pooled_predict
+
+    # one sample per class: only its own mirror could match it, and that must not train
+    rng = np.random.RandomState(0)
+    X = rng.randn(5, 6)
+    y = np.arange(5)
+    preds = loo_pooled_predict(X, y, method="knn", k=1, X_aug=X.copy())
+    assert not (preds == y).any()
