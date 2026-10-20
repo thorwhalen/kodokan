@@ -115,15 +115,39 @@ def make_problem(
     if mode not in MODES:
         raise ValueError(f"mode must be one of {MODES}")
     rng = rng or random.Random()
-    clip_for = clip_for or (lambda k: (catalog[k].get("clips") or [None])[0])
 
     distractors = confusable_distractors(
         target_key, list(catalog), n=n_choices - 1, similarity=similarity, rng=rng
     )
     option_keys = distractors + [target_key]
     rng.shuffle(option_keys)
-    correct_index = option_keys.index(target_key)
+    return problem_from_keys(
+        catalog,
+        target_key,
+        option_keys,
+        mode=mode,
+        clip_for=clip_for,
+        problem_id=f"{mode}-{target_key}-{rng.randrange(10**9)}",
+    )
 
+
+def problem_from_keys(
+    catalog: dict,
+    target_key: str,
+    option_keys: list[str],
+    *,
+    mode: str = "video_to_name",
+    clip_for=None,
+    problem_id: str,
+) -> Problem:
+    """Assemble a :class:`Problem` from an already-chosen, ordered option set.
+
+    The seam between *choosing* (``make_problem``, or a ``learning.Strategy``) and
+    *presenting*: whoever picks the options, the problem looks the same.
+    """
+    if mode not in MODES:
+        raise ValueError(f"mode must be one of {MODES}")
+    clip_for = clip_for or (lambda k: (catalog[k].get("clips") or [None])[0])
     if mode == "video_to_name":
         prompt = {"clip": clip_for(target_key)}
         choices = [{"key": k, "name": catalog[k]["name"]} for k in option_keys]
@@ -133,14 +157,13 @@ def make_problem(
             {"key": k, "name": catalog[k]["name"], "clip": clip_for(k)}
             for k in option_keys
         ]
-
     return Problem(
-        problem_id=f"{mode}-{target_key}-{rng.randrange(10**9)}",
+        problem_id=problem_id,
         mode=mode,
         target_key=target_key,
         prompt=prompt,
         choices=choices,
-        correct_index=correct_index,
+        correct_index=list(option_keys).index(target_key),
     )
 
 
