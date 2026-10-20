@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="../../_static/documentation_options.js?v=5d650c58"></script>
+    <script src="../../_static/documentation_options.js?v=cee5022b"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -411,7 +411,7 @@ window.runMermaid = runMermaid;</script>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.25" />
+  <meta name="docsearch:version" content="0.0.27" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -709,8 +709,8 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">  can show).</span>
 <span class="sd">- :func:`recognize_segments` — offline video: detect the throws in a whole pose</span>
 <span class="sd">  sequence and recognize each.</span>
-<span class="sd">- :class:`LiveRecognizer` — live stream: push pose frames into a rolling buffer; each</span>
-<span class="sd">  throw is recognized once its segment has closed.</span>
+<span class="sd">- :class:`ThrowDetector` — a rolling pose buffer that reports each throw once its</span>
+<span class="sd">  segment has closed; :class:`LiveRecognizer` recognizes them (live stream mode).</span>
 
 <span class="sd">Scores are a softmax over negative distances to each technique's centroid, in the</span>
 <span class="sd">train-standardized (and, when scikit-learn is installed, LDA-projected) descriptor</span>
@@ -762,7 +762,9 @@ window.runMermaid = runMermaid;</script>
     <span class="n">levels</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">DFLT_LEVELS</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""The default :data:`Featurizer`: per-frame demo features, temporal-pyramid pooled."""</span>
-    <span class="k">return</span> <span class="n">pooled_descriptor</span><span class="p">(</span><span class="n">demo_feature</span><span class="p">(</span><span class="n">pose_seq</span><span class="p">,</span> <span class="n">start_s</span><span class="p">,</span> <span class="n">end_s</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">),</span> <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">pooled_descriptor</span><span class="p">(</span>
+        <span class="n">demo_feature</span><span class="p">(</span><span class="n">pose_seq</span><span class="p">,</span> <span class="n">start_s</span><span class="p">,</span> <span class="n">end_s</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">),</span> <span class="n">levels</span><span class="o">=</span><span class="n">levels</span>
+    <span class="p">)</span></div>
 
 
 
@@ -826,7 +828,9 @@ window.runMermaid = runMermaid;</script>
 <span class="w">        </span><span class="sd">"""Fit on pooled descriptors ``X`` (one row per demo) and technique labels ``y``."""</span>
         <span class="n">X</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">X</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"X must be a non-empty (n_demos, n_features) array matching y"</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">"X must be a non-empty (n_demos, n_features) array matching y"</span>
+            <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">classes_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
         <span class="n">sd</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_mu</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sd</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">sd</span> <span class="o">&gt;</span> <span class="n">_MIN_SD</span><span class="p">,</span> <span class="n">sd</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
@@ -865,7 +869,9 @@ window.runMermaid = runMermaid;</script>
         <span class="k">if</span> <span class="n">spread</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">spread</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">spread</span><span class="p">)))</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_centroids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">gaps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_centroids</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_centroids</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">gaps</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_centroids</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_centroids</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span>
+            <span class="p">)</span>
             <span class="n">between</span> <span class="o">=</span> <span class="n">gaps</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">triu_indices</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">gaps</span><span class="p">),</span> <span class="mi">1</span><span class="p">)]</span>
             <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">between</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">between</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span>
@@ -873,7 +879,9 @@ window.runMermaid = runMermaid;</script>
 
 <div class="viewcode-block" id="TechniqueRecognizer.fit_demos">
 <a class="viewcode-back" href="../../_autosummary/kodokan.recognizer.html#kodokan.TechniqueRecognizer.fit_demos">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">fit_demos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">feature_seqs</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="n">DFLT_LEVELS</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TechniqueRecognizer</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fit_demos</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">feature_seqs</span><span class="p">,</span> <span class="n">labels</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="n">DFLT_LEVELS</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TechniqueRecognizer</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""Fit on per-frame feature sequences (e.g. :func:`kodokan.recognize.demo_feature`)."""</span>
         <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">pooled_descriptor</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">)</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">feature_seqs</span><span class="p">])</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">labels</span><span class="p">)</span></div>
@@ -942,7 +950,9 @@ window.runMermaid = runMermaid;</script>
 <span class="sd">    only those whose peak energy reaches ``min_peak_activity`` (an absolute floor:</span>
 <span class="sd">    the hysteresis thresholds are quantiles, so an idle buffer still has "segments")."""</span>
     <span class="n">energy</span> <span class="o">=</span> <span class="n">pose_motion_energy</span><span class="p">(</span><span class="n">pose_seq</span><span class="p">)</span>
-    <span class="n">found</span> <span class="o">=</span> <span class="n">find_segments</span><span class="p">(</span><span class="n">energy</span><span class="p">,</span> <span class="n">pose_seq</span><span class="o">.</span><span class="n">frame_indices</span><span class="p">,</span> <span class="n">pose_seq</span><span class="o">.</span><span class="n">fps</span><span class="p">,</span> <span class="o">**</span><span class="n">segment_kwargs</span><span class="p">)</span>
+    <span class="n">found</span> <span class="o">=</span> <span class="n">find_segments</span><span class="p">(</span>
+        <span class="n">energy</span><span class="p">,</span> <span class="n">pose_seq</span><span class="o">.</span><span class="n">frame_indices</span><span class="p">,</span> <span class="n">pose_seq</span><span class="o">.</span><span class="n">fps</span><span class="p">,</span> <span class="o">**</span><span class="n">segment_kwargs</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">found</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">peak_activity</span> <span class="o">&gt;=</span> <span class="n">min_peak_activity</span><span class="p">]</span></div>
 
 
@@ -959,51 +969,52 @@ window.runMermaid = runMermaid;</script>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Segment</span><span class="p">,</span> <span class="n">Recognition</span><span class="p">]]:</span>
 <span class="w">    </span><span class="sd">"""Offline video mode: every detected throw in ``pose_seq``, recognized."""</span>
     <span class="k">return</span> <span class="p">[</span>
-        <span class="p">(</span><span class="n">seg</span><span class="p">,</span> <span class="n">recognizer</span><span class="o">.</span><span class="n">recognize_clip</span><span class="p">(</span><span class="n">pose_seq</span><span class="p">,</span> <span class="n">seg</span><span class="o">.</span><span class="n">start_s</span><span class="p">,</span> <span class="n">seg</span><span class="o">.</span><span class="n">end_s</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">featurize</span><span class="o">=</span><span class="n">featurize</span><span class="p">))</span>
+        <span class="p">(</span>
+            <span class="n">seg</span><span class="p">,</span>
+            <span class="n">recognizer</span><span class="o">.</span><span class="n">recognize_clip</span><span class="p">(</span>
+                <span class="n">pose_seq</span><span class="p">,</span> <span class="n">seg</span><span class="o">.</span><span class="n">start_s</span><span class="p">,</span> <span class="n">seg</span><span class="o">.</span><span class="n">end_s</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">featurize</span><span class="o">=</span><span class="n">featurize</span>
+            <span class="p">),</span>
+        <span class="p">)</span>
         <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">segmenter</span><span class="p">(</span><span class="n">pose_seq</span><span class="p">)</span>
     <span class="p">]</span></div>
 
 
 
-<div class="viewcode-block" id="LiveRecognizer">
-<a class="viewcode-back" href="../../_autosummary/kodokan.recognizer.html#kodokan.LiveRecognizer">[docs]</a>
-<span class="k">class</span><span class="w"> </span><span class="nc">LiveRecognizer</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""Live mode: a rolling pose buffer; each throw is recognized once its segment closes.</span>
+<div class="viewcode-block" id="ThrowDetector">
+<a class="viewcode-back" href="../../_autosummary/kodokan.recognizer.html#kodokan.ThrowDetector">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ThrowDetector</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""A rolling pose buffer that reports each throw once, after its segment closes.</span>
 
 <span class="sd">    Push one frame at a time (``(P, 17, 3)`` keypoints, as in :class:`PoseSequence`).</span>
-<span class="sd">    :meth:`push` returns the throws that closed with that frame, each recognized once.</span>
-<span class="sd">    A segment counts as closed when it ends at least ``close_after_s`` before the newest</span>
-<span class="sd">    frame; the buffer keeps the last ``buffer_s`` seconds of pushed frames (at ``fps``</span>
-<span class="sd">    frames a second: push every analysed frame, or pass the analysed rate as ``fps``).</span>
-<span class="sd">    A segment that mostly overlaps a throw already recognized is that throw.</span>
+<span class="sd">    :meth:`push` returns ``(buffer, segment)`` for the throws that closed with that</span>
+<span class="sd">    frame. A segment counts as closed when it ends at least ``close_after_s`` before</span>
+<span class="sd">    the newest frame; the buffer keeps the last ``buffer_s`` seconds of pushed frames</span>
+<span class="sd">    (at ``fps`` frames a second: push every analysed frame, or pass the analysed rate</span>
+<span class="sd">    as ``fps``). A segment that mostly overlaps a throw already reported is that throw.</span>
 <span class="sd">    """</span>
 
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">recognizer</span><span class="p">:</span> <span class="n">TechniqueRecognizer</span><span class="p">,</span>
         <span class="o">*</span><span class="p">,</span>
         <span class="n">fps</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
         <span class="n">buffer_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">20.0</span><span class="p">,</span>
         <span class="n">close_after_s</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
-        <span class="n">featurize</span><span class="p">:</span> <span class="n">Featurizer</span> <span class="o">=</span> <span class="n">pooled_demo_descriptor</span><span class="p">,</span>
         <span class="n">segmenter</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">PoseSequence</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="n">Segment</span><span class="p">]]</span> <span class="o">=</span> <span class="n">motion_segments</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="k">if</span> <span class="n">fps</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"fps must be positive, got </span><span class="si">{</span><span class="n">fps</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">recognizer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">fps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">recognizer</span><span class="p">,</span> <span class="n">fps</span><span class="p">,</span> <span class="n">k</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fps</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">size</span> <span class="o">=</span> <span class="n">fps</span><span class="p">,</span> <span class="p">(</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">max_frames</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">buffer_s</span> <span class="o">*</span> <span class="n">fps</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">close_after_s</span> <span class="o">=</span> <span class="n">close_after_s</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">featurize</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">segmenter</span> <span class="o">=</span> <span class="n">featurize</span><span class="p">,</span> <span class="n">segmenter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">segmenter</span> <span class="o">=</span> <span class="n">segmenter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_frames</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_indices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_emitted</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># throws already recognized</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reported</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
 
-<div class="viewcode-block" id="LiveRecognizer.buffer">
-<a class="viewcode-back" href="../../_autosummary/kodokan.recognizer.html#kodokan.LiveRecognizer.buffer">[docs]</a>
+<div class="viewcode-block" id="ThrowDetector.buffer">
+<a class="viewcode-back" href="../../_autosummary/kodokan.recognizer.html#kodokan.ThrowDetector.buffer">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PoseSequence</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">"""The buffered frames as a :class:`PoseSequence` (people padded with NaN)."""</span>
         <span class="n">n_people</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_frames</span><span class="p">)</span>
@@ -1022,14 +1033,20 @@ window.runMermaid = runMermaid;</script>
         <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="LiveRecognizer.push">
-<a class="viewcode-back" href="../../_autosummary/kodokan.recognizer.html#kodokan.LiveRecognizer.push">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">push</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">keypoints</span><span class="p">,</span> <span class="n">frame_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Segment</span><span class="p">,</span> <span class="n">Recognition</span><span class="p">]]:</span>
-<span class="w">        </span><span class="sd">"""Add one frame; return the throws that closed with it, recognized."""</span>
+<div class="viewcode-block" id="ThrowDetector.push">
+<a class="viewcode-back" href="../../_autosummary/kodokan.recognizer.html#kodokan.ThrowDetector.push">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">push</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">keypoints</span><span class="p">,</span> <span class="n">frame_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">PoseSequence</span><span class="p">,</span> <span class="n">Segment</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">"""Add one frame; return ``(buffer, segment)`` for each throw it closed."""</span>
         <span class="n">kp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">keypoints</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">kp</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">3</span> <span class="ow">or</span> <span class="n">kp</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">!=</span> <span class="p">(</span><span class="mi">17</span><span class="p">,</span> <span class="mi">3</span><span class="p">):</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"a frame is (persons, 17, 3) keypoints, got </span><span class="si">{</span><span class="n">kp</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-        <span class="n">index</span> <span class="o">=</span> <span class="n">frame_index</span> <span class="k">if</span> <span class="n">frame_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_indices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_indices</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">frame_index</span>
+            <span class="k">if</span> <span class="n">frame_index</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="k">else</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_indices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_indices</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">kp</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">index</span><span class="p">))</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_frames</span><span class="p">)</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_frames</span><span class="p">:</span>
@@ -1039,25 +1056,66 @@ window.runMermaid = runMermaid;</script>
         <span class="n">pose_seq</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">buffer</span><span class="p">()</span>
         <span class="n">newest_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_indices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">fps</span>
         <span class="n">oldest_s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">fps</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_emitted</span> <span class="o">=</span> <span class="p">[(</span><span class="n">s</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_emitted</span> <span class="k">if</span> <span class="n">e</span> <span class="o">&gt;=</span> <span class="n">oldest_s</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_reported</span> <span class="o">=</span> <span class="p">[(</span><span class="n">s</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reported</span> <span class="k">if</span> <span class="n">e</span> <span class="o">&gt;=</span> <span class="n">oldest_s</span><span class="p">]</span>
         <span class="n">closed</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">segmenter</span><span class="p">(</span><span class="n">pose_seq</span><span class="p">):</span>
             <span class="k">if</span> <span class="n">seg</span><span class="o">.</span><span class="n">end_s</span> <span class="o">&gt;</span> <span class="n">newest_s</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">close_after_s</span><span class="p">:</span>
                 <span class="k">continue</span>  <span class="c1"># still open: the throw may go on</span>
             <span class="c1"># Re-segmenting a sliding buffer can move a throw's edges a little: one</span>
-            <span class="c1"># that mostly overlaps a throw already recognized is that throw.</span>
+            <span class="c1"># that mostly overlaps a throw already reported is that throw.</span>
             <span class="n">length</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">end_s</span> <span class="o">-</span> <span class="n">seg</span><span class="o">.</span><span class="n">start_s</span><span class="p">,</span> <span class="mf">1e-9</span><span class="p">)</span>
             <span class="k">if</span> <span class="nb">any</span><span class="p">(</span>
                 <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">end_s</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span> <span class="o">-</span> <span class="nb">max</span><span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">start_s</span><span class="p">,</span> <span class="n">s</span><span class="p">))</span> <span class="o">/</span> <span class="n">length</span> <span class="o">&gt;</span> <span class="mf">0.5</span>
-                <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_emitted</span>
+                <span class="k">for</span> <span class="n">s</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_reported</span>
             <span class="p">):</span>
                 <span class="k">continue</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_emitted</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">seg</span><span class="o">.</span><span class="n">start_s</span><span class="p">,</span> <span class="n">seg</span><span class="o">.</span><span class="n">end_s</span><span class="p">))</span>
-            <span class="n">rec</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">recognizer</span><span class="o">.</span><span class="n">recognize_clip</span><span class="p">(</span>
-                <span class="n">pose_seq</span><span class="p">,</span> <span class="n">seg</span><span class="o">.</span><span class="n">start_s</span><span class="p">,</span> <span class="n">seg</span><span class="o">.</span><span class="n">end_s</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="n">featurize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">featurize</span>
-            <span class="p">)</span>
-            <span class="n">closed</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">seg</span><span class="p">,</span> <span class="n">rec</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reported</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">seg</span><span class="o">.</span><span class="n">start_s</span><span class="p">,</span> <span class="n">seg</span><span class="o">.</span><span class="n">end_s</span><span class="p">))</span>
+            <span class="n">closed</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">pose_seq</span><span class="p">,</span> <span class="n">seg</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">closed</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="LiveRecognizer">
+<a class="viewcode-back" href="../../_autosummary/kodokan.recognizer.html#kodokan.LiveRecognizer">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LiveRecognizer</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Live mode: each throw a :class:`ThrowDetector` reports, recognized once.</span>
+
+<span class="sd">    :meth:`push` takes one frame (``(P, 17, 3)`` keypoints) and returns</span>
+<span class="sd">    ``(segment, recognition)`` for the throws that closed with it. Detector options</span>
+<span class="sd">    (``buffer_s``, ``close_after_s``, ``segmenter``, ``width``, ``height``) pass through.</span>
+<span class="sd">    """</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">recognizer</span><span class="p">:</span> <span class="n">TechniqueRecognizer</span><span class="p">,</span>
+        <span class="o">*</span><span class="p">,</span>
+        <span class="n">fps</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+        <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="n">featurize</span><span class="p">:</span> <span class="n">Featurizer</span> <span class="o">=</span> <span class="n">pooled_demo_descriptor</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">detector_kwargs</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recognizer</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">featurize</span> <span class="o">=</span> <span class="n">recognizer</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">featurize</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">detector</span> <span class="o">=</span> <span class="n">ThrowDetector</span><span class="p">(</span><span class="n">fps</span><span class="o">=</span><span class="n">fps</span><span class="p">,</span> <span class="o">**</span><span class="n">detector_kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PoseSequence</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">buffer</span><span class="p">()</span>
+
+<div class="viewcode-block" id="LiveRecognizer.push">
+<a class="viewcode-back" href="../../_autosummary/kodokan.recognizer.html#kodokan.LiveRecognizer.push">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">push</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">keypoints</span><span class="p">,</span> <span class="n">frame_index</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Segment</span><span class="p">,</span> <span class="n">Recognition</span><span class="p">]]:</span>
+<span class="w">        </span><span class="sd">"""Add one frame; return the throws that closed with it, recognized."""</span>
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="p">(</span>
+                <span class="n">seg</span><span class="p">,</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">recognizer</span><span class="o">.</span><span class="n">recognize_clip</span><span class="p">(</span>
+                    <span class="n">pose_seq</span><span class="p">,</span> <span class="n">seg</span><span class="o">.</span><span class="n">start_s</span><span class="p">,</span> <span class="n">seg</span><span class="o">.</span><span class="n">end_s</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="n">featurize</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">featurize</span>
+                <span class="p">),</span>
+            <span class="p">)</span>
+            <span class="k">for</span> <span class="n">pose_seq</span><span class="p">,</span> <span class="n">seg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">detector</span><span class="o">.</span><span class="n">push</span><span class="p">(</span><span class="n">keypoints</span><span class="p">,</span> <span class="n">frame_index</span><span class="p">)</span>
+        <span class="p">]</span></div>
 </div>
 
 </pre></div>

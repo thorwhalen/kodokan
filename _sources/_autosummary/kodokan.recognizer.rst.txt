@@ -27,4 +27,5 @@ kodokan.recognizer
       LiveRecognizer
       Recognition
       TechniqueRecognizer
+      ThrowDetector
    

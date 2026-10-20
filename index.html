@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
 
-    <script src="_static/documentation_options.js?v=5d650c58"></script>
+    <script src="_static/documentation_options.js?v=cee5022b"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -57,7 +57,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.25" />
+  <meta name="docsearch:version" content="0.0.27" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -524,7 +524,13 @@ are recorded in <code class="docutils literal notranslate"><span class="pre">[to
 <td><p>experimental feature descriptors (for the eval harness)</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">kodokan.recognizer</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">TechniqueRecognizer</span></code> (top-k guesses + every technique’s score), <code class="docutils literal notranslate"><span class="pre">recognize_segments</span></code> (a whole video), <code class="docutils literal notranslate"><span class="pre">LiveRecognizer</span></code> (rolling pose buffer, one guess per closed throw)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TechniqueRecognizer</span></code> (top-k guesses + every technique’s score), <code class="docutils literal notranslate"><span class="pre">recognize_segments</span></code> (a whole video), <code class="docutils literal notranslate"><span class="pre">ThrowDetector</span></code> / <code class="docutils literal notranslate"><span class="pre">LiveRecognizer</span></code> (rolling pose buffer, one guess per closed throw)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">kodokan.coach</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">coach</span></code> (0–100 + per-joint / per-phase deviation + EN/FR advice on the worst dimensions), <code class="docutils literal notranslate"><span class="pre">LiveCoach</span></code> (the same per detected throw on a live stream)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">kodokan.testmode</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TechniqueTest</span></code> (random technique from a focus pool; graded on the recognizer’s confidence for it, plus closeness and advice when a reference is given), <code class="docutils literal notranslate"><span class="pre">LiveTechniqueTest</span></code> (the prompt, perform, grade loop on a live stream)</p></td>
 </tr>
 </tbody>
 </table>
@@ -576,7 +582,7 @@ features don’t discriminate techniques (the empirical finding).</p></li>
 </section>
 </section>
 
-<p class="epythet-provenance" style="font-size:.8em;opacity:.65;margin-top:2.5em;text-align:right">built 2026-10-20 14:16 UTC from <a href="https://github.com/thorwhalen/kodokan/commit/4f38c6bb1ea44930615551ef3fc3ca7fd7acb739">4f38c6b</a> (main) · kodokan 0.0.25 · <a href="about-this-build.html">about this build</a></p>
+<p class="epythet-provenance" style="font-size:.8em;opacity:.65;margin-top:2.5em;text-align:right">built 2026-10-20 14:26 UTC from <a href="https://github.com/thorwhalen/kodokan/commit/54e14695cbde67447aac3293ec35f2045541412c">54e1469</a> (main) · kodokan 0.0.27 · <a href="about-this-build.html">about this build</a></p>
 
                 </article>
               

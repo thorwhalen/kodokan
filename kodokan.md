@@ -1,4 +1,4 @@
-> built 2026-10-20 14:16 UTC from 4f38c6b (main) · kodokan 0.0.25. Details: build_info.json
+> built 2026-10-20 14:26 UTC from 54e1469 (main) · kodokan 0.0.27. Details: build_info.json
 
 # index.html.md
 
@@ -136,18 +136,20 @@ are recorded in `[tool.wads.licence]` in `pyproject.toml`.
 
 ## The pipeline
 
-| module                | purpose                                                                                                                                                                   |
-|-----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `kodokan.acquire`     | download techniques (wraps `yb`), skip the PV, keep source URLs                                                                                                           |
-| `kodokan.pose`        | `estimate_poses` facade (rtmlib / ultralytics backends), COCO-17, `PoseSequence`                                                                                          |
-| `kodokan.track`       | `estimate_poses_tracked` — stable tori/uke identity (BoT-SORT + spatial continuity)                                                                                       |
-| `kodokan.segment`     | hysteresis motion-energy segmentation + two-person gate + self-similarity                                                                                                 |
-| `kodokan.store`       | `pose_store` (tidy Parquet) / `segments_store` (JSON), the analysis SSOT                                                                                                  |
-| `kodokan.viz`         | overlay / blank-canvas MP4 + Rerun logging                                                                                                                                |
-| `kodokan.compare`     | joint-angle (soft-)DTW comparison of two demonstrations                                                                                                                   |
-| `kodokan.score`       | reference-based 0–100 scoring + per-joint/per-phase feedback                                                                                                              |
-| `kodokan.descriptors` | experimental feature descriptors (for the eval harness)                                                                                                                   |
-| `kodokan.recognizer`  | `TechniqueRecognizer` (top-k guesses + every technique’s score), `recognize_segments` (a whole video), `LiveRecognizer` (rolling pose buffer, one guess per closed throw) |
+| module                | purpose                                                                                                                                                                                                                         |
+|-----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `kodokan.acquire`     | download techniques (wraps `yb`), skip the PV, keep source URLs                                                                                                                                                                 |
+| `kodokan.pose`        | `estimate_poses` facade (rtmlib / ultralytics backends), COCO-17, `PoseSequence`                                                                                                                                                |
+| `kodokan.track`       | `estimate_poses_tracked` — stable tori/uke identity (BoT-SORT + spatial continuity)                                                                                                                                             |
+| `kodokan.segment`     | hysteresis motion-energy segmentation + two-person gate + self-similarity                                                                                                                                                       |
+| `kodokan.store`       | `pose_store` (tidy Parquet) / `segments_store` (JSON), the analysis SSOT                                                                                                                                                        |
+| `kodokan.viz`         | overlay / blank-canvas MP4 + Rerun logging                                                                                                                                                                                      |
+| `kodokan.compare`     | joint-angle (soft-)DTW comparison of two demonstrations                                                                                                                                                                         |
+| `kodokan.score`       | reference-based 0–100 scoring + per-joint/per-phase feedback                                                                                                                                                                    |
+| `kodokan.descriptors` | experimental feature descriptors (for the eval harness)                                                                                                                                                                         |
+| `kodokan.recognizer`  | `TechniqueRecognizer` (top-k guesses + every technique’s score), `recognize_segments` (a whole video), `ThrowDetector` / `LiveRecognizer` (rolling pose buffer, one guess per closed throw)                                     |
+| `kodokan.coach`       | `coach` (0–100 + per-joint / per-phase deviation + EN/FR advice on the worst dimensions), `LiveCoach` (the same per detected throw on a live stream)                                                                            |
+| `kodokan.testmode`    | `TechniqueTest` (random technique from a focus pool; graded on the recognizer’s confidence for it, plus closeness and advice when a reference is given), `LiveTechniqueTest` (the prompt, perform, grade loop on a live stream) |
 
 Runnable end-to-end examples live in `examples/` (`warmup_seoinage.py`,
 `batch_pipeline.py`, `segment_review.py`, `compare_demos.py`, `score_demos.py`,
@@ -703,6 +705,7 @@ See `misc/docs/research-architecture.md` for the tool/architecture rationale.
 | [`feedback`](_autosummary/kodokan.html.md#kodokan.feedback)(query_features, reference, \*[, ...])     | Interpretable difference: per joint-angle and per phase (degrees).                 |
 | [`demo_features`](_autosummary/kodokan.html.md#kodokan.demo_features)(pose_seq, start_s, end_s, \*[, ...]) | Cleaned joint-angle features for one demo window (primary person by default).      |
 | [`recognize_segments`](_autosummary/kodokan.html.md#kodokan.recognize_segments)(pose_seq, recognizer, \*)       | Offline video mode: every detected throw in `pose_seq`, recognized.                |
+| [`coach`](_autosummary/kodokan.html.md#kodokan.coach)(query_features, reference, \*[, ...])        | Score `query_features` against `reference` and advise on the worst dimensions.     |
 | [`make_problem`](_autosummary/kodokan.html.md#kodokan.make_problem)(catalog, target_key, \*[, mode, ...]) | Build a multiple-choice problem for `target_key` from a technique `catalog`.       |
 | [`build_catalog`](_autosummary/kodokan.html.md#kodokan.build_catalog)(\*[, min_two_person_frac, ...])      | Build `{technique_key: {"name", "clips":[...]}}` from the pose/segments stores.    |
 | [`clip_filename`](_autosummary/kodokan.html.md#kodokan.clip_filename)(video_id, start_s, dur_s)            | The web-app clip file for one demo segment, named by the segment's IDENTITY.       |
@@ -713,13 +716,37 @@ See `misc/docs/research-architecture.md` for the tool/architecture rationale.
 
 ### Classes
 
-| [`PoseSequence`](_autosummary/kodokan.html.md#kodokan.PoseSequence)(keypoints, frame_indices, fps, ...)   | A per-frame, per-person sequence of COCO-17 keypoints for one clip.                 |
-|-----------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
-| [`Segment`](_autosummary/kodokan.html.md#kodokan.Segment)(index, start_s, end_s, start_frame, ...)   | One detected demonstration interval.                                                |
-| [`TechniqueRecognizer`](_autosummary/kodokan.html.md#kodokan.TechniqueRecognizer)(\*[, method, temperature])     | Fit on pooled descriptors; recognize with top-k guesses and the full score vector.  |
-| [`Recognition`](_autosummary/kodokan.html.md#kodokan.Recognition)(guesses[, scores])                     | The top-k guesses, best first, and every technique's score.                         |
-| [`Guess`](_autosummary/kodokan.html.md#kodokan.Guess)(technique, score)                            | One candidate technique and its score (higher is more likely).                      |
-| [`LiveRecognizer`](_autosummary/kodokan.html.md#kodokan.LiveRecognizer)(recognizer, \*, fps[, width, ...])  | Live mode: a rolling pose buffer; each throw is recognized once its segment closes. |
+| [`PoseSequence`](_autosummary/kodokan.html.md#kodokan.PoseSequence)(keypoints, frame_indices, fps, ...)   | A per-frame, per-person sequence of COCO-17 keypoints for one clip.                                              |
+|-----------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
+| [`Segment`](_autosummary/kodokan.html.md#kodokan.Segment)(index, start_s, end_s, start_frame, ...)   | One detected demonstration interval.                                                                             |
+| [`TechniqueRecognizer`](_autosummary/kodokan.html.md#kodokan.TechniqueRecognizer)(\*[, method, temperature])     | Fit on pooled descriptors; recognize with top-k guesses and the full score vector.                               |
+| [`Recognition`](_autosummary/kodokan.html.md#kodokan.Recognition)(guesses[, scores])                     | The top-k guesses, best first, and every technique's score.                                                      |
+| [`Guess`](_autosummary/kodokan.html.md#kodokan.Guess)(technique, score)                            | One candidate technique and its score (higher is more likely).                                                   |
+| [`LiveRecognizer`](_autosummary/kodokan.html.md#kodokan.LiveRecognizer)(recognizer, \*, fps[, k, ...])      | Live mode: each throw a [`ThrowDetector`](_autosummary/kodokan.html.md#kodokan.ThrowDetector) reports, recognized once. |
+| [`ThrowDetector`](_autosummary/kodokan.html.md#kodokan.ThrowDetector)(\*, fps[, width, height, ...])       | A rolling pose buffer that reports each throw once, after its segment closes.                                    |
+| [`Coaching`](_autosummary/kodokan.html.md#kodokan.Coaching)(technique, lang, score, closer_than_pct)  | A scored performance and the advice drawn from its worst dimensions.                                             |
+| [`LiveCoach`](_autosummary/kodokan.html.md#kodokan.LiveCoach)(target, reference, \*, fps[, lang, ...]) | Coach a target technique on a live pose stream, one throw at a time.                                             |
+| [`TechniqueTest`](_autosummary/kodokan.html.md#kodokan.TechniqueTest)(recognizer, \*[, pool, ...])         | Prompt a random technique from a focus pool; grade the performance.                                              |
+| [`LiveTechniqueTest`](_autosummary/kodokan.html.md#kodokan.LiveTechniqueTest)(test, \*, fps[, featurize, ...]) | The test loop on a live stream: prompt, detect the throw, grade, prompt again.                                   |
+| [`TestResult`](_autosummary/kodokan.html.md#kodokan.TestResult)(target, recognition, ...)               | The grade of one performance of the prompted technique.                                                          |
+
+### *class* kodokan.Coaching(technique, lang, score, closer_than_pct, per_joint_deg=dict(), per_phase_deg=dict(), worst_joint=None, worst_phase=None, tips=(), reason=None)
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+A scored performance and the advice drawn from its worst dimensions.
+
+#### reason *: [str](https://docs.python.org/3/builtins/stdtypes.html#str) | [None](https://docs.python.org/3/builtins/constants.html#None)* *= None*
+
+`"too_short"` when the throw window had fewer
+than two usable frames to compare.
+
+* **Type:**
+  Why there is no score or tip
+
+#### *property* text *: [str](https://docs.python.org/3/builtins/stdtypes.html#str)*
+
+The advice as one paragraph.
 
 ### *class* kodokan.Guess(technique, score)
 
@@ -727,25 +754,33 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 One candidate technique and its score (higher is more likely).
 
-### *class* kodokan.LiveRecognizer(recognizer, \*, fps, width=0, height=0, k=3, buffer_s=20.0, close_after_s=1.0, featurize=<function pooled_demo_descriptor>, segmenter=<function motion_segments>)
+### *class* kodokan.LiveCoach(target, reference, \*, fps, lang='en', n_tips=2, advice={'en': {'close': 'Close to the reference: keep it up.', 'elbow': "Your {side} elbow is {deg:.0f}° off the reference: keep that arm's pull firm and close to your body.", 'headline': '{technique}: {score}/100.', 'hip': 'Your {side} hip is {deg:.0f}° off: bring your hips lower and closer to your partner.', 'kake': 'Most of the difference is in kake: commit through the finish.', 'knee': 'Your {side} knee is {deg:.0f}° off: bend your knees more as you enter, then drive up.', 'kuzushi': "Most of the difference is in kuzushi: break your partner's balance before you turn in.", 'shoulder': "Your {side} shoulder is {deg:.0f}° off: lift and turn that arm with the reference timing to take your partner's balance.", 'tsukuri': 'Most of the difference is in tsukuri: step in faster and closer.'}, 'fr': {'close': 'Proche de la référence : continuez ainsi.', 'elbow': "Votre coude {side} s'écarte de {deg:.0f}° de la référence : gardez la traction de ce bras ferme et près du corps.", 'headline': '{technique} : {score}/100.', 'hip': "Votre hanche {side_f} s'écarte de {deg:.0f}° : placez vos hanches plus bas et plus près de votre partenaire.", 'kake': "L'essentiel de l'écart est dans le kake : allez au bout de la projection.", 'knee': "Votre genou {side} s'écarte de {deg:.0f}° : fléchissez davantage les genoux en entrant, puis poussez vers le haut.", 'kuzushi': "L'essentiel de l'écart est dans le kuzushi : déséquilibrez votre partenaire avant d'entrer.", 'shoulder': "Votre épaule {side_f} s'écarte de {deg:.0f}° : levez et tournez ce bras au rythme de la référence pour déséquilibrer votre partenaire.", 'tsukuri': "L'essentiel de l'écart est dans le tsukuri : entrez plus vite et plus près."}}, featurize=<function demo_features>, \*\*detector_kwargs)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
-Live mode: a rolling pose buffer; each throw is recognized once its segment closes.
+Coach a target technique on a live pose stream, one throw at a time.
 
-Push one frame at a time (`(P, 17, 3)` keypoints, as in [`PoseSequence`](_autosummary/kodokan.html.md#kodokan.PoseSequence)).
-[`push()`](_autosummary/kodokan.html.md#kodokan.LiveRecognizer.push) returns the throws that closed with that frame, each recognized once.
-A segment counts as closed when it ends at least `close_after_s` before the newest
-frame; the buffer keeps the last `buffer_s` seconds of pushed frames (at `fps`
-frames a second: push every analysed frame, or pass the analysed rate as `fps`).
-A segment that mostly overlaps a throw already recognized is that throw.
+[`push()`](_autosummary/kodokan.html.md#kodokan.LiveCoach.push) takes one frame (`(P, 17, 3)` keypoints) and returns
+`(segment, coaching)` for each throw that closed with it. The target can be
+changed between throws (`target`, `reference`). Detector options
+(`buffer_s`, `close_after_s`, `segmenter`, …) pass through.
 
-#### buffer()
+#### push(keypoints, frame_index=None)
 
-The buffered frames as a [`PoseSequence`](_autosummary/kodokan.html.md#kodokan.PoseSequence) (people padded with NaN).
+Add one frame; return each throw it closed, coached against the target.
 
 * **Return type:**
-  [`PoseSequence`](_autosummary/kodokan.pose.html.md#kodokan.pose.PoseSequence)
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`Segment`](_autosummary/kodokan.segment.html.md#kodokan.segment.Segment), [`Coaching`](_autosummary/kodokan.html.md#kodokan.Coaching)]]
+
+### *class* kodokan.LiveRecognizer(recognizer, \*, fps, k=3, featurize=<function pooled_demo_descriptor>, \*\*detector_kwargs)
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+Live mode: each throw a [`ThrowDetector`](_autosummary/kodokan.html.md#kodokan.ThrowDetector) reports, recognized once.
+
+[`push()`](_autosummary/kodokan.html.md#kodokan.LiveRecognizer.push) takes one frame (`(P, 17, 3)` keypoints) and returns
+`(segment, recognition)` for the throws that closed with it. Detector options
+(`buffer_s`, `close_after_s`, `segmenter`, `width`, `height`) pass through.
 
 #### push(keypoints, frame_index=None)
 
@@ -753,6 +788,27 @@ Add one frame; return the throws that closed with it, recognized.
 
 * **Return type:**
   [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`Segment`](_autosummary/kodokan.segment.html.md#kodokan.segment.Segment), [`Recognition`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.Recognition)]]
+
+### *class* kodokan.LiveTechniqueTest(test, \*, fps, featurize=<function pooled_demo_descriptor>, angle_featurize=<function demo_features>, on_prompt=None, \*\*detector_kwargs)
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+The test loop on a live stream: prompt, detect the throw, grade, prompt again.
+
+[`push()`](_autosummary/kodokan.html.md#kodokan.LiveTechniqueTest.push) takes one frame and returns `(segment, result)` for each throw that
+closed with it; after each graded throw the next technique is drawn
+(`prompt`). Detector options pass through.
+
+A throw is graded once it has *closed* (`close_after_s` after it ends), so the
+performer should wait for the next prompt before the next throw; any motion the
+detector takes for a throw also uses up a prompt.
+
+#### push(keypoints, frame_index=None)
+
+Add one frame; grade each throw it closed and draw the next prompt.
+
+* **Return type:**
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`Segment`](_autosummary/kodokan.segment.html.md#kodokan.segment.Segment), [`TestResult`](_autosummary/kodokan.testmode.html.md#kodokan.testmode.TestResult)]]
 
 ### *class* kodokan.PoseSequence(keypoints, frame_indices, fps, width, height, backend, video_path, source_url=None, keypoint_names=('nose', 'left_eye', 'right_eye', 'left_ear', 'right_ear', 'left_shoulder', 'right_shoulder', 'left_elbow', 'right_elbow', 'left_wrist', 'right_wrist', 'left_hip', 'right_hip', 'left_knee', 'right_knee', 'left_ankle', 'right_ankle'), skeleton=((5, 7), (7, 9), (6, 8), (8, 10), (5, 6), (5, 11), (6, 12), (11, 12), (11, 13), (13, 15), (12, 14), (14, 16), (0, 1), (0, 2), (1, 3), (2, 4), (0, 5), (0, 6)))
 
@@ -886,6 +942,80 @@ Every technique’s score for one pooled descriptor (they sum to 1).
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`float`](https://docs.python.org/3/builtins/functions.html#float)]
 
+### *class* kodokan.TechniqueTest(recognizer, , pool=None, references=None, lang='en', confidence_weight=0.5, seed=None, rng=None, advice={'en': {'close': 'Close to the reference: keep it up.', 'elbow': "Your {side} elbow is {deg:.0f}° off the reference: keep that arm's pull firm and close to your body.", 'headline': '{technique}: {score}/100.', 'hip': 'Your {side} hip is {deg:.0f}° off: bring your hips lower and closer to your partner.', 'kake': 'Most of the difference is in kake: commit through the finish.', 'knee': 'Your {side} knee is {deg:.0f}° off: bend your knees more as you enter, then drive up.', 'kuzushi': "Most of the difference is in kuzushi: break your partner's balance before you turn in.", 'shoulder': "Your {side} shoulder is {deg:.0f}° off: lift and turn that arm with the reference timing to take your partner's balance.", 'tsukuri': 'Most of the difference is in tsukuri: step in faster and closer.'}, 'fr': {'close': 'Proche de la référence : continuez ainsi.', 'elbow': "Votre coude {side} s'écarte de {deg:.0f}° de la référence : gardez la traction de ce bras ferme et près du corps.", 'headline': '{technique} : {score}/100.', 'hip': "Votre hanche {side_f} s'écarte de {deg:.0f}° : placez vos hanches plus bas et plus près de votre partenaire.", 'kake': "L'essentiel de l'écart est dans le kake : allez au bout de la projection.", 'knee': "Votre genou {side} s'écarte de {deg:.0f}° : fléchissez davantage les genoux en entrant, puis poussez vers le haut.", 'kuzushi': "L'essentiel de l'écart est dans le kuzushi : déséquilibrez votre partenaire avant d'entrer.", 'shoulder': "Votre épaule {side_f} s'écarte de {deg:.0f}° : levez et tournez ce bras au rythme de la référence pour déséquilibrer votre partenaire.", 'tsukuri': "L'essentiel de l'écart est dans le tsukuri : entrez plus vite et plus près."}})
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+Prompt a random technique from a focus pool; grade the performance.
+
+* **Parameters:**
+  * **recognizer** ([`TechniqueRecognizer`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.TechniqueRecognizer)) – a fitted [`TechniqueRecognizer`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.TechniqueRecognizer).
+  * **pool** ([`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str)] | [`None`](https://docs.python.org/3/builtins/constants.html#None)) – the techniques to draw from (default: all the recognizer knows).
+  * **references** ([`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)] | [`None`](https://docs.python.org/3/builtins/constants.html#None)) – `{technique: build_reference(...)}`; techniques with one are
+    also graded on closeness, with advice.
+  * **confidence_weight** ([`float`](https://docs.python.org/3/builtins/functions.html#float)) – share of the score from the target’s confidence (the
+    rest from closeness to the reference, when there is one).
+  * **seed** ([`int`](https://docs.python.org/3/builtins/functions.html#int) | [`None`](https://docs.python.org/3/builtins/constants.html#None)) – or `rng`, for a reproducible sequence of prompts.
+
+#### grade(descriptor, angle_features=None)
+
+Grade one performance: its pooled `descriptor` and, for closeness, its
+per-frame `angle_features` (`kodokan.score.demo_features()`).
+
+* **Return type:**
+  [`TestResult`](_autosummary/kodokan.testmode.html.md#kodokan.testmode.TestResult)
+
+#### grade_clip(pose_seq, start_s, end_s, \*, featurize=<function pooled_demo_descriptor>, angle_featurize=<function demo_features>)
+
+Grade the performance in `pose_seq` between `start_s` and `end_s`.
+
+* **Return type:**
+  [`TestResult`](_autosummary/kodokan.testmode.html.md#kodokan.testmode.TestResult)
+
+#### next_prompt()
+
+Draw the next technique to perform (never the same one twice in a row).
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
+
+### *class* kodokan.TestResult(target, recognition, target_confidence, coaching, score)
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+The grade of one performance of the prompted technique.
+
+#### *property* passed *: [bool](https://docs.python.org/3/builtins/functions.html#bool)*
+
+Whether the recognizer’s best guess is the target.
+
+### *class* kodokan.ThrowDetector(\*, fps, width=0, height=0, buffer_s=20.0, close_after_s=1.0, segmenter=<function motion_segments>)
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+A rolling pose buffer that reports each throw once, after its segment closes.
+
+Push one frame at a time (`(P, 17, 3)` keypoints, as in [`PoseSequence`](_autosummary/kodokan.html.md#kodokan.PoseSequence)).
+[`push()`](_autosummary/kodokan.html.md#kodokan.ThrowDetector.push) returns `(buffer, segment)` for the throws that closed with that
+frame. A segment counts as closed when it ends at least `close_after_s` before
+the newest frame; the buffer keeps the last `buffer_s` seconds of pushed frames
+(at `fps` frames a second: push every analysed frame, or pass the analysed rate
+as `fps`). A segment that mostly overlaps a throw already reported is that throw.
+
+#### buffer()
+
+The buffered frames as a [`PoseSequence`](_autosummary/kodokan.html.md#kodokan.PoseSequence) (people padded with NaN).
+
+* **Return type:**
+  [`PoseSequence`](_autosummary/kodokan.pose.html.md#kodokan.pose.PoseSequence)
+
+#### push(keypoints, frame_index=None)
+
+Add one frame; return `(buffer, segment)` for each throw it closed.
+
+* **Return type:**
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`PoseSequence`](_autosummary/kodokan.pose.html.md#kodokan.pose.PoseSequence), [`Segment`](_autosummary/kodokan.segment.html.md#kodokan.segment.Segment)]]
+
 ### kodokan.angle_features(pose_seq, , person=0, frame_range=None)
 
 Per-frame joint-angle features `(F, n_angles)` for one person.
@@ -936,6 +1066,25 @@ changed segment simply gets a new name. Positional names (`{vid}_3.mp4`) could.
 
 * **Return type:**
   [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
+
+### kodokan.coach(query_features, reference, , technique=None, lang='en', n_tips=2, min_deviation_deg=10.0, advice={'en': {'close': 'Close to the reference: keep it up.', 'elbow': "Your {side} elbow is {deg:.0f}° off the reference: keep that arm's pull firm and close to your body.", 'headline': '{technique}: {score}/100.', 'hip': 'Your {side} hip is {deg:.0f}° off: bring your hips lower and closer to your partner.', 'kake': 'Most of the difference is in kake: commit through the finish.', 'knee': 'Your {side} knee is {deg:.0f}° off: bend your knees more as you enter, then drive up.', 'kuzushi': "Most of the difference is in kuzushi: break your partner's balance before you turn in.", 'shoulder': "Your {side} shoulder is {deg:.0f}° off: lift and turn that arm with the reference timing to take your partner's balance.", 'tsukuri': 'Most of the difference is in tsukuri: step in faster and closer.'}, 'fr': {'close': 'Proche de la référence : continuez ainsi.', 'elbow': "Votre coude {side} s'écarte de {deg:.0f}° de la référence : gardez la traction de ce bras ferme et près du corps.", 'headline': '{technique} : {score}/100.', 'hip': "Votre hanche {side_f} s'écarte de {deg:.0f}° : placez vos hanches plus bas et plus près de votre partenaire.", 'kake': "L'essentiel de l'écart est dans le kake : allez au bout de la projection.", 'knee': "Votre genou {side} s'écarte de {deg:.0f}° : fléchissez davantage les genoux en entrant, puis poussez vers le haut.", 'kuzushi': "L'essentiel de l'écart est dans le kuzushi : déséquilibrez votre partenaire avant d'entrer.", 'shoulder': "Votre épaule {side_f} s'écarte de {deg:.0f}° : levez et tournez ce bras au rythme de la référence pour déséquilibrer votre partenaire.", 'tsukuri': "L'essentiel de l'écart est dans le tsukuri : entrez plus vite et plus près."}})
+
+Score `query_features` against `reference` and advise on the worst dimensions.
+
+* **Parameters:**
+  * **query_features** (`ndarray`) – per-frame joint angles of the performance
+    (`kodokan.score.demo_features()`).
+  * **reference** ([`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)) – the target technique’s `build_reference()`.
+  * **lang** ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str)) – a key of `advice` (`"en"` or `"fr"` built in).
+  * **n_tips** ([`int`](https://docs.python.org/3/builtins/functions.html#int)) – joint tips to give, worst first, after the phase tip.
+  * **min_deviation_deg** ([`float`](https://docs.python.org/3/builtins/functions.html#float)) – a phase or joint closer than this gets no tip; with
+    none left, the advice says the performance is close to the reference.
+* **Return type:**
+  [`Coaching`](_autosummary/kodokan.html.md#kodokan.Coaching)
+
+A window with fewer than two usable frames cannot be compared: it gets a
+[`Coaching`](_autosummary/kodokan.html.md#kodokan.Coaching) with no score and `reason="too_short"` rather than an error,
+so a live loop goes on.
 
 ### kodokan.compare(features_a, features_b)
 
@@ -1151,6 +1300,7 @@ A dict-like `{video_id: <json>}` store for demo segments (and metadata).
 | [`recognizer`](_autosummary/kodokan.recognizer.html.md#module-kodokan.recognizer)   | Technique recognition for applications: top-k guesses with inspectable scores (#3).                  |
 | [`segment`](_autosummary/kodokan.segment.html.md#module-kodokan.segment)         | Segment a clip into its repeated demonstrations of one throw.                                        |
 | [`store`](_autosummary/kodokan.store.html.md#module-kodokan.store)             | dol-backed stores for the pipeline's artifacts (the analysis SSOT).                                  |
+| [`testmode`](_autosummary/kodokan.testmode.html.md#module-kodokan.testmode)       | Technique test mode: perform the technique the system names, get scored (#5).                        |
 | [`track`](_autosummary/kodokan.track.html.md#module-kodokan.track)             | Stable tori/uke identity tracking (BoT-SORT / ByteTrack).                                            |
 | [`viz`](_autosummary/kodokan.viz.html.md#module-kodokan.viz)                 | Visualize a [`PoseSequence`](_autosummary/kodokan.pose.html.md#kodokan.pose.PoseSequence). |
 
@@ -1824,8 +1974,8 @@ This module is the application facade over them:
   > can show).
 - [`recognize_segments()`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.recognize_segments) — offline video: detect the throws in a whole pose
   sequence and recognize each.
-- [`LiveRecognizer`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.LiveRecognizer) — live stream: push pose frames into a rolling buffer; each
-  throw is recognized once its segment has closed.
+- [`ThrowDetector`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.ThrowDetector) — a rolling pose buffer that reports each throw once its
+  segment has closed; [`LiveRecognizer`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.LiveRecognizer) recognizes them (live stream mode).
 
 Scores are a softmax over negative distances to each technique’s centroid, in the
 train-standardized (and, when scikit-learn is installed, LDA-projected) descriptor
@@ -1859,11 +2009,12 @@ training demo, so with few demos per technique the spread stays optimistic.
 
 ### Classes
 
-| [`Guess`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.Guess)(technique, score)                           | One candidate technique and its score (higher is more likely).                      |
-|----------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
-| [`LiveRecognizer`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.LiveRecognizer)(recognizer, \*, fps[, width, ...]) | Live mode: a rolling pose buffer; each throw is recognized once its segment closes. |
-| [`Recognition`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.Recognition)(guesses[, scores])                    | The top-k guesses, best first, and every technique's score.                         |
-| [`TechniqueRecognizer`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.TechniqueRecognizer)(\*[, method, temperature])    | Fit on pooled descriptors; recognize with top-k guesses and the full score vector.  |
+| [`Guess`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.Guess)(technique, score)                        | One candidate technique and its score (higher is more likely).                                                   |
+|-------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
+| [`LiveRecognizer`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.LiveRecognizer)(recognizer, \*, fps[, k, ...])  | Live mode: each throw a [`ThrowDetector`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.ThrowDetector) reports, recognized once. |
+| [`Recognition`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.Recognition)(guesses[, scores])                 | The top-k guesses, best first, and every technique's score.                                                      |
+| [`TechniqueRecognizer`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.TechniqueRecognizer)(\*[, method, temperature]) | Fit on pooled descriptors; recognize with top-k guesses and the full score vector.                               |
+| [`ThrowDetector`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.ThrowDetector)(\*, fps[, width, height, ...])   | A rolling pose buffer that reports each throw once, after its segment closes.                                    |
 
 ### kodokan.recognizer.DFLT_MIN_PEAK_ACTIVITY *= 3.0*
 
@@ -1882,25 +2033,15 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 One candidate technique and its score (higher is more likely).
 
-### *class* kodokan.recognizer.LiveRecognizer(recognizer, \*, fps, width=0, height=0, k=3, buffer_s=20.0, close_after_s=1.0, featurize=<function pooled_demo_descriptor>, segmenter=<function motion_segments>)
+### *class* kodokan.recognizer.LiveRecognizer(recognizer, \*, fps, k=3, featurize=<function pooled_demo_descriptor>, \*\*detector_kwargs)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
-Live mode: a rolling pose buffer; each throw is recognized once its segment closes.
+Live mode: each throw a [`ThrowDetector`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.ThrowDetector) reports, recognized once.
 
-Push one frame at a time (`(P, 17, 3)` keypoints, as in `PoseSequence`).
-[`push()`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.LiveRecognizer.push) returns the throws that closed with that frame, each recognized once.
-A segment counts as closed when it ends at least `close_after_s` before the newest
-frame; the buffer keeps the last `buffer_s` seconds of pushed frames (at `fps`
-frames a second: push every analysed frame, or pass the analysed rate as `fps`).
-A segment that mostly overlaps a throw already recognized is that throw.
-
-#### buffer()
-
-The buffered frames as a `PoseSequence` (people padded with NaN).
-
-* **Return type:**
-  [`PoseSequence`](_autosummary/kodokan.pose.html.md#kodokan.pose.PoseSequence)
+[`push()`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.LiveRecognizer.push) takes one frame (`(P, 17, 3)` keypoints) and returns
+`(segment, recognition)` for the throws that closed with it. Detector options
+(`buffer_s`, `close_after_s`, `segmenter`, `width`, `height`) pass through.
 
 #### push(keypoints, frame_index=None)
 
@@ -1967,6 +2108,33 @@ Every technique’s score for one pooled descriptor (they sum to 1).
 
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`float`](https://docs.python.org/3/builtins/functions.html#float)]
+
+### *class* kodokan.recognizer.ThrowDetector(\*, fps, width=0, height=0, buffer_s=20.0, close_after_s=1.0, segmenter=<function motion_segments>)
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+A rolling pose buffer that reports each throw once, after its segment closes.
+
+Push one frame at a time (`(P, 17, 3)` keypoints, as in `PoseSequence`).
+[`push()`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.ThrowDetector.push) returns `(buffer, segment)` for the throws that closed with that
+frame. A segment counts as closed when it ends at least `close_after_s` before
+the newest frame; the buffer keeps the last `buffer_s` seconds of pushed frames
+(at `fps` frames a second: push every analysed frame, or pass the analysed rate
+as `fps`). A segment that mostly overlaps a throw already reported is that throw.
+
+#### buffer()
+
+The buffered frames as a `PoseSequence` (people padded with NaN).
+
+* **Return type:**
+  [`PoseSequence`](_autosummary/kodokan.pose.html.md#kodokan.pose.PoseSequence)
+
+#### push(keypoints, frame_index=None)
+
+Add one frame; return `(buffer, segment)` for each throw it closed.
+
+* **Return type:**
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`PoseSequence`](_autosummary/kodokan.pose.html.md#kodokan.pose.PoseSequence), [`Segment`](_autosummary/kodokan.segment.html.md#kodokan.segment.Segment)]]
 
 ### kodokan.recognizer.motion_segments(pose_seq, , min_peak_activity=3.0, \*\*segment_kwargs)
 
@@ -2199,6 +2367,107 @@ Returns `{video_id: report}`; a clip that fails to load records
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
 
+# _autosummary/kodokan.testmode.html.md
+
+# kodokan.testmode
+
+Technique test mode: perform the technique the system names, get scored (#5).
+
+[`TechniqueTest`](_autosummary/kodokan.testmode.html.md#kodokan.testmode.TechniqueTest) draws a technique at random from a focus pool (all the
+recognizer knows by default), names it, and grades the next performance on two
+things: how confidently the recognizer sees the *target* in it, and, when a reference
+for the target is given, how close it is to that reference (`kodokan.coach.coach()`,
+with its advice). `TechniqueTest.push()` runs the same loop on a live pose stream.
+
+```pycon
+>>> import numpy as np
+>>> from kodokan.recognizer import TechniqueRecognizer
+>>> X = np.vstack([np.full((3, 4), c) + np.arange(3)[:, None] * 0.1 for c in (0.0, 3.0)])
+>>> rec = TechniqueRecognizer(method="centroid").fit(X, ["o-goshi"] * 3 + ["uchi-mata"] * 3)
+>>> test = TechniqueTest(rec, pool=["uchi-mata"], seed=1)
+>>> test.next_prompt()
+'uchi-mata'
+>>> result = test.grade(np.full(4, 3.1))
+>>> result.passed, result.score > 50
+(True, True)
+```
+
+### Classes
+
+| [`LiveTechniqueTest`](_autosummary/kodokan.testmode.html.md#kodokan.testmode.LiveTechniqueTest)(test, \*, fps[, featurize, ...])   | The test loop on a live stream: prompt, detect the throw, grade, prompt again.   |
+|-------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| [`TechniqueTest`](_autosummary/kodokan.testmode.html.md#kodokan.testmode.TechniqueTest)(recognizer, \*[, pool, ...])           | Prompt a random technique from a focus pool; grade the performance.              |
+| [`TestResult`](_autosummary/kodokan.testmode.html.md#kodokan.testmode.TestResult)(target, recognition, ...)                 | The grade of one performance of the prompted technique.                          |
+
+### *class* kodokan.testmode.LiveTechniqueTest(test, \*, fps, featurize=<function pooled_demo_descriptor>, angle_featurize=<function demo_features>, on_prompt=None, \*\*detector_kwargs)
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+The test loop on a live stream: prompt, detect the throw, grade, prompt again.
+
+[`push()`](_autosummary/kodokan.testmode.html.md#kodokan.testmode.LiveTechniqueTest.push) takes one frame and returns `(segment, result)` for each throw that
+closed with it; after each graded throw the next technique is drawn
+(`prompt`). Detector options pass through.
+
+A throw is graded once it has *closed* (`close_after_s` after it ends), so the
+performer should wait for the next prompt before the next throw; any motion the
+detector takes for a throw also uses up a prompt.
+
+#### push(keypoints, frame_index=None)
+
+Add one frame; grade each throw it closed and draw the next prompt.
+
+* **Return type:**
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`Segment`](_autosummary/kodokan.segment.html.md#kodokan.segment.Segment), [`TestResult`](_autosummary/kodokan.testmode.html.md#kodokan.testmode.TestResult)]]
+
+### *class* kodokan.testmode.TechniqueTest(recognizer, , pool=None, references=None, lang='en', confidence_weight=0.5, seed=None, rng=None, advice={'en': {'close': 'Close to the reference: keep it up.', 'elbow': "Your {side} elbow is {deg:.0f}° off the reference: keep that arm's pull firm and close to your body.", 'headline': '{technique}: {score}/100.', 'hip': 'Your {side} hip is {deg:.0f}° off: bring your hips lower and closer to your partner.', 'kake': 'Most of the difference is in kake: commit through the finish.', 'knee': 'Your {side} knee is {deg:.0f}° off: bend your knees more as you enter, then drive up.', 'kuzushi': "Most of the difference is in kuzushi: break your partner's balance before you turn in.", 'shoulder': "Your {side} shoulder is {deg:.0f}° off: lift and turn that arm with the reference timing to take your partner's balance.", 'tsukuri': 'Most of the difference is in tsukuri: step in faster and closer.'}, 'fr': {'close': 'Proche de la référence : continuez ainsi.', 'elbow': "Votre coude {side} s'écarte de {deg:.0f}° de la référence : gardez la traction de ce bras ferme et près du corps.", 'headline': '{technique} : {score}/100.', 'hip': "Votre hanche {side_f} s'écarte de {deg:.0f}° : placez vos hanches plus bas et plus près de votre partenaire.", 'kake': "L'essentiel de l'écart est dans le kake : allez au bout de la projection.", 'knee': "Votre genou {side} s'écarte de {deg:.0f}° : fléchissez davantage les genoux en entrant, puis poussez vers le haut.", 'kuzushi': "L'essentiel de l'écart est dans le kuzushi : déséquilibrez votre partenaire avant d'entrer.", 'shoulder': "Votre épaule {side_f} s'écarte de {deg:.0f}° : levez et tournez ce bras au rythme de la référence pour déséquilibrer votre partenaire.", 'tsukuri': "L'essentiel de l'écart est dans le tsukuri : entrez plus vite et plus près."}})
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+Prompt a random technique from a focus pool; grade the performance.
+
+* **Parameters:**
+  * **recognizer** ([`TechniqueRecognizer`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.TechniqueRecognizer)) – a fitted [`TechniqueRecognizer`](_autosummary/kodokan.recognizer.html.md#kodokan.recognizer.TechniqueRecognizer).
+  * **pool** ([`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str)] | [`None`](https://docs.python.org/3/builtins/constants.html#None)) – the techniques to draw from (default: all the recognizer knows).
+  * **references** ([`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)] | [`None`](https://docs.python.org/3/builtins/constants.html#None)) – `{technique: build_reference(...)}`; techniques with one are
+    also graded on closeness, with advice.
+  * **confidence_weight** ([`float`](https://docs.python.org/3/builtins/functions.html#float)) – share of the score from the target’s confidence (the
+    rest from closeness to the reference, when there is one).
+  * **seed** ([`int`](https://docs.python.org/3/builtins/functions.html#int) | [`None`](https://docs.python.org/3/builtins/constants.html#None)) – or `rng`, for a reproducible sequence of prompts.
+
+#### grade(descriptor, angle_features=None)
+
+Grade one performance: its pooled `descriptor` and, for closeness, its
+per-frame `angle_features` (`kodokan.score.demo_features()`).
+
+* **Return type:**
+  [`TestResult`](_autosummary/kodokan.testmode.html.md#kodokan.testmode.TestResult)
+
+#### grade_clip(pose_seq, start_s, end_s, \*, featurize=<function pooled_demo_descriptor>, angle_featurize=<function demo_features>)
+
+Grade the performance in `pose_seq` between `start_s` and `end_s`.
+
+* **Return type:**
+  [`TestResult`](_autosummary/kodokan.testmode.html.md#kodokan.testmode.TestResult)
+
+#### next_prompt()
+
+Draw the next technique to perform (never the same one twice in a row).
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
+
+### *class* kodokan.testmode.TestResult(target, recognition, target_confidence, coaching, score)
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+The grade of one performance of the prompted technique.
+
+#### *property* passed *: [bool](https://docs.python.org/3/builtins/functions.html#bool)*
+
+Whether the recognizer’s best guess is the target.
+
+
 # _autosummary/kodokan.track.html.md
 
 # kodokan.track
@@ -2342,16 +2611,18 @@ Render skeletons to an MP4.
 
 # About this build
 
-This documentation was built on **2026-10-20 14:16 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/4f38c6bb1ea44930615551ef3fc3ca7fd7acb739"><code>4f38c6b</code></a> on branch <code>main</code>, for **kodokan 0.0.25** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-10-20 14:26 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/54e14695cbde67447aac3293ec35f2045541412c"><code>54e1469</code></a> on branch <code>main</code>, for **kodokan 0.0.27** (from <code>pyproject.toml</code>).
 
-#### NOTE
-Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
+#### WARNING
+The documentation and the package may be misaligned:
+
+- The documented version (0.0.27) is behind the latest release on PyPI (0.0.28): `pip install kodokan` gives newer code than these docs describe.
 
 ## Source
 
 |                     |                                                                                                                                                           |
 |---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/thorwhalen/kodokan/commit/4f38c6bb1ea44930615551ef3fc3ca7fd7acb739"><code>4f38c6bb1ea44930615551ef3fc3ca7fd7acb739</code></a> |
+| Commit              | <a href="https://github.com/thorwhalen/kodokan/commit/54e14695cbde67447aac3293ec35f2045541412c"><code>54e14695cbde67447aac3293ec35f2045541412c</code></a> |
 | Branch              | <code>main</code>                                                                                                                                         |
 | Tags at this commit | none                                                                                                                                                      |
 | Working tree        | clean                                                                                                                                                     |
@@ -2362,9 +2633,9 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>thorwhalen/kodokan</code>                                                            |
-| Run          | <a href="https://github.com/thorwhalen/kodokan/actions/runs/39437482188">39437482188</a>   |
+| Run          | <a href="https://github.com/thorwhalen/kodokan/actions/runs/39438987114">39438987114</a>   |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>4f38c6bb1ea44930615551ef3fc3ca7fd7acb739</code> (in the history of the built commit) |
+| Event commit | <code>54e14695cbde67447aac3293ec35f2045541412c</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -2389,13 +2660,13 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/kodokan/0.0.25/">0.0.25</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/kodokan/0.0.28/">0.0.28</a>, newer than the documented version (0.0.27).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/thorwhalen/kodokan && cd kodokan
-git checkout 4f38c6bb1ea44930615551ef3fc3ca7fd7acb739
+git checkout 54e14695cbde67447aac3293ec35f2045541412c
 pip install "epythet==0.2.21"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

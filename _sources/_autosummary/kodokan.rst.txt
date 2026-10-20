@@ -24,6 +24,7 @@
       feedback
       demo_features
       recognize_segments
+      coach
       make_problem
       build_catalog
       clip_filename
@@ -42,6 +43,12 @@
       Recognition
       Guess
       LiveRecognizer
+      ThrowDetector
+      Coaching
+      LiveCoach
+      TechniqueTest
+      LiveTechniqueTest
+      TestResult
    
 .. rubric:: Modules
 
@@ -61,5 +68,6 @@
    recognizer
    segment
    store
+   testmode
    track
    viz

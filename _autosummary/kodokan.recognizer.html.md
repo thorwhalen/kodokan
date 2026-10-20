@@ -11,8 +11,8 @@ This module is the application facade over them:
   > can show).
 - [`recognize_segments()`](#kodokan.recognizer.recognize_segments) — offline video: detect the throws in a whole pose
   sequence and recognize each.
-- [`LiveRecognizer`](#kodokan.recognizer.LiveRecognizer) — live stream: push pose frames into a rolling buffer; each
-  throw is recognized once its segment has closed.
+- [`ThrowDetector`](#kodokan.recognizer.ThrowDetector) — a rolling pose buffer that reports each throw once its
+  segment has closed; [`LiveRecognizer`](#kodokan.recognizer.LiveRecognizer) recognizes them (live stream mode).
 
 Scores are a softmax over negative distances to each technique’s centroid, in the
 train-standardized (and, when scikit-learn is installed, LDA-projected) descriptor
@@ -46,11 +46,12 @@ training demo, so with few demos per technique the spread stays optimistic.
 
 ### Classes
 
-| [`Guess`](#kodokan.recognizer.Guess)(technique, score)                           | One candidate technique and its score (higher is more likely).                      |
-|----------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
-| [`LiveRecognizer`](#kodokan.recognizer.LiveRecognizer)(recognizer, \*, fps[, width, ...]) | Live mode: a rolling pose buffer; each throw is recognized once its segment closes. |
-| [`Recognition`](#kodokan.recognizer.Recognition)(guesses[, scores])                    | The top-k guesses, best first, and every technique's score.                         |
-| [`TechniqueRecognizer`](#kodokan.recognizer.TechniqueRecognizer)(\*[, method, temperature])    | Fit on pooled descriptors; recognize with top-k guesses and the full score vector.  |
+| [`Guess`](#kodokan.recognizer.Guess)(technique, score)                        | One candidate technique and its score (higher is more likely).                                                   |
+|-------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------|
+| [`LiveRecognizer`](#kodokan.recognizer.LiveRecognizer)(recognizer, \*, fps[, k, ...])  | Live mode: each throw a [`ThrowDetector`](#kodokan.recognizer.ThrowDetector) reports, recognized once. |
+| [`Recognition`](#kodokan.recognizer.Recognition)(guesses[, scores])                 | The top-k guesses, best first, and every technique's score.                                                      |
+| [`TechniqueRecognizer`](#kodokan.recognizer.TechniqueRecognizer)(\*[, method, temperature]) | Fit on pooled descriptors; recognize with top-k guesses and the full score vector.                               |
+| [`ThrowDetector`](#kodokan.recognizer.ThrowDetector)(\*, fps[, width, height, ...])   | A rolling pose buffer that reports each throw once, after its segment closes.                                    |
 
 ### kodokan.recognizer.DFLT_MIN_PEAK_ACTIVITY *= 3.0*
 
@@ -69,25 +70,15 @@ Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
 One candidate technique and its score (higher is more likely).
 
-### *class* kodokan.recognizer.LiveRecognizer(recognizer, \*, fps, width=0, height=0, k=3, buffer_s=20.0, close_after_s=1.0, featurize=<function pooled_demo_descriptor>, segmenter=<function motion_segments>)
+### *class* kodokan.recognizer.LiveRecognizer(recognizer, \*, fps, k=3, featurize=<function pooled_demo_descriptor>, \*\*detector_kwargs)
 
 Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
 
-Live mode: a rolling pose buffer; each throw is recognized once its segment closes.
+Live mode: each throw a [`ThrowDetector`](#kodokan.recognizer.ThrowDetector) reports, recognized once.
 
-Push one frame at a time (`(P, 17, 3)` keypoints, as in `PoseSequence`).
-[`push()`](#kodokan.recognizer.LiveRecognizer.push) returns the throws that closed with that frame, each recognized once.
-A segment counts as closed when it ends at least `close_after_s` before the newest
-frame; the buffer keeps the last `buffer_s` seconds of pushed frames (at `fps`
-frames a second: push every analysed frame, or pass the analysed rate as `fps`).
-A segment that mostly overlaps a throw already recognized is that throw.
-
-#### buffer()
-
-The buffered frames as a `PoseSequence` (people padded with NaN).
-
-* **Return type:**
-  [`PoseSequence`](kodokan.pose.html.md#kodokan.pose.PoseSequence)
+[`push()`](#kodokan.recognizer.LiveRecognizer.push) takes one frame (`(P, 17, 3)` keypoints) and returns
+`(segment, recognition)` for the throws that closed with it. Detector options
+(`buffer_s`, `close_after_s`, `segmenter`, `width`, `height`) pass through.
 
 #### push(keypoints, frame_index=None)
 
@@ -154,6 +145,33 @@ Every technique’s score for one pooled descriptor (they sum to 1).
 
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`float`](https://docs.python.org/3/builtins/functions.html#float)]
+
+### *class* kodokan.recognizer.ThrowDetector(\*, fps, width=0, height=0, buffer_s=20.0, close_after_s=1.0, segmenter=<function motion_segments>)
+
+Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
+
+A rolling pose buffer that reports each throw once, after its segment closes.
+
+Push one frame at a time (`(P, 17, 3)` keypoints, as in `PoseSequence`).
+[`push()`](#kodokan.recognizer.ThrowDetector.push) returns `(buffer, segment)` for the throws that closed with that
+frame. A segment counts as closed when it ends at least `close_after_s` before
+the newest frame; the buffer keeps the last `buffer_s` seconds of pushed frames
+(at `fps` frames a second: push every analysed frame, or pass the analysed rate
+as `fps`). A segment that mostly overlaps a throw already reported is that throw.
+
+#### buffer()
+
+The buffered frames as a `PoseSequence` (people padded with NaN).
+
+* **Return type:**
+  [`PoseSequence`](kodokan.pose.html.md#kodokan.pose.PoseSequence)
+
+#### push(keypoints, frame_index=None)
+
+Add one frame; return `(buffer, segment)` for each throw it closed.
+
+* **Return type:**
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`PoseSequence`](kodokan.pose.html.md#kodokan.pose.PoseSequence), [`Segment`](kodokan.segment.html.md#kodokan.segment.Segment)]]
 
 ### kodokan.recognizer.motion_segments(pose_seq, , min_peak_activity=3.0, \*\*segment_kwargs)
 

@@ -1,0 +1,14 @@
+kodokan.testmode
+================
+
+.. automodule:: kodokan.testmode
+
+   
+   .. rubric:: Classes
+
+   .. autosummary::
+   
+      LiveTechniqueTest
+      TechniqueTest
+      TestResult
+   
