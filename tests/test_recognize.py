@@ -237,3 +237,14 @@ def test_paired_bootstrap_separability_brackets_and_pairs():
     with pytest.raises(ValueError, match="technique order"):
         paired_bootstrap_separability(rows, rows[::-1])
     assert "per_demo" not in loo_medoid_separability(techs, distance=dist)  # opt-in
+
+def test_similarity_from_confusion():
+    from kodokan.recognize import similarity_from_confusion
+
+    y_true = ["a", "a", "a", "a", "b", "b", "c"]
+    y_pred = ["a", "b", "b", None, "b", "a", "c"]
+    sym = similarity_from_confusion(y_true, y_pred)
+    assert sym["a"]["b"] == sym["b"]["a"] == (0.5 + 0.5) / 2
+    assert "c" not in sym["a"] and sym["c"] == {}
+    directed = similarity_from_confusion(y_true, y_pred, symmetric=False)
+    assert directed["a"] == {"b": 0.5} and directed["b"] == {"a": 0.5}

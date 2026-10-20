@@ -115,15 +115,39 @@ def make_problem(
     if mode not in MODES:
         raise ValueError(f"mode must be one of {MODES}")
     rng = rng or random.Random()
-    clip_for = clip_for or (lambda k: (catalog[k].get("clips") or [None])[0])
 
     distractors = confusable_distractors(
         target_key, list(catalog), n=n_choices - 1, similarity=similarity, rng=rng
     )
     option_keys = distractors + [target_key]
     rng.shuffle(option_keys)
-    correct_index = option_keys.index(target_key)
+    return problem_from_keys(
+        catalog,
+        target_key,
+        option_keys,
+        mode=mode,
+        clip_for=clip_for,
+        problem_id=f"{mode}-{target_key}-{rng.randrange(10**9)}",
+    )
 
+
+def problem_from_keys(
+    catalog: dict,
+    target_key: str,
+    option_keys: list[str],
+    *,
+    mode: str = "video_to_name",
+    clip_for=None,
+    problem_id: str,
+) -> Problem:
+    """Assemble a :class:`Problem` from an already-chosen, ordered option set.
+
+    The seam between *choosing* (``make_problem``, or a ``learning.Strategy``) and
+    *presenting*: whoever picks the options, the problem looks the same.
+    """
+    if mode not in MODES:
+        raise ValueError(f"mode must be one of {MODES}")
+    clip_for = clip_for or (lambda k: (catalog[k].get("clips") or [None])[0])
     if mode == "video_to_name":
         prompt = {"clip": clip_for(target_key)}
         choices = [{"key": k, "name": catalog[k]["name"]} for k in option_keys]
@@ -133,14 +157,13 @@ def make_problem(
             {"key": k, "name": catalog[k]["name"], "clip": clip_for(k)}
             for k in option_keys
         ]
-
     return Problem(
-        problem_id=f"{mode}-{target_key}-{rng.randrange(10**9)}",
+        problem_id=problem_id,
         mode=mode,
         target_key=target_key,
         prompt=prompt,
         choices=choices,
-        correct_index=correct_index,
+        correct_index=list(option_keys).index(target_key),
     )
 
 
@@ -295,6 +318,52 @@ def clip_filename(video_id: str, start_s: float, dur_s: float) -> str:
     changed segment simply gets a new name. Positional names (``{vid}_3.mp4``) could.
     """
     return f"{video_id}_{round(start_s * 1000)}_{round(dur_s * 1000)}.mp4"
+
+
+def build_model_confusability(
+    catalog: dict | None = None,
+    *,
+    feature: str = "tori_angles_pos",
+    method: str = "lda_knn",
+    cross_source: bool = True,
+) -> dict:
+    """Technique×technique confusability from the recognizer's own leave-one-out confusions.
+
+    Same shape as :func:`build_confusability`. Predictions are leave-one-clip-out
+    (``cross_source``) or leave-one-sample-out. Techniques the model never confuses get
+    no row entries; ``learning.merge_similarity`` / the strategies fall back as usual.
+    """
+    import numpy as np
+
+    from kodokan import store
+    from kodokan.recognize import (
+        demo_feature,
+        loo_pooled_predict,
+        pooled_descriptor,
+        similarity_from_confusion,
+    )
+
+    catalog = catalog or build_catalog()
+    ps = store.pose_store()
+    X, y, groups = [], [], []
+    for key, entry in catalog.items():
+        for clip in entry["clips"]:
+            if clip["video_id"] not in ps:
+                continue
+            seq = ps[clip["video_id"]]
+            for d in clip["demos"]:
+                f = demo_feature(seq, d["start_s"], d["end_s"], mode=feature)
+                if len(f) >= 4:
+                    X.append(pooled_descriptor(f))
+                    y.append(key)
+                    groups.append(clip["video_id"])
+    if len(set(y)) < 2:
+        return {}
+    y = np.array(y)
+    preds = loo_pooled_predict(
+        np.stack(X), y, method=method, groups=groups if cross_source else None
+    )
+    return similarity_from_confusion(y, preds)
 
 
 def build_confusability(
