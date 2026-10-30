@@ -103,7 +103,14 @@ def labelled_slots(pose_seq, start_s: float, end_s: float) -> list[int]:
 
 
 def manifest_entry(
-    *, throw: str, video_id: str, source: str, pose_seq, start_s: float, end_s: float, clip_file: str
+    *,
+    throw: str,
+    video_id: str,
+    source: str,
+    pose_seq,
+    start_s: float,
+    end_s: float,
+    clip_file: str,
 ) -> dict | None:
     """One labelling item for a demo, or ``None`` if it does not have two trackable people."""
     slots = labelled_slots(pose_seq, start_s, end_s)
@@ -161,7 +168,9 @@ def stratified_sample(
     return picked
 
 
-def build_label_manifest(*, n: int = 60, seed: int = 0, abstain_share: float = 0.4) -> list[dict]:
+def build_label_manifest(
+    *, n: int = 60, seed: int = 0, abstain_share: float = 0.4
+) -> list[dict]:
     """Sample the demos of the local pose/segment stores into a labelling manifest."""
     from kodokan import store
     from kodokan.flashcards import build_catalog, clip_filename
@@ -181,7 +190,9 @@ def build_label_manifest(*, n: int = 60, seed: int = 0, abstain_share: float = 0
                     pose_seq=seq,
                     start_s=d["start_s"],
                     end_s=d["end_s"],
-                    clip_file=clip_filename(clip["video_id"], d["start_s"], d["end_s"] - d["start_s"]),
+                    clip_file=clip_filename(
+                        clip["video_id"], d["start_s"], d["end_s"] - d["start_s"]
+                    ),
                 )
                 if e:
                     entries.append(e)
@@ -217,7 +228,10 @@ def agreement_report(manifest: Sequence[dict], labels: Iterable[dict]) -> dict:
     """
     by_id = {e["id"]: e for e in manifest}
     lab = {i: r for i, r in latest_labels(labels).items() if i in by_id}
-    groups: dict[str, dict] = {g: {"labelled": 0, "decided": 0, "agree": 0, "cant_tell": 0} for g in ("confident", "abstained")}
+    groups: dict[str, dict] = {
+        g: {"labelled": 0, "decided": 0, "agree": 0, "cant_tell": 0}
+        for g in ("confident", "abstained")
+    }
     for i, r in lab.items():
         e = by_id[i]
         g = groups["abstained" if e["abstained"] else "confident"]
@@ -227,12 +241,22 @@ def agreement_report(manifest: Sequence[dict], labels: Iterable[dict]) -> dict:
             continue
         g["decided"] += 1
         g["agree"] += int(e["slots"][0 if r["verdict"] == "A" else 1] == e["tori_slot"])
-    total = {k: sum(g[k] for g in groups.values()) for k in ("labelled", "decided", "agree", "cant_tell")}
+    total = {
+        k: sum(g[k] for g in groups.values())
+        for k in ("labelled", "decided", "agree", "cant_tell")
+    }
     for g in (*groups.values(), total):
         g["agreement"] = round(g["agree"] / g["decided"], 3) if g["decided"] else None
         g["ci95"] = wilson_interval(g["agree"], g["decided"])
-        g["cant_tell_rate"] = round(g["cant_tell"] / g["labelled"], 3) if g["labelled"] else None
-    return {"sampled": len(manifest), "unlabelled": len(manifest) - total["labelled"], "overall": total, **groups}
+        g["cant_tell_rate"] = (
+            round(g["cant_tell"] / g["labelled"], 3) if g["labelled"] else None
+        )
+    return {
+        "sampled": len(manifest),
+        "unlabelled": len(manifest) - total["labelled"],
+        "overall": total,
+        **groups,
+    }
 
 
 def _read_jsonl(path: Path) -> list[dict]:
@@ -240,9 +264,13 @@ def _read_jsonl(path: Path) -> list[dict]:
 
 
 def main(argv: Sequence[str] | None = None) -> None:
-    ap = argparse.ArgumentParser(prog="python -m kodokan.tori_labels", description=__doc__.split("\n")[0])
+    ap = argparse.ArgumentParser(
+        prog="python -m kodokan.tori_labels", description=__doc__.split("\n")[0]
+    )
     sub = ap.add_subparsers(dest="cmd", required=True)
-    b = sub.add_parser("build", help="sample demos into a labelling manifest (needs ~/kodokan_data)")
+    b = sub.add_parser(
+        "build", help="sample demos into a labelling manifest (needs ~/kodokan_data)"
+    )
     b.add_argument("out", type=Path)
     b.add_argument("--n", type=int, default=60)
     b.add_argument("--seed", type=int, default=0)
@@ -256,7 +284,14 @@ def main(argv: Sequence[str] | None = None) -> None:
         a.out.write_text(json.dumps(m))
         print(f"wrote {len(m)} items to {a.out}")
     else:
-        print(json.dumps(agreement_report(json.loads(a.manifest.read_text()), _read_jsonl(a.labels)), indent=2))
+        print(
+            json.dumps(
+                agreement_report(
+                    json.loads(a.manifest.read_text()), _read_jsonl(a.labels)
+                ),
+                indent=2,
+            )
+        )
 
 
 if __name__ == "__main__":
