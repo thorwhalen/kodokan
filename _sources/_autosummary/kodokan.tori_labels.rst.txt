@@ -1,0 +1,28 @@
+kodokan.tori\_labels
+====================
+
+.. automodule:: kodokan.tori_labels
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      VERDICTS
+      MIN_KEYPOINT_CONF
+      BOX_PAD
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      agreement_report
+      build_label_manifest
+      labelled_slots
+      latest_labels
+      main
+      manifest_entry
+      person_boxes
+      stratified_sample
+      wilson_interval
+   

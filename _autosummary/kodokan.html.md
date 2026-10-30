@@ -637,5 +637,6 @@ A dict-like `{video_id: <json>}` store for demo segments (and metadata).
 | [`segment`](kodokan.segment.html.md#module-kodokan.segment)         | Segment a clip into its repeated demonstrations of one throw.                                        |
 | [`store`](kodokan.store.html.md#module-kodokan.store)             | dol-backed stores for the pipeline's artifacts (the analysis SSOT).                                  |
 | [`testmode`](kodokan.testmode.html.md#module-kodokan.testmode)       | Technique test mode: perform the technique the system names, get scored (#5).                        |
+| [`tori_labels`](kodokan.tori_labels.html.md#module-kodokan.tori_labels) | Hand-labelling of the tori heuristic (#49): sample demos, then score agreement.                      |
 | [`track`](kodokan.track.html.md#module-kodokan.track)             | Stable tori/uke identity tracking (BoT-SORT / ByteTrack).                                            |
 | [`viz`](kodokan.viz.html.md#module-kodokan.viz)                 | Visualize a [`PoseSequence`](kodokan.pose.html.md#kodokan.pose.PoseSequence). |

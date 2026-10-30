@@ -21,9 +21,10 @@
 - [kodokan.segment](_autosummary/kodokan.segment.html.md): Segment a clip into its repeated demonstrations of one throw.
 - [kodokan.store](_autosummary/kodokan.store.html.md): dol-backed stores for the pipeline’s artifacts (the analysis SSOT).
 - [kodokan.testmode](_autosummary/kodokan.testmode.html.md): Technique test mode: perform the technique the system names, get scored (#5).
+- [kodokan.tori_labels](_autosummary/kodokan.tori_labels.html.md): Hand-labelling of the tori heuristic (#49): sample demos, then score agreement.
 - [kodokan.track](_autosummary/kodokan.track.html.md): Stable tori/uke identity tracking (BoT-SORT / ByteTrack).
 - [kodokan.viz](_autosummary/kodokan.viz.html.md): Visualize a &#96;PoseSequence&#96;.
-- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-10-20 14:32 UTC&#42;&#42; from commit &lt;a href="https://github.com/tho...
+- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-10-30 13:30 UTC&#42;&#42; from commit &lt;a href="https://github.com/tho...
 
 ## Optional
 

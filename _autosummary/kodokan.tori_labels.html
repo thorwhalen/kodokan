@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="alternate" type="text/markdown" href="kodokan.tori_labels.html.md">
+<link rel="describedby" href="../llms.txt" type="text/markdown">
+<link rel="alternate" type="text/markdown" href="kodokan.tori_labels.html.md">
+<link rel="describedby" href="llms.txt">
+    <title>kodokan.tori_labels &#8212; kodokan</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=18bd87630a240e9c25be" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_autodoc_typehints.css?v=057ac668" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/epythet.css?v=11616352" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=18bd87630a240e9c25be"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be" />
+
+    <script src="../_static/documentation_options.js?v=828725f0"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=fd10adb8"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_autosummary/kodokan.tori_labels';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="kodokan.track" href="kodokan.track.html" />
+    <link rel="prev" title="kodokan.testmode" href="kodokan.testmode.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.0.29" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">kodokan</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/thorwhalen/kodokan" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/thorwhalen/kodokan" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="kodokan.html">kodokan</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kodokan.acquire.html">kodokan.acquire</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.canon3d.html">kodokan.canon3d</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.config.html">kodokan.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.descriptors.html">kodokan.descriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.flashcards.html">kodokan.flashcards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.learning.html">kodokan.learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.pose.html">kodokan.pose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.quiz.html">kodokan.quiz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.recognize.html">kodokan.recognize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.recognizer.html">kodokan.recognizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.segment.html">kodokan.segment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.store.html">kodokan.store</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.testmode.html">kodokan.testmode</a></li>
+<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">kodokan.tori_labels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.track.html">kodokan.track</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.viz.html">kodokan.viz</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../api.html" class="nav-link">API reference</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="kodokan.html" class="nav-link">kodokan</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">kodokan.tori_labels</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-kodokan.tori_labels">
+<span id="kodokan-tori-labels"></span><h1>kodokan.tori_labels<a class="headerlink" href="#module-kodokan.tori_labels" title="Link to this heading">#</a></h1>
+<p>Hand-labelling of the tori heuristic (#49): sample demos, then score agreement.</p>
+<p><code class="docutils literal notranslate"><span class="pre">recognize.tori_index</span></code> decides which tracked judoka is tori (the thrower) from hip
+heights alone. There is no ground truth to validate it against, so the owner labels a
+stratified sample of demos by eye (in the web app’s owner-only labelling page) and this
+module closes the loop:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#kodokan.tori_labels.build_label_manifest" title="kodokan.tori_labels.build_label_manifest"><code class="xref py py-func docutils literal notranslate"><span class="pre">build_label_manifest()</span></code></a> – pick ~60 demos (stratified over throw, source and the
+confident/abstain split) and emit, per demo, the two tracked people’s boxes over time,
+normalised to the frame so the page can outline them on the clip in two colours. The
+heuristic’s own answer is stored but the app never sends it to the labelling page.</p></li>
+<li><p><a class="reference internal" href="#kodokan.tori_labels.agreement_report" title="kodokan.tori_labels.agreement_report"><code class="xref py py-func docutils literal notranslate"><span class="pre">agreement_report()</span></code></a> – given the owner’s labels, the agreement with the heuristic
+(Wilson CI), split by confident/abstained, plus the “can’t tell” rate in each.</p></li>
+</ul>
+<p>Command line:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">kodokan</span><span class="o">.</span><span class="n">tori_labels</span> <span class="n">build</span> <span class="n">manifest</span><span class="o">.</span><span class="n">json</span> <span class="o">--</span><span class="n">n</span> <span class="mi">60</span>
+<span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">kodokan</span><span class="o">.</span><span class="n">tori_labels</span> <span class="n">report</span> <span class="n">manifest</span><span class="o">.</span><span class="n">json</span> <span class="n">labels</span><span class="o">.</span><span class="n">jsonl</span>
+</pre></div>
+</div>
+<p>Needs the pose and segment stores (<code class="docutils literal notranslate"><span class="pre">~/kodokan_data</span></code>) for <code class="docutils literal notranslate"><span class="pre">build</span></code> only; <code class="docutils literal notranslate"><span class="pre">report</span></code>
+and the pure helpers need nothing but the two files.</p>
+<p class="rubric">Module Attributes</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.tori_labels.VERDICTS" title="kodokan.tori_labels.VERDICTS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">VERDICTS</span></code></a></p></td>
+<td><p>The verdicts the labelling page records.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.tori_labels.MIN_KEYPOINT_CONF" title="kodokan.tori_labels.MIN_KEYPOINT_CONF"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MIN_KEYPOINT_CONF</span></code></a></p></td>
+<td><p>Minimum keypoint confidence for a joint to count towards a person's box.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.tori_labels.BOX_PAD" title="kodokan.tori_labels.BOX_PAD"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BOX_PAD</span></code></a></p></td>
+<td><p>Padding added around the joints' extent, as a fraction of the box size.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Functions</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.tori_labels.agreement_report" title="kodokan.tori_labels.agreement_report"><code class="xref py py-obj docutils literal notranslate"><span class="pre">agreement_report</span></code></a>(manifest, labels)</p></td>
+<td><p>Agreement of <code class="docutils literal notranslate"><span class="pre">tori_index</span></code> with the owner's labels.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.tori_labels.build_label_manifest" title="kodokan.tori_labels.build_label_manifest"><code class="xref py py-obj docutils literal notranslate"><span class="pre">build_label_manifest</span></code></a>(*[, n, seed, abstain_share])</p></td>
+<td><p>Sample the demos of the local pose/segment stores into a labelling manifest.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.tori_labels.labelled_slots" title="kodokan.tori_labels.labelled_slots"><code class="xref py py-obj docutils literal notranslate"><span class="pre">labelled_slots</span></code></a>(pose_seq, start_s, end_s)</p></td>
+<td><p>The two person slots shown to the labeller: the two most present in the window.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.tori_labels.latest_labels" title="kodokan.tori_labels.latest_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">latest_labels</span></code></a>(rows)</p></td>
+<td><p>The most recent label per demo id (the owner may re-label).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">main</span></code>([argv])</p></td>
+<td><p></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.tori_labels.manifest_entry" title="kodokan.tori_labels.manifest_entry"><code class="xref py py-obj docutils literal notranslate"><span class="pre">manifest_entry</span></code></a>(*, throw, video_id, source, ...)</p></td>
+<td><p>One labelling item for a demo, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if it does not have two trackable people.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.tori_labels.person_boxes" title="kodokan.tori_labels.person_boxes"><code class="xref py py-obj docutils literal notranslate"><span class="pre">person_boxes</span></code></a>(pose_seq, start_s, end_s, *, slots)</p></td>
+<td><p>Normalised boxes of the given person <em>slots</em> over a demo window.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.tori_labels.stratified_sample" title="kodokan.tori_labels.stratified_sample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">stratified_sample</span></code></a>(entries[, n, ...])</p></td>
+<td><p>Pick <em>n</em> entries spread over throws and sources, with a guaranteed abstain share.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.tori_labels.wilson_interval" title="kodokan.tori_labels.wilson_interval"><code class="xref py py-obj docutils literal notranslate"><span class="pre">wilson_interval</span></code></a>(k, n, *[, z])</p></td>
+<td><p>Wilson score interval for a proportion (95% by default).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py data">
+<dt class="sig sig-object py" id="kodokan.tori_labels.BOX_PAD">
+<span class="sig-prename descclassname"><span class="pre">kodokan.tori_labels.</span></span><span class="sig-name descname"><span class="pre">BOX_PAD</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.08</span></span><a class="headerlink" href="#kodokan.tori_labels.BOX_PAD" title="Link to this definition">#</a></dt>
+<dd><p>Padding added around the joints’ extent, as a fraction of the box size.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="kodokan.tori_labels.MIN_KEYPOINT_CONF">
+<span class="sig-prename descclassname"><span class="pre">kodokan.tori_labels.</span></span><span class="sig-name descname"><span class="pre">MIN_KEYPOINT_CONF</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.1</span></span><a class="headerlink" href="#kodokan.tori_labels.MIN_KEYPOINT_CONF" title="Link to this definition">#</a></dt>
+<dd><p>Minimum keypoint confidence for a joint to count towards a person’s box.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="kodokan.tori_labels.VERDICTS">
+<span class="sig-prename descclassname"><span class="pre">kodokan.tori_labels.</span></span><span class="sig-name descname"><span class="pre">VERDICTS</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">('A',</span> <span class="pre">'B',</span> <span class="pre">'cant_tell')</span></span><a class="headerlink" href="#kodokan.tori_labels.VERDICTS" title="Link to this definition">#</a></dt>
+<dd><p>The verdicts the labelling page records.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.tori_labels.agreement_report">
+<span class="sig-prename descclassname"><span class="pre">kodokan.tori_labels.</span></span><span class="sig-name descname"><span class="pre">agreement_report</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">manifest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">labels</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/tori_labels.html#agreement_report"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.tori_labels.agreement_report" title="Link to this definition">#</a></dt>
+<dd><p>Agreement of <code class="docutils literal notranslate"><span class="pre">tori_index</span></code> with the owner’s labels.</p>
+<p>A decided label (“A”/”B”) agrees when the named slot equals the heuristic’s. “Can’t tell”
+is excluded from agreement and reported as a rate, overall and per confident/abstained
+group – if abstentions are the genuinely ambiguous demos, their can’t-tell rate is higher.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.tori_labels.build_label_manifest">
+<span class="sig-prename descclassname"><span class="pre">kodokan.tori_labels.</span></span><span class="sig-name descname"><span class="pre">build_label_manifest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">abstain_share</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.4</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/tori_labels.html#build_label_manifest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.tori_labels.build_label_manifest" title="Link to this definition">#</a></dt>
+<dd><p>Sample the demos of the local pose/segment stores into a labelling manifest.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.tori_labels.labelled_slots">
+<span class="sig-prename descclassname"><span class="pre">kodokan.tori_labels.</span></span><span class="sig-name descname"><span class="pre">labelled_slots</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose_seq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_s</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/tori_labels.html#labelled_slots"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.tori_labels.labelled_slots" title="Link to this definition">#</a></dt>
+<dd><p>The two person slots shown to the labeller: the two most present in the window.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.tori_labels.latest_labels">
+<span class="sig-prename descclassname"><span class="pre">kodokan.tori_labels.</span></span><span class="sig-name descname"><span class="pre">latest_labels</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rows</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/tori_labels.html#latest_labels"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.tori_labels.latest_labels" title="Link to this definition">#</a></dt>
+<dd><p>The most recent label per demo id (the owner may re-label).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.tori_labels.manifest_entry">
+<span class="sig-prename descclassname"><span class="pre">kodokan.tori_labels.</span></span><span class="sig-name descname"><span class="pre">manifest_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">throw</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">video_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pose_seq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clip_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/tori_labels.html#manifest_entry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.tori_labels.manifest_entry" title="Link to this definition">#</a></dt>
+<dd><p>One labelling item for a demo, or <code class="docutils literal notranslate"><span class="pre">None</span></code> if it does not have two trackable people.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a> | <span class="highlight sphinx_autodoc_typehints-value"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></a></span></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.tori_labels.person_boxes">
+<span class="sig-prename descclassname"><span class="pre">kodokan.tori_labels.</span></span><span class="sig-name descname"><span class="pre">person_boxes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pose_seq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_s</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">slots</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_conf</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pad</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.08</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_frames</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">120</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/tori_labels.html#person_boxes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.tori_labels.person_boxes" title="Link to this definition">#</a></dt>
+<dd><p>Normalised boxes of the given person <em>slots</em> over a demo window.</p>
+<p>Returns <code class="docutils literal notranslate"><span class="pre">{&quot;t&quot;:</span> <span class="pre">[seconds</span> <span class="pre">from</span> <span class="pre">window</span> <span class="pre">start],</span> <span class="pre">&quot;boxes&quot;:</span> <span class="pre">[[</span> <span class="pre">[x0,y0,x1,y1]</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">per</span> <span class="pre">slot</span> <span class="pre">]</span> <span class="pre">per</span> <span class="pre">frame]}</span></code>
+with coordinates as fractions of the frame (so they scale to any rendition of the clip).
+Frames are thinned to at most <em>max_frames</em>; a slot with no usable joints in a frame is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.tori_labels.stratified_sample">
+<span class="sig-prename descclassname"><span class="pre">kodokan.tori_labels.</span></span><span class="sig-name descname"><span class="pre">stratified_sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">entries</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">abstain_share</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/tori_labels.html#stratified_sample"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.tori_labels.stratified_sample" title="Link to this definition">#</a></dt>
+<dd><p>Pick <em>n</em> entries spread over throws and sources, with a guaranteed abstain share.</p>
+<p>The abstained demos are the ones whose role label is in doubt, so they get at least
+<code class="docutils literal notranslate"><span class="pre">abstain_share</span></code> of the sample (fewer only if there are not that many). Within each
+half, strata are <code class="docutils literal notranslate"><span class="pre">(throw,</span> <span class="pre">source)</span></code> cells drawn round-robin from a seeded shuffle, so
+no throw or source dominates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.tori_labels.wilson_interval">
+<span class="sig-prename descclassname"><span class="pre">kodokan.tori_labels.</span></span><span class="sig-name descname"><span class="pre">wilson_interval</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.96</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/tori_labels.html#wilson_interval"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.tori_labels.wilson_interval" title="Link to this definition">#</a></dt>
+<dd><p>Wilson score interval for a proportion (95% by default).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#tuple" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">tuple</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="kodokan.testmode.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">kodokan.testmode</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="kodokan.track.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">kodokan.track</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.tori_labels.BOX_PAD"><code class="docutils literal notranslate"><span class="pre">BOX_PAD</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.tori_labels.MIN_KEYPOINT_CONF"><code class="docutils literal notranslate"><span class="pre">MIN_KEYPOINT_CONF</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.tori_labels.VERDICTS"><code class="docutils literal notranslate"><span class="pre">VERDICTS</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.tori_labels.agreement_report"><code class="docutils literal notranslate"><span class="pre">agreement_report()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.tori_labels.build_label_manifest"><code class="docutils literal notranslate"><span class="pre">build_label_manifest()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.tori_labels.labelled_slots"><code class="docutils literal notranslate"><span class="pre">labelled_slots()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.tori_labels.latest_labels"><code class="docutils literal notranslate"><span class="pre">latest_labels()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.tori_labels.manifest_entry"><code class="docutils literal notranslate"><span class="pre">manifest_entry()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.tori_labels.person_boxes"><code class="docutils literal notranslate"><span class="pre">person_boxes()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.tori_labels.stratified_sample"><code class="docutils literal notranslate"><span class="pre">stratified_sample()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.tori_labels.wilson_interval"><code class="docutils literal notranslate"><span class="pre">wilson_interval()</span></code></a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/_autosummary/kodokan.tori_labels.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=18bd87630a240e9c25be"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=18bd87630a240e9c25be"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.23.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

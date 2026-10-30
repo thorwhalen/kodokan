@@ -69,5 +69,6 @@
    segment
    store
    testmode
+   tori_labels
    track
    viz
