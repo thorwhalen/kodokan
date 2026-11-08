@@ -10,6 +10,7 @@
 - [kodokan](_autosummary/kodokan.html.md): kodokan — study Kodokan Judo throws from video via body-pose analysis.
 - [kodokan.acquire](_autosummary/kodokan.acquire.html.md): Acquire Kodokan technique clips from YouTube (thin wrapper over &#96;yb.download&#96;).
 - [kodokan.canon3d](_autosummary/kodokan.canon3d.html.md): Pelvis-frame (Procrustes) canonicalization of 3D world landmarks.
+- [kodokan.competitions](_autosummary/kodokan.competitions.html.md): A calendar of upcoming judo competitions in one French département, and who may enter each.
 - [kodokan.config](_autosummary/kodokan.config.html.md): Where kodokan keeps its data (downloaded clips + derived artifacts).
 - [kodokan.descriptors](_autosummary/kodokan.descriptors.html.md): Experimental per-demo feature descriptors (to test what makes throws separable).
 - [kodokan.flashcards](_autosummary/kodokan.flashcards.html.md): Technique-recognition learning game (app #6) — logic layer.
@@ -24,7 +25,8 @@
 - [kodokan.tori_labels](_autosummary/kodokan.tori_labels.html.md): Hand-labelling of the tori heuristic (#49): sample demos, then score agreement.
 - [kodokan.track](_autosummary/kodokan.track.html.md): Stable tori/uke identity tracking (BoT-SORT / ByteTrack).
 - [kodokan.viz](_autosummary/kodokan.viz.html.md): Visualize a &#96;PoseSequence&#96;.
-- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-11-07 09:02 UTC&#42;&#42; from commit &lt;a href="https://github.com/tho...
+- [For AI agents](ai-agents.html.md): &#96;kodokan&#96; ships artifacts for coding agents alongside its code. This page lists
+- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-11-08 16:43 UTC&#42;&#42; from commit &lt;a href="https://github.com/tho...
 
 ## Optional
 

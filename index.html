@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="_static/documentation_options.js?v=61a342a2"></script>
+    <script src="_static/documentation_options.js?v=c5dbc6bb"></script>
     <script src="_static/doctools.js?v=fd6eb6e6"></script>
     <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/clipboard.min.js?v=a7894cd8"></script>
@@ -57,7 +57,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.30" />
+  <meta name="docsearch:version" content="0.0.31" />
   
     
     <script src="_static/searchtools.js"></script>
@@ -142,6 +142,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="api.html">
     API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="ai-agents.html">
+    For AI agents
   </a>
 </li>
 
@@ -245,6 +252,13 @@
 <li class="nav-item ">
   <a class="nav-link nav-internal" href="api.html">
     API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="ai-agents.html">
+    For AI agents
   </a>
 </li>
 
@@ -567,6 +581,14 @@ examples — not viewpoint alone. Recognition needs a <strong>learned</strong> s
 role-consistent features. The eval harness (<code class="docutils literal notranslate"><span class="pre">examples/eval_features*.py</span></code>) is ready to
 validate those.</p>
 </section>
+<section id="competition-calendar">
+<h2>Competition calendar<a class="headerlink" href="#competition-calendar" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">kodokan.competitions</span></code> fetches the French judo federation’s agenda for one département (default: the Bouches-du-Rhône), each event’s detail page and the committee’s season forecast PDF into a snapshot folder, and validates the calendar built from it before it is published. Deciding who may enter each event (open, by qualification, a friendly interclub, by invitation) is reading prose rules; the <code class="docutils literal notranslate"><span class="pre">kodokan-competitions</span></code> skill in <code class="docutils literal notranslate"><span class="pre">.claude/skills/</span></code> is that procedure.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>kodokan.competitions<span class="w"> </span>snapshot<span class="w"> </span>./snap<span class="w">      </span><span class="c1"># agenda.json, details/, forecast.txt</span>
+python<span class="w"> </span>-m<span class="w"> </span>kodokan.competitions<span class="w"> </span>validate<span class="w"> </span>competitions.json
+</pre></div>
+</div>
+</section>
 <section id="background-rationale">
 <h2>Background &amp; rationale<a class="headerlink" href="#background-rationale" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -582,7 +604,7 @@ features don’t discriminate techniques (the empirical finding).</p></li>
 </section>
 </section>
 
-<p class="epythet-provenance" style="font-size:.8em;opacity:.65;margin-top:2.5em;text-align:right">built 2026-11-07 09:02 UTC from <a href="https://github.com/thorwhalen/kodokan/commit/80f290852c3dccd68e081f1f6e7b6c943e7a6008">80f2908</a> (main) · kodokan 0.0.30 · <a href="about-this-build.html">about this build</a></p>
+<p class="epythet-provenance" style="font-size:.8em;opacity:.65;margin-top:2.5em;text-align:right">built 2026-11-08 16:43 UTC from <a href="https://github.com/thorwhalen/kodokan/commit/5609c220f53fd655d23e79553314532cbffb3212">5609c22</a> (main) · kodokan 0.0.31 · <a href="about-this-build.html">about this build</a></p>
 
                 </article>
               
@@ -627,6 +649,7 @@ features don’t discriminate techniques (the empirical finding).</p></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-pipeline">The pipeline</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#dataset">Dataset</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#status-honest-limits">Status &amp; honest limits</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#competition-calendar">Competition calendar</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#background-rationale">Background &amp; rationale</a></li>
 </ul>
   </nav></div>

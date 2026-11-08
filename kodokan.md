@@ -1,4 +1,4 @@
-> built 2026-11-07 09:02 UTC from 80f2908 (main) · kodokan 0.0.30. Details: build_info.json
+> built 2026-11-08 16:43 UTC from 5609c22 (main) · kodokan 0.0.31. Details: build_info.json
 
 # index.html.md
 
@@ -185,6 +185,15 @@ examples — not viewpoint alone. Recognition needs a **learned** skeleton repre
 (few-shot JEANIE, or trained PoseC3D/CTR-GCN) and/or cleaner multi-person 3D with
 role-consistent features. The eval harness (`examples/eval_features*.py`) is ready to
 validate those.
+
+## Competition calendar
+
+`kodokan.competitions` fetches the French judo federation’s agenda for one département (default: the Bouches-du-Rhône), each event’s detail page and the committee’s season forecast PDF into a snapshot folder, and validates the calendar built from it before it is published. Deciding who may enter each event (open, by qualification, a friendly interclub, by invitation) is reading prose rules; the `kodokan-competitions` skill in `.claude/skills/` is that procedure.
+
+```bash
+python -m kodokan.competitions snapshot ./snap      # agenda.json, details/, forecast.txt
+python -m kodokan.competitions validate competitions.json
+```
 
 ## Background & rationale
 
@@ -385,6 +394,163 @@ orthogonalized against the spine so the basis is orthonormal (Gram-Schmidt).
 
 * **Return type:**
   [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[`ndarray`, `ndarray`]
+
+
+# _autosummary/kodokan.competitions.html.md
+
+# kodokan.competitions
+
+A calendar of upcoming judo competitions in one French département, and who may enter each.
+
+The French judo federation (FFJDA) runs one agenda engine behind every regional and
+departmental site. Each site’s `/evenement` page embeds the *whole national agenda* as
+JSON in a hidden form field, so one GET gives every published event with its town,
+postcode, organiser, level and the extranet registration window; each event also has a
+detail page with the birth years, minimum belt and the rules of entry. The department’s
+committee additionally publishes a season forecast as a PDF, which is the only source for
+events more than four to six weeks ahead.
+
+This module does the deterministic part of refreshing a calendar: fetch the agenda,
+select the area, fetch the detail pages and the forecast, and write a *snapshot* folder.
+Deciding who may enter each event (open, by qualification, a friendly interclub limited to
+named clubs) is reading prose rules, and is left to the person or agent doing the refresh:
+the `kodokan-competitions` skill is that procedure. The result is validated with
+[`validate_calendar()`](_autosummary/kodokan.competitions.html.md#kodokan.competitions.validate_calendar) before it is published.
+
+```pycon
+>>> html = '<input type="hidden" name="evenements" value=\'{"2026": {"11": [{"id_evenement": "1", "titre": "SHIREN", "codePostal": "13015", "date_debut": "1794096000", "date_fin": "1794096000", "libelleType": "COMPETITION", "proprietaire": "Comité X", "slug": "shiren"}]}}\' />'
+>>> [e["titre"] for e in parse_agenda(html)]
+['SHIREN']
+>>> normalise(parse_agenda(html)[0])["date_start"]
+'2026-11-08'
+```
+
+Nothing here names a club: the home club, the area and the output path are arguments
+(or a local config file the skill reads), so the module serves any club in any département.
+
+### Module Attributes
+
+| [`DFLT_SITE`](_autosummary/kodokan.competitions.html.md#kodokan.competitions.DFLT_SITE)          | The Bouches-du-Rhône committee's site; any FFJDA committee or league site has the same engine.   |
+|---------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| [`DFLT_OWNERS`](_autosummary/kodokan.competitions.html.md#kodokan.competitions.DFLT_OWNERS)        | Organisers whose events count even when held outside the area (regional league, the committee).  |
+| [`DFLT_EXCLUDE_TYPES`](_autosummary/kodokan.competitions.html.md#kodokan.competitions.DFLT_EXCLUDE_TYPES) | Event types that are not competitions or events a young judoka enters.                           |
+| [`EVENT_FIELDS`](_autosummary/kodokan.competitions.html.md#kodokan.competitions.EVENT_FIELDS)       | Keys of one published event, and the type each must have (`None` allowed where listed).          |
+
+### Functions
+
+| [`detail_text`](_autosummary/kodokan.competitions.html.md#kodokan.competitions.detail_text)(page_html)                             | The readable body of an event detail page: dates, venue, categories, birth years, belts and the free-text rules (weigh-in times, who may not enter, fees).   |
+|-----------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `detail_url`(ev, \*[, site])                                                                        |                                                                                                                                                              |
+| [`forecast_pdf_url`](_autosummary/kodokan.competitions.html.md#kodokan.competitions.forecast_pdf_url)(calendars_page_html, \*[, site])  | The link to the season's forecast calendar PDF on the committee's calendars page.                                                                            |
+| [`http_get`](_autosummary/kodokan.competitions.html.md#kodokan.competitions.http_get)(url, \*[, timeout])                       | GET `url` with an identifying User-Agent (the default fetcher).                                                                                              |
+| [`in_area`](_autosummary/kodokan.competitions.html.md#kodokan.competitions.in_area)(ev, \*[, postcode_prefixes, owners, ...])  | Whether an agenda event belongs in the area's calendar.                                                                                                      |
+| [`normalise`](_autosummary/kodokan.competitions.html.md#kodokan.competitions.normalise)(ev, \*[, site])                          | The fields of a raw agenda event that a calendar needs, with ISO dates.                                                                                      |
+| [`parse_agenda`](_autosummary/kodokan.competitions.html.md#kodokan.competitions.parse_agenda)(page_html)                            | Every event in an FFJDA site's `/evenement` page (the embedded national agenda).                                                                             |
+| [`pdf_text`](_autosummary/kodokan.competitions.html.md#kodokan.competitions.pdf_text)(pdf)                                      | The text of a PDF, laid out (`pdftotext -layout`, from poppler).                                                                                             |
+| [`snapshot`](_autosummary/kodokan.competitions.html.md#kodokan.competitions.snapshot)(out_dir, \*[, site, calendars_path, ...]) | Fetch everything a calendar refresh reads, into `out_dir`.                                                                                                   |
+| [`validate_calendar`](_autosummary/kodokan.competitions.html.md#kodokan.competitions.validate_calendar)(cal)                             | Problems with a calendar about to be published (`[]` means publishable).                                                                                     |
+| [`write_calendar`](_autosummary/kodokan.competitions.html.md#kodokan.competitions.write_calendar)(cal, path)                          | Validate `cal` and write it as JSON, events sorted by date.                                                                                                  |
+
+### kodokan.competitions.DFLT_EXCLUDE_TYPES *= ('PASSAGE DE GRADE',)*
+
+Event types that are not competitions or events a young judoka enters.
+
+### kodokan.competitions.DFLT_OWNERS *= ('BOUCHES DU RHONE', 'PACA')*
+
+Organisers whose events count even when held outside the area (regional league, the committee).
+
+### kodokan.competitions.DFLT_SITE *= 'https://comite13judo.ffjudo.com'*
+
+The Bouches-du-Rhône committee’s site; any FFJDA committee or league site has the same engine.
+
+### kodokan.competitions.EVENT_FIELDS *: [Mapping](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[[str](https://docs.python.org/3/builtins/stdtypes.html#str), [tuple](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[type](https://docs.python.org/3/builtins/functions.html#type), ...]]* *= {'birth_years': (<class 'list'>, <class 'NoneType'>), 'categories': (<class 'list'>,), 'confidence': (<class 'str'>,), 'date_end': (<class 'str'>,), 'date_start': (<class 'str'>,), 'deadline': (<class 'str'>, <class 'NoneType'>), 'eligibility': (<class 'str'>,), 'eligibility_note': (<class 'str'>,), 'eligible_clubs': (<class 'list'>,), 'format': (<class 'str'>, <class 'NoneType'>), 'home_club_eligible': (<class 'bool'>, <class 'NoneType'>), 'id': (<class 'str'>,), 'level': (<class 'str'>,), 'organiser': (<class 'str'>, <class 'NoneType'>), 'registration': (<class 'str'>, <class 'NoneType'>), 'source_url': (<class 'str'>,), 'title': (<class 'str'>,), 'town': (<class 'str'>,), 'venue': (<class 'str'>, <class 'NoneType'>)}*
+
+Keys of one published event, and the type each must have (`None` allowed where listed).
+
+### kodokan.competitions.detail_text(page_html)
+
+The readable body of an event detail page: dates, venue, categories, birth years,
+belts and the free-text rules (weigh-in times, who may not enter, fees).
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
+
+### kodokan.competitions.forecast_pdf_url(calendars_page_html, , site='https://comite13judo.ffjudo.com')
+
+The link to the season’s forecast calendar PDF on the committee’s calendars page.
+
+Its file name changes with every revision, so it is always read from the page.
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str) | [`None`](https://docs.python.org/3/builtins/constants.html#None)
+
+### kodokan.competitions.http_get(url, , timeout=30.0)
+
+GET `url` with an identifying User-Agent (the default fetcher).
+
+* **Return type:**
+  [`bytes`](https://docs.python.org/3/builtins/stdtypes.html#bytes)
+
+### kodokan.competitions.in_area(ev, , postcode_prefixes=('13',), owners=('BOUCHES DU RHONE', 'PACA'), exclude_types=('PASSAGE DE GRADE',))
+
+Whether an agenda event belongs in the area’s calendar.
+
+* **Return type:**
+  [`bool`](https://docs.python.org/3/builtins/functions.html#bool)
+
+### kodokan.competitions.normalise(ev, , site='https://comite13judo.ffjudo.com')
+
+The fields of a raw agenda event that a calendar needs, with ISO dates.
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
+
+### kodokan.competitions.parse_agenda(page_html)
+
+Every event in an FFJDA site’s `/evenement` page (the embedded national agenda).
+
+The JSON sits in `<input name="evenements" value='...'>`; it is decoded with
+`raw_decode` from the opening brace, because apostrophes inside the JSON make
+searching for the closing quote unreliable.
+
+* **Return type:**
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)]
+
+### kodokan.competitions.pdf_text(pdf)
+
+The text of a PDF, laid out (`pdftotext -layout`, from poppler).
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
+
+### kodokan.competitions.snapshot(out_dir, \*, site='https://comite13judo.ffjudo.com', calendars_path='/calendriers-8', since=None, get=<function http_get>, details=True, forecast=True, \*\*area)
+
+Fetch everything a calendar refresh reads, into `out_dir`.
+
+Writes `agenda.json` (the area’s events from `since` on, normalised),
+`details/<agenda_id>.txt` (each one’s detail page as text) and `forecast.txt`
+(the season forecast PDF as text, with `forecast_url.txt`). Returns a summary.
+`area` takes [`in_area()`](_autosummary/kodokan.competitions.html.md#kodokan.competitions.in_area)’s keyword arguments.
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
+
+### kodokan.competitions.validate_calendar(cal)
+
+Problems with a calendar about to be published (`[]` means publishable).
+
+Checks the envelope and every event’s keys, types, enumerations and dates, so a
+hand-edited refresh cannot ship a file the web page would mis-render.
+
+* **Return type:**
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]
+
+### kodokan.competitions.write_calendar(cal, path)
+
+Validate `cal` and write it as JSON, events sorted by date. Raises on any problem.
+
+* **Return type:**
+  [`Path`](https://docs.python.org/3/library/pathlib.html#pathlib.Path)
 
 
 # _autosummary/kodokan.config.html.md
@@ -1287,23 +1453,24 @@ A dict-like `{video_id: <json>}` store for demo segments (and metadata).
 
 ### Modules
 
-| [`acquire`](_autosummary/kodokan.acquire.html.md#module-kodokan.acquire)         | Acquire Kodokan technique clips from YouTube (thin wrapper over `yb.download`).                      |
-|-----------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------|
-| [`canon3d`](_autosummary/kodokan.canon3d.html.md#module-kodokan.canon3d)         | Pelvis-frame (Procrustes) canonicalization of 3D world landmarks.                                    |
-| [`config`](_autosummary/kodokan.config.html.md#module-kodokan.config)           | Where kodokan keeps its data (downloaded clips + derived artifacts).                                 |
-| [`descriptors`](_autosummary/kodokan.descriptors.html.md#module-kodokan.descriptors) | Experimental per-demo feature descriptors (to test what makes throws separable).                     |
-| [`flashcards`](_autosummary/kodokan.flashcards.html.md#module-kodokan.flashcards)   | Technique-recognition learning game (app #6) — logic layer.                                          |
-| [`learning`](_autosummary/kodokan.learning.html.md#module-kodokan.learning)       | Adaptive learning engine for the flashcard quiz — selectable strategies.                             |
-| [`pose`](_autosummary/kodokan.pose.html.md#module-kodokan.pose)               | Body-pose estimation: a video → a sequence of per-person skeletal keypoints.                         |
-| [`quiz`](_autosummary/kodokan.quiz.html.md#module-kodokan.quiz)               | Quiz service: the UI-agnostic orchestrator of the technique-recognition game (app #6).               |
-| [`recognize`](_autosummary/kodokan.recognize.html.md#module-kodokan.recognize)     | Learned-vs-DTW technique recognition experiments (data-appropriate, no GPU).                         |
-| [`recognizer`](_autosummary/kodokan.recognizer.html.md#module-kodokan.recognizer)   | Technique recognition for applications: top-k guesses with inspectable scores (#3).                  |
-| [`segment`](_autosummary/kodokan.segment.html.md#module-kodokan.segment)         | Segment a clip into its repeated demonstrations of one throw.                                        |
-| [`store`](_autosummary/kodokan.store.html.md#module-kodokan.store)             | dol-backed stores for the pipeline's artifacts (the analysis SSOT).                                  |
-| [`testmode`](_autosummary/kodokan.testmode.html.md#module-kodokan.testmode)       | Technique test mode: perform the technique the system names, get scored (#5).                        |
-| [`tori_labels`](_autosummary/kodokan.tori_labels.html.md#module-kodokan.tori_labels) | Hand-labelling of the tori heuristic (#49): sample demos, then score agreement.                      |
-| [`track`](_autosummary/kodokan.track.html.md#module-kodokan.track)             | Stable tori/uke identity tracking (BoT-SORT / ByteTrack).                                            |
-| [`viz`](_autosummary/kodokan.viz.html.md#module-kodokan.viz)                 | Visualize a [`PoseSequence`](_autosummary/kodokan.pose.html.md#kodokan.pose.PoseSequence). |
+| [`acquire`](_autosummary/kodokan.acquire.html.md#module-kodokan.acquire)           | Acquire Kodokan technique clips from YouTube (thin wrapper over `yb.download`).                      |
+|-------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------|
+| [`canon3d`](_autosummary/kodokan.canon3d.html.md#module-kodokan.canon3d)           | Pelvis-frame (Procrustes) canonicalization of 3D world landmarks.                                    |
+| [`competitions`](_autosummary/kodokan.competitions.html.md#module-kodokan.competitions) | A calendar of upcoming judo competitions in one French département, and who may enter each.          |
+| [`config`](_autosummary/kodokan.config.html.md#module-kodokan.config)             | Where kodokan keeps its data (downloaded clips + derived artifacts).                                 |
+| [`descriptors`](_autosummary/kodokan.descriptors.html.md#module-kodokan.descriptors)   | Experimental per-demo feature descriptors (to test what makes throws separable).                     |
+| [`flashcards`](_autosummary/kodokan.flashcards.html.md#module-kodokan.flashcards)     | Technique-recognition learning game (app #6) — logic layer.                                          |
+| [`learning`](_autosummary/kodokan.learning.html.md#module-kodokan.learning)         | Adaptive learning engine for the flashcard quiz — selectable strategies.                             |
+| [`pose`](_autosummary/kodokan.pose.html.md#module-kodokan.pose)                 | Body-pose estimation: a video → a sequence of per-person skeletal keypoints.                         |
+| [`quiz`](_autosummary/kodokan.quiz.html.md#module-kodokan.quiz)                 | Quiz service: the UI-agnostic orchestrator of the technique-recognition game (app #6).               |
+| [`recognize`](_autosummary/kodokan.recognize.html.md#module-kodokan.recognize)       | Learned-vs-DTW technique recognition experiments (data-appropriate, no GPU).                         |
+| [`recognizer`](_autosummary/kodokan.recognizer.html.md#module-kodokan.recognizer)     | Technique recognition for applications: top-k guesses with inspectable scores (#3).                  |
+| [`segment`](_autosummary/kodokan.segment.html.md#module-kodokan.segment)           | Segment a clip into its repeated demonstrations of one throw.                                        |
+| [`store`](_autosummary/kodokan.store.html.md#module-kodokan.store)               | dol-backed stores for the pipeline's artifacts (the analysis SSOT).                                  |
+| [`testmode`](_autosummary/kodokan.testmode.html.md#module-kodokan.testmode)         | Technique test mode: perform the technique the system names, get scored (#5).                        |
+| [`tori_labels`](_autosummary/kodokan.tori_labels.html.md#module-kodokan.tori_labels)   | Hand-labelling of the tori heuristic (#49): sample demos, then score agreement.                      |
+| [`track`](_autosummary/kodokan.track.html.md#module-kodokan.track)               | Stable tori/uke identity tracking (BoT-SORT / ByteTrack).                                            |
+| [`viz`](_autosummary/kodokan.viz.html.md#module-kodokan.viz)                   | Visualize a [`PoseSequence`](_autosummary/kodokan.pose.html.md#kodokan.pose.PoseSequence). |
 
 
 # _autosummary/kodokan.learning.html.md
@@ -2765,18 +2932,18 @@ Render skeletons to an MP4.
 
 # About this build
 
-This documentation was built on **2026-11-07 09:02 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/80f290852c3dccd68e081f1f6e7b6c943e7a6008"><code>80f2908</code></a> on branch <code>main</code>, for **kodokan 0.0.30** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-11-08 16:43 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/5609c220f53fd655d23e79553314532cbffb3212"><code>5609c22</code></a> on branch <code>main</code>, for **kodokan 0.0.31** (from <code>pyproject.toml</code>).
 
 #### WARNING
 The documentation and the package may be misaligned:
 
-- The documented version (0.0.30) is behind the latest release on PyPI (0.0.31): `pip install kodokan` gives newer code than these docs describe.
+- The documented version (0.0.31) is behind the latest release on PyPI (0.0.32): `pip install kodokan` gives newer code than these docs describe.
 
 ## Source
 
 |                     |                                                                                                                                                           |
 |---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/thorwhalen/kodokan/commit/80f290852c3dccd68e081f1f6e7b6c943e7a6008"><code>80f290852c3dccd68e081f1f6e7b6c943e7a6008</code></a> |
+| Commit              | <a href="https://github.com/thorwhalen/kodokan/commit/5609c220f53fd655d23e79553314532cbffb3212"><code>5609c220f53fd655d23e79553314532cbffb3212</code></a> |
 | Branch              | <code>main</code>                                                                                                                                         |
 | Tags at this commit | none                                                                                                                                                      |
 | Working tree        | clean                                                                                                                                                     |
@@ -2787,9 +2954,9 @@ The documentation and the package may be misaligned:
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>thorwhalen/kodokan</code>                                                            |
-| Run          | <a href="https://github.com/thorwhalen/kodokan/actions/runs/42357924619">42357924619</a>   |
+| Run          | <a href="https://github.com/thorwhalen/kodokan/actions/runs/42501248705">42501248705</a>   |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>80f290852c3dccd68e081f1f6e7b6c943e7a6008</code> (in the history of the built commit) |
+| Event commit | <code>5609c220f53fd655d23e79553314532cbffb3212</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -2814,18 +2981,48 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/kodokan/0.0.31/">0.0.31</a>, newer than the documented version (0.0.30).
+Latest release: <a href="https://pypi.org/project/kodokan/0.0.32/">0.0.32</a>, newer than the documented version (0.0.31).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/thorwhalen/kodokan && cd kodokan
-git checkout 80f290852c3dccd68e081f1f6e7b6c943e7a6008
+git checkout 5609c220f53fd655d23e79553314532cbffb3212
 pip install "epythet==0.2.22"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```
 
 The same data, for machines: <a href="build_info.json"><code>build_info.json</code></a> (schema version 1).
+
+
+# ai-agents.html.md
+
+<!-- generated by epythet -->
+
+# For AI agents
+
+`kodokan` ships artifacts for coding agents alongside its code. This page lists
+them, says where each lives in the repository, and points at the
+machine-readable copies of this documentation.
+
+## Skills
+
+Skills are folders holding a `SKILL.md` (the [Agent Skills](https://agentskills.io) format): a description that tells an agent when to use it and a body with the procedure. Install one into your agent with `gh skill` (any host: `--agent claude-code`, `copilot`, `cursor`, `codex`, `gemini`), or use the copy bundled in the wheel.
+
+### `kodokan-competitions`
+
+Refresh the calendar of upcoming youth judo competitions in a French département (by default the Bouches-du-Rhône, around Aix-en-Provence) and say, for each, who may enter: open to any licensed judoka, by qualification, a friendly (amical) interclub limited to named clubs, or by invitation, judged against the user’s home club. Publishes the result to the Resources page of judo.thorwhalen.com. Use when asked to “refresh/update the competition calendar”, “which competitions can we go to”, “what judo competitions are coming up in Aix / the 13 / Bouches-du-Rhône”, “is this tournament open to our club”, “add this interclub to the calendar”, or when the calendar on the site looks stale.
+
+Source: [`.claude/skills/kodokan-competitions`](https://github.com/thorwhalen/kodokan/tree/HEAD/.claude/skills/kodokan-competitions).
+
+## Machine-readable documentation
+
+This site publishes the same documentation in forms that fit an agent’s context window:
+
+- [`llms.txt`](https://thorwhalen.github.io/kodokan/llms.txt): an index of every page with a one-line description ([llms.txt](https://llmstxt.org) format)
+- [`kodokan.md`](https://thorwhalen.github.io/kodokan/kodokan.md): the whole documentation as one Markdown file
+- `<page>.html.md`: a rendered Markdown twin of every page, advertised from each page’s `<head>` with `<link rel="alternate" type="text/markdown">`
+- [`objects.inv`](https://thorwhalen.github.io/kodokan/objects.inv): the Sphinx inventory: a symbol-to-URL index (`sphobjinv convert plain objects.inv -`)
 
 
 # api.html.md

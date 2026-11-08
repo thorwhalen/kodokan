@@ -58,6 +58,7 @@
 
    acquire
    canon3d
+   competitions
    config
    descriptors
    flashcards

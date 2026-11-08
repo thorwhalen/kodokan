@@ -1,0 +1,31 @@
+kodokan.competitions
+====================
+
+.. automodule:: kodokan.competitions
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      DFLT_SITE
+      DFLT_OWNERS
+      DFLT_EXCLUDE_TYPES
+      EVENT_FIELDS
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      detail_text
+      detail_url
+      forecast_pdf_url
+      http_get
+      in_area
+      normalise
+      parse_agenda
+      pdf_text
+      snapshot
+      validate_calendar
+      write_calendar
+   

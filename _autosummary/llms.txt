@@ -8,6 +8,7 @@
 - [kodokan](kodokan.html.md): kodokan — study Kodokan Judo throws from video via body-pose analysis.
 - [kodokan.acquire](kodokan.acquire.html.md): Acquire Kodokan technique clips from YouTube (thin wrapper over &#96;yb.download&#96;).
 - [kodokan.canon3d](kodokan.canon3d.html.md): Pelvis-frame (Procrustes) canonicalization of 3D world landmarks.
+- [kodokan.competitions](kodokan.competitions.html.md): A calendar of upcoming judo competitions in one French département, and who may enter each.
 - [kodokan.config](kodokan.config.html.md): Where kodokan keeps its data (downloaded clips + derived artifacts).
 - [kodokan.descriptors](kodokan.descriptors.html.md): Experimental per-demo feature descriptors (to test what makes throws separable).
 - [kodokan.flashcards](kodokan.flashcards.html.md): Technique-recognition learning game (app #6) — logic layer.

@@ -182,6 +182,15 @@ examples — not viewpoint alone. Recognition needs a **learned** skeleton repre
 role-consistent features. The eval harness (`examples/eval_features*.py`) is ready to
 validate those.
 
+## Competition calendar
+
+`kodokan.competitions` fetches the French judo federation’s agenda for one département (default: the Bouches-du-Rhône), each event’s detail page and the committee’s season forecast PDF into a snapshot folder, and validates the calendar built from it before it is published. Deciding who may enter each event (open, by qualification, a friendly interclub, by invitation) is reading prose rules; the `kodokan-competitions` skill in `.claude/skills/` is that procedure.
+
+```bash
+python -m kodokan.competitions snapshot ./snap      # agenda.json, details/, forecast.txt
+python -m kodokan.competitions validate competitions.json
+```
+
 ## Background & rationale
 
 - [`misc/docs/research-architecture.md`]() — cited

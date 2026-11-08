@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../_static/documentation_options.js?v=61a342a2"></script>
+    <script src="../_static/documentation_options.js?v=c5dbc6bb"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -58,7 +58,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.30" />
+  <meta name="docsearch:version" content="0.0.31" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -143,6 +143,13 @@
 <li class="nav-item current active">
   <a class="nav-link nav-internal" href="../api.html">
     API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../ai-agents.html">
+    For AI agents
   </a>
 </li>
 
@@ -247,6 +254,13 @@
   </a>
 </li>
 
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../ai-agents.html">
+    For AI agents
+  </a>
+</li>
+
   </ul>
 </nav></div>
           
@@ -308,6 +322,7 @@
 <li class="toctree-l1 current active has-children"><a aria-current="page" class="current reference internal" href="#">kodokan</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="kodokan.acquire.html">kodokan.acquire</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kodokan.canon3d.html">kodokan.canon3d</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.competitions.html">kodokan.competitions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kodokan.config.html">kodokan.config</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kodokan.descriptors.html">kodokan.descriptors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="kodokan.flashcards.html">kodokan.flashcards</a></li>
@@ -1317,46 +1332,49 @@ Segments whose two-person coverage is below <code class="docutils literal notran
 <tr class="row-even"><td><p><a class="reference internal" href="kodokan.canon3d.html#module-kodokan.canon3d" title="kodokan.canon3d"><code class="xref py py-obj docutils literal notranslate"><span class="pre">canon3d</span></code></a></p></td>
 <td><p>Pelvis-frame (Procrustes) canonicalization of 3D world landmarks.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="kodokan.config.html#module-kodokan.config" title="kodokan.config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">config</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="kodokan.competitions.html#module-kodokan.competitions" title="kodokan.competitions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">competitions</span></code></a></p></td>
+<td><p>A calendar of upcoming judo competitions in one French département, and who may enter each.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="kodokan.config.html#module-kodokan.config" title="kodokan.config"><code class="xref py py-obj docutils literal notranslate"><span class="pre">config</span></code></a></p></td>
 <td><p>Where kodokan keeps its data (downloaded clips + derived artifacts).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="kodokan.descriptors.html#module-kodokan.descriptors" title="kodokan.descriptors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">descriptors</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="kodokan.descriptors.html#module-kodokan.descriptors" title="kodokan.descriptors"><code class="xref py py-obj docutils literal notranslate"><span class="pre">descriptors</span></code></a></p></td>
 <td><p>Experimental per-demo feature descriptors (to test what makes throws separable).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="kodokan.flashcards.html#module-kodokan.flashcards" title="kodokan.flashcards"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flashcards</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="kodokan.flashcards.html#module-kodokan.flashcards" title="kodokan.flashcards"><code class="xref py py-obj docutils literal notranslate"><span class="pre">flashcards</span></code></a></p></td>
 <td><p>Technique-recognition learning game (app #6) — logic layer.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="kodokan.learning.html#module-kodokan.learning" title="kodokan.learning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">learning</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="kodokan.learning.html#module-kodokan.learning" title="kodokan.learning"><code class="xref py py-obj docutils literal notranslate"><span class="pre">learning</span></code></a></p></td>
 <td><p>Adaptive learning engine for the flashcard quiz — selectable strategies.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="kodokan.pose.html#module-kodokan.pose" title="kodokan.pose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pose</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="kodokan.pose.html#module-kodokan.pose" title="kodokan.pose"><code class="xref py py-obj docutils literal notranslate"><span class="pre">pose</span></code></a></p></td>
 <td><p>Body-pose estimation: a video → a sequence of per-person skeletal keypoints.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="kodokan.quiz.html#module-kodokan.quiz" title="kodokan.quiz"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quiz</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="kodokan.quiz.html#module-kodokan.quiz" title="kodokan.quiz"><code class="xref py py-obj docutils literal notranslate"><span class="pre">quiz</span></code></a></p></td>
 <td><p>Quiz service: the UI-agnostic orchestrator of the technique-recognition game (app #6).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="kodokan.recognize.html#module-kodokan.recognize" title="kodokan.recognize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">recognize</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="kodokan.recognize.html#module-kodokan.recognize" title="kodokan.recognize"><code class="xref py py-obj docutils literal notranslate"><span class="pre">recognize</span></code></a></p></td>
 <td><p>Learned-vs-DTW technique recognition experiments (data-appropriate, no GPU).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="kodokan.recognizer.html#module-kodokan.recognizer" title="kodokan.recognizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">recognizer</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="kodokan.recognizer.html#module-kodokan.recognizer" title="kodokan.recognizer"><code class="xref py py-obj docutils literal notranslate"><span class="pre">recognizer</span></code></a></p></td>
 <td><p>Technique recognition for applications: top-k guesses with inspectable scores (#3).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="kodokan.segment.html#module-kodokan.segment" title="kodokan.segment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">segment</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="kodokan.segment.html#module-kodokan.segment" title="kodokan.segment"><code class="xref py py-obj docutils literal notranslate"><span class="pre">segment</span></code></a></p></td>
 <td><p>Segment a clip into its repeated demonstrations of one throw.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="kodokan.store.html#module-kodokan.store" title="kodokan.store"><code class="xref py py-obj docutils literal notranslate"><span class="pre">store</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="kodokan.store.html#module-kodokan.store" title="kodokan.store"><code class="xref py py-obj docutils literal notranslate"><span class="pre">store</span></code></a></p></td>
 <td><p>dol-backed stores for the pipeline's artifacts (the analysis SSOT).</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="kodokan.testmode.html#module-kodokan.testmode" title="kodokan.testmode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">testmode</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="kodokan.testmode.html#module-kodokan.testmode" title="kodokan.testmode"><code class="xref py py-obj docutils literal notranslate"><span class="pre">testmode</span></code></a></p></td>
 <td><p>Technique test mode: perform the technique the system names, get scored (#5).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="kodokan.tori_labels.html#module-kodokan.tori_labels" title="kodokan.tori_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tori_labels</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="kodokan.tori_labels.html#module-kodokan.tori_labels" title="kodokan.tori_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">tori_labels</span></code></a></p></td>
 <td><p>Hand-labelling of the tori heuristic (#49): sample demos, then score agreement.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="kodokan.track.html#module-kodokan.track" title="kodokan.track"><code class="xref py py-obj docutils literal notranslate"><span class="pre">track</span></code></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="kodokan.track.html#module-kodokan.track" title="kodokan.track"><code class="xref py py-obj docutils literal notranslate"><span class="pre">track</span></code></a></p></td>
 <td><p>Stable tori/uke identity tracking (BoT-SORT / ByteTrack).</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="kodokan.viz.html#module-kodokan.viz" title="kodokan.viz"><code class="xref py py-obj docutils literal notranslate"><span class="pre">viz</span></code></a></p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="kodokan.viz.html#module-kodokan.viz" title="kodokan.viz"><code class="xref py py-obj docutils literal notranslate"><span class="pre">viz</span></code></a></p></td>
 <td><p>Visualize a <a class="reference internal" href="kodokan.pose.html#kodokan.pose.PoseSequence" title="kodokan.pose.PoseSequence"><code class="xref py py-class docutils literal notranslate"><span class="pre">PoseSequence</span></code></a>.</p></td>
 </tr>
 </tbody>
