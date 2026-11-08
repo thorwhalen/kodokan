@@ -54,9 +54,16 @@ Start from the previously published file (`~/.local/share/kodokan/resources/comp
 Write the calendar with `kodokan.competitions.write_calendar(cal, path)`, which refuses anything `validate_calendar` flags:
 
 ```python
-{"updated": "YYYY-MM-DD", "home_club": "<from the config>", "area": "<from the config>",
- "sources": [{"name": "Agenda du Comité 13 (FFJDA)", "url": "..."}, {"name": "Calendrier prévisionnel 2026-2027 (PDF)", "url": "..."}],
- "events": [ ... ]}
+{
+    "updated": "YYYY-MM-DD",
+    "home_club": "<from the config>",
+    "area": "<from the config>",
+    "sources": [
+        {"name": "Agenda du Comité 13 (FFJDA)", "url": "..."},
+        {"name": "Calendrier prévisionnel 2026-2027 (PDF)", "url": "..."},
+    ],
+    "events": [...],
+}
 ```
 
 Each event has exactly the keys in `kodokan.competitions.EVENT_FIELDS`: `id` (a slug with the date), `date_start`, `date_end`, `title`, `town`, `venue`, `organiser`, `level` (`departemental`, `regional`, `national`), `categories`, `birth_years`, `format`, `eligibility`, `eligible_clubs`, `home_club_eligible`, `eligibility_note`, `registration`, `deadline`, `source_url`, `confidence`.

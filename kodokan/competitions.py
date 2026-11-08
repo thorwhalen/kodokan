@@ -92,7 +92,7 @@ def parse_agenda(page_html: str) -> list[dict]:
     m = re.search(r"""name=["']evenements["'][^>]*?value=(["'])""", page_html)
     if not m:
         raise ValueError("no embedded agenda (input name='evenements') in this page")
-    data, _ = json.JSONDecoder().raw_decode(page_html[m.end():])
+    data, _ = json.JSONDecoder().raw_decode(page_html[m.end() :])
     return [e for months in data.values() for evs in months.values() for e in evs]
 
 
@@ -116,7 +116,8 @@ def normalise(ev: Mapping, *, site: str = DFLT_SITE) -> dict:
         "registration_opens": _iso(ev.get("dateOuverture")),
         "registration_closes": _iso(ev.get("dateCloture")),
         "venue": ev.get("lieu") or None,
-        "address": " ".join(x for x in (ev.get("adresse1"), ev.get("adresse2")) if x) or None,
+        "address": " ".join(x for x in (ev.get("adresse1"), ev.get("adresse2")) if x)
+        or None,
         "postcode": ev.get("codePostal") or None,
         "town": ev.get("ville") or None,
         "organiser": ev.get("proprietaire") or None,
@@ -139,7 +140,9 @@ def in_area(
         return False
     pc = str(ev.get("codePostal") or "")
     owner = _plain(ev.get("proprietaire") or "")
-    return pc.startswith(tuple(postcode_prefixes)) or any(_plain(o) in owner for o in owners)
+    return pc.startswith(tuple(postcode_prefixes)) or any(
+        _plain(o) in owner for o in owners
+    )
 
 
 def _plain(s: str) -> str:
@@ -184,7 +187,9 @@ def pdf_text(pdf: bytes) -> str:
             "pdftotext is needed to read the forecast PDF: `brew install poppler` (macOS) "
             "or `apt install poppler-utils` (Debian/Ubuntu)"
         )
-    r = subprocess.run([exe, "-layout", "-", "-"], input=pdf, capture_output=True, check=True)
+    r = subprocess.run(
+        [exe, "-layout", "-", "-"], input=pdf, capture_output=True, check=True
+    )
     return r.stdout.decode("utf-8", "replace")
 
 
@@ -212,22 +217,37 @@ def snapshot(
     raw = parse_agenda(get(f"{site}/evenement").decode("utf-8", "replace"))
     evs = [normalise(e, site=site) for e in raw if in_area(e, **area)]
     evs = sorted(
-        (e for e in evs if (e["date_end"] or e["date_start"] or "") >= since.isoformat()),
+        (
+            e
+            for e in evs
+            if (e["date_end"] or e["date_start"] or "") >= since.isoformat()
+        ),
         key=lambda e: (e["date_start"] or "", e["title"]),
     )
     (out / "agenda.json").write_text(json.dumps(evs, ensure_ascii=False, indent=1))
-    summary = {"agenda_total": len(raw), "in_area": len(evs), "details": 0, "forecast": None}
+    summary = {
+        "agenda_total": len(raw),
+        "in_area": len(evs),
+        "details": 0,
+        "forecast": None,
+    }
     if details:
         d = out / "details"
         d.mkdir(exist_ok=True)
         for e in evs:
             try:
-                (d / f"{e['agenda_id']}.txt").write_text(e["url"] + "\n" + detail_text(get(e["url"]).decode("utf-8", "replace")))
+                (d / f"{e['agenda_id']}.txt").write_text(
+                    e["url"]
+                    + "\n"
+                    + detail_text(get(e["url"]).decode("utf-8", "replace"))
+                )
                 summary["details"] += 1
             except OSError as err:  # one unreachable page must not lose the rest
                 (d / f"{e['agenda_id']}.error").write_text(f"{e['url']}\n{err}\n")
     if forecast:
-        url = forecast_pdf_url(get(site + calendars_path).decode("utf-8", "replace"), site=site)
+        url = forecast_pdf_url(
+            get(site + calendars_path).decode("utf-8", "replace"), site=site
+        )
         if url:
             (out / "forecast_url.txt").write_text(url + "\n")
             (out / "forecast.txt").write_text(pdf_text(get(url)))
@@ -273,7 +293,10 @@ def write_calendar(cal: Mapping, path: str | Path) -> Path:
     problems = validate_calendar(cal)
     if problems:
         raise ValueError("calendar not publishable:\n  " + "\n  ".join(problems))
-    cal = {**cal, "events": sorted(cal["events"], key=lambda e: (e["date_start"], e["title"]))}
+    cal = {
+        **cal,
+        "events": sorted(cal["events"], key=lambda e: (e["date_start"], e["title"])),
+    }
     p = Path(path).expanduser()
     p.parent.mkdir(parents=True, exist_ok=True)
     p.write_text(json.dumps(cal, ensure_ascii=False, indent=1))
@@ -283,20 +306,39 @@ def write_calendar(cal: Mapping, path: str | Path) -> Path:
 def _main(argv: Iterable[str] | None = None) -> None:
     import argparse
 
-    ap = argparse.ArgumentParser(prog="python -m kodokan.competitions", description=__doc__.split("\n\n")[0])
+    ap = argparse.ArgumentParser(
+        prog="python -m kodokan.competitions", description=__doc__.split("\n\n")[0]
+    )
     sub = ap.add_subparsers(dest="cmd", required=True)
-    s = sub.add_parser("snapshot", help="fetch the agenda, detail pages and forecast into a folder")
+    s = sub.add_parser(
+        "snapshot", help="fetch the agenda, detail pages and forecast into a folder"
+    )
     s.add_argument("out_dir")
     s.add_argument("--site", default=DFLT_SITE)
-    s.add_argument("--postcode", action="append", help="postcode prefix (repeatable; default 13)")
+    s.add_argument(
+        "--postcode", action="append", help="postcode prefix (repeatable; default 13)"
+    )
     s.add_argument("--no-details", action="store_true")
     s.add_argument("--no-forecast", action="store_true")
-    v = sub.add_parser("validate", help="check a calendar JSON file before publishing it")
+    v = sub.add_parser(
+        "validate", help="check a calendar JSON file before publishing it"
+    )
     v.add_argument("path")
     a = ap.parse_args(list(argv) if argv is not None else None)
     if a.cmd == "snapshot":
         area = {"postcode_prefixes": tuple(a.postcode)} if a.postcode else {}
-        print(json.dumps(snapshot(a.out_dir, site=a.site, details=not a.no_details, forecast=not a.no_forecast, **area), indent=1))
+        print(
+            json.dumps(
+                snapshot(
+                    a.out_dir,
+                    site=a.site,
+                    details=not a.no_details,
+                    forecast=not a.no_forecast,
+                    **area,
+                ),
+                indent=1,
+            )
+        )
     else:
         problems = validate_calendar(json.loads(Path(a.path).read_text()))
         print("\n".join(problems) or "ok")
