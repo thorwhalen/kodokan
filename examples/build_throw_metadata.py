@@ -6,20 +6,25 @@ Parses the owner's classification reference (misc/docs/judo_throws_classificatio
 
 and merges it with the clip catalog (data/catalog.json) to emit two SSOT data files the
 new app consumes:
-  - vocab.json   : {wordKey: {romaji, hiragana, kanji, en, fr, throws:[throwKey]}}
+  - vocab.json   : {wordKey: {romaji, alts, hiragana, kanji, en, fr, throws:[throwKey]}}
   - throws.json  : {throwKey: {slug, romaji, jp:{kanji,hiragana}, en, fr, category,
                                words:[wordKey], clips:[...], confusable:[...], hasClips}}
 
-Per-throw kanji/hiragana are composed from the throw's component words (the glossary's
-reverse mapping); hiragana uses each word's primary reading (rendaku is approximate).
+Which words a throw uses is derived by tokenizing its name against the glossary
+(``kodokan.vocab.word_throws``: primary + declared alternate readings, so koshi/goshi are one
+word), not taken from the glossary's hand-kept throw lists, which had missed some (#65).
+Per-throw kanji/hiragana are composed from the throw's component words; hiragana uses each
+word's primary reading (rendaku is approximate).
 
-Usage::  PYTHONPATH=<repo> python examples/build_throw_metadata.py
+Usage::  PYTHONPATH=<repo> python examples/build_throw_metadata.py [OUT_DIR]
 """
 
 import json
 import re
+import sys
 from pathlib import Path
 
+from kodokan import vocab as kv
 from kodokan.acquire import canonical_technique_key
 
 MD = Path("/Users/thorwhalen/Dropbox/py/proj/t/kodokan/misc/docs/judo_throws_classification.md")
@@ -102,7 +107,7 @@ def compose_jp(romaji: str, tok2word: dict):
     return ("".join(kanji), "".join(hira)) if ok else (None, None)
 
 
-def main():
+def main(out_dir: Path = OUT_DIR):
     md = MD.read_text()
     glossary = parse_glossary(md)
     classification = parse_classification(md)
@@ -115,28 +120,35 @@ def main():
         for alt in w["alts"]:
             tok2word[alt.lower()] = w
 
-    # vocab.json: word -> translations + throw keys it appears in
+    # throws.json covers the union of the 68 official + our clip catalog
+    all_keys = set(classification) | set(catalog)
+    names = {
+        k: classification.get(k, {}).get("romaji") or catalog.get(k, {}).get("name") or k
+        for k in all_keys
+    }
+
+    # vocab.json: word -> translations + the throws whose NAME contains it (#65)
+    word_throws = kv.word_throws(names, glossary)
     vocab = {}
     for key, w in glossary.items():
         vocab[key] = {
-            "romaji": w["romaji"], "hiragana": w["hiragana"], "kanji": w["kanji"],
+            "romaji": w["romaji"], "alts": w["alts"],
+            "hiragana": w["hiragana"], "kanji": w["kanji"],
             "en": w["en"], "fr": w["fr"],
-            "throws": sorted({canonical_technique_key(t) for t in w["throws"]}),
+            "throws": word_throws[key],
         }
 
-    # which words each throw uses (reverse of the glossary)
+    # which words each throw uses (the reverse)
     throw_words: dict[str, list[str]] = {}
-    for key, w in glossary.items():
-        for t in w["throws"]:
-            throw_words.setdefault(canonical_technique_key(t), []).append(key)
+    for key, techs in word_throws.items():
+        for t in techs:
+            throw_words.setdefault(t, []).append(key)
 
-    # throws.json: union of the 68 official + our clip catalog
     throws = {}
-    all_keys = set(classification) | set(catalog)
     for key in sorted(all_keys):
         cl = classification.get(key, {})
         cat = catalog.get(key, {})
-        romaji = cl.get("romaji") or cat.get("name") or key
+        romaji = names[key]
         kanji, hira = compose_jp(romaji, tok2word)
         throws[key] = {
             "slug": _slug(romaji),
@@ -165,15 +177,16 @@ def main():
                 unresolved.add(s)
         t["confusable"] = out
 
-    OUT_DIR.mkdir(parents=True, exist_ok=True)
-    (OUT_DIR / "vocab.json").write_text(json.dumps({"words": vocab}, ensure_ascii=False, indent=1))
-    (OUT_DIR / "throws.json").write_text(json.dumps({"throws": throws}, ensure_ascii=False, indent=1))
+    out_dir.mkdir(parents=True, exist_ok=True)
+    (out_dir / "vocab.json").write_text(json.dumps({"words": vocab}, ensure_ascii=False, indent=1))
+    (out_dir / "throws.json").write_text(json.dumps({"throws": throws}, ensure_ascii=False, indent=1))
 
     # report
     official = set(classification)
     have_clips = {k for k, t in throws.items() if t["hasClips"]}
     no_kanji = [k for k, t in throws.items() if t["jp"]["kanji"] is None]
-    print(f"vocab words: {len(vocab)}")
+    print(f"vocab words: {len(vocab)}; name tokens no word claims: {kv.unmatched_tokens(names, glossary)}")
+    print(f"words shared by >=k throws: {kv.threshold_table(word_throws)}")
     print(f"throws total: {len(throws)} (official nage-waza in file: {len(official)}, with clips: {len(have_clips)})")
     print(f"official without clips (text-only games/info ok): {sorted(official - have_clips)}")
     print(f"our catalog throws NOT in official file (katame etc.): {sorted(set(catalog) - official)}")
@@ -184,4 +197,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(Path(sys.argv[1]) if len(sys.argv) > 1 else OUT_DIR)
