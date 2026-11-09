@@ -79,11 +79,19 @@ def variant_index(glossary: Mapping[str, Mapping]) -> dict[str, str]:
 
     ``glossary`` maps a part key (its primary romaji, lower-case) to a mapping that may hold
     ``alts``: alternate readings such as ``["koshi"]`` for ``goshi``.
+
+    :raises ValueError: if one spelling would belong to two parts (glossary order must never
+        decide which part a name token is).
     """
     index: dict[str, str] = {}
-    for key, entry in glossary.items():
-        for spelling in (key, *(a.lower() for a in entry.get("alts") or ())):
-            index.setdefault(spelling, key)
+    pairs = [(k, k) for k in glossary] + [
+        (a.lower(), k) for k, e in glossary.items() for a in e.get("alts") or ()
+    ]
+    for spelling, key in pairs:
+        if index.setdefault(spelling, key) != key:
+            raise ValueError(
+                f"spelling {spelling!r} belongs to both {index[spelling]!r} and {key!r}"
+            )
     return index
 
 

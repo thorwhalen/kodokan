@@ -43,6 +43,11 @@ def test_variants_are_declared_not_guessed():
     }
 
 
+def test_a_spelling_shared_by_two_parts_is_an_error():
+    with pytest.raises(ValueError, match="koshi"):
+        kv.variant_index({"goshi": {"alts": ["koshi"]}, "koshi": {}})
+
+
 def test_every_glossary_part_listed_even_unused():
     assert kv.word_throws({}, GLOSSARY)["ashi"] == []
 
