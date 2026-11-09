@@ -104,9 +104,7 @@ def unmatched_tokens(
     for spelling, key in index.items():
         by_plain.setdefault(devoiced(spelling), key)
     tokens = {t for romaji in names.values() for t in name_tokens(romaji)}
-    return {
-        t: by_plain.get(devoiced(t)) for t in sorted(tokens) if t not in index
-    }
+    return {t: by_plain.get(devoiced(t)) for t in sorted(tokens) if t not in index}
 
 
 def parts_of_name(romaji: str, index: Mapping[str, str]) -> list[str]:
