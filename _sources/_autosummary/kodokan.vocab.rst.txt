@@ -1,0 +1,26 @@
+kodokan.vocab
+=============
+
+.. automodule:: kodokan.vocab
+
+   
+   .. rubric:: Module Attributes
+
+   .. autosummary::
+   
+      MIN_TECHNIQUES
+      HOMOGRAPHS
+   
+   .. rubric:: Functions
+
+   .. autosummary::
+   
+      devoiced
+      name_tokens
+      part_stats
+      parts_of_name
+      threshold_table
+      unmatched_tokens
+      variant_index
+      word_throws
+   

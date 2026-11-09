@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="alternate" type="text/markdown" href="kodokan.vocab.html.md">
+<link rel="describedby" href="../llms.txt" type="text/markdown">
+<link rel="alternate" type="text/markdown" href="kodokan.vocab.html.md">
+<link rel="describedby" href="llms.txt">
+    <title>kodokan.vocab &#8212; kodokan</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=d75fae25" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx_autodoc_typehints.css?v=057ac668" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="../_static/epythet.css?v=11616352" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="../_static/documentation_options.js?v=f2234cd1"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../_static/copybutton.js?v=fd10adb8"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_autosummary/kodokan.vocab';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="For AI agents" href="../ai-agents.html" />
+    <link rel="prev" title="kodokan.viz" href="kodokan.viz.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="0.0.32" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+  
+    <p class="title logo__title">kodokan</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../ai-agents.html">
+    For AI agents
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/thorwhalen/kodokan" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page" aria-expanded="false" aria-controls="pst-secondary-sidebar-modal">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="../api.html">
+    API reference
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../ai-agents.html">
+    For AI agents
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/thorwhalen/kodokan" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="kodokan.html">kodokan</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kodokan.acquire.html">kodokan.acquire</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.canon3d.html">kodokan.canon3d</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.competitions.html">kodokan.competitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.config.html">kodokan.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.descriptors.html">kodokan.descriptors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.flashcards.html">kodokan.flashcards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.learning.html">kodokan.learning</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.pose.html">kodokan.pose</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.quiz.html">kodokan.quiz</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.recognize.html">kodokan.recognize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.recognizer.html">kodokan.recognizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.segment.html">kodokan.segment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.store.html">kodokan.store</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.testmode.html">kodokan.testmode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.tori_labels.html">kodokan.tori_labels</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.track.html">kodokan.track</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kodokan.viz.html">kodokan.viz</a></li>
+<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">kodokan.vocab</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../api.html" class="nav-link">API reference</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="kodokan.html" class="nav-link">kodokan</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">kodokan.vocab</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="module-kodokan.vocab">
+<span id="kodokan-vocab"></span><h1>kodokan.vocab<a class="headerlink" href="#module-kodokan.vocab" title="Link to this heading">#</a></h1>
+<p>Word parts of technique names: which techniques share which part, and how often.</p>
+<p>A Kodokan technique name is a compound of recurring word parts: <em>Harai-goshi</em> is
+<em>harai</em> (sweep) + <em>goshi</em> (hip), <em>O-soto-gari</em> is <em>o</em> (large) + <em>soto</em> (outer) + <em>gari</em>
+(reap). Learning a dozen of those parts makes a hundred names guessable, which is what the
+web app’s word-part quizzes train (thorwhalen/kodokan#65).</p>
+<p>The same part is spelled differently depending on its position: Japanese <em>rendaku</em> voices
+the first consonant of a non-initial part, so <em>koshi</em> (hip) becomes <em>goshi</em> in Harai-goshi
+but stays <em>koshi</em> in Koshi-guruma; likewise kari/gari, kuruma/guruma, kake/gake,
+kaeshi/gaeshi. Those variants are <strong>one</strong> part. A part is keyed by its glossary entry, and
+a name token maps to it when it is the entry’s primary romaji or one of its declared
+alternate readings (the glossary’s <code class="docutils literal notranslate"><span class="pre">alts</span></code>):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">glossary</span> <span class="o">=</span> <span class="p">{</span>
+<span class="gp">... </span>    <span class="s2">"goshi"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"alts"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"koshi"</span><span class="p">]},</span>
+<span class="gp">... </span>    <span class="s2">"guruma"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"alts"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"kuruma"</span><span class="p">]},</span>
+<span class="gp">... </span>    <span class="s2">"harai"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"alts"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"barai"</span><span class="p">]},</span>
+<span class="gp">... </span>    <span class="s2">"gaeshi"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"alts"</span><span class="p">:</span> <span class="p">[]},</span>
+<span class="gp">... </span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">index</span> <span class="o">=</span> <span class="n">variant_index</span><span class="p">(</span><span class="n">glossary</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[</span><span class="n">index</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"koshi"</span><span class="p">,</span> <span class="s2">"goshi"</span><span class="p">,</span> <span class="s2">"barai"</span><span class="p">,</span> <span class="s2">"kaeshi"</span><span class="p">,</span> <span class="s2">"nage"</span><span class="p">)]</span>
+<span class="go">['goshi', 'goshi', 'harai', None, None]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">parts_of_name</span><span class="p">(</span><span class="s2">"Koshi-guruma"</span><span class="p">,</span> <span class="n">index</span><span class="p">)</span>
+<span class="go">['goshi', 'guruma']</span>
+</pre></div>
+</div>
+<p>Variants are declared, not guessed: rendaku is regular enough to <em>suggest</em> a variant but
+not to merge one silently (devoicing <em>de</em>, “advancing”, gives <em>te</em>, “hand”, a different
+word). So <a class="reference internal" href="#kodokan.vocab.unmatched_tokens" title="kodokan.vocab.unmatched_tokens"><code class="xref py py-func docutils literal notranslate"><span class="pre">unmatched_tokens()</span></code></a> reports the name tokens no part claims, with the part
+they are a rendaku variant of, for a person to add as an <code class="docutils literal notranslate"><span class="pre">alts</span></code> entry:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">unmatched_tokens</span><span class="p">({</span><span class="s2">"kaeshiwaza"</span><span class="p">:</span> <span class="s2">"Kaeshi-waza"</span><span class="p">},</span> <span class="n">glossary</span><span class="p">)</span>
+<span class="go">{'kaeshi': 'gaeshi', 'waza': None}</span>
+</pre></div>
+</div>
+<p><a class="reference internal" href="#kodokan.vocab.word_throws" title="kodokan.vocab.word_throws"><code class="xref py py-func docutils literal notranslate"><span class="pre">word_throws()</span></code></a> derives <code class="docutils literal notranslate"><span class="pre">part</span> <span class="pre">-&gt;</span> <span class="pre">techniques</span></code> by tokenizing the names, rather than
+trusting a hand-kept list (which had missed Koshi-guruma under goshi), and
+<a class="reference internal" href="#kodokan.vocab.part_stats" title="kodokan.vocab.part_stats"><code class="xref py py-func docutils literal notranslate"><span class="pre">part_stats()</span></code></a> counts the distinct techniques per part. <a class="reference internal" href="#kodokan.vocab.MIN_TECHNIQUES" title="kodokan.vocab.MIN_TECHNIQUES"><code class="xref py py-data docutils literal notranslate"><span class="pre">MIN_TECHNIQUES</span></code></a> is the
+threshold for a part to be offered in the quizzes; its docstring records why.</p>
+<p class="rubric">Module Attributes</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.vocab.MIN_TECHNIQUES" title="kodokan.vocab.MIN_TECHNIQUES"><code class="xref py py-obj docutils literal notranslate"><span class="pre">MIN_TECHNIQUES</span></code></a></p></td>
+<td><p>A part is offered in the word-part quizzes when at least this many distinct techniques use it.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.vocab.HOMOGRAPHS" title="kodokan.vocab.HOMOGRAPHS"><code class="xref py py-obj docutils literal notranslate"><span class="pre">HOMOGRAPHS</span></code></a></p></td>
+<td><p>technique names where a token is NOT the glossary part.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p class="rubric">Functions</p>
+<div class="pst-scrollable-table-container"><table class="autosummary longtable table">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.vocab.devoiced" title="kodokan.vocab.devoiced"><code class="xref py py-obj docutils literal notranslate"><span class="pre">devoiced</span></code></a>(token)</p></td>
+<td><p>The unvoiced (rendaku-undone) form of <code class="docutils literal notranslate"><span class="pre">token</span></code>, or <code class="docutils literal notranslate"><span class="pre">token</span></code> if it starts unvoiced.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.vocab.name_tokens" title="kodokan.vocab.name_tokens"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_tokens</span></code></a>(romaji)</p></td>
+<td><p>The lower-cased parts of a romaji name: <code class="docutils literal notranslate"><span class="pre">&quot;O-soto-gari&quot;</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">['o',</span> <span class="pre">'soto',</span> <span class="pre">'gari']</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.vocab.part_stats" title="kodokan.vocab.part_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">part_stats</span></code></a>(part_throws, *[, min_techniques])</p></td>
+<td><p>One row per part, most-shared first: <code class="docutils literal notranslate"><span class="pre">{part,</span> <span class="pre">n_techniques,</span> <span class="pre">offered}</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.vocab.parts_of_name" title="kodokan.vocab.parts_of_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parts_of_name</span></code></a>(romaji, index)</p></td>
+<td><p>The distinct part keys of a name, in order of appearance.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.vocab.threshold_table" title="kodokan.vocab.threshold_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">threshold_table</span></code></a>(part_throws, *[, upto])</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">-&gt;</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">parts</span> <span class="pre">shared</span> <span class="pre">by</span> <span class="pre">at</span> <span class="pre">least</span> <span class="pre">k</span> <span class="pre">techniques</span></code>, for choosing a threshold.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.vocab.unmatched_tokens" title="kodokan.vocab.unmatched_tokens"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unmatched_tokens</span></code></a>(names, glossary)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">token</span> <span class="pre">-&gt;</span> <span class="pre">part</span> <span class="pre">it</span> <span class="pre">is</span> <span class="pre">a</span> <span class="pre">rendaku</span> <span class="pre">variant</span> <span class="pre">of</span> <span class="pre">(or</span> <span class="pre">None)</span></code> for tokens no part claims.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.vocab.variant_index" title="kodokan.vocab.variant_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">variant_index</span></code></a>(glossary)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spelling</span> <span class="pre">-&gt;</span> <span class="pre">part</span> <span class="pre">key</span></code> for every primary key and declared alternate reading.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.vocab.word_throws" title="kodokan.vocab.word_throws"><code class="xref py py-obj docutils literal notranslate"><span class="pre">word_throws</span></code></a>(names, glossary, *[, homographs])</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">part</span> <span class="pre">key</span> <span class="pre">-&gt;</span> <span class="pre">sorted</span> <span class="pre">technique</span> <span class="pre">keys</span></code> whose name contains the part.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<dl class="py data">
+<dt class="sig sig-object py" id="kodokan.vocab.HOMOGRAPHS">
+<span class="sig-prename descclassname"><span class="pre">kodokan.vocab.</span></span><span class="sig-name descname"><span class="pre">HOMOGRAPHS</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#frozenset" title="(in Python v3.15)"><span class="pre">frozenset</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'kata':</span> <span class="pre">frozenset({'katajujijime'})}</span></span><a class="headerlink" href="#kodokan.vocab.HOMOGRAPHS" title="Link to this definition">#</a></dt>
+<dd><p>technique names where a token is NOT the glossary part.
+Kata-juji-jime’s <em>kata</em> is 片 (“one-sided”), not the glossary’s 肩 (“shoulder”).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Same spelling, different word</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="kodokan.vocab.MIN_TECHNIQUES">
+<span class="sig-prename descclassname"><span class="pre">kodokan.vocab.</span></span><span class="sig-name descname"><span class="pre">MIN_TECHNIQUES</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></span><a class="headerlink" href="#kodokan.vocab.MIN_TECHNIQUES" title="Link to this definition">#</a></dt>
+<dd><p>A part is offered in the word-part quizzes when at least this many distinct techniques
+use it. Chosen from the statistics of the 68 nage-waza (2026-11-09, kodokan#65):
+23 parts are shared by &gt;=2 techniques, 20 by &gt;=3, 16 by &gt;=4, 13 by &gt;=5. A part shared by
+only two techniques (obi, sumi, wakare) is a pair to memorize, not a pattern to spot,
+while 3 keeps <em>seoi</em> (Seoi-nage, Ippon-seoi-nage, Seoi-otoshi), one of the four parts the
+owner named as the point of the exercise; 4 would drop it. So 3.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.vocab.devoiced">
+<span class="sig-prename descclassname"><span class="pre">kodokan.vocab.</span></span><span class="sig-name descname"><span class="pre">devoiced</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">token</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/vocab.html#devoiced"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.vocab.devoiced" title="Link to this definition">#</a></dt>
+<dd><p>The unvoiced (rendaku-undone) form of <code class="docutils literal notranslate"><span class="pre">token</span></code>, or <code class="docutils literal notranslate"><span class="pre">token</span></code> if it starts unvoiced.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">devoiced</span><span class="p">(</span><span class="s2">"gaeshi"</span><span class="p">),</span> <span class="n">devoiced</span><span class="p">(</span><span class="s2">"jime"</span><span class="p">),</span> <span class="n">devoiced</span><span class="p">(</span><span class="s2">"barai"</span><span class="p">),</span> <span class="n">devoiced</span><span class="p">(</span><span class="s2">"ashi"</span><span class="p">)</span>
+<span class="go">('kaeshi', 'shime', 'harai', 'ashi')</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.vocab.name_tokens">
+<span class="sig-prename descclassname"><span class="pre">kodokan.vocab.</span></span><span class="sig-name descname"><span class="pre">name_tokens</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">romaji</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/vocab.html#name_tokens"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.vocab.name_tokens" title="Link to this definition">#</a></dt>
+<dd><p>The lower-cased parts of a romaji name: <code class="docutils literal notranslate"><span class="pre">&quot;O-soto-gari&quot;</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">['o',</span> <span class="pre">'soto',</span> <span class="pre">'gari']</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.vocab.part_stats">
+<span class="sig-prename descclassname"><span class="pre">kodokan.vocab.</span></span><span class="sig-name descname"><span class="pre">part_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_throws</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_techniques</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/vocab.html#part_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.vocab.part_stats" title="Link to this definition">#</a></dt>
+<dd><p>One row per part, most-shared first: <code class="docutils literal notranslate"><span class="pre">{part,</span> <span class="pre">n_techniques,</span> <span class="pre">offered}</span></code>.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">part_stats</span><span class="p">({</span><span class="s2">"ashi"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"a"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">,</span> <span class="s2">"c"</span><span class="p">],</span> <span class="s2">"obi"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"d"</span><span class="p">,</span> <span class="s2">"e"</span><span class="p">],</span> <span class="s2">"kani"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"f"</span><span class="p">]})</span>
+<span class="gp">...</span>
+<span class="go">[{'part': 'ashi', 'n_techniques': 3, 'offered': True},</span>
+<span class="go"> {'part': 'obi', 'n_techniques': 2, 'offered': False},</span>
+<span class="go"> {'part': 'kani', 'n_techniques': 1, 'offered': False}]</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.vocab.parts_of_name">
+<span class="sig-prename descclassname"><span class="pre">kodokan.vocab.</span></span><span class="sig-name descname"><span class="pre">parts_of_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">romaji</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/vocab.html#parts_of_name"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.vocab.parts_of_name" title="Link to this definition">#</a></dt>
+<dd><p>The distinct part keys of a name, in order of appearance.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.vocab.threshold_table">
+<span class="sig-prename descclassname"><span class="pre">kodokan.vocab.</span></span><span class="sig-name descname"><span class="pre">threshold_table</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">part_throws</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">upto</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">6</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/vocab.html#threshold_table"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.vocab.threshold_table" title="Link to this definition">#</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">-&gt;</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">parts</span> <span class="pre">shared</span> <span class="pre">by</span> <span class="pre">at</span> <span class="pre">least</span> <span class="pre">k</span> <span class="pre">techniques</span></code>, for choosing a threshold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.vocab.unmatched_tokens">
+<span class="sig-prename descclassname"><span class="pre">kodokan.vocab.</span></span><span class="sig-name descname"><span class="pre">unmatched_tokens</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">glossary</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/vocab.html#unmatched_tokens"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.vocab.unmatched_tokens" title="Link to this definition">#</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">token</span> <span class="pre">-&gt;</span> <span class="pre">part</span> <span class="pre">it</span> <span class="pre">is</span> <span class="pre">a</span> <span class="pre">rendaku</span> <span class="pre">variant</span> <span class="pre">of</span> <span class="pre">(or</span> <span class="pre">None)</span></code> for tokens no part claims.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a> | <span class="highlight sphinx_autodoc_typehints-value"><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.15)"><code class="xref py py-obj docutils literal notranslate"><span class="kc"><span class="pre">None</span></span></code></a></span>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.vocab.variant_index">
+<span class="sig-prename descclassname"><span class="pre">kodokan.vocab.</span></span><span class="sig-name descname"><span class="pre">variant_index</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">glossary</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/vocab.html#variant_index"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.vocab.variant_index" title="Link to this definition">#</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">spelling</span> <span class="pre">-&gt;</span> <span class="pre">part</span> <span class="pre">key</span></code> for every primary key and declared alternate reading.</p>
+<p><code class="docutils literal notranslate"><span class="pre">glossary</span></code> maps a part key (its primary romaji, lower-case) to a mapping that may hold
+<code class="docutils literal notranslate"><span class="pre">alts</span></code>: alternate readings such as <code class="docutils literal notranslate"><span class="pre">[&quot;koshi&quot;]</span></code> for <code class="docutils literal notranslate"><span class="pre">goshi</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.15)"><strong>ValueError</strong></a> – if one spelling would belong to two parts (glossary order must never
+decide which part a name token is).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.vocab.word_throws">
+<span class="sig-prename descclassname"><span class="pre">kodokan.vocab.</span></span><span class="sig-name descname"><span class="pre">word_throws</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">glossary</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">homographs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'kata':</span> <span class="pre">frozenset({'katajujijime'})}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/vocab.html#word_throws"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.vocab.word_throws" title="Link to this definition">#</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">part</span> <span class="pre">key</span> <span class="pre">-&gt;</span> <span class="pre">sorted</span> <span class="pre">technique</span> <span class="pre">keys</span></code> whose name contains the part.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>names</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapping</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]</span>) – <code class="docutils literal notranslate"><span class="pre">technique</span> <span class="pre">key</span> <span class="pre">-&gt;</span> <span class="pre">romaji</span> <span class="pre">name</span></code>.</p></li>
+<li><p><strong>glossary</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapping</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapping</span></code></a>]</span>) – as for <a class="reference internal" href="#kodokan.vocab.variant_index" title="kodokan.vocab.variant_index"><code class="xref py py-func docutils literal notranslate"><span class="pre">variant_index()</span></code></a>. Every glossary part appears in the
+result, with an empty list if no name uses it.</p></li>
+<li><p><strong>homographs</strong> (<span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Mapping</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Iterable</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]]</span>) – <code class="docutils literal notranslate"><span class="pre">part</span> <span class="pre">key</span> <span class="pre">-&gt;</span> <span class="pre">technique</span> <span class="pre">keys</span></code> where the spelling is another word.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">list</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]]</span></p>
+</dd>
+</dl>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">word_throws</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="p">{</span><span class="s2">"kataguruma"</span><span class="p">:</span> <span class="s2">"Kata-guruma"</span><span class="p">,</span> <span class="s2">"katajujijime"</span><span class="p">:</span> <span class="s2">"Kata-juji-jime"</span><span class="p">},</span>
+<span class="gp">... </span>    <span class="p">{</span><span class="s2">"kata"</span><span class="p">:</span> <span class="p">{},</span> <span class="s2">"guruma"</span><span class="p">:</span> <span class="p">{}},</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="go">{'kata': ['kataguruma'], 'guruma': ['kataguruma']}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="kodokan.viz.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">kodokan.viz</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../ai-agents.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">For AI agents</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal" tabindex="-1"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.vocab.HOMOGRAPHS"><code class="docutils literal notranslate"><span class="pre">HOMOGRAPHS</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.vocab.MIN_TECHNIQUES"><code class="docutils literal notranslate"><span class="pre">MIN_TECHNIQUES</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.vocab.devoiced"><code class="docutils literal notranslate"><span class="pre">devoiced()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.vocab.name_tokens"><code class="docutils literal notranslate"><span class="pre">name_tokens()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.vocab.part_stats"><code class="docutils literal notranslate"><span class="pre">part_stats()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.vocab.parts_of_name"><code class="docutils literal notranslate"><span class="pre">parts_of_name()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.vocab.threshold_table"><code class="docutils literal notranslate"><span class="pre">threshold_table()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.vocab.unmatched_tokens"><code class="docutils literal notranslate"><span class="pre">unmatched_tokens()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.vocab.variant_index"><code class="docutils literal notranslate"><span class="pre">variant_index()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.vocab.word_throws"><code class="docutils literal notranslate"><span class="pre">word_throws()</span></code></a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/_autosummary/kodokan.vocab.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

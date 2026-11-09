@@ -1,4 +1,4 @@
-> built 2026-11-08 16:43 UTC from 5609c22 (main) · kodokan 0.0.31. Details: build_info.json
+> built 2026-11-09 09:12 UTC from 033a4f6 (main) · kodokan 0.0.32. Details: build_info.json
 
 # index.html.md
 
@@ -1471,6 +1471,7 @@ A dict-like `{video_id: <json>}` store for demo segments (and metadata).
 | [`tori_labels`](_autosummary/kodokan.tori_labels.html.md#module-kodokan.tori_labels)   | Hand-labelling of the tori heuristic (#49): sample demos, then score agreement.                      |
 | [`track`](_autosummary/kodokan.track.html.md#module-kodokan.track)               | Stable tori/uke identity tracking (BoT-SORT / ByteTrack).                                            |
 | [`viz`](_autosummary/kodokan.viz.html.md#module-kodokan.viz)                   | Visualize a [`PoseSequence`](_autosummary/kodokan.pose.html.md#kodokan.pose.PoseSequence). |
+| [`vocab`](_autosummary/kodokan.vocab.html.md#module-kodokan.vocab)               | Word parts of technique names: which techniques share which part, and how often.                     |
 
 
 # _autosummary/kodokan.learning.html.md
@@ -2926,24 +2927,193 @@ Render skeletons to an MP4.
   The output path.
 
 
+# _autosummary/kodokan.vocab.html.md
+
+# kodokan.vocab
+
+Word parts of technique names: which techniques share which part, and how often.
+
+A Kodokan technique name is a compound of recurring word parts: *Harai-goshi* is
+*harai* (sweep) + *goshi* (hip), *O-soto-gari* is *o* (large) + *soto* (outer) + *gari*
+(reap). Learning a dozen of those parts makes a hundred names guessable, which is what the
+web app’s word-part quizzes train (thorwhalen/kodokan#65).
+
+The same part is spelled differently depending on its position: Japanese *rendaku* voices
+the first consonant of a non-initial part, so *koshi* (hip) becomes *goshi* in Harai-goshi
+but stays *koshi* in Koshi-guruma; likewise kari/gari, kuruma/guruma, kake/gake,
+kaeshi/gaeshi. Those variants are **one** part. A part is keyed by its glossary entry, and
+a name token maps to it when it is the entry’s primary romaji or one of its declared
+alternate readings (the glossary’s `alts`):
+
+```default
+>>> glossary = {
+...     "goshi": {"alts": ["koshi"]},
+...     "guruma": {"alts": ["kuruma"]},
+...     "harai": {"alts": ["barai"]},
+...     "gaeshi": {"alts": []},
+... }
+>>> index = variant_index(glossary)
+>>> [index.get(t) for t in ("koshi", "goshi", "barai", "kaeshi", "nage")]
+['goshi', 'goshi', 'harai', None, None]
+>>> parts_of_name("Koshi-guruma", index)
+['goshi', 'guruma']
+```
+
+Variants are declared, not guessed: rendaku is regular enough to *suggest* a variant but
+not to merge one silently (devoicing *de*, “advancing”, gives *te*, “hand”, a different
+word). So [`unmatched_tokens()`](_autosummary/kodokan.vocab.html.md#kodokan.vocab.unmatched_tokens) reports the name tokens no part claims, with the part
+they are a rendaku variant of, for a person to add as an `alts` entry:
+
+```default
+>>> unmatched_tokens({"kaeshiwaza": "Kaeshi-waza"}, glossary)
+{'kaeshi': 'gaeshi', 'waza': None}
+```
+
+[`word_throws()`](_autosummary/kodokan.vocab.html.md#kodokan.vocab.word_throws) derives `part -> techniques` by tokenizing the names, rather than
+trusting a hand-kept list (which had missed Koshi-guruma under goshi), and
+[`part_stats()`](_autosummary/kodokan.vocab.html.md#kodokan.vocab.part_stats) counts the distinct techniques per part. [`MIN_TECHNIQUES`](_autosummary/kodokan.vocab.html.md#kodokan.vocab.MIN_TECHNIQUES) is the
+threshold for a part to be offered in the quizzes; its docstring records why.
+
+### Module Attributes
+
+| [`MIN_TECHNIQUES`](_autosummary/kodokan.vocab.html.md#kodokan.vocab.MIN_TECHNIQUES)   | A part is offered in the word-part quizzes when at least this many distinct techniques use it.   |
+|-------------------------------------------------------------------|--------------------------------------------------------------------------------------------------|
+| [`HOMOGRAPHS`](_autosummary/kodokan.vocab.html.md#kodokan.vocab.HOMOGRAPHS)       | technique names where a token is NOT the glossary part.                                          |
+
+### Functions
+
+| [`devoiced`](_autosummary/kodokan.vocab.html.md#kodokan.vocab.devoiced)(token)                                | The unvoiced (rendaku-undone) form of `token`, or `token` if it starts unvoiced.    |
+|-------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
+| [`name_tokens`](_autosummary/kodokan.vocab.html.md#kodokan.vocab.name_tokens)(romaji)                            | The lower-cased parts of a romaji name: `"O-soto-gari"` -> `['o', 'soto', 'gari']`. |
+| [`part_stats`](_autosummary/kodokan.vocab.html.md#kodokan.vocab.part_stats)(part_throws, \*[, min_techniques])  | One row per part, most-shared first: `{part, n_techniques, offered}`.               |
+| [`parts_of_name`](_autosummary/kodokan.vocab.html.md#kodokan.vocab.parts_of_name)(romaji, index)                   | The distinct part keys of a name, in order of appearance.                           |
+| [`threshold_table`](_autosummary/kodokan.vocab.html.md#kodokan.vocab.threshold_table)(part_throws, \*[, upto])       | `k -> number of parts shared by at least k techniques`, for choosing a threshold.   |
+| [`unmatched_tokens`](_autosummary/kodokan.vocab.html.md#kodokan.vocab.unmatched_tokens)(names, glossary)              | `token -> part it is a rendaku variant of (or None)` for tokens no part claims.     |
+| [`variant_index`](_autosummary/kodokan.vocab.html.md#kodokan.vocab.variant_index)(glossary)                        | `spelling -> part key` for every primary key and declared alternate reading.        |
+| [`word_throws`](_autosummary/kodokan.vocab.html.md#kodokan.vocab.word_throws)(names, glossary, \*[, homographs]) | `part key -> sorted technique keys` whose name contains the part.                   |
+
+### kodokan.vocab.HOMOGRAPHS *: [dict](https://docs.python.org/3/builtins/stdtypes.html#dict)[[str](https://docs.python.org/3/builtins/stdtypes.html#str), [frozenset](https://docs.python.org/3/builtins/stdtypes.html#frozenset)[[str](https://docs.python.org/3/builtins/stdtypes.html#str)]]* *= {'kata': frozenset({'katajujijime'})}*
+
+technique names where a token is NOT the glossary part.
+Kata-juji-jime’s *kata* is 片 (“one-sided”), not the glossary’s 肩 (“shoulder”).
+
+* **Type:**
+  Same spelling, different word
+
+### kodokan.vocab.MIN_TECHNIQUES *= 3*
+
+A part is offered in the word-part quizzes when at least this many distinct techniques
+use it. Chosen from the statistics of the 68 nage-waza (2026-11-09, kodokan#65):
+23 parts are shared by >=2 techniques, 20 by >=3, 16 by >=4, 13 by >=5. A part shared by
+only two techniques (obi, sumi, wakare) is a pair to memorize, not a pattern to spot,
+while 3 keeps *seoi* (Seoi-nage, Ippon-seoi-nage, Seoi-otoshi), one of the four parts the
+owner named as the point of the exercise; 4 would drop it. So 3.
+
+### kodokan.vocab.devoiced(token)
+
+The unvoiced (rendaku-undone) form of `token`, or `token` if it starts unvoiced.
+
+```pycon
+>>> devoiced("gaeshi"), devoiced("jime"), devoiced("barai"), devoiced("ashi")
+('kaeshi', 'shime', 'harai', 'ashi')
+```
+
+* **Return type:**
+  [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
+
+### kodokan.vocab.name_tokens(romaji)
+
+The lower-cased parts of a romaji name: `"O-soto-gari"` -> `['o', 'soto', 'gari']`.
+
+* **Return type:**
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]
+
+### kodokan.vocab.part_stats(part_throws, , min_techniques=3)
+
+One row per part, most-shared first: `{part, n_techniques, offered}`.
+
+```pycon
+>>> part_stats({"ashi": ["a", "b", "c"], "obi": ["d", "e"], "kani": ["f"]})
+...
+[{'part': 'ashi', 'n_techniques': 3, 'offered': True},
+ {'part': 'obi', 'n_techniques': 2, 'offered': False},
+ {'part': 'kani', 'n_techniques': 1, 'offered': False}]
+```
+
+* **Return type:**
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)]
+
+### kodokan.vocab.parts_of_name(romaji, index)
+
+The distinct part keys of a name, in order of appearance.
+
+* **Return type:**
+  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]
+
+### kodokan.vocab.threshold_table(part_throws, , upto=6)
+
+`k -> number of parts shared by at least k techniques`, for choosing a threshold.
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
+
+### kodokan.vocab.unmatched_tokens(names, glossary)
+
+`token -> part it is a rendaku variant of (or None)` for tokens no part claims.
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`str`](https://docs.python.org/3/builtins/stdtypes.html#str) | [`None`](https://docs.python.org/3/builtins/constants.html#None)]
+
+### kodokan.vocab.variant_index(glossary)
+
+`spelling -> part key` for every primary key and declared alternate reading.
+
+`glossary` maps a part key (its primary romaji, lower-case) to a mapping that may hold
+`alts`: alternate readings such as `["koshi"]` for `goshi`.
+
+* **Raises:**
+  [**ValueError**](https://docs.python.org/3/builtins/exceptions.html#ValueError) – if one spelling would belong to two parts (glossary order must never
+  decide which part a name token is).
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]
+
+### kodokan.vocab.word_throws(names, glossary, , homographs={'kata': frozenset({'katajujijime'})})
+
+`part key -> sorted technique keys` whose name contains the part.
+
+* **Parameters:**
+  * **names** ([`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]) – `technique key -> romaji name`.
+  * **glossary** ([`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)]) – as for [`variant_index()`](_autosummary/kodokan.vocab.html.md#kodokan.vocab.variant_index). Every glossary part appears in the
+    result, with an empty list if no name uses it.
+  * **homographs** ([`Mapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`Iterable`](https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]]) – `part key -> technique keys` where the spelling is another word.
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]]
+
+```pycon
+>>> word_throws(
+...     {"kataguruma": "Kata-guruma", "katajujijime": "Kata-juji-jime"},
+...     {"kata": {}, "guruma": {}},
+... )
+{'kata': ['kataguruma'], 'guruma': ['kataguruma']}
+```
+
+
 # about-this-build.html.md
 
 <!-- generated by epythet -->
 
 # About this build
 
-This documentation was built on **2026-11-08 16:43 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/5609c220f53fd655d23e79553314532cbffb3212"><code>5609c22</code></a> on branch <code>main</code>, for **kodokan 0.0.31** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-11-09 09:12 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/033a4f6775c01e1e190a1e81fb3c5ee846f2bddd"><code>033a4f6</code></a> on branch <code>main</code>, for **kodokan 0.0.32** (from <code>pyproject.toml</code>).
 
-#### WARNING
-The documentation and the package may be misaligned:
-
-- The documented version (0.0.31) is behind the latest release on PyPI (0.0.32): `pip install kodokan` gives newer code than these docs describe.
+#### NOTE
+Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
 
 ## Source
 
 |                     |                                                                                                                                                           |
 |---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/thorwhalen/kodokan/commit/5609c220f53fd655d23e79553314532cbffb3212"><code>5609c220f53fd655d23e79553314532cbffb3212</code></a> |
+| Commit              | <a href="https://github.com/thorwhalen/kodokan/commit/033a4f6775c01e1e190a1e81fb3c5ee846f2bddd"><code>033a4f6775c01e1e190a1e81fb3c5ee846f2bddd</code></a> |
 | Branch              | <code>main</code>                                                                                                                                         |
 | Tags at this commit | none                                                                                                                                                      |
 | Working tree        | clean                                                                                                                                                     |
@@ -2954,9 +3124,9 @@ The documentation and the package may be misaligned:
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>thorwhalen/kodokan</code>                                                            |
-| Run          | <a href="https://github.com/thorwhalen/kodokan/actions/runs/42501248705">42501248705</a>   |
+| Run          | <a href="https://github.com/thorwhalen/kodokan/actions/runs/42591430861">42591430861</a>   |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>5609c220f53fd655d23e79553314532cbffb3212</code> (in the history of the built commit) |
+| Event commit | <code>033a4f6775c01e1e190a1e81fb3c5ee846f2bddd</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -2981,13 +3151,13 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/kodokan/0.0.32/">0.0.32</a>, newer than the documented version (0.0.31).
+Latest release: <a href="https://pypi.org/project/kodokan/0.0.32/">0.0.32</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/thorwhalen/kodokan && cd kodokan
-git checkout 5609c220f53fd655d23e79553314532cbffb3212
+git checkout 033a4f6775c01e1e190a1e81fb3c5ee846f2bddd
 pip install "epythet==0.2.22"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

@@ -73,3 +73,4 @@
    tori_labels
    track
    viz
+   vocab

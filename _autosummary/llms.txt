@@ -23,6 +23,7 @@
 - [kodokan.tori_labels](kodokan.tori_labels.html.md): Hand-labelling of the tori heuristic (#49): sample demos, then score agreement.
 - [kodokan.track](kodokan.track.html.md): Stable tori/uke identity tracking (BoT-SORT / ByteTrack).
 - [kodokan.viz](kodokan.viz.html.md): Visualize a &#96;PoseSequence&#96;.
+- [kodokan.vocab](kodokan.vocab.html.md): Word parts of technique names: which techniques share which part, and how often.
 
 ## Optional
 

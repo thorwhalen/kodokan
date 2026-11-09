@@ -641,3 +641,4 @@ A dict-like `{video_id: <json>}` store for demo segments (and metadata).
 | [`tori_labels`](kodokan.tori_labels.html.md#module-kodokan.tori_labels)   | Hand-labelling of the tori heuristic (#49): sample demos, then score agreement.                      |
 | [`track`](kodokan.track.html.md#module-kodokan.track)               | Stable tori/uke identity tracking (BoT-SORT / ByteTrack).                                            |
 | [`viz`](kodokan.viz.html.md#module-kodokan.viz)                   | Visualize a [`PoseSequence`](kodokan.pose.html.md#kodokan.pose.PoseSequence). |
+| [`vocab`](kodokan.vocab.html.md#module-kodokan.vocab)               | Word parts of technique names: which techniques share which part, and how often.                     |
