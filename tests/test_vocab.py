@@ -70,6 +70,7 @@ def test_part_stats_and_threshold():
 
 
 _BUILDER = Path(__file__).parents[1] / "examples" / "build_throw_metadata.py"
+_MD = Path(__file__).parents[1] / "misc" / "docs" / "judo_throws_classification.md"
 
 
 @pytest.mark.skipif(not _BUILDER.exists(), reason="builder script not present")
@@ -89,3 +90,26 @@ def test_real_glossary_threshold_keeps_the_owners_examples():
     assert {"ashi", "goshi", "harai", "seoi"} <= offered
     assert "koshiguruma" in wt["goshi"]  # the hand-kept list had missed it
     assert not kv.unmatched_tokens(names, glossary)  # every nage-waza token is a known part
+
+
+def test_homographs_found_from_kanji_not_a_hand_list():
+    glossary = {"kata": {"kanji": "肩"}, "guruma": {"kanji": "車"}, "shiho": {"kanji": "四方", "alts": ["siho"]}}
+    names = {"kataguruma": "Kata-guruma", "katahajime": "Kata-ha-jime", "kamishihogatame": "Kami-siho-gatame"}
+    kanji = {"kataguruma": "肩車", "katahajime": "片羽絞"}  # no kanji given for the third: not judged
+    found = kv.homographs_by_kanji(names, kanji, glossary)
+    assert found == {"kata": frozenset({"katahajime"})}
+    wt = kv.word_throws(names, glossary, homographs=found)
+    assert wt["kata"] == ["kataguruma"]
+    assert wt["shiho"] == ["kamishihogatame"]  # the spelling siho is the same part
+
+
+@pytest.mark.skipif(not (_BUILDER.exists() and _MD.exists()), reason="builder or reference absent")
+def test_katame_words_are_in_the_glossary_and_claimed():
+    spec = importlib.util.spec_from_file_location("builder", _BUILDER)
+    builder = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(builder)
+    text = _MD.read_text()
+    glossary = builder.parse_glossary(text)
+    assert {"gatame", "jime", "shiho", "kesa", "juji"} <= set(glossary)
+    assert "siho" in glossary["shiho"]["alts"]
+    assert builder.parse_technique_kanji(text)["katajujijime"] == "片十字絞"

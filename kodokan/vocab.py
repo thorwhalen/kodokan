@@ -119,7 +119,41 @@ def parts_of_name(romaji: str, index: Mapping[str, str]) -> list[str]:
 
 #: Same spelling, different word: technique names where a token is NOT the glossary part.
 #: Kata-juji-jime's *kata* is 片 ("one-sided"), not the glossary's 肩 ("shoulder").
+#: The fallback when no technique kanji is at hand; :func:`homographs_by_kanji` finds
+#: these from the kanji instead.
 HOMOGRAPHS: dict[str, frozenset[str]] = {"kata": frozenset({"katajujijime"})}
+
+
+def homographs_by_kanji(
+    names: Mapping[str, str],
+    kanji: Mapping[str, str],
+    glossary: Mapping[str, Mapping],
+) -> dict[str, frozenset[str]]:
+    """``part key -> technique keys`` whose name has the part's spelling but not its kanji.
+
+    A name token that is a part's spelling is another word when the technique's own kanji
+    lacks the part's glossary kanji: *Kata-juji-jime* (片十字絞) has *kata* but not 肩.
+    Techniques with no kanji in ``kanji`` are not judged. The result is what
+    :func:`word_throws` takes as ``homographs``, found from the data rather than kept by
+    hand beside the technique keys.
+
+    >>> glossary = {"kata": {"kanji": "肩"}, "juji": {"kanji": "十字"}}
+    >>> names = {"katajujijime": "Kata-juji-jime", "kataguruma": "Kata-guruma"}
+    >>> kanji = {"katajujijime": "片十字絞", "kataguruma": "肩車"}
+    >>> homographs_by_kanji(names, kanji, glossary)
+    {'kata': frozenset({'katajujijime'})}
+    """
+    index = variant_index(glossary)
+    found: dict[str, set[str]] = {}
+    for tech, romaji in names.items():
+        written = kanji.get(tech)
+        if not written:
+            continue
+        for part in parts_of_name(romaji, index):
+            part_kanji = glossary[part].get("kanji")
+            if part_kanji and part_kanji not in written:
+                found.setdefault(part, set()).add(tech)
+    return {part: frozenset(techs) for part, techs in found.items()}
 
 
 def word_throws(

@@ -71,6 +71,19 @@ def parse_glossary(md: str) -> dict:
     return words
 
 
+def parse_technique_kanji(md: str) -> dict:
+    """{throwKey: kanji} from the two-cell ``| **Technique** | kanji |`` rows."""
+    out = {}
+    for line in md.splitlines():
+        if not line.startswith("| **"):
+            continue
+        c = _cells(line)
+        name = re.fullmatch(r"\*\*(.+?)\*\*", c[0]) if len(c) == 2 else None
+        if name:
+            out[canonical_technique_key(name.group(1).strip())] = c[1]
+    return out
+
+
 def parse_classification(md: str) -> dict:
     """{throwKey: {romaji, en, fr, category}} from the per-category tables."""
     throws, category = {}, None
@@ -128,7 +141,11 @@ def main(out_dir: Path = OUT_DIR):
     }
 
     # vocab.json: word -> translations + the throws whose NAME contains it (#65)
-    word_throws = kv.word_throws(names, glossary)
+    # kanji of a technique: its words' kanji joined, unless the glossary file states it
+    technique_kanji = {k: compose_jp(n, tok2word)[0] for k, n in names.items()}
+    technique_kanji.update(parse_technique_kanji(md))
+    homographs = kv.homographs_by_kanji(names, technique_kanji, glossary)
+    word_throws = kv.word_throws(names, glossary, homographs=homographs)
     vocab = {}
     for key, w in glossary.items():
         vocab[key] = {
