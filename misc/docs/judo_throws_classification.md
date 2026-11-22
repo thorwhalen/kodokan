@@ -69,6 +69,36 @@ The table below details every distinct linguistic component utilized across the 
 | **yama**<br>やま (山) | Mountain | Montagne | 1 | Yama-arashi |
 
 
+### 1b. Katame-waza words and technique kanji
+
+Words that appear in the grappling techniques of the clip catalog (not among the 68 nage-waza above), in the same format, so the word-part quizzes offer them with no code change. *siho* is a spelling of *shiho* in Kami-siho-gatame. The count is the number of katame-waza technique names the word appears in.
+
+| Japanese Word | English Translation / Concept | French Translation / Concept | Count | List of Throws It Appears In |
+| :--- | :--- | :--- | :---: | :--- |
+| **gatame** (katame)<br>がため / かため (固) | Hold / Pin / Lock | Immobilisation / Clé | 10 | Kuzure-kami-shiho-gatame, Kuzure-kesa-gatame, Kesa-gatame, Uki-gatame, Tate-shiho-gatame, Yoko-shiho-gatame, Ura-gatame, Kami-siho-gatame, Kata-gatame, Ushiro-kesa-gatame |
+| **jime** (shime)<br>じめ / しめ (絞) | Strangle / Choke | Étranglement | 5 | Okuri-eri-jime, Hadaka-jime, Gyaku-juji-jime, Nami-juji-jime, Kata-juji-jime |
+| **shiho** (siho)<br>しほう (四方) | Four directions / All sides | Quatre directions / Quatre points cardinaux | 4 | Kuzure-kami-shiho-gatame, Tate-shiho-gatame, Yoko-shiho-gatame, Kami-siho-gatame |
+| **kesa**<br>けさ (袈裟) | Buddhist priest's stole (diagonal sash) | Étole de moine bouddhiste (écharpe en diagonale) | 3 | Kuzure-kesa-gatame, Kesa-gatame, Ushiro-kesa-gatame |
+| **juji**<br>じゅうじ (十字) | Cross | Croix | 3 | Gyaku-juji-jime, Nami-juji-jime, Kata-juji-jime |
+| **kami**<br>かみ (上) | Upper | Supérieur / Haut | 2 | Kuzure-kami-shiho-gatame, Kami-siho-gatame |
+| **kuzure**<br>くずれ (崩) | Broken / Modified (variant of a technique) | Brisé / Variante | 2 | Kuzure-kami-shiho-gatame, Kuzure-kesa-gatame |
+| **age**<br>あげ (上) | To lift up | Soulever | 1 | Daki-age |
+| **eri**<br>えり (襟) | Collar / Lapel | Col / Revers | 1 | Okuri-eri-jime |
+| **gyaku**<br>ぎゃく (逆) | Reverse / Opposite | Inverse / Contraire | 1 | Gyaku-juji-jime |
+| **hadaka**<br>はだか (裸) | Naked / Bare (no jacket grip) | Nu / À mains nues | 1 | Hadaka-jime |
+| **nami**<br>なみ (並) | Normal / Ordinary | Normal / Ordinaire | 1 | Nami-juji-jime |
+| **tate**<br>たて (縦) | Vertical / Lengthwise | Vertical / Dans la longueur | 1 | Tate-shiho-gatame |
+
+Each technique's own kanji, where it is not simply its words' kanji joined: a spelling shared by two words is told apart by comparing these with the glossary kanji above (*Kata-gatame* 肩固 is the shoulder, *Kata-juji-jime* 片十字絞 is "one-sided").
+
+| Technique | Kanji |
+| :--- | :--- |
+| **Kata-gatame** | 肩固 |
+| **Kata-juji-jime** | 片十字絞 |
+| **Kata-guruma** | 肩車 |
+| **Kami-siho-gatame** | 上四方固 |
+
+
 ## 2. Comprehensive Kodokan Classification Table (FFJudo Standards)
 
 ### I. Tachi-waza (Standing Techniques / Techniques Debout)
