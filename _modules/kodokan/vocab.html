@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../_static/documentation_options.js?v=f2234cd1"></script>
+    <script src="../../_static/documentation_options.js?v=565bc8c8"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -411,7 +411,7 @@ window.runMermaid = runMermaid;</script>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.32" />
+  <meta name="docsearch:version" content="0.0.33" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -829,9 +829,7 @@ window.runMermaid = runMermaid;</script>
     <span class="k">for</span> <span class="n">spelling</span><span class="p">,</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">index</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">by_plain</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">devoiced</span><span class="p">(</span><span class="n">spelling</span><span class="p">),</span> <span class="n">key</span><span class="p">)</span>
     <span class="n">tokens</span> <span class="o">=</span> <span class="p">{</span><span class="n">t</span> <span class="k">for</span> <span class="n">romaji</span> <span class="ow">in</span> <span class="n">names</span><span class="o">.</span><span class="n">values</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">name_tokens</span><span class="p">(</span><span class="n">romaji</span><span class="p">)}</span>
-    <span class="k">return</span> <span class="p">{</span>
-        <span class="n">t</span><span class="p">:</span> <span class="n">by_plain</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">devoiced</span><span class="p">(</span><span class="n">t</span><span class="p">))</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">index</span>
-    <span class="p">}</span></div>
+    <span class="k">return</span> <span class="p">{</span><span class="n">t</span><span class="p">:</span> <span class="n">by_plain</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">devoiced</span><span class="p">(</span><span class="n">t</span><span class="p">))</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span> <span class="k">if</span> <span class="n">t</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">index</span><span class="p">}</span></div>
 
 
 

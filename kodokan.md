@@ -1,4 +1,4 @@
-> built 2026-11-09 09:12 UTC from 033a4f6 (main) · kodokan 0.0.32. Details: build_info.json
+> built 2026-11-22 15:32 UTC from 55da6e0 (main) · kodokan 0.0.33. Details: build_info.json
 
 # index.html.md
 
@@ -769,6 +769,9 @@ changed segment simply gets a new name. Positional names (`{vid}_3.mp4`) could.
 
 Pick `n` distractor keys, preferring those most confusable with the target.
 
+The choice is learny’s (`learny.distractors.pick_distractors()`): weighted by
+`similarity`, uniform when it knows nothing of the target.
+
 * **Return type:**
   [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)
 
@@ -1460,9 +1463,7 @@ A dict-like `{video_id: <json>}` store for demo segments (and metadata).
 | [`config`](_autosummary/kodokan.config.html.md#module-kodokan.config)             | Where kodokan keeps its data (downloaded clips + derived artifacts).                                 |
 | [`descriptors`](_autosummary/kodokan.descriptors.html.md#module-kodokan.descriptors)   | Experimental per-demo feature descriptors (to test what makes throws separable).                     |
 | [`flashcards`](_autosummary/kodokan.flashcards.html.md#module-kodokan.flashcards)     | Technique-recognition learning game (app #6) — logic layer.                                          |
-| [`learning`](_autosummary/kodokan.learning.html.md#module-kodokan.learning)         | Adaptive learning engine for the flashcard quiz — selectable strategies.                             |
 | [`pose`](_autosummary/kodokan.pose.html.md#module-kodokan.pose)                 | Body-pose estimation: a video → a sequence of per-person skeletal keypoints.                         |
-| [`quiz`](_autosummary/kodokan.quiz.html.md#module-kodokan.quiz)                 | Quiz service: the UI-agnostic orchestrator of the technique-recognition game (app #6).               |
 | [`recognize`](_autosummary/kodokan.recognize.html.md#module-kodokan.recognize)       | Learned-vs-DTW technique recognition experiments (data-appropriate, no GPU).                         |
 | [`recognizer`](_autosummary/kodokan.recognizer.html.md#module-kodokan.recognizer)     | Technique recognition for applications: top-k guesses with inspectable scores (#3).                  |
 | [`segment`](_autosummary/kodokan.segment.html.md#module-kodokan.segment)           | Segment a clip into its repeated demonstrations of one throw.                                        |
@@ -1472,143 +1473,6 @@ A dict-like `{video_id: <json>}` store for demo segments (and metadata).
 | [`track`](_autosummary/kodokan.track.html.md#module-kodokan.track)               | Stable tori/uke identity tracking (BoT-SORT / ByteTrack).                                            |
 | [`viz`](_autosummary/kodokan.viz.html.md#module-kodokan.viz)                   | Visualize a [`PoseSequence`](_autosummary/kodokan.pose.html.md#kodokan.pose.PoseSequence). |
 | [`vocab`](_autosummary/kodokan.vocab.html.md#module-kodokan.vocab)               | Word parts of technique names: which techniques share which part, and how often.                     |
-
-
-# _autosummary/kodokan.learning.html.md
-
-# kodokan.learning
-
-Adaptive learning engine for the flashcard quiz — selectable strategies.
-
-A [`Strategy`](_autosummary/kodokan.learning.html.md#kodokan.learning.Strategy) maps the recorded response **history** to the next **problem**
-— which technique to ask (target) and which distractors to show — both drawn from
-an active study *set*. Strategies are research-backed (spaced repetition + MCQ
-learning science; see `misc/docs/learning-research.md`) and the user picks one in
-settings. The function from recorded data → next question is therefore a swappable
-strategy (open/closed): add a class, register it, and it appears in the UI.
-
-## Design notes
-
-- History is a list of plain response dicts (the logged record schema below), so the
-  engine has no storage dependency and is trivially testable.
-- Per-item adaptive state (Leitner box, SM-2 ease, FSRS stability) is reconstructed by
-  *replaying* the history — no mutable server state to corrupt.
-- Spacing intervals are in **days**; within a single dense session most items aren’t
-  “due”, so every scheduler falls back to an urgency ranking (most-overdue / lowest
-  recall / box weight) instead of stalling.
-
-Record schema (one dict per answered problem):
-
-```default
-response_id, problem_id, user, session_id, strategy_key,
-target_key, mode, choice_keys, chosen_key,
-correct, score, timed_out, response_time_ms,
-ts_presented, ts_answered            # ISO-8601 UTC
-```
-
-### Functions
-
-| [`empirical_confusion`](_autosummary/kodokan.learning.html.md#kodokan.learning.empirical_confusion)(history, \*[, ...])           | Per-learner confusion matrix from wrong answers: `{correct: {chosen_wrong: weight}}`.   |
-|----------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------|
-| [`item_accuracy`](_autosummary/kodokan.learning.html.md#kodokan.learning.item_accuracy)(history)                            | Per-item running stats: `{key: {n, wrong, last_ts, last_correct}}`.                     |
-| [`list_strategies`](_autosummary/kodokan.learning.html.md#kodokan.learning.list_strategies)()                                 | Describe available strategies (for the settings UI).                                    |
-| [`make_strategy`](_autosummary/kodokan.learning.html.md#kodokan.learning.make_strategy)([key])                              | Instantiate a strategy by key (default = confusion-weighted); unknown params ignored.   |
-| [`merge_similarity`](_autosummary/kodokan.learning.html.md#kodokan.learning.merge_similarity)(base, overlay, \*[, boost])      | Additively merge two `target -> {key: weight}` matrices (overlay boosted).              |
-| [`pick_distractors`](_autosummary/kodokan.learning.html.md#kodokan.learning.pick_distractors)(target, study_set, \*, n[, ...]) | Pick `n` distractors from `study_set`, preferring confusable ones.                      |
-
-### Classes
-
-| [`ConfusionWeighted`](_autosummary/kodokan.learning.html.md#kodokan.learning.ConfusionWeighted)([n_choices, ...])             |                                                                                   |
-|--------------------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------|
-| [`FSRSLite`](_autosummary/kodokan.learning.html.md#kodokan.learning.FSRSLite)([n_choices, target_retention, ...])    |                                                                                   |
-| [`Leitner`](_autosummary/kodokan.learning.html.md#kodokan.learning.Leitner)([n_choices, n_boxes, intervals, ...])   |                                                                                   |
-| [`SM2`](_autosummary/kodokan.learning.html.md#kodokan.learning.SM2)([n_choices, ef_start, ef_min, i1, i2, ...]) |                                                                                   |
-| [`Selection`](_autosummary/kodokan.learning.html.md#kodokan.learning.Selection)(target_key, choice_keys)              | A chosen target plus the full ordered option set (includes the target).           |
-| [`Strategy`](_autosummary/kodokan.learning.html.md#kodokan.learning.Strategy)([n_choices])                           | Base strategy: target selection is overridden; distractors default to confusable. |
-| [`UniformRandom`](_autosummary/kodokan.learning.html.md#kodokan.learning.UniformRandom)([n_choices, anti_repeat])         |                                                                                   |
-
-### *class* kodokan.learning.ConfusionWeighted(n_choices=4, recency_halflife_days=7.0, epsilon_explore=0.1, prior=1.0)
-
-Bases: [`Strategy`](_autosummary/kodokan.learning.html.md#kodokan.learning.Strategy)
-
-### *class* kodokan.learning.FSRSLite(n_choices=4, target_retention=0.9, s_init=1.0, stability_growth=2.0, lapse_floor=0.5)
-
-Bases: [`Strategy`](_autosummary/kodokan.learning.html.md#kodokan.learning.Strategy)
-
-### *class* kodokan.learning.Leitner(n_choices=4, n_boxes=5, intervals=(1, 2, 4, 8, 16), demotion='reset')
-
-Bases: [`Strategy`](_autosummary/kodokan.learning.html.md#kodokan.learning.Strategy)
-
-### *class* kodokan.learning.SM2(n_choices=4, ef_start=2.5, ef_min=1.3, i1=1, i2=6, fast_ms=3500, slow_ms=9000)
-
-Bases: [`Strategy`](_autosummary/kodokan.learning.html.md#kodokan.learning.Strategy)
-
-### *class* kodokan.learning.Selection(target_key, choice_keys)
-
-Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
-
-A chosen target plus the full ordered option set (includes the target).
-
-### *class* kodokan.learning.Strategy(n_choices=4)
-
-Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
-
-Base strategy: target selection is overridden; distractors default to confusable.
-
-### *class* kodokan.learning.UniformRandom(n_choices=4, anti_repeat=True)
-
-Bases: [`Strategy`](_autosummary/kodokan.learning.html.md#kodokan.learning.Strategy)
-
-### kodokan.learning.empirical_confusion(history, , halflife_days=7.0, now=None)
-
-Per-learner confusion matrix from wrong answers: `{correct: {chosen_wrong: weight}}`.
-
-Each mistake contributes a recency-decayed, partial-credit-shortfall weight, so the
-throws a learner *actually* mixes up (recently) dominate.
-
-* **Return type:**
-  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
-
-### kodokan.learning.item_accuracy(history)
-
-Per-item running stats: `{key: {n, wrong, last_ts, last_correct}}`.
-
-* **Return type:**
-  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)]
-
-### kodokan.learning.list_strategies()
-
-Describe available strategies (for the settings UI).
-
-* **Return type:**
-  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)]
-
-### kodokan.learning.make_strategy(key=None, \*\*params)
-
-Instantiate a strategy by key (default = confusion-weighted); unknown params ignored.
-
-* **Return type:**
-  [`Strategy`](_autosummary/kodokan.learning.html.md#kodokan.learning.Strategy)
-
-### kodokan.learning.merge_similarity(base, overlay, , boost=2.0)
-
-Additively merge two `target -> {key: weight}` matrices (overlay boosted).
-
-Keeps the dense `base` (pose-shape) for every target and *adds* the sparse
-`overlay` (per-learner confusion) on top — so confusable distractors are always
-available, with the learner’s personal confusers weighted up rather than replacing
-pose-similarity for not-yet-confused targets.
-
-* **Return type:**
-  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
-
-### kodokan.learning.pick_distractors(target, study_set, , n, similarity=None, rng, top_up=True)
-
-Pick `n` distractors from `study_set`, preferring confusable ones.
-
-`similarity` maps `target -> {key: weight}` (pose-shape or empirical confusion).
-Falls back to uniform when absent; tops up from the rest of the set if the
-confusable pool is too small (so the answer set always has `n` options when possible).
 
 
 # _autosummary/kodokan.pose.html.md
@@ -1749,134 +1613,6 @@ two highest-confidence people per frame (left→right ordered) via RTMPose.
   [`PoseSequence`](_autosummary/kodokan.pose.html.md#kodokan.pose.PoseSequence)
 * **Returns:**
   A [`PoseSequence`](_autosummary/kodokan.pose.html.md#kodokan.pose.PoseSequence) of shape `(F, n_persons, 17, 3)`.
-
-
-# _autosummary/kodokan.quiz.html.md
-
-# kodokan.quiz
-
-Quiz service: the UI-agnostic orchestrator of the technique-recognition game (app #6).
-
-`flashcards` makes and scores one problem, `learning` chooses the next one from a
-learner’s history. This module wires them to storage so that any surface (a web app, a
-CLI, a test) needs only three calls, all taking and returning plain data:
-
-```default
-quiz = Quiz(catalog, similarity=similarity)          # or Quiz.from_library()
-problem = quiz.next_problem("ana", strategy="sm2")   # issued problems are remembered
-record = quiz.submit(problem.problem_id, chosen_index=2, response_time_ms=3100)
-quiz.stats("ana")                                    # per-technique {n, wrong, ...}
-```
-
-State lives in two dict-like stores (seams; default: `dol` JSON files under the data
-root, one per user prefix): the **issued problems** not yet answered, and the **responses**
-(one record per answered problem, the `learning.RECORD_FIELDS` schema). A surface can
-therefore be stateless between “give me a problem” and “here is the answer”.
-
-```pycon
->>> catalog = {k: {"name": k.title(), "clips": []} for k in ("seoinage", "ogoshi", "tomoenage", "uchimata")}
->>> quiz = Quiz(catalog, responses={}, problems={})
->>> problem = quiz.next_problem("ana", rng=__import__("random").Random(0))
->>> record = quiz.submit(problem.problem_id, problem.correct_index)
->>> record["correct"], record["user"], quiz.stats("ana")[problem.target_key]["n"]
-(True, 'ana', 1)
-```
-
-### Module Attributes
-
-| [`USER_RE`](_autosummary/kodokan.quiz.html.md#kodokan.quiz.USER_RE)   | A user id is a filesystem-safe token; `__` is the separator of the stored keys.   |
-|------------------------------------------------------------|-----------------------------------------------------------------------------------|
-
-### Functions
-
-| [`quiz_stores`](_autosummary/kodokan.quiz.html.md#kodokan.quiz.quiz_stores)([directory])   | `(responses, problems)` as `dol` JSON-file stores under the data root.   |
-|-----------------------------------------------------------------------------|--------------------------------------------------------------------------|
-
-### Classes
-
-| [`Quiz`](_autosummary/kodokan.quiz.html.md#kodokan.quiz.Quiz)(catalog[, similarity, responses, ...])   | The game for one `catalog` (`technique_key -> {"name", "clips"}`).   |
-|------------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
-
-### *class* kodokan.quiz.Quiz(catalog, similarity=None, responses=None, problems=None, clip_for=None, now=<function \_now>)
-
-Bases: [`object`](https://docs.python.org/3/builtins/functions.html#object)
-
-The game for one `catalog` (`technique_key -> {"name", "clips"}`).
-
-* **Parameters:**
-  * **similarity** ([`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict) | [`None`](https://docs.python.org/3/builtins/constants.html#None)) – `target -> {key: weight}`, e.g. `flashcards.build_confusability()`;
-    the learner’s own confusion is merged on top by the strategy.
-  * **responses** ([`MutableMapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.MutableMapping)) – answered-problem records, keyed `<user>__<ts>__<response_id>.json`.
-  * **problems** ([`MutableMapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.MutableMapping)) – issued, unanswered problems, keyed `<problem_id>.json`.
-    Both default to [`quiz_stores()`](_autosummary/kodokan.quiz.html.md#kodokan.quiz.quiz_stores).
-  * **clip_for** ([`object`](https://docs.python.org/3/builtins/functions.html#object)) – `key -> clip` for the media of a technique (default: its first clip).
-
-#### *classmethod* from_library(\*\*kwargs)
-
-A quiz over the clip library on disk (needs `kodokan[analysis]`).
-
-`confusability`: `"pose"` (default, pose-shape proxy) or `"model"` (the
-recognizer’s leave-one-clip-out confusions; weak until cross-source recognition
-beats chance, #7). An explicit `similarity=` mapping wins over both.
-
-* **Return type:**
-  [`Quiz`](_autosummary/kodokan.quiz.html.md#kodokan.quiz.Quiz)
-
-#### history(user)
-
-The user’s answered-problem records, oldest first.
-
-* **Return type:**
-  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)]
-
-#### next_problem(user, , strategy=None, mode='video_to_name', study_set=None, session_id=None, rng=None)
-
-Choose the next problem for `user` from their history, and remember it as issued.
-
-* **Parameters:**
-  * **strategy** ([`str`](https://docs.python.org/3/builtins/stdtypes.html#str) | [`None`](https://docs.python.org/3/builtins/constants.html#None)) – a key of [`strategies()`](_autosummary/kodokan.quiz.html.md#kodokan.quiz.Quiz.strategies) (default: confusion-weighted).
-  * **study_set** – the technique keys to draw from (default: the whole catalog).
-* **Raises:**
-  [**ValueError**](https://docs.python.org/3/builtins/exceptions.html#ValueError) – for an unknown user format, mode, or an empty study set.
-* **Return type:**
-  [`Problem`](_autosummary/kodokan.flashcards.html.md#kodokan.flashcards.Problem)
-
-#### stats(user)
-
-Per-technique `{n, wrong, last_ts, last_correct}` for the user.
-
-* **Return type:**
-  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)]
-
-#### *static* strategies()
-
-The selectable strategies (for a settings screen).
-
-* **Return type:**
-  [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)[[`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)]
-
-#### submit(problem_id, chosen_index, , timed_out=False, response_time_ms=None)
-
-Score an issued problem, store the record, and return it.
-
-`chosen_index` is None for a timeout. A problem is answered once.
-
-* **Raises:**
-  * [**KeyError**](https://docs.python.org/3/builtins/exceptions.html#KeyError) – if `problem_id` was never issued, or was already answered.
-  * [**ValueError**](https://docs.python.org/3/builtins/exceptions.html#ValueError) – if `chosen_index` is not one of the choices.
-* **Return type:**
-  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
-
-### kodokan.quiz.USER_RE *= re.compile('^(?!.\*_\_)[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$')*
-
-A user id is a filesystem-safe token; `__` is the separator of the stored keys.
-
-### kodokan.quiz.quiz_stores(directory=None)
-
-`(responses, problems)` as `dol` JSON-file stores under the data root.
-
-* **Return type:**
-  [`tuple`](https://docs.python.org/3/builtins/stdtypes.html#tuple)[[`MutableMapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.MutableMapping), [`MutableMapping`](https://docs.python.org/3/library/collections.abc.html#collections.abc.MutableMapping)]
 
 
 # _autosummary/kodokan.recognize.html.md
@@ -3104,16 +2840,18 @@ The distinct part keys of a name, in order of appearance.
 
 # About this build
 
-This documentation was built on **2026-11-09 09:12 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/033a4f6775c01e1e190a1e81fb3c5ee846f2bddd"><code>033a4f6</code></a> on branch <code>main</code>, for **kodokan 0.0.32** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-11-22 15:32 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/55da6e02a7b6725946eab62131744aa5281df1f1"><code>55da6e0</code></a> on branch <code>main</code>, for **kodokan 0.0.33** (from <code>pyproject.toml</code>).
 
-#### NOTE
-Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
+#### WARNING
+The documentation and the package may be misaligned:
+
+- The documented version (0.0.33) is behind the latest release on PyPI (0.0.34): `pip install kodokan` gives newer code than these docs describe.
 
 ## Source
 
 |                     |                                                                                                                                                           |
 |---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/thorwhalen/kodokan/commit/033a4f6775c01e1e190a1e81fb3c5ee846f2bddd"><code>033a4f6775c01e1e190a1e81fb3c5ee846f2bddd</code></a> |
+| Commit              | <a href="https://github.com/thorwhalen/kodokan/commit/55da6e02a7b6725946eab62131744aa5281df1f1"><code>55da6e02a7b6725946eab62131744aa5281df1f1</code></a> |
 | Branch              | <code>main</code>                                                                                                                                         |
 | Tags at this commit | none                                                                                                                                                      |
 | Working tree        | clean                                                                                                                                                     |
@@ -3124,15 +2862,15 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>thorwhalen/kodokan</code>                                                            |
-| Run          | <a href="https://github.com/thorwhalen/kodokan/actions/runs/42591430861">42591430861</a>   |
+| Run          | <a href="https://github.com/thorwhalen/kodokan/actions/runs/45038745318">45038745318</a>   |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>033a4f6775c01e1e190a1e81fb3c5ee846f2bddd</code> (in the history of the built commit) |
+| Event commit | <code>55da6e02a7b6725946eab62131744aa5281df1f1</code> (in the history of the built commit) |
 
 ## Tools
 
 |          |         |
 |----------|---------|
-| epythet  | 0.2.22  |
+| epythet  | 0.2.23  |
 | Sphinx   | 9.1.1   |
 | docutils | 0.22.4  |
 | Python   | 3.12.16 |
@@ -3151,14 +2889,14 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/kodokan/0.0.32/">0.0.32</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/kodokan/0.0.34/">0.0.34</a>, newer than the documented version (0.0.33).
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/thorwhalen/kodokan && cd kodokan
-git checkout 033a4f6775c01e1e190a1e81fb3c5ee846f2bddd
-pip install "epythet==0.2.22"
+git checkout 55da6e02a7b6725946eab62131744aa5281df1f1
+pip install "epythet==0.2.23"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```
 

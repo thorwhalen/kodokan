@@ -90,6 +90,9 @@ changed segment simply gets a new name. Positional names (`{vid}_3.mp4`) could.
 
 Pick `n` distractor keys, preferring those most confusable with the target.
 
+The choice is learny’s (`learny.distractors.pick_distractors()`): weighted by
+`similarity`, uniform when it knows nothing of the target.
+
 * **Return type:**
   [`list`](https://docs.python.org/3/builtins/stdtypes.html#list)
 

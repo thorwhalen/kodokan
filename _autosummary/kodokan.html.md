@@ -630,9 +630,7 @@ A dict-like `{video_id: <json>}` store for demo segments (and metadata).
 | [`config`](kodokan.config.html.md#module-kodokan.config)             | Where kodokan keeps its data (downloaded clips + derived artifacts).                                 |
 | [`descriptors`](kodokan.descriptors.html.md#module-kodokan.descriptors)   | Experimental per-demo feature descriptors (to test what makes throws separable).                     |
 | [`flashcards`](kodokan.flashcards.html.md#module-kodokan.flashcards)     | Technique-recognition learning game (app #6) — logic layer.                                          |
-| [`learning`](kodokan.learning.html.md#module-kodokan.learning)         | Adaptive learning engine for the flashcard quiz — selectable strategies.                             |
 | [`pose`](kodokan.pose.html.md#module-kodokan.pose)                 | Body-pose estimation: a video → a sequence of per-person skeletal keypoints.                         |
-| [`quiz`](kodokan.quiz.html.md#module-kodokan.quiz)                 | Quiz service: the UI-agnostic orchestrator of the technique-recognition game (app #6).               |
 | [`recognize`](kodokan.recognize.html.md#module-kodokan.recognize)       | Learned-vs-DTW technique recognition experiments (data-appropriate, no GPU).                         |
 | [`recognizer`](kodokan.recognizer.html.md#module-kodokan.recognizer)     | Technique recognition for applications: top-k guesses with inspectable scores (#3).                  |
 | [`segment`](kodokan.segment.html.md#module-kodokan.segment)           | Segment a clip into its repeated demonstrations of one throw.                                        |
