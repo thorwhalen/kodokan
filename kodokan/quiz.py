@@ -155,24 +155,23 @@ class Quiz:
         :param study_set: the technique keys to draw from (default: the whole catalog).
         :raises ValueError: for an unknown user format, mode, or an empty study set.
         """
-        history = self.history(user)
+        history = learning.to_responses(self.history(user))
         keys = [k for k in (study_set or self.catalog) if k in self.catalog]
-        chosen = learning.make_strategy(strategy)
+        chosen = learning.make_strategy(strategy or learning.DEFAULT_STRATEGY)
         selection = chosen.next_selection(
             history,
             keys,
-            mode=mode,
             similarity=self.similarity,
-            now=self.now(),
+            now=self.now().timestamp(),
             rng=rng,
         )
         problem = problem_from_keys(
             self.catalog,
-            selection.target_key,
-            selection.choice_keys,
+            selection.target,
+            selection.options,
             mode=mode,
             clip_for=self.clip_for,
-            problem_id=f"{mode}-{selection.target_key}-{uuid.uuid4().hex[:12]}",
+            problem_id=f"{mode}-{selection.target}-{uuid.uuid4().hex[:12]}",
         )
         self.problems[f"{problem.problem_id}.json"] = {
             "problem": asdict(problem),

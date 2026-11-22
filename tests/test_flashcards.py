@@ -16,6 +16,7 @@ def _catalog(n=5):
 
 
 def test_make_problem_video_to_name():
+    pytest.importorskip("learny", reason="needs the quiz extra")
     cat = _catalog()
     p = fc.make_problem(cat, "t2", mode="video_to_name", n_choices=4, rng=random.Random(0))
     assert p.mode == "video_to_name"
@@ -25,6 +26,7 @@ def test_make_problem_video_to_name():
 
 
 def test_make_problem_name_to_video():
+    pytest.importorskip("learny", reason="needs the quiz extra")
     cat = _catalog()
     p = fc.make_problem(cat, "t1", mode="name_to_video", n_choices=3, rng=random.Random(1))
     assert p.prompt["name"] == "Technique 1"
@@ -33,6 +35,7 @@ def test_make_problem_name_to_video():
 
 
 def test_confusable_distractors_prefers_similar():
+    pytest.importorskip("learny", reason="needs the quiz extra")
     keys = [f"t{i}" for i in range(6)]
     sim = {"t0": {"t1": 0.95, "t2": 0.9, "t3": 0.05, "t4": 0.05, "t5": 0.05}}
     rng = random.Random(0)
@@ -60,6 +63,7 @@ def test_next_target_focus_and_weakness():
 
 
 def test_log_response_roundtrip(tmp_path):
+    pytest.importorskip("learny", reason="needs the quiz extra")
     pytest.importorskip("dol")
     from dol import JsonFiles
 

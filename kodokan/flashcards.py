@@ -64,36 +64,17 @@ class Problem:
 # --------------------------------------------------------------------------- #
 
 
-def _weighted_sample(
-    items: list, weights: list[float], k: int, rng: random.Random
-) -> list:
-    """Sample k distinct items proportional to weights (no replacement)."""
-    items, weights = list(items), [max(w, 1e-9) for w in weights]
-    chosen = []
-    for _ in range(min(k, len(items))):
-        total = sum(weights)
-        r = rng.random() * total
-        acc = 0.0
-        for i, w in enumerate(weights):
-            acc += w
-            if r <= acc:
-                chosen.append(items.pop(i))
-                weights.pop(i)
-                break
-    return chosen
-
-
 def confusable_distractors(target_key, keys, *, n, similarity=None, rng=None) -> list:
-    """Pick ``n`` distractor keys, preferring those most confusable with the target."""
-    rng = rng or random.Random()
-    pool = [k for k in keys if k != target_key]
-    if similarity and target_key in similarity:
-        weights = [similarity[target_key].get(k, 0.0) for k in pool]
-        if not any(weights):
-            weights = [1.0] * len(pool)
-    else:
-        weights = [1.0] * len(pool)
-    return _weighted_sample(pool, weights, n, rng)
+    """Pick ``n`` distractor keys, preferring those most confusable with the target.
+
+    The choice is learny's (:func:`learny.distractors.pick_distractors`): weighted by
+    ``similarity``, uniform when it knows nothing of the target.
+    """
+    from learny.distractors import pick_distractors  # the ``quiz`` extra
+
+    return pick_distractors(
+        target_key, keys, n=n, similarity=similarity, rng=rng or random.Random()
+    )
 
 
 def make_problem(
@@ -202,7 +183,7 @@ def next_target(keys, history, *, focus=None, rng: random.Random | None = None) 
         seen = [h for h in history if h.get("target_key") == k]
         wrong = sum(1 for h in seen if not h.get("correct"))
         weights.append((wrong + 1) / (len(seen) + 1))
-    return _weighted_sample(cand, weights, 1, rng)[0]
+    return rng.choices(cand, weights)[0]
 
 
 # --------------------------------------------------------------------------- #

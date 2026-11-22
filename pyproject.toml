@@ -65,6 +65,11 @@ storage = [
 acquire = [
     "yb",
 ]
+# The flashcard quiz picks its next question and distractors with learny
+# (learny.scheduling, learny.distractors). Not yet on PyPI: install from its repo.
+quiz = [
+    "learny",
+]
 all = [
     "rtmlib",
     "onnxruntime",
@@ -79,6 +84,7 @@ all = [
     "pyarrow",
     "dol",
     "yb",
+    "learny",
 ]
 dev = [
     "pytest>=7.0",
