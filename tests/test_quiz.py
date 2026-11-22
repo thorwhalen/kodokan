@@ -5,7 +5,9 @@ from datetime import datetime, timedelta, timezone
 
 import pytest
 
-from kodokan import learning
+pytest.importorskip("learny", reason="the quiz needs learny (extra: quiz)")
+
+from kodokan import learning  # noqa: E402
 from kodokan.quiz import Quiz, quiz_stores
 
 
