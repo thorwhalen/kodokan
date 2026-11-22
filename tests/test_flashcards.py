@@ -33,6 +33,7 @@ def test_make_problem_name_to_video():
 
 
 def test_confusable_distractors_prefers_similar():
+    pytest.importorskip("learny", reason="needs the quiz extra")
     keys = [f"t{i}" for i in range(6)]
     sim = {"t0": {"t1": 0.95, "t2": 0.9, "t3": 0.05, "t4": 0.05, "t5": 0.05}}
     rng = random.Random(0)
