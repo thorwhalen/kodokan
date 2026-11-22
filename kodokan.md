@@ -1,4 +1,4 @@
-> built 2026-11-22 15:32 UTC from 55da6e0 (main) · kodokan 0.0.33. Details: build_info.json
+> built 2026-11-22 15:47 UTC from f75b2e4 (main) · kodokan 0.0.34. Details: build_info.json
 
 # index.html.md
 
@@ -2720,6 +2720,7 @@ threshold for a part to be offered in the quizzes; its docstring records why.
 
 | [`devoiced`](_autosummary/kodokan.vocab.html.md#kodokan.vocab.devoiced)(token)                                | The unvoiced (rendaku-undone) form of `token`, or `token` if it starts unvoiced.    |
 |-------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
+| [`homographs_by_kanji`](_autosummary/kodokan.vocab.html.md#kodokan.vocab.homographs_by_kanji)(names, kanji, glossary)    | `part key -> technique keys` whose name has the part's spelling but not its kanji.  |
 | [`name_tokens`](_autosummary/kodokan.vocab.html.md#kodokan.vocab.name_tokens)(romaji)                            | The lower-cased parts of a romaji name: `"O-soto-gari"` -> `['o', 'soto', 'gari']`. |
 | [`part_stats`](_autosummary/kodokan.vocab.html.md#kodokan.vocab.part_stats)(part_throws, \*[, min_techniques])  | One row per part, most-shared first: `{part, n_techniques, offered}`.               |
 | [`parts_of_name`](_autosummary/kodokan.vocab.html.md#kodokan.vocab.parts_of_name)(romaji, index)                   | The distinct part keys of a name, in order of appearance.                           |
@@ -2732,6 +2733,8 @@ threshold for a part to be offered in the quizzes; its docstring records why.
 
 technique names where a token is NOT the glossary part.
 Kata-juji-jime’s *kata* is 片 (“one-sided”), not the glossary’s 肩 (“shoulder”).
+The fallback when no technique kanji is at hand; [`homographs_by_kanji()`](_autosummary/kodokan.vocab.html.md#kodokan.vocab.homographs_by_kanji) finds
+these from the kanji instead.
 
 * **Type:**
   Same spelling, different word
@@ -2756,6 +2759,27 @@ The unvoiced (rendaku-undone) form of `token`, or `token` if it starts unvoiced.
 
 * **Return type:**
   [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
+
+### kodokan.vocab.homographs_by_kanji(names, kanji, glossary)
+
+`part key -> technique keys` whose name has the part’s spelling but not its kanji.
+
+A name token that is a part’s spelling is another word when the technique’s own kanji
+lacks the part’s glossary kanji: *Kata-juji-jime* (片十字絞) has *kata* but not 肩.
+Techniques with no kanji in `kanji` are not judged. The result is what
+[`word_throws()`](_autosummary/kodokan.vocab.html.md#kodokan.vocab.word_throws) takes as `homographs`, found from the data rather than kept by
+hand beside the technique keys.
+
+```pycon
+>>> glossary = {"kata": {"kanji": "肩"}, "juji": {"kanji": "十字"}}
+>>> names = {"katajujijime": "Kata-juji-jime", "kataguruma": "Kata-guruma"}
+>>> kanji = {"katajujijime": "片十字絞", "kataguruma": "肩車"}
+>>> homographs_by_kanji(names, kanji, glossary)
+{'kata': frozenset({'katajujijime'})}
+```
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`frozenset`](https://docs.python.org/3/builtins/stdtypes.html#frozenset)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]]
 
 ### kodokan.vocab.name_tokens(romaji)
 
@@ -2840,18 +2864,16 @@ The distinct part keys of a name, in order of appearance.
 
 # About this build
 
-This documentation was built on **2026-11-22 15:32 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/55da6e02a7b6725946eab62131744aa5281df1f1"><code>55da6e0</code></a> on branch <code>main</code>, for **kodokan 0.0.33** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-11-22 15:47 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/f75b2e4a4842d955f99fc08b198607801d0e7a36"><code>f75b2e4</code></a> on branch <code>main</code>, for **kodokan 0.0.34** (from <code>pyproject.toml</code>).
 
-#### WARNING
-The documentation and the package may be misaligned:
-
-- The documented version (0.0.33) is behind the latest release on PyPI (0.0.34): `pip install kodokan` gives newer code than these docs describe.
+#### NOTE
+Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
 
 ## Source
 
 |                     |                                                                                                                                                           |
 |---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/thorwhalen/kodokan/commit/55da6e02a7b6725946eab62131744aa5281df1f1"><code>55da6e02a7b6725946eab62131744aa5281df1f1</code></a> |
+| Commit              | <a href="https://github.com/thorwhalen/kodokan/commit/f75b2e4a4842d955f99fc08b198607801d0e7a36"><code>f75b2e4a4842d955f99fc08b198607801d0e7a36</code></a> |
 | Branch              | <code>main</code>                                                                                                                                         |
 | Tags at this commit | none                                                                                                                                                      |
 | Working tree        | clean                                                                                                                                                     |
@@ -2862,9 +2884,9 @@ The documentation and the package may be misaligned:
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>thorwhalen/kodokan</code>                                                            |
-| Run          | <a href="https://github.com/thorwhalen/kodokan/actions/runs/45038745318">45038745318</a>   |
+| Run          | <a href="https://github.com/thorwhalen/kodokan/actions/runs/45040127006">45040127006</a>   |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>55da6e02a7b6725946eab62131744aa5281df1f1</code> (in the history of the built commit) |
+| Event commit | <code>f75b2e4a4842d955f99fc08b198607801d0e7a36</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -2889,13 +2911,13 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/kodokan/0.0.34/">0.0.34</a>, newer than the documented version (0.0.33).
+Latest release: <a href="https://pypi.org/project/kodokan/0.0.34/">0.0.34</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/thorwhalen/kodokan && cd kodokan
-git checkout 55da6e02a7b6725946eab62131744aa5281df1f1
+git checkout f75b2e4a4842d955f99fc08b198607801d0e7a36
 pip install "epythet==0.2.23"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

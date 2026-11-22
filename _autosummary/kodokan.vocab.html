@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../_static/documentation_options.js?v=565bc8c8"></script>
+    <script src="../_static/documentation_options.js?v=9dd25805"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -58,7 +58,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.33" />
+  <meta name="docsearch:version" content="0.0.34" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -457,25 +457,28 @@ threshold for a part to be offered in the quizzes; its docstring records why.</p
 <tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.vocab.devoiced" title="kodokan.vocab.devoiced"><code class="xref py py-obj docutils literal notranslate"><span class="pre">devoiced</span></code></a>(token)</p></td>
 <td><p>The unvoiced (rendaku-undone) form of <code class="docutils literal notranslate"><span class="pre">token</span></code>, or <code class="docutils literal notranslate"><span class="pre">token</span></code> if it starts unvoiced.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.vocab.name_tokens" title="kodokan.vocab.name_tokens"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_tokens</span></code></a>(romaji)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.vocab.homographs_by_kanji" title="kodokan.vocab.homographs_by_kanji"><code class="xref py py-obj docutils literal notranslate"><span class="pre">homographs_by_kanji</span></code></a>(names, kanji, glossary)</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">part</span> <span class="pre">key</span> <span class="pre">-&gt;</span> <span class="pre">technique</span> <span class="pre">keys</span></code> whose name has the part's spelling but not its kanji.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.vocab.name_tokens" title="kodokan.vocab.name_tokens"><code class="xref py py-obj docutils literal notranslate"><span class="pre">name_tokens</span></code></a>(romaji)</p></td>
 <td><p>The lower-cased parts of a romaji name: <code class="docutils literal notranslate"><span class="pre">&quot;O-soto-gari&quot;</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">['o',</span> <span class="pre">'soto',</span> <span class="pre">'gari']</span></code>.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.vocab.part_stats" title="kodokan.vocab.part_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">part_stats</span></code></a>(part_throws, *[, min_techniques])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.vocab.part_stats" title="kodokan.vocab.part_stats"><code class="xref py py-obj docutils literal notranslate"><span class="pre">part_stats</span></code></a>(part_throws, *[, min_techniques])</p></td>
 <td><p>One row per part, most-shared first: <code class="docutils literal notranslate"><span class="pre">{part,</span> <span class="pre">n_techniques,</span> <span class="pre">offered}</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.vocab.parts_of_name" title="kodokan.vocab.parts_of_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parts_of_name</span></code></a>(romaji, index)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.vocab.parts_of_name" title="kodokan.vocab.parts_of_name"><code class="xref py py-obj docutils literal notranslate"><span class="pre">parts_of_name</span></code></a>(romaji, index)</p></td>
 <td><p>The distinct part keys of a name, in order of appearance.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.vocab.threshold_table" title="kodokan.vocab.threshold_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">threshold_table</span></code></a>(part_throws, *[, upto])</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.vocab.threshold_table" title="kodokan.vocab.threshold_table"><code class="xref py py-obj docutils literal notranslate"><span class="pre">threshold_table</span></code></a>(part_throws, *[, upto])</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">k</span> <span class="pre">-&gt;</span> <span class="pre">number</span> <span class="pre">of</span> <span class="pre">parts</span> <span class="pre">shared</span> <span class="pre">by</span> <span class="pre">at</span> <span class="pre">least</span> <span class="pre">k</span> <span class="pre">techniques</span></code>, for choosing a threshold.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.vocab.unmatched_tokens" title="kodokan.vocab.unmatched_tokens"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unmatched_tokens</span></code></a>(names, glossary)</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.vocab.unmatched_tokens" title="kodokan.vocab.unmatched_tokens"><code class="xref py py-obj docutils literal notranslate"><span class="pre">unmatched_tokens</span></code></a>(names, glossary)</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">token</span> <span class="pre">-&gt;</span> <span class="pre">part</span> <span class="pre">it</span> <span class="pre">is</span> <span class="pre">a</span> <span class="pre">rendaku</span> <span class="pre">variant</span> <span class="pre">of</span> <span class="pre">(or</span> <span class="pre">None)</span></code> for tokens no part claims.</p></td>
 </tr>
-<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.vocab.variant_index" title="kodokan.vocab.variant_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">variant_index</span></code></a>(glossary)</p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.vocab.variant_index" title="kodokan.vocab.variant_index"><code class="xref py py-obj docutils literal notranslate"><span class="pre">variant_index</span></code></a>(glossary)</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">spelling</span> <span class="pre">-&gt;</span> <span class="pre">part</span> <span class="pre">key</span></code> for every primary key and declared alternate reading.</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="#kodokan.vocab.word_throws" title="kodokan.vocab.word_throws"><code class="xref py py-obj docutils literal notranslate"><span class="pre">word_throws</span></code></a>(names, glossary, *[, homographs])</p></td>
+<tr class="row-odd"><td><p><a class="reference internal" href="#kodokan.vocab.word_throws" title="kodokan.vocab.word_throws"><code class="xref py py-obj docutils literal notranslate"><span class="pre">word_throws</span></code></a>(names, glossary, *[, homographs])</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">part</span> <span class="pre">key</span> <span class="pre">-&gt;</span> <span class="pre">sorted</span> <span class="pre">technique</span> <span class="pre">keys</span></code> whose name contains the part.</p></td>
 </tr>
 </tbody>
@@ -485,7 +488,9 @@ threshold for a part to be offered in the quizzes; its docstring records why.</p
 <dt class="sig sig-object py" id="kodokan.vocab.HOMOGRAPHS">
 <span class="sig-prename descclassname"><span class="pre">kodokan.vocab.</span></span><span class="sig-name descname"><span class="pre">HOMOGRAPHS</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#frozenset" title="(in Python v3.15)"><span class="pre">frozenset</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'kata':</span> <span class="pre">frozenset({'katajujijime'})}</span></span><a class="headerlink" href="#kodokan.vocab.HOMOGRAPHS" title="Link to this definition">#</a></dt>
 <dd><p>technique names where a token is NOT the glossary part.
-Kata-juji-jime’s <em>kata</em> is 片 (“one-sided”), not the glossary’s 肩 (“shoulder”).</p>
+Kata-juji-jime’s <em>kata</em> is 片 (“one-sided”), not the glossary’s 肩 (“shoulder”).
+The fallback when no technique kanji is at hand; <a class="reference internal" href="#kodokan.vocab.homographs_by_kanji" title="kodokan.vocab.homographs_by_kanji"><code class="xref py py-func docutils literal notranslate"><span class="pre">homographs_by_kanji()</span></code></a> finds
+these from the kanji instead.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Same spelling, different word</p>
@@ -515,6 +520,29 @@ owner named as the point of the exercise; 4 would drop it. So 3.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a></span></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kodokan.vocab.homographs_by_kanji">
+<span class="sig-prename descclassname"><span class="pre">kodokan.vocab.</span></span><span class="sig-name descname"><span class="pre">homographs_by_kanji</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kanji</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">glossary</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/vocab.html#homographs_by_kanji"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.vocab.homographs_by_kanji" title="Link to this definition">#</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">part</span> <span class="pre">key</span> <span class="pre">-&gt;</span> <span class="pre">technique</span> <span class="pre">keys</span></code> whose name has the part’s spelling but not its kanji.</p>
+<p>A name token that is a part’s spelling is another word when the technique’s own kanji
+lacks the part’s glossary kanji: <em>Kata-juji-jime</em> (片十字絞) has <em>kata</em> but not 肩.
+Techniques with no kanji in <code class="docutils literal notranslate"><span class="pre">kanji</span></code> are not judged. The result is what
+<a class="reference internal" href="#kodokan.vocab.word_throws" title="kodokan.vocab.word_throws"><code class="xref py py-func docutils literal notranslate"><span class="pre">word_throws()</span></code></a> takes as <code class="docutils literal notranslate"><span class="pre">homographs</span></code>, found from the data rather than kept by
+hand beside the technique keys.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">glossary</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"kata"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"kanji"</span><span class="p">:</span> <span class="s2">"肩"</span><span class="p">},</span> <span class="s2">"juji"</span><span class="p">:</span> <span class="p">{</span><span class="s2">"kanji"</span><span class="p">:</span> <span class="s2">"十字"</span><span class="p">}}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">names</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"katajujijime"</span><span class="p">:</span> <span class="s2">"Kata-juji-jime"</span><span class="p">,</span> <span class="s2">"kataguruma"</span><span class="p">:</span> <span class="s2">"Kata-guruma"</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kanji</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"katajujijime"</span><span class="p">:</span> <span class="s2">"片十字絞"</span><span class="p">,</span> <span class="s2">"kataguruma"</span><span class="p">:</span> <span class="s2">"肩車"</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">homographs_by_kanji</span><span class="p">(</span><span class="n">names</span><span class="p">,</span> <span class="n">kanji</span><span class="p">,</span> <span class="n">glossary</span><span class="p">)</span>
+<span class="go">{'kata': frozenset({'katajujijime'})}</span>
+</pre></div>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#frozenset" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">frozenset</span></code></a>[<a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]]</span></p>
 </dd>
 </dl>
 </dd></dl>
@@ -676,6 +704,7 @@ result, with an empty list if no name uses it.</p></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.vocab.HOMOGRAPHS"><code class="docutils literal notranslate"><span class="pre">HOMOGRAPHS</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.vocab.MIN_TECHNIQUES"><code class="docutils literal notranslate"><span class="pre">MIN_TECHNIQUES</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.vocab.devoiced"><code class="docutils literal notranslate"><span class="pre">devoiced()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.vocab.homographs_by_kanji"><code class="docutils literal notranslate"><span class="pre">homographs_by_kanji()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.vocab.name_tokens"><code class="docutils literal notranslate"><span class="pre">name_tokens()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.vocab.part_stats"><code class="docutils literal notranslate"><span class="pre">part_stats()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#kodokan.vocab.parts_of_name"><code class="docutils literal notranslate"><span class="pre">parts_of_name()</span></code></a></li>

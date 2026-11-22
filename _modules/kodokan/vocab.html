@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../_static/documentation_options.js?v=565bc8c8"></script>
+    <script src="../../_static/documentation_options.js?v=9dd25805"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -411,7 +411,7 @@ window.runMermaid = runMermaid;</script>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.33" />
+  <meta name="docsearch:version" content="0.0.34" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -848,7 +848,44 @@ window.runMermaid = runMermaid;</script>
 
 <span class="c1">#: Same spelling, different word: technique names where a token is NOT the glossary part.</span>
 <span class="c1">#: Kata-juji-jime's *kata* is 片 ("one-sided"), not the glossary's 肩 ("shoulder").</span>
+<span class="c1">#: The fallback when no technique kanji is at hand; :func:`homographs_by_kanji` finds</span>
+<span class="c1">#: these from the kanji instead.</span>
 <span class="n">HOMOGRAPHS</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">frozenset</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"kata"</span><span class="p">:</span> <span class="nb">frozenset</span><span class="p">({</span><span class="s2">"katajujijime"</span><span class="p">})}</span>
+
+
+<div class="viewcode-block" id="homographs_by_kanji">
+<a class="viewcode-back" href="../../_autosummary/kodokan.vocab.html#kodokan.vocab.homographs_by_kanji">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">homographs_by_kanji</span><span class="p">(</span>
+    <span class="n">names</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">kanji</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+    <span class="n">glossary</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">frozenset</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""``part key -&gt; technique keys`` whose name has the part's spelling but not its kanji.</span>
+
+<span class="sd">    A name token that is a part's spelling is another word when the technique's own kanji</span>
+<span class="sd">    lacks the part's glossary kanji: *Kata-juji-jime* (片十字絞) has *kata* but not 肩.</span>
+<span class="sd">    Techniques with no kanji in ``kanji`` are not judged. The result is what</span>
+<span class="sd">    :func:`word_throws` takes as ``homographs``, found from the data rather than kept by</span>
+<span class="sd">    hand beside the technique keys.</span>
+
+<span class="sd">    &gt;&gt;&gt; glossary = {"kata": {"kanji": "肩"}, "juji": {"kanji": "十字"}}</span>
+<span class="sd">    &gt;&gt;&gt; names = {"katajujijime": "Kata-juji-jime", "kataguruma": "Kata-guruma"}</span>
+<span class="sd">    &gt;&gt;&gt; kanji = {"katajujijime": "片十字絞", "kataguruma": "肩車"}</span>
+<span class="sd">    &gt;&gt;&gt; homographs_by_kanji(names, kanji, glossary)</span>
+<span class="sd">    {'kata': frozenset({'katajujijime'})}</span>
+<span class="sd">    """</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">variant_index</span><span class="p">(</span><span class="n">glossary</span><span class="p">)</span>
+    <span class="n">found</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">tech</span><span class="p">,</span> <span class="n">romaji</span> <span class="ow">in</span> <span class="n">names</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">written</span> <span class="o">=</span> <span class="n">kanji</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">tech</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">written</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts_of_name</span><span class="p">(</span><span class="n">romaji</span><span class="p">,</span> <span class="n">index</span><span class="p">):</span>
+            <span class="n">part_kanji</span> <span class="o">=</span> <span class="n">glossary</span><span class="p">[</span><span class="n">part</span><span class="p">]</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"kanji"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">part_kanji</span> <span class="ow">and</span> <span class="n">part_kanji</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">written</span><span class="p">:</span>
+                <span class="n">found</span><span class="o">.</span><span class="n">setdefault</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="nb">set</span><span class="p">())</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">tech</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">part</span><span class="p">:</span> <span class="nb">frozenset</span><span class="p">(</span><span class="n">techs</span><span class="p">)</span> <span class="k">for</span> <span class="n">part</span><span class="p">,</span> <span class="n">techs</span> <span class="ow">in</span> <span class="n">found</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
+
 
 
 <div class="viewcode-block" id="word_throws">

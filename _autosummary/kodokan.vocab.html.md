@@ -53,6 +53,7 @@ threshold for a part to be offered in the quizzes; its docstring records why.
 
 | [`devoiced`](#kodokan.vocab.devoiced)(token)                                | The unvoiced (rendaku-undone) form of `token`, or `token` if it starts unvoiced.    |
 |-------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------|
+| [`homographs_by_kanji`](#kodokan.vocab.homographs_by_kanji)(names, kanji, glossary)    | `part key -> technique keys` whose name has the part's spelling but not its kanji.  |
 | [`name_tokens`](#kodokan.vocab.name_tokens)(romaji)                            | The lower-cased parts of a romaji name: `"O-soto-gari"` -> `['o', 'soto', 'gari']`. |
 | [`part_stats`](#kodokan.vocab.part_stats)(part_throws, \*[, min_techniques])  | One row per part, most-shared first: `{part, n_techniques, offered}`.               |
 | [`parts_of_name`](#kodokan.vocab.parts_of_name)(romaji, index)                   | The distinct part keys of a name, in order of appearance.                           |
@@ -65,6 +66,8 @@ threshold for a part to be offered in the quizzes; its docstring records why.
 
 technique names where a token is NOT the glossary part.
 Kata-juji-jime’s *kata* is 片 (“one-sided”), not the glossary’s 肩 (“shoulder”).
+The fallback when no technique kanji is at hand; [`homographs_by_kanji()`](#kodokan.vocab.homographs_by_kanji) finds
+these from the kanji instead.
 
 * **Type:**
   Same spelling, different word
@@ -89,6 +92,27 @@ The unvoiced (rendaku-undone) form of `token`, or `token` if it starts unvoiced.
 
 * **Return type:**
   [`str`](https://docs.python.org/3/builtins/stdtypes.html#str)
+
+### kodokan.vocab.homographs_by_kanji(names, kanji, glossary)
+
+`part key -> technique keys` whose name has the part’s spelling but not its kanji.
+
+A name token that is a part’s spelling is another word when the technique’s own kanji
+lacks the part’s glossary kanji: *Kata-juji-jime* (片十字絞) has *kata* but not 肩.
+Techniques with no kanji in `kanji` are not judged. The result is what
+[`word_throws()`](#kodokan.vocab.word_throws) takes as `homographs`, found from the data rather than kept by
+hand beside the technique keys.
+
+```pycon
+>>> glossary = {"kata": {"kanji": "肩"}, "juji": {"kanji": "十字"}}
+>>> names = {"katajujijime": "Kata-juji-jime", "kataguruma": "Kata-guruma"}
+>>> kanji = {"katajujijime": "片十字絞", "kataguruma": "肩車"}
+>>> homographs_by_kanji(names, kanji, glossary)
+{'kata': frozenset({'katajujijime'})}
+```
+
+* **Return type:**
+  [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str), [`frozenset`](https://docs.python.org/3/builtins/stdtypes.html#frozenset)[[`str`](https://docs.python.org/3/builtins/stdtypes.html#str)]]
 
 ### kodokan.vocab.name_tokens(romaji)
 

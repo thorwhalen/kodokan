@@ -25,7 +25,7 @@
 - [kodokan.viz](_autosummary/kodokan.viz.html.md): Visualize a &#96;PoseSequence&#96;.
 - [kodokan.vocab](_autosummary/kodokan.vocab.html.md): Word parts of technique names: which techniques share which part, and how often.
 - [For AI agents](ai-agents.html.md): &#96;kodokan&#96; ships artifacts for coding agents alongside its code. This page lists
-- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-11-22 15:32 UTC&#42;&#42; from commit &lt;a href="https://github.com/tho...
+- [About this build](about-this-build.html.md): This documentation was built on &#42;&#42;2026-11-22 15:47 UTC&#42;&#42; from commit &lt;a href="https://github.com/tho...
 
 ## Optional
 

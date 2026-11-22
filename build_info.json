@@ -1,32 +1,32 @@
 {
   "schema_version": 1,
-  "built_at": "2026-11-22T15:32:31Z",
+  "built_at": "2026-11-22T15:47:33Z",
   "package": {
     "name": "kodokan",
-    "version": "0.0.33",
+    "version": "0.0.34",
     "display_name": "kodokan",
     "source": "pyproject.toml"
   },
   "git": {
     "available": true,
-    "commit": "55da6e02a7b6725946eab62131744aa5281df1f1",
-    "short_commit": "55da6e0",
+    "commit": "f75b2e4a4842d955f99fc08b198607801d0e7a36",
+    "short_commit": "f75b2e4",
     "branch": "main",
     "tags": [],
     "dirty": false,
     "remote_url": "https://github.com/thorwhalen/kodokan",
-    "commit_url": "https://github.com/thorwhalen/kodokan/commit/55da6e02a7b6725946eab62131744aa5281df1f1",
+    "commit_url": "https://github.com/thorwhalen/kodokan/commit/f75b2e4a4842d955f99fc08b198607801d0e7a36",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "thorwhalen/kodokan",
-    "sha": "55da6e02a7b6725946eab62131744aa5281df1f1",
+    "sha": "f75b2e4a4842d955f99fc08b198607801d0e7a36",
     "sha_in_history": true,
     "ref": "refs/heads/main",
     "ref_name": "main",
-    "run_id": "45038745318",
-    "run_url": "https://github.com/thorwhalen/kodokan/actions/runs/45038745318",
+    "run_id": "45040127006",
+    "run_url": "https://github.com/thorwhalen/kodokan/actions/runs/45040127006",
     "server_url": "https://github.com"
   },
   "tools": {
@@ -56,20 +56,18 @@
   },
   "site": {
     "modules_documented": 17,
-    "objects_documented": 213
+    "objects_documented": 214
   },
   "pypi": {
     "checked": true,
     "latest": "0.0.34",
-    "relation": "behind",
+    "relation": "same",
     "error": null
   },
-  "reproduce": "git clone https://github.com/thorwhalen/kodokan && cd kodokan\ngit checkout 55da6e02a7b6725946eab62131744aa5281df1f1\npip install \"epythet==0.2.23\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "reproduce": "git clone https://github.com/thorwhalen/kodokan && cd kodokan\ngit checkout f75b2e4a4842d955f99fc08b198607801d0e7a36\npip install \"epythet==0.2.23\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
   "warnings": [],
   "alignment": {
-    "aligned": false,
-    "notes": [
-      "The documented version (0.0.33) is behind the latest release on PyPI (0.0.34): `pip install kodokan` gives newer code than these docs describe."
-    ]
+    "aligned": true,
+    "notes": []
   }
 }

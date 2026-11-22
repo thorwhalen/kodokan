@@ -16,6 +16,7 @@ kodokan.vocab
    .. autosummary::
    
       devoiced
+      homographs_by_kanji
       name_tokens
       part_stats
       parts_of_name
