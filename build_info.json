@@ -1,36 +1,36 @@
 {
   "schema_version": 1,
-  "built_at": "2026-11-23T04:59:24Z",
+  "built_at": "2026-11-23T07:59:29Z",
   "package": {
     "name": "kodokan",
-    "version": "0.0.36",
+    "version": "0.0.37",
     "display_name": "kodokan",
     "source": "pyproject.toml"
   },
   "git": {
     "available": true,
-    "commit": "af72599b9756e94f7a90356eecf6a381117b59c0",
-    "short_commit": "af72599",
+    "commit": "686f95c5da4e5fcaf943c7e518b2fc45284baf85",
+    "short_commit": "686f95c",
     "branch": "main",
     "tags": [],
     "dirty": false,
     "remote_url": "https://github.com/thorwhalen/kodokan",
-    "commit_url": "https://github.com/thorwhalen/kodokan/commit/af72599b9756e94f7a90356eecf6a381117b59c0",
+    "commit_url": "https://github.com/thorwhalen/kodokan/commit/686f95c5da4e5fcaf943c7e518b2fc45284baf85",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "thorwhalen/kodokan",
-    "sha": "af72599b9756e94f7a90356eecf6a381117b59c0",
+    "sha": "686f95c5da4e5fcaf943c7e518b2fc45284baf85",
     "sha_in_history": true,
     "ref": "refs/heads/main",
     "ref_name": "main",
-    "run_id": "45114875222",
-    "run_url": "https://github.com/thorwhalen/kodokan/actions/runs/45114875222",
+    "run_id": "45134920877",
+    "run_url": "https://github.com/thorwhalen/kodokan/actions/runs/45134920877",
     "server_url": "https://github.com"
   },
   "tools": {
-    "epythet": "0.2.23",
+    "epythet": "0.2.25",
     "sphinx": "9.1.1",
     "docutils": "0.22.4",
     "python": "3.12.16"
@@ -60,11 +60,11 @@
   },
   "pypi": {
     "checked": true,
-    "latest": "0.0.36",
+    "latest": "0.0.37",
     "relation": "same",
     "error": null
   },
-  "reproduce": "git clone https://github.com/thorwhalen/kodokan && cd kodokan\ngit checkout af72599b9756e94f7a90356eecf6a381117b59c0\npip install \"epythet==0.2.23\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "reproduce": "git clone https://github.com/thorwhalen/kodokan && cd kodokan\ngit checkout 686f95c5da4e5fcaf943c7e518b2fc45284baf85\npip install \"epythet==0.2.25\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
   "warnings": [],
   "alignment": {
     "aligned": true,

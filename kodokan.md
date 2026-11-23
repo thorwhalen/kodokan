@@ -1,4 +1,4 @@
-> built 2026-11-23 04:59 UTC from af72599 (main) · kodokan 0.0.36. Details: build_info.json
+> built 2026-11-23 07:59 UTC from 686f95c (main) · kodokan 0.0.37. Details: build_info.json
 
 # index.html.md
 
@@ -6,10 +6,9 @@
 
 # kodokan
 
-Study Kodokan Judo throws from video via body-pose analysis: download technique
-demonstrations, extract two-person (tori/uke) skeletons, split each clip into its
-repeated demonstrations, visualize them, and compare/score demonstrations.
+Study Kodokan Judo throws from video via body-pose analysis: download technique demonstrations, extract two-person (tori/uke) skeletons, split each clip into its repeated demonstrations, visualize them, and compare/score demonstrations.
 
+<!-- wads-docs: skip downloads videos and runs pose estimation -->
 ```python
 from kodokan.acquire import download_techniques
 from kodokan.track import estimate_poses_tracked
@@ -41,13 +40,11 @@ acquire (yb) ─► pose (rtmlib / YOLO, tracked tori/uke) ─► segment (motio
        └─► compare two demos (joint-angle DTW) ─► score + eval harness
 ```
 
-YouTube acquisition lives in the [`yb`](https://github.com/thorwhalen/yb) package
-(`download_youtube_playlist`); `kodokan` is the analysis layer on top.
+YouTube acquisition lives in the [`yb`](https://github.com/thorwhalen/yb) package (`download_youtube_playlist`); `kodokan` is the analysis layer on top.
 
 ## Install
 
-`import kodokan` needs only **numpy**; everything heavy is an optional extra (imported
-lazily on first use), so the import never fails for a missing one:
+`import kodokan` needs only **numpy**; everything heavy is an optional extra (imported lazily on first use), so the import never fails for a missing one:
 
 ```bash
 pip install -e '.[all]'      # or pick extras: .[pose,track,viz,analysis,storage,acquire]
@@ -62,35 +59,27 @@ pip install -e '.[all]'      # or pick extras: .[pose,track,viz,analysis,storage
 | `storage`  | dol stores                                          | dol                                                        | permissive            |
 | `acquire`  | YouTube download                                    | yb                                                         | permissive            |
 
-`track` is separated from `pose` on purpose — see
-[Licensing of extras](). The example at the top of this README
-uses `estimate_poses_tracked`, so it needs `track`; `estimate_poses` alone does not.
+`track` is separated from `pose` on purpose — see [Licensing of extras](). The example at the top of this README uses `estimate_poses_tracked`, so it needs `track`; `estimate_poses` alone does not.
 
-You also need **ffmpeg** on PATH (acquisition/merge). The optional **3D lift**
-(`scripts/lift_3d_mediapipe.py`) runs in a **separate venv**, because MediaPipe is
-ABI-incompatible with numpy 2.x:
+You also need **ffmpeg** on PATH (acquisition/merge). The optional **3D lift** (`scripts/lift_3d_mediapipe.py`) runs in a **separate venv**, because MediaPipe is ABI-incompatible with numpy 2.x:
 
 ```bash
 python -m venv ~/.kodokan_mp
 ~/.kodokan_mp/bin/pip install 'mediapipe==0.10.18' 'numpy<2' 'opencv-python-headless==4.10.0.84'
 ```
 
-Data (videos, keypoints, renders, weights) lives **outside the repo** under
-`~/kodokan_data` (override with `KODOKAN_DATA_DIR`).
+Data (videos, keypoints, renders, weights) lives **outside the repo** under `~/kodokan_data` (override with `KODOKAN_DATA_DIR`).
 
 ## Licensing of extras
 
-kodokan itself is **MIT**, and `pip install kodokan` installs **numpy and nothing
-else** — no copyleft reaches you through the core package.
+kodokan itself is **MIT**, and `pip install kodokan` installs **numpy and nothing else** — no copyleft reaches you through the core package.
 
 One extra is different, and it is worth reading before you type it:
 
 > **`kodokan[track]` installs [ultralytics](https://github.com/ultralytics/ultralytics),
 > which is licensed AGPL-3.0-or-later.** `kodokan[all]` includes it too.
 
-It is three distributions, not one — ultralytics pulls two more of its own, and both
-carry the same licence, so listing only the first would understate what lands in your
-environment:
+It is three distributions, not one — ultralytics pulls two more of its own, and both carry the same licence, so listing only the first would understate what lands in your environment:
 
 | distribution           | licence           | how it arrives                               |
 |------------------------|-------------------|----------------------------------------------|
@@ -98,41 +87,23 @@ environment:
 | `ultralytics-thop`     | AGPL-3.0-or-later | hard dependency of `ultralytics`             |
 | `ultralytics-platform` | AGPL-3.0-only     | dependency of `ultralytics` on Python ≥ 3.11 |
 
-kodokan imports only the first; the other two arrive with it and are covered by the
-same adjudication.
+kodokan imports only the first; the other two arrive with it and are covered by the same adjudication.
 
-The AGPL is not “the GPL but for Python”. Its section 13 adds a **network clause**:
-if you modify the work and let users interact with it *over a network*, those users
-are entitled to the complete corresponding source of the whole combined work — even
-though you never distributed a copy to anyone. Deploying a judo-analysis service
-built on `kodokan[track]` is exactly that situation. The obligation attaches to the
-combined work, not to ultralytics alone. That is the conservative reading — the one
-this project plans around — rather than settled case law, but “we only import it” is
-not a position worth betting a product on.
+The AGPL is not “the GPL but for Python”. Its section 13 adds a **network clause**: if you modify the work and let users interact with it *over a network*, those users are entitled to the complete corresponding source of the whole combined work — even though you never distributed a copy to anyone. Deploying a judo-analysis service built on `kodokan[track]` is exactly that situation. The obligation attaches to the combined work, not to ultralytics alone. That is the conservative reading — the one this project plans around — rather than settled case law, but “we only import it” is not a position worth betting a product on.
 
 If that is not compatible with what you are building, you have two options:
 
 1. **Do not install `track`.** Everything below still works.
-2. **Buy an [Ultralytics Enterprise License](https://www.ultralytics.com/license)**,
-   which Ultralytics sells precisely for commercial use that cannot accept the AGPL.
+2. **Buy an [Ultralytics Enterprise License](https://www.ultralytics.com/license)**, which Ultralytics sells precisely for commercial use that cannot accept the AGPL.
 
 **What you can do without it.** Everything except identity tracking:
 
-- `estimate_poses(...)` — the default `backend="rtmlib"` (RTMPose over onnxruntime)
-  is AGPL-free and is what `kodokan[pose]` installs. It keeps the two
-  highest-confidence people per frame, ordered left→right *per frame*.
+- `estimate_poses(...)` — the default `backend="rtmlib"` (RTMPose over onnxruntime) is AGPL-free and is what `kodokan[pose]` installs. It keeps the two highest-confidence people per frame, ordered left→right *per frame*.
 - `segment`, `compare`, `score`, `store`, `viz`, `acquire` — all permissive.
 
-**What you give up.** `kodokan.track.estimate_poses_tracked` runs Ultralytics’
-built-in BoT-SORT/ByteTrack so tori and uke keep persistent identities across a
-clip instead of swapping whenever they cross. rtmlib is a pose estimator with no
-multi-object tracker, so this is a real feature difference, not a packaging one.
-`estimate_poses(backend="ultralytics")` — the non-default YOLO11-pose backend —
-also needs it. Both raise an `ImportError` naming the extra and the licence rather
-than a bare `ModuleNotFoundError`.
+**What you give up.** `kodokan.track.estimate_poses_tracked` runs Ultralytics’ built-in BoT-SORT/ByteTrack so tori and uke keep persistent identities across a clip instead of swapping whenever they cross. rtmlib is a pose estimator with no multi-object tracker, so this is a real feature difference, not a packaging one. `estimate_poses(backend="ultralytics")` — the non-default YOLO11-pose backend — also needs it. Both raise an `ImportError` naming the extra and the licence rather than a bare `ModuleNotFoundError`.
 
-The decision to keep this dependency, and the conditions that should reopen it,
-are recorded in `[tool.wads.licence]` in `pyproject.toml`.
+The decision to keep this dependency, and the conditions that should reopen it, are recorded in `[tool.wads.licence]` in `pyproject.toml`.
 
 ## The pipeline
 
@@ -151,14 +122,11 @@ are recorded in `[tool.wads.licence]` in `pyproject.toml`.
 | `kodokan.coach`       | `coach` (0–100 + per-joint / per-phase deviation + EN/FR advice on the worst dimensions), `LiveCoach` (the same per detected throw on a live stream)                                                                            |
 | `kodokan.testmode`    | `TechniqueTest` (random technique from a focus pool; graded on the recognizer’s confidence for it, plus closeness and advice when a reference is given), `LiveTechniqueTest` (the prompt, perform, grade loop on a live stream) |
 
-Runnable end-to-end examples live in `examples/` (`warmup_seoinage.py`,
-`batch_pipeline.py`, `segment_review.py`, `compare_demos.py`, `score_demos.py`,
-`eval_features.py`).
+Runnable end-to-end examples live in `examples/` (`warmup_seoinage.py`, `batch_pipeline.py`, `segment_review.py`, `compare_demos.py`, `score_demos.py`, `eval_features.py`).
 
 ## Dataset
 
-`examples/batch_pipeline.py` builds a small dataset (10 techniques · 84
-demonstrations · 18.3k frames) into the `dol` stores. Load it:
+`examples/batch_pipeline.py` builds a small dataset (10 techniques · 84 demonstrations · 18.3k frames) into the `dol` stores. Load it:
 
 ```python
 from kodokan.store import pose_store, segments_store, load_all_tidy
@@ -172,19 +140,9 @@ See [`misc/docs/dataset.md`]().
 
 ## Status & honest limits
 
-Works well: acquisition, tracked two-person pose, demo segmentation, the dol stores,
-visualization, and same-technique demo comparison (joint-angle DTW is speed-invariant)
-with interpretable per-joint/per-phase feedback.
+Works well: acquisition, tracked two-person pose, demo segmentation, the dol stores, visualization, and same-technique demo comparison (joint-angle DTW is speed-invariant) with interpretable per-joint/per-phase feedback.
 
-Does **not** work yet — and this is *measured, not assumed*: **technique recognition /
-cross-demo scoring**. A feature bake-off ([`misc/docs/feature-bakeoff.md`]())
-shows every 2D descriptor *and* MediaPipe 3D joint angles sit at chance (separation
-AUC ≈ 0.49–0.56). The blockers are noisy monocular 3D under grappling occlusion,
-tori/uke role inconsistency, and the weakness of hand-crafted angle-DTW for few
-examples — not viewpoint alone. Recognition needs a **learned** skeleton representation
-(few-shot JEANIE, or trained PoseC3D/CTR-GCN) and/or cleaner multi-person 3D with
-role-consistent features. The eval harness (`examples/eval_features*.py`) is ready to
-validate those.
+Does **not** work yet — and this is *measured, not assumed*: **technique recognition / cross-demo scoring**. A feature bake-off ([`misc/docs/feature-bakeoff.md`]()) shows every 2D descriptor *and* MediaPipe 3D joint angles sit at chance (separation AUC ≈ 0.49–0.56). The blockers are noisy monocular 3D under grappling occlusion, tori/uke role inconsistency, and the weakness of hand-crafted angle-DTW for few examples — not viewpoint alone. Recognition needs a **learned** skeleton representation (few-shot JEANIE, or trained PoseC3D/CTR-GCN) and/or cleaner multi-person 3D with role-consistent features. The eval harness (`examples/eval_features*.py`) is ready to validate those.
 
 ## Competition calendar
 
@@ -197,11 +155,9 @@ python -m kodokan.competitions validate competitions.json
 
 ## Background & rationale
 
-- [`misc/docs/research-architecture.md`]() — cited
-  tools/architecture research (75 refs).
+- [`misc/docs/research-architecture.md`]() — cited tools/architecture research (75 refs).
 - [`misc/docs/dataset.md`]() — dataset card.
-- [`misc/docs/feature-bakeoff.md`]() — why hand-crafted
-  features don’t discriminate techniques (the empirical finding).
+- [`misc/docs/feature-bakeoff.md`]() — why hand-crafted features don’t discriminate techniques (the empirical finding).
 
 <p class="epythet-aggregates">This documentation as a single file: <a href="kodokan.md">kodokan.md</a> (Markdown, for agents).</p>
 
@@ -2869,7 +2825,7 @@ The distinct part keys of a name, in order of appearance.
 
 # About this build
 
-This documentation was built on **2026-11-23 04:59 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/af72599b9756e94f7a90356eecf6a381117b59c0"><code>af72599</code></a> on branch <code>main</code>, for **kodokan 0.0.36** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-11-23 07:59 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/686f95c5da4e5fcaf943c7e518b2fc45284baf85"><code>686f95c</code></a> on branch <code>main</code>, for **kodokan 0.0.37** (from <code>pyproject.toml</code>).
 
 #### NOTE
 Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
@@ -2878,7 +2834,7 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 |                     |                                                                                                                                                           |
 |---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/thorwhalen/kodokan/commit/af72599b9756e94f7a90356eecf6a381117b59c0"><code>af72599b9756e94f7a90356eecf6a381117b59c0</code></a> |
+| Commit              | <a href="https://github.com/thorwhalen/kodokan/commit/686f95c5da4e5fcaf943c7e518b2fc45284baf85"><code>686f95c5da4e5fcaf943c7e518b2fc45284baf85</code></a> |
 | Branch              | <code>main</code>                                                                                                                                         |
 | Tags at this commit | none                                                                                                                                                      |
 | Working tree        | clean                                                                                                                                                     |
@@ -2889,15 +2845,15 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>thorwhalen/kodokan</code>                                                            |
-| Run          | <a href="https://github.com/thorwhalen/kodokan/actions/runs/45114875222">45114875222</a>   |
+| Run          | <a href="https://github.com/thorwhalen/kodokan/actions/runs/45134920877">45134920877</a>   |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>af72599b9756e94f7a90356eecf6a381117b59c0</code> (in the history of the built commit) |
+| Event commit | <code>686f95c5da4e5fcaf943c7e518b2fc45284baf85</code> (in the history of the built commit) |
 
 ## Tools
 
 |          |         |
 |----------|---------|
-| epythet  | 0.2.23  |
+| epythet  | 0.2.25  |
 | Sphinx   | 9.1.1   |
 | docutils | 0.22.4  |
 | Python   | 3.12.16 |
@@ -2916,14 +2872,14 @@ Nothing suggests a mismatch: the tree was clean at the commit above, and the doc
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/kodokan/0.0.36/">0.0.36</a>, the same as the documented version.
+Latest release: <a href="https://pypi.org/project/kodokan/0.0.37/">0.0.37</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/thorwhalen/kodokan && cd kodokan
-git checkout af72599b9756e94f7a90356eecf6a381117b59c0
-pip install "epythet==0.2.23"
+git checkout 686f95c5da4e5fcaf943c7e518b2fc45284baf85
+pip install "epythet==0.2.25"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```
 
