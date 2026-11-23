@@ -82,26 +82,41 @@ def _clean(feats: np.ndarray) -> np.ndarray:
     return feats[~np.any(np.isnan(feats), axis=1)]
 
 
+def _dtw_c_available() -> bool:
+    """True when dtaidistance's compiled C library is importable (it ships in its wheels)."""
+    try:
+        from dtaidistance import dtw_cc  # noqa: F401
+    except ImportError:
+        return False
+    return dtw_cc is not None
+
+
 def compare(features_a: np.ndarray, features_b: np.ndarray) -> dict:
     """DTW-align two angle-feature sequences.
 
     Returns a dict with ``distance`` (total DTW cost), ``normalized`` (cost per
     aligned step — comparable across different-length demos), the warping ``path``,
     and the cleaned input arrays ``a``/``b``.
+
+    One DTW pass gives both the path and the distance, on dtaidistance's C
+    library when it is available (its pure-Python fallback is ~250x slower).
     """
-    from dtaidistance import dtw_ndim
+    from dtaidistance import dtw
 
     a = np.ascontiguousarray(_clean(features_a), dtype=np.double)
     b = np.ascontiguousarray(_clean(features_b), dtype=np.double)
     if len(a) < 2 or len(b) < 2:
         return {"distance": np.nan, "normalized": np.nan, "path": [], "a": a, "b": b}
-    path = dtw_ndim.warping_path(a, b)  # list of (i, j)
+    path, dist = dtw.warping_path(
+        a, b, use_ndim=True, use_c=_dtw_c_available(), include_distance=True
+    )  # path: list of (i, j)
     # Mean Euclidean cost per aligned step. (dist/len(path) would leave a ~1/sqrt(len)
     # length bias because dist is an L2 path cost, not a sum of per-step distances.)
-    steps = [float(np.linalg.norm(a[i] - b[j])) for i, j in path]
+    p = np.asarray(path, dtype=np.intp).reshape(-1, 2)
+    steps = np.linalg.norm(a[p[:, 0]] - b[p[:, 1]], axis=1)
     return {
-        "distance": float(dtw_ndim.distance(a, b)),
-        "normalized": float(np.mean(steps)) if steps else float("nan"),
+        "distance": float(dist),
+        "normalized": float(steps.mean()) if len(steps) else float("nan"),
         "path": path,
         "a": a,
         "b": b,
@@ -109,12 +124,15 @@ def compare(features_a: np.ndarray, features_b: np.ndarray) -> dict:
 
 
 def distance_matrix(feature_seqs: list[np.ndarray]) -> np.ndarray:
-    """Pairwise normalized-DTW distance matrix over a list of feature sequences."""
+    """Pairwise normalized-DTW distance matrix over a list of feature sequences.
+
+    The normalized distance is symmetric, so only the upper triangle is computed.
+    """
     n = len(feature_seqs)
     d = np.full((n, n), np.nan)
     for i in range(n):
-        for j in range(n):
-            d[i, j] = compare(feature_seqs[i], feature_seqs[j])["normalized"]
+        for j in range(i, n):
+            d[i, j] = d[j, i] = compare(feature_seqs[i], feature_seqs[j])["normalized"]
     return d
 
 

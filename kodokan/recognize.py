@@ -22,7 +22,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from kodokan.compare import _clean, compare
+from kodokan.compare import _clean, compare, distance_matrix
 from kodokan.descriptors import _angles, _norm_positions, _window
 from kodokan.pose import PoseSequence
 
@@ -229,16 +229,13 @@ def mirror_feature(feat: np.ndarray, *, mode: str) -> np.ndarray:
 def dtw_1nn_predict(feature_seqs: list[np.ndarray], labels) -> list:
     """Leave-one-out 1-NN by DTW distance; returns predicted label per item."""
     n = len(feature_seqs)
+    d = distance_matrix(feature_seqs)  # symmetric: each pair aligned once
+    d[~np.isfinite(d)] = np.inf
+    np.fill_diagonal(d, np.inf)
     preds: list = [None] * n
     for i in range(n):
-        best, best_j = np.inf, -1
-        for j in range(n):
-            if i == j:
-                continue
-            d = compare(feature_seqs[i], feature_seqs[j])["normalized"]
-            if np.isfinite(d) and d < best:
-                best, best_j = d, j
-        preds[i] = labels[best_j] if best_j >= 0 else None
+        best_j = int(np.argmin(d[i])) if n > 1 else -1
+        preds[i] = labels[best_j] if best_j >= 0 and np.isfinite(d[i, best_j]) else None
     return preds
 
 
