@@ -20,6 +20,7 @@ Usage::  PYTHONPATH=<repo> python examples/build_throw_metadata.py [OUT_DIR]
 """
 
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -27,12 +28,18 @@ from pathlib import Path
 from kodokan import vocab as kv
 from kodokan.acquire import canonical_technique_key
 
-MD = Path("/Users/thorwhalen/Dropbox/py/proj/t/kodokan/misc/docs/judo_throws_classification.md")
-CATALOG = Path("/Users/thorwhalen/Dropbox/py/proj/tt/papp/migrated_apps/kodokan/data/catalog.json")
+_DOCS = Path(__file__).resolve().parents[1] / "misc" / "docs"
+MD = _DOCS / "judo_throws_classification.md"
 # Curated 'commonly-confused throws' map (slug -> [slug]), from authoritative judo pedagogy
 # (Kodokan-official series + corroborating sources) — replaces the weak pose-similarity proxy (#33).
-CONFUSABLE = Path("/Users/thorwhalen/Dropbox/py/proj/t/kodokan/misc/docs/confusable_curated.json")
-OUT_DIR = Path("/Users/thorwhalen/Dropbox/py/proj/tt/papp/migrated_apps/kodokan/data")
+CONFUSABLE = _DOCS / "confusable_curated.json"
+# The web app's data folder (catalog in, vocab.json and throws.json out): $KODOKAN_APP_DATA,
+# else its place in the projects folder ($PP).
+OUT_DIR = Path(
+    os.environ.get("KODOKAN_APP_DATA")
+    or Path(os.environ.get("PP", "~")).expanduser() / "tt" / "papp" / "migrated_apps" / "kodokan" / "data"
+)
+CATALOG = OUT_DIR / "catalog.json"
 
 
 def _slug(romaji: str) -> str:
@@ -195,7 +202,10 @@ def main(out_dir: Path = OUT_DIR):
         t["confusable"] = out
 
     out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / "vocab.json").write_text(json.dumps({"words": vocab}, ensure_ascii=False, indent=1))
+    # min_techniques: the app offers a word part only when this many techniques use it (#67);
+    # written here so the threshold has one owner, kodokan.vocab.MIN_TECHNIQUES.
+    vocab_doc = {"words": vocab, "min_techniques": kv.MIN_TECHNIQUES}
+    (out_dir / "vocab.json").write_text(json.dumps(vocab_doc, ensure_ascii=False, indent=1))
     (out_dir / "throws.json").write_text(json.dumps({"throws": throws}, ensure_ascii=False, indent=1))
 
     # report

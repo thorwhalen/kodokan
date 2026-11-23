@@ -10,14 +10,17 @@ Usage::
 """
 
 import json
+import os
 import sys
 from pathlib import Path
 
 from kodokan import flashcards as fc
 
+# The web app's data folder: $KODOKAN_APP_DATA, else its place in the projects folder ($PP).
 DEFAULT_OUT = Path(
-    "/Users/thorwhalen/Dropbox/py/proj/tt/papp/migrated_apps/kodokan/data/catalog.json"
-)
+    os.environ.get("KODOKAN_APP_DATA")
+    or Path(os.environ.get("PP", "~")).expanduser() / "tt" / "papp" / "migrated_apps" / "kodokan" / "data"
+) / "catalog.json"
 LOOP_MAX_S = 7.0   # cap a loop segment length
 LOOP_MIN_S = 1.5
 N_CONFUSABLE = 8
