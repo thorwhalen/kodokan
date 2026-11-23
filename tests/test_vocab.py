@@ -1,6 +1,7 @@
 """Tests for word parts of technique names (kodokan#65)."""
 
 import importlib.util
+import json
 from pathlib import Path
 
 import pytest
@@ -113,3 +114,17 @@ def test_katame_words_are_in_the_glossary_and_claimed():
     assert {"gatame", "jime", "shiho", "kesa", "juji"} <= set(glossary)
     assert "siho" in glossary["shiho"]["alts"]
     assert builder.parse_technique_kanji(text)["katajujijime"] == "片十字絞"
+
+
+@pytest.mark.skipif(not (_BUILDER.exists() and _MD.exists()), reason="builder or reference absent")
+def test_the_builder_writes_the_threshold_into_vocab_json(tmp_path, monkeypatch):
+    """The app reads its word-part threshold from vocab.json, so it has one owner (#67)."""
+    spec = importlib.util.spec_from_file_location("builder", _BUILDER)
+    builder = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(builder)
+    if not builder.CATALOG.exists():
+        pytest.skip("the web app's catalog is not on this machine")
+    builder.main(tmp_path)
+    doc = json.loads((tmp_path / "vocab.json").read_text())
+    assert doc["min_techniques"] == kv.MIN_TECHNIQUES
+    assert doc["words"]
