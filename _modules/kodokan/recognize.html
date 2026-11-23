@@ -41,7 +41,7 @@
   <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../../_static/documentation_options.js?v=39aadc1c"></script>
+    <script src="../../_static/documentation_options.js?v=0e525676"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -411,7 +411,7 @@ window.runMermaid = runMermaid;</script>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.35" />
+  <meta name="docsearch:version" content="0.0.36" />
   
     
     <script src="../../_static/searchtools.js"></script>
@@ -736,7 +736,7 @@ window.runMermaid = runMermaid;</script>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.compare</span><span class="w"> </span><span class="kn">import</span> <span class="n">_clean</span><span class="p">,</span> <span class="n">compare</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.compare</span><span class="w"> </span><span class="kn">import</span> <span class="n">_clean</span><span class="p">,</span> <span class="n">compare</span><span class="p">,</span> <span class="n">distance_matrix</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.descriptors</span><span class="w"> </span><span class="kn">import</span> <span class="n">_angles</span><span class="p">,</span> <span class="n">_norm_positions</span><span class="p">,</span> <span class="n">_window</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kodokan.pose</span><span class="w"> </span><span class="kn">import</span> <span class="n">PoseSequence</span>
 
@@ -966,16 +966,13 @@ window.runMermaid = runMermaid;</script>
 <span class="k">def</span><span class="w"> </span><span class="nf">dtw_1nn_predict</span><span class="p">(</span><span class="n">feature_seqs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">labels</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""Leave-one-out 1-NN by DTW distance; returns predicted label per item."""</span>
     <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">feature_seqs</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">distance_matrix</span><span class="p">(</span><span class="n">feature_seqs</span><span class="p">)</span>  <span class="c1"># symmetric: each pair aligned once</span>
+    <span class="n">d</span><span class="p">[</span><span class="o">~</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">d</span><span class="p">)]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">fill_diagonal</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">)</span>
     <span class="n">preds</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">n</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-        <span class="n">best</span><span class="p">,</span> <span class="n">best_j</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>
-        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
-            <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="n">j</span><span class="p">:</span>
-                <span class="k">continue</span>
-            <span class="n">d</span> <span class="o">=</span> <span class="n">compare</span><span class="p">(</span><span class="n">feature_seqs</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">feature_seqs</span><span class="p">[</span><span class="n">j</span><span class="p">])[</span><span class="s2">"normalized"</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">d</span><span class="p">)</span> <span class="ow">and</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="n">best</span><span class="p">:</span>
-                <span class="n">best</span><span class="p">,</span> <span class="n">best_j</span> <span class="o">=</span> <span class="n">d</span><span class="p">,</span> <span class="n">j</span>
-        <span class="n">preds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">best_j</span><span class="p">]</span> <span class="k">if</span> <span class="n">best_j</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">else</span> <span class="kc">None</span>
+        <span class="n">best_j</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">argmin</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span> <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">preds</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">labels</span><span class="p">[</span><span class="n">best_j</span><span class="p">]</span> <span class="k">if</span> <span class="n">best_j</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">best_j</span><span class="p">])</span> <span class="k">else</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">preds</span></div>
 
 

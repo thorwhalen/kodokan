@@ -1,32 +1,32 @@
 {
   "schema_version": 1,
-  "built_at": "2026-11-23T00:57:56Z",
+  "built_at": "2026-11-23T04:59:24Z",
   "package": {
     "name": "kodokan",
-    "version": "0.0.35",
+    "version": "0.0.36",
     "display_name": "kodokan",
     "source": "pyproject.toml"
   },
   "git": {
     "available": true,
-    "commit": "9b6e4e546b9c6802e662d5d41b47f6d092759fef",
-    "short_commit": "9b6e4e5",
+    "commit": "af72599b9756e94f7a90356eecf6a381117b59c0",
+    "short_commit": "af72599",
     "branch": "main",
     "tags": [],
     "dirty": false,
     "remote_url": "https://github.com/thorwhalen/kodokan",
-    "commit_url": "https://github.com/thorwhalen/kodokan/commit/9b6e4e546b9c6802e662d5d41b47f6d092759fef",
+    "commit_url": "https://github.com/thorwhalen/kodokan/commit/af72599b9756e94f7a90356eecf6a381117b59c0",
     "error": null
   },
   "ci": {
     "provider": "github",
     "repository": "thorwhalen/kodokan",
-    "sha": "9b6e4e546b9c6802e662d5d41b47f6d092759fef",
+    "sha": "af72599b9756e94f7a90356eecf6a381117b59c0",
     "sha_in_history": true,
     "ref": "refs/heads/main",
     "ref_name": "main",
-    "run_id": "45091671493",
-    "run_url": "https://github.com/thorwhalen/kodokan/actions/runs/45091671493",
+    "run_id": "45114875222",
+    "run_url": "https://github.com/thorwhalen/kodokan/actions/runs/45114875222",
     "server_url": "https://github.com"
   },
   "tools": {
@@ -61,15 +61,13 @@
   "pypi": {
     "checked": true,
     "latest": "0.0.36",
-    "relation": "behind",
+    "relation": "same",
     "error": null
   },
-  "reproduce": "git clone https://github.com/thorwhalen/kodokan && cd kodokan\ngit checkout 9b6e4e546b9c6802e662d5d41b47f6d092759fef\npip install \"epythet==0.2.23\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
+  "reproduce": "git clone https://github.com/thorwhalen/kodokan && cd kodokan\ngit checkout af72599b9756e94f7a90356eecf6a381117b59c0\npip install \"epythet==0.2.23\"\nepythet quickstart . --ignore tests/ scrap/ examples/",
   "warnings": [],
   "alignment": {
-    "aligned": false,
-    "notes": [
-      "The documented version (0.0.35) is behind the latest release on PyPI (0.0.36): `pip install kodokan` gives newer code than these docs describe."
-    ]
+    "aligned": true,
+    "notes": []
   }
 }

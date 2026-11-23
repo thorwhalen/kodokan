@@ -1,4 +1,4 @@
-> built 2026-11-23 00:57 UTC from 9b6e4e5 (main) · kodokan 0.0.35. Details: build_info.json
+> built 2026-11-23 04:59 UTC from af72599 (main) · kodokan 0.0.36. Details: build_info.json
 
 # index.html.md
 
@@ -1263,6 +1263,9 @@ Returns a dict with `distance` (total DTW cost), `normalized` (cost per
 aligned step — comparable across different-length demos), the warping `path`,
 and the cleaned input arrays `a`/`b`.
 
+One DTW pass gives both the path and the distance, on dtaidistance’s C
+library when it is available (its pure-Python fallback is ~250x slower).
+
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
@@ -1276,6 +1279,8 @@ Cleaned joint-angle features for one demo window (primary person by default).
 ### kodokan.distance_matrix(feature_seqs)
 
 Pairwise normalized-DTW distance matrix over a list of feature sequences.
+
+The normalized distance is symmetric, so only the upper triangle is computed.
 
 * **Return type:**
   `ndarray`
@@ -2864,18 +2869,16 @@ The distinct part keys of a name, in order of appearance.
 
 # About this build
 
-This documentation was built on **2026-11-23 00:57 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/9b6e4e546b9c6802e662d5d41b47f6d092759fef"><code>9b6e4e5</code></a> on branch <code>main</code>, for **kodokan 0.0.35** (from <code>pyproject.toml</code>).
+This documentation was built on **2026-11-23 04:59 UTC** from commit <a href="https://github.com/thorwhalen/kodokan/commit/af72599b9756e94f7a90356eecf6a381117b59c0"><code>af72599</code></a> on branch <code>main</code>, for **kodokan 0.0.36** (from <code>pyproject.toml</code>).
 
-#### WARNING
-The documentation and the package may be misaligned:
-
-- The documented version (0.0.35) is behind the latest release on PyPI (0.0.36): `pip install kodokan` gives newer code than these docs describe.
+#### NOTE
+Nothing suggests a mismatch: the tree was clean at the commit above, and the documented version is the one on PyPI.
 
 ## Source
 
 |                     |                                                                                                                                                           |
 |---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Commit              | <a href="https://github.com/thorwhalen/kodokan/commit/9b6e4e546b9c6802e662d5d41b47f6d092759fef"><code>9b6e4e546b9c6802e662d5d41b47f6d092759fef</code></a> |
+| Commit              | <a href="https://github.com/thorwhalen/kodokan/commit/af72599b9756e94f7a90356eecf6a381117b59c0"><code>af72599b9756e94f7a90356eecf6a381117b59c0</code></a> |
 | Branch              | <code>main</code>                                                                                                                                         |
 | Tags at this commit | none                                                                                                                                                      |
 | Working tree        | clean                                                                                                                                                     |
@@ -2886,9 +2889,9 @@ The documentation and the package may be misaligned:
 |              |                                                                                            |
 |--------------|--------------------------------------------------------------------------------------------|
 | Repository   | <code>thorwhalen/kodokan</code>                                                            |
-| Run          | <a href="https://github.com/thorwhalen/kodokan/actions/runs/45091671493">45091671493</a>   |
+| Run          | <a href="https://github.com/thorwhalen/kodokan/actions/runs/45114875222">45114875222</a>   |
 | Ref          | <code>refs/heads/main</code>                                                               |
-| Event commit | <code>9b6e4e546b9c6802e662d5d41b47f6d092759fef</code> (in the history of the built commit) |
+| Event commit | <code>af72599b9756e94f7a90356eecf6a381117b59c0</code> (in the history of the built commit) |
 
 ## Tools
 
@@ -2913,13 +2916,13 @@ The documentation and the package may be misaligned:
 
 ## Package on PyPI
 
-Latest release: <a href="https://pypi.org/project/kodokan/0.0.36/">0.0.36</a>, newer than the documented version (0.0.35).
+Latest release: <a href="https://pypi.org/project/kodokan/0.0.36/">0.0.36</a>, the same as the documented version.
 
 ## Reproduce
 
 ```bash
 git clone https://github.com/thorwhalen/kodokan && cd kodokan
-git checkout 9b6e4e546b9c6802e662d5d41b47f6d092759fef
+git checkout af72599b9756e94f7a90356eecf6a381117b59c0
 pip install "epythet==0.2.23"
 epythet quickstart . --ignore tests/ scrap/ examples/
 ```

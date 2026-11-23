@@ -44,7 +44,7 @@
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
 <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
 
-    <script src="../_static/documentation_options.js?v=39aadc1c"></script>
+    <script src="../_static/documentation_options.js?v=0e525676"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
@@ -58,7 +58,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="color-scheme" content="light dark"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="0.0.35" />
+  <meta name="docsearch:version" content="0.0.36" />
   
     
     <script src="../_static/searchtools.js"></script>
@@ -1054,6 +1054,8 @@ so a live loop goes on.</p>
 <p>Returns a dict with <code class="docutils literal notranslate"><span class="pre">distance</span></code> (total DTW cost), <code class="docutils literal notranslate"><span class="pre">normalized</span></code> (cost per
 aligned step — comparable across different-length demos), the warping <code class="docutils literal notranslate"><span class="pre">path</span></code>,
 and the cleaned input arrays <code class="docutils literal notranslate"><span class="pre">a</span></code>/<code class="docutils literal notranslate"><span class="pre">b</span></code>.</p>
+<p>One DTW pass gives both the path and the distance, on dtaidistance’s C
+library when it is available (its pure-Python fallback is ~250x slower).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#dict" title="(in Python v3.15)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a></span></p>
@@ -1076,6 +1078,7 @@ and the cleaned input arrays <code class="docutils literal notranslate"><span cl
 <dt class="sig sig-object py" id="kodokan.distance_matrix">
 <span class="sig-prename descclassname"><span class="pre">kodokan.</span></span><span class="sig-name descname"><span class="pre">distance_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">feature_seqs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/kodokan/compare.html#distance_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#kodokan.distance_matrix" title="Link to this definition">#</a></dt>
 <dd><p>Pairwise normalized-DTW distance matrix over a list of feature sequences.</p>
+<p>The normalized distance is symmetric, so only the upper triangle is computed.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p><span class="sphinx_autodoc_typehints-type"><code class="xref py py-class docutils literal notranslate"><span class="pre">ndarray</span></code></span></p>

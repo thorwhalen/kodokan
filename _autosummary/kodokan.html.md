@@ -430,6 +430,9 @@ Returns a dict with `distance` (total DTW cost), `normalized` (cost per
 aligned step — comparable across different-length demos), the warping `path`,
 and the cleaned input arrays `a`/`b`.
 
+One DTW pass gives both the path and the distance, on dtaidistance’s C
+library when it is available (its pure-Python fallback is ~250x slower).
+
 * **Return type:**
   [`dict`](https://docs.python.org/3/builtins/stdtypes.html#dict)
 
@@ -443,6 +446,8 @@ Cleaned joint-angle features for one demo window (primary person by default).
 ### kodokan.distance_matrix(feature_seqs)
 
 Pairwise normalized-DTW distance matrix over a list of feature sequences.
+
+The normalized distance is symmetric, so only the upper triangle is computed.
 
 * **Return type:**
   `ndarray`
